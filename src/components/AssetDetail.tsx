@@ -19,7 +19,7 @@ import {
 import { ASSETS } from '../data/portfolio';
 import { Amount, Pills } from './ui';
 
-type StyleId = '1' | '2';
+type StyleId = '1' | '2' | '3';
 
 /* ----------------------------- lista instrumentów ----------------------------- */
 
@@ -183,8 +183,10 @@ export function AssetDetailScreen({
   const [grouping, setGrouping] = useState<string>('Emitenci');
   const [account, setAccount] = useState<string>('Wszystkie');
 
-  const color =
-    ASSETS.find((a) => a.id === 'corp')?.colors[styleId].card ?? 'var(--ink)';
+  /* Makieta nie ma palety — kolor i tak gasi CSS, wiec siegamy po nr 1. */
+  const palette = styleId === '2' ? '2' : '1';
+  const color = ASSETS.find((a) => a.id === 'corp')?.colors[palette].card ?? 'var(--ink)';
+  const locked = styleId === '3';
   const items = grouping === 'Emitenci' ? ISSUERS : SERIES;
 
   return (
@@ -207,7 +209,12 @@ export function AssetDetailScreen({
               </span>
               <span className="crumbs__current">{DETAIL.breadcrumb[2]}</span>
             </nav>
-            <Pills items={DETAIL_CURRENCIES} value={currency} onChange={setCurrency} />
+            <Pills
+              items={DETAIL_CURRENCIES}
+              value={currency}
+              onChange={setCurrency}
+              locked={locked}
+            />
           </div>
 
           <section className="summary">
@@ -221,7 +228,12 @@ export function AssetDetailScreen({
             <div className="panel__head">
               <h2 className="sectionTitle">Instrumenty i pozycje</h2>
               <div className="panel__actions">
-                <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
+                <Pills
+                  items={['Emitenci', 'Serie']}
+                  value={grouping}
+                  onChange={setGrouping}
+                  locked={locked}
+                />
                 <button type="button" className="btnGhost">
                   <span aria-hidden="true">⤢</span> Pełna tabela
                 </button>

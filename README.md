@@ -194,3 +194,25 @@ Dwie decyzje:
 Przy okazji: w Figmie wszystkie trzy karty gotówki mają podpis „Wolna
 gotówka", co wygląda na pomyłkę przy kopiowaniu. W „Łącznie" zostawione 1:1,
 w nowych widokach są poprawne podpisy — do ujednolicenia po Twojej decyzji.
+
+## Makieta (stylistyka nr 3)
+
+Wireframe z Figmy `920:7575` jako trzecia pozycja w przełączniku — żeby na
+jednym kliknięciu pokazać klientowi, co jest układem, a co już decyzją
+wizualną. Ta sama treść i te same dane co w nr 1 i nr 2; różni się wyłącznie
+forma.
+
+- osobny blok tokenów `[data-style='3']`: szarość, płaskie karty, cień
+  zastąpiony cienkim obrysem;
+- kolory pozycji są ustawiane inline przez `--seg`, więc gasi je jedno
+  nadpisanie: `--seg-flat` na `[data-style='3']`, a elementy czytają
+  `var(--seg-flat, var(--seg))`;
+- karta aktywa ma w makiecie inną budowę: kropka przy nazwie, kwota z „≈",
+  wszystkie metryki w szarym pasku i przycisk pod nimi;
+- **pigułki pokazują układ, ale nie przełączają** — makieta jest do
+  oglądania, nie do klikania;
+- makieta nie ma własnej palety: do danych sięga po nr 1, a kolejność pozycji
+  bierze z nr 2. Kolor i tak gaśnie w CSS, więc to tylko detal implementacji.
+
+Dane w wireframie z Figmy są inne niż nasze (Emitenci 5, Serie 9, 7,62%).
+Zostały nasze — przy porównywaniu trzech wersji jedyną zmienną ma być forma.

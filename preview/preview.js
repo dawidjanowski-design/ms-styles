@@ -49,18 +49,27 @@ const CASH_CARDS = [
 
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
-const state = { style: localStorage.getItem("ms-style") === "2" ? "2" : "1", hot: null,
+const saved = localStorage.getItem('ms-style');
+const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '' };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
+/* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
+   Kolejnosc pozycji ma taka jak nr 2. */
+const pal = () => (state.style === '2' ? '2' : '1');
+const ord = () => (state.style === '1' ? '1' : '2');
 const dim = (id) => (state.hot === null ? '' : state.hot === id ? 'is-hot' : 'is-dim');
 const amount = (int, dec, cls = '') =>
   `<div class="amount ${cls}"><span class="amount__int">${int}</span><span class="amount__dec">${dec}</span></div>`;
-const pills = (items, active, group) => `<div class="pills" role="group">${items
-  .map((i) => `<button type="button" data-pill="${group}" data-value="${i}" aria-pressed="${i === active}">${i}</button>`)
-  .join('')}</div>`;
+const pills = (items, active, group) => {
+  const locked = state.style === '3';
+  return `<div class="pills" role="group">${items
+    .map((i) => `<button type="button" ${locked ? '' : `data-pill="${group}" `}data-value="${i}"
+      aria-pressed="${i === active}"${locked ? ' aria-disabled="true"' : ''}>${i}</button>`)
+    .join('')}</div>`;
+};
 const kv = (label, value, px = 0) =>
   `<div class="kv" style="--rowPx:${px}px"><span class="kv__label">${label}</span><span class="kv__value">${value}</span></div>`;
 
@@ -70,7 +79,7 @@ function chart(rows) {
   const total = segs.reduce((acc, a) => acc + a.share, 0);
   return `<div class="chart" data-chart>${segs
     .map((s) => {
-      const c = META[s.id].colors[state.style];
+      const c = META[s.id].colors[pal()];
       return `<button type="button" class="chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dim(s.id)}"
         data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:${c.chart};--seg-foot:${c.chartFoot || c.chart}"
         aria-label="${META[s.id].name}: ${pct(s.share)}">
@@ -82,7 +91,7 @@ function chart(rows) {
 function legendRow(r) {
   const link = DETAIL_ASSETS.has(r.id);
   return `<button type="button" class="legendRow ${dim(r.id)}" data-hot="${r.id}"
-    ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[state.style].legend};cursor:${link ? 'pointer' : 'default'}">
+    ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[pal()].legend};cursor:${link ? 'pointer' : 'default'}">
     <span class="legendRow__dot"></span>
     <span class="legendRow__name">${META[r.id].name}</span>
     <span class="legendRow__share">${pct(r.share)}</span>
@@ -143,7 +152,7 @@ const ACCOUNTS = [
 ];
 
 function accountCard(a) {
-  return `<article class="acctCard" style="--seg:${a.marker[state.style]}">
+  return `<article class="acctCard" style="--seg:${a.marker[pal()]}">
     <div class="acctCard__head"><div class="acctCard__top">
       <div class="acctCard__title">
         <span class="acctCard__dot"></span>
@@ -177,27 +186,31 @@ function accountCard(a) {
 }
 
 function assetCard(a) {
-  const strip = state.style === '1';
-  const rows = strip ? a.rows : [...a.highlights, ...a.rows];
+  const makieta = state.style === '3';
+  const strip = state.style !== '2';
+  const rows = makieta ? [] : strip ? a.rows : [...a.highlights, ...a.rows];
+  const stripItems = makieta ? [...a.rows, ...a.highlights] : a.highlights;
   const link = DETAIL_ASSETS.has(a.id);
-  return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[state.style].card}">
+  return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
         ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
         <span class="assetCard__name">${a.name}</span>
-        ${state.style === '1' ? '<span class="assetCard__dot"></span>' : ''}
+        ${state.style !== '2' ? '<span class="assetCard__dot"></span>' : ''}
       </div>
-      ${amount(a.amount, a.dec, 'assetCard__amount')}
+      ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount')}
     </div>
-    <div class="divider"></div>
-    <div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>
+    ${makieta ? '' : '<div class="divider"></div>'}
+    ${rows.length ? `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>` : ''}
     ${
-      strip && a.highlights.length
-        ? `<div class="strip">${a.highlights
+      strip && stripItems.length
+        ? `<div class="strip">${stripItems
             .map(([l, v]) => `<div class="strip__item"><span class="strip__label">${l}</span><span class="strip__value">${v}</span></div>`)
             .join('')}</div>`
         : ''
-    }</article>`;
+    }
+    ${makieta ? `<div class="assetCard__more"><span class="acctCard__action">Zobacz szczegóły<span>›</span></span></div>` : ''}
+    </article>`;
 }
 
 
@@ -333,7 +346,7 @@ function transactions() {
 
 function detailScreen() {
   const corp = ASSETS.find((a) => a.id === 'corp');
-  const color = corp.colors[state.style].card;
+  const color = corp.colors[pal()].card;
   const items = state.grouping === 'Emitenci' ? ISSUERS : SERIES;
 
   return `<div class="screenOuter"><div class="screen"><div class="content">
@@ -495,7 +508,7 @@ const META = Object.fromEntries([
 
 function ordered(rows) {
   const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
-  const out = LEGEND_ORDER[state.style].map((id) => byId[id]).filter(Boolean);
+  const out = LEGEND_ORDER[ord()].map((id) => byId[id]).filter(Boolean);
   if (byId.cash) out.push(byId.cash);
   return out;
 }
@@ -574,7 +587,7 @@ function dashboardScreen() {
 }
 
 function portfolioScreen() {
-  const titleInSummary = state.style === '1';
+  const titleInSummary = state.style !== '2';
   const title = '<h1 class="pageTitle">Portfel</h1>';
   const data = VIEWS[state.currency];
   return `
@@ -633,7 +646,8 @@ function render() {
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
-      ${['1', '2'].map((id) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">nr ${id}</button>`).join('')}
+      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'Makieta']]
+        .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
 }
 

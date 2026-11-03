@@ -4,7 +4,12 @@ import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
 import { DashboardScreen } from './components/Dashboard';
 
-type StyleId = '1' | '2';
+type StyleId = '1' | '2' | '3';
+const STYLES: { id: StyleId; label: string }[] = [
+  { id: '1', label: 'nr 1' },
+  { id: '2', label: 'nr 2' },
+  { id: '3', label: 'Makieta' },
+];
 /** Pulpit, portfel i klasa aktywów (obligacje korporacyjne). */
 type Screen = { name: 'pulpit' } | { name: 'portfel' } | { name: 'asset'; id: string };
 
@@ -14,7 +19,7 @@ export default function App() {
   const [styleId, setStyleId] = useState<StyleId>(() => {
     try {
       const saved = localStorage.getItem(KEY);
-      return saved === '2' ? '2' : '1';
+      return saved === '2' || saved === '3' ? saved : '1';
     } catch {
       return '1';
     }
@@ -62,14 +67,14 @@ export default function App() {
 
       <div className="styleSwitch" role="group" aria-label="Wybór stylistyki">
         <span>Stylistyka</span>
-        {(['1', '2'] as StyleId[]).map((id) => (
+        {STYLES.map((s) => (
           <button
-            key={id}
+            key={s.id}
             type="button"
-            aria-pressed={styleId === id}
-            onClick={() => setStyleId(id)}
+            aria-pressed={styleId === s.id}
+            onClick={() => setStyleId(s.id)}
           >
-            nr {id}
+            {s.label}
           </button>
         ))}
       </div>

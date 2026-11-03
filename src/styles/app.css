@@ -501,3 +501,65 @@ select.field__control {
   margin: 0; padding-top: 8px; max-width: 620px;
   font-size: 11px; line-height: 16px; color: var(--muted);
 }
+
+/* ================= MAKIETA — warstwa wireframe'u =================
+   Wszystko, co w nr 1 i nr 2 niesie kolor albo materiał, tu znika. */
+
+/* Kolor pozycji ustawiany inline przez --seg ustępuje jednemu odcieniowi. */
+[data-style='3'] .chartSeg__body,
+[data-style='3'] .legendRow__dot,
+[data-style='3'] .assetCard__dot,
+[data-style='3'] .assetCard__bar,
+[data-style='3'] .acctCard__dot,
+[data-style='3'] .instrRow__dot {
+  background: var(--seg-flat);
+}
+[data-style='3'] .chartSeg__foot { display: none; }
+[data-style='3'] .chartSeg--cash .chartSeg__body {
+  background: repeating-linear-gradient(-45deg, #d0d0d0 0 3px, #ededed 3px 7px);
+}
+
+/* Znacznik pozycji w legendzie to w makiecie kropka tekstowa, nie plamka koloru */
+[data-style='3'] .legendRow__dot {
+  width: 3px; height: 3px; background: #9a9a9a;
+}
+[data-style='3'] .legendRow__name { font-size: 11px; font-weight: 400; }
+[data-style='3'] .legendRow__share,
+[data-style='3'] .legendRow__value { font-size: 11px; font-weight: 400; color: var(--muted); }
+[data-style='3'] .legend__cashSub { font-size: 9px; }
+
+/* Pigułki są w makiecie tylko etykietą układu — nie klikają */
+[data-style='3'] .pills button { cursor: default; }
+[data-style='3'] .pills button[aria-pressed='true'] { background: #ffffff; }
+
+/* Karty bez cienia, z cienkim obrysem */
+[data-style='3'] .cashCard__amount .amount__int { font-size: 22px; }
+[data-style='3'] .cashCard__amount .amount__dec { font-size: 17px; }
+[data-style='3'] .cashCard__label { font-size: 12px; }
+
+/* Karta aktywa: nazwa z kropką, kwota z „≈", metryki w szarym pasku,
+   pod nimi przycisk — tak jak na wireframie */
+[data-style='3'] .assetCard { gap: 14px; }
+[data-style='3'] .assetCard__name { font-size: 13px; font-weight: 400; }
+[data-style='3'] .assetCard__dot { width: 4px; height: 4px; background: #8d8d8d; }
+[data-style='3'] .assetCard__title { gap: 8px; flex-direction: row-reverse; justify-content: flex-end; }
+[data-style='3'] .strip {
+  border-radius: 8px; padding: 12px 16px; gap: 28px; flex-wrap: wrap;
+  background: #f4f4f4;
+}
+[data-style='3'] .strip__item { width: auto; min-width: 72px; gap: 4px; }
+[data-style='3'] .strip__label { font-size: 9px; }
+[data-style='3'] .strip__value { font-size: 12px; font-weight: 400; }
+.assetCard__more { display: flex; }
+[data-style='3'] .acctCard__name { font-weight: 400; }
+
+/* Na wireframie przełącznik stoi nad tytułem sekcji, nie obok niego */
+[data-style='3'] .assets__head {
+  flex-direction: column-reverse; align-items: flex-start;
+  gap: 12px; height: auto;
+}
+[data-style='3'] .offers__head { align-items: flex-start; }
+
+/* Logo emitentów to jedyny kolor, jaki zostawał na pulpicie w makiecie */
+[data-style='3'] .offerCard__logo { filter: grayscale(1); opacity: 0.6; }
+[data-style='3'] .offerCard__rate { font-weight: 400; }

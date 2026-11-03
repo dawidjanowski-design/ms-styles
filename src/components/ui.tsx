@@ -22,10 +22,13 @@ export function Pills({
   items,
   value,
   onChange,
+  /** w makiecie pigułki pokazują układ, ale nie przełączają */
+  locked = false,
 }: {
   items: readonly string[];
   value: string;
   onChange: (v: string) => void;
+  locked?: boolean;
 }) {
   return (
     <div className="pills" role="group">
@@ -34,7 +37,8 @@ export function Pills({
           key={it}
           type="button"
           aria-pressed={it === value}
-          onClick={() => onChange(it)}
+          aria-disabled={locked || undefined}
+          onClick={locked ? undefined : () => onChange(it)}
         >
           {it}
         </button>

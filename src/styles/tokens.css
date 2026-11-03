@@ -155,3 +155,69 @@
   --c-cash: #9ec421;
   --c-cash-bg: #f2f5e3;
 }
+
+/* ====================== MAKIETA (stylistyka 3) ======================
+   Wireframe z Figmy 920:7575. Ta sama treść co w nr 1 i nr 2, tylko bez
+   koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,
+   co jest układem, a co już decyzją wizualną. */
+[data-style='3'] {
+  --page-bg: #f2f2f2;
+  --screen-bg: #f6f6f6;
+  --screen-border: #e8e8e8;
+
+  --ink: #343434;
+  --muted: #8d8d8d;
+  --legend-name: #4a4a4d;
+
+  --title-size: 24px;
+  --title-weight: 500;
+  --title-color: var(--ink);
+  --title-tracking: -0.01em;
+
+  --summary-pt: 0px;
+  --summary-gap: 0px;
+  --summary-top-gap: 16px;
+  --title-amount-gap: 10px;
+  --legend-pt: 18px;
+  --legend-gap: 4px;
+  --cash-pt: 28px;
+
+  --amount-size: 26px;
+  --amount-decimals: 19px;
+
+  --pill-track-bg: #ececec;
+  --pill-track-pad: 2px;
+  --pill-h: 26px;
+  --pill-px: 12px;
+  --pill-gap: 2px;
+  --pill-size: 11px;
+  --pill-active-color: #3a3a3a;
+
+  --section-title-size: 12px;
+  --section-title-color: #7a7a7a;
+  --section-title-tracking: 0;
+
+  --bar-h: 36px;
+  --bar-gap: 4px;
+  --bar-radius: 3px;
+  --bar-foot-h: 0px;
+  --bar-fill-alpha: 1;
+
+  --asset-card-pad: 18px;
+  --asset-head-px: 0px;
+  --asset-row-px: 0px;
+  --asset-value-size: 15px;
+  --asset-value-decimals: 15px;
+
+  /* Jeden odcień zamiast palety — tym jednym nadpisaniem gasną wszystkie
+     kolory ustawiane inline przez --seg. */
+  --seg-flat: #d6d6d6;
+
+  --card-bg: #ffffff;
+  --card-radius: 10px;
+  --divider: #ededed;
+  --shadow-card: 0 0 0 1px #ececec;
+  --shadow-pill: 0 0 0 1px #e2e2e2;
+  --shadow-track: 0 0 0 1px #e6e6e6;
+  --c-cash-bg: #ededed;
+}

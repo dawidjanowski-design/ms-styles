@@ -4,7 +4,7 @@ import { VIEWS } from '../data/currencies';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2';
+type StyleId = '1' | '2' | '3';
 
 function OfferCard({ offer }: { offer: Offer }) {
   return (

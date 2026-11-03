@@ -16,7 +16,11 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 
-type StyleId = '1' | '2';
+type StyleId = '1' | '2' | '3';
+/** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
+const paletteOf = (s: StyleId): '1' | '2' => (s === '2' ? '2' : '1');
+/** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
+const orderOf = (s: StyleId): '1' | '2' => (s === '1' ? '1' : '2');
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -35,7 +39,7 @@ const META: Record<string, { name: string; colors: Record<'1' | '2', Palette> }>
 function ordered(rows: AllocationRow[], styleId: StyleId): AllocationRow[] {
   const byId = new Map(rows.map((r) => [r.id, r]));
   const out: AllocationRow[] = [];
-  for (const id of LEGEND_ORDER[styleId]) {
+  for (const id of LEGEND_ORDER[orderOf(styleId)]) {
     const row = byId.get(id);
     if (row) out.push(row);
   }
@@ -60,7 +64,7 @@ export function AllocationChart({
   return (
     <div className="chart" onMouseLeave={() => setHot(null)}>
       {segments.map((s) => {
-        const c = META[s.id].colors[styleId];
+        const c = META[s.id].colors[paletteOf(styleId)];
         return (
           <button
             key={s.id}
@@ -142,7 +146,7 @@ export function Legend({
     <LegendRow
       key={r.id}
       id={r.id}
-      color={META[r.id].colors[styleId].legend}
+      color={META[r.id].colors[paletteOf(styleId)].legend}
       name={META[r.id].name}
       share={pct(r.share)}
       value={r.value}
@@ -207,40 +211,56 @@ function AssetCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
-  const strip = styleId === '1';
-  const rows = strip ? asset.rows : [...asset.highlights, ...asset.rows];
+  const makieta = styleId === '3';
+  const strip = styleId !== '2';
+  const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
+  const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
 
   return (
     <article
       className={`assetCard ${onOpen ? 'assetCard--link' : ''}`}
-      style={{ ['--seg' as string]: asset.colors[styleId].card }}
+      style={{ ['--seg' as string]: asset.colors[paletteOf(styleId)].card }}
       onClick={onOpen}
     >
       <div className="assetCard__head">
         <div className="assetCard__title">
           {styleId === '2' && <span className="assetCard__bar" />}
           <span className="assetCard__name">{asset.name}</span>
-          {styleId === '1' && <span className="assetCard__dot" />}
+          {styleId !== '2' && <span className="assetCard__dot" />}
         </div>
-        <Amount int={asset.amount} dec={asset.amountDecimals} className="assetCard__amount" />
+        <Amount
+          int={makieta ? `≈ ${asset.amount}` : asset.amount}
+          dec={asset.amountDecimals}
+          className="assetCard__amount"
+        />
       </div>
 
-      <div className="divider" />
+      {!makieta && <div className="divider" />}
 
-      <div className="assetCard__rows">
-        {rows.map((r) => (
-          <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
-        ))}
-      </div>
+      {rows.length > 0 && (
+        <div className="assetCard__rows">
+          {rows.map((r) => (
+            <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
+          ))}
+        </div>
+      )}
 
-      {strip && asset.highlights.length > 0 && (
+      {strip && stripItems.length > 0 && (
         <div className="strip">
-          {asset.highlights.map((h) => (
+          {stripItems.map((h) => (
             <div className="strip__item" key={h.label}>
               <span className="strip__label">{h.label}</span>
               <span className="strip__value">{h.value}</span>
             </div>
           ))}
+        </div>
+      )}
+
+      {makieta && (
+        <div className="assetCard__more">
+          <span className="acctCard__action">
+            Zobacz szczegóły<span aria-hidden="true">›</span>
+          </span>
         </div>
       )}
     </article>
@@ -251,7 +271,7 @@ function AssetCard({
 
 function AccountCard({ account, styleId }: { account: Account; styleId: StyleId }) {
   return (
-    <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[styleId] }}>
+    <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
       <div className="acctCard__head">
         <div className="acctCard__top">
           <div className="acctCard__title">
@@ -329,7 +349,7 @@ export function PortfolioScreen({
   const [hot, setHot] = useState<string | null>(null);
 
   const data = VIEWS[currency];
-  const titleInSummary = styleId === '1';
+  const titleInSummary = styleId !== '2';
   const title = <h1 className="pageTitle">Portfel</h1>;
 
   return (
@@ -348,6 +368,7 @@ export function PortfolioScreen({
                     items={CURRENCIES}
                     value={currency}
                     onChange={(v) => setCurrency(v as Currency)}
+                    locked={styleId === '3'}
                   />
                 </div>
               </div>
@@ -375,7 +396,12 @@ export function PortfolioScreen({
               <h2 className="sectionTitle">
                 {view === 'Aktywa' ? 'Struktura aktywów' : 'Struktura rachunków'}
               </h2>
-              <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={setView} />
+              <Pills
+                items={['Aktywa', 'Rachunki']}
+                value={view}
+                onChange={setView}
+                locked={styleId === '3'}
+              />
             </div>
             <div className="assets__list">
               {view === 'Aktywa'
