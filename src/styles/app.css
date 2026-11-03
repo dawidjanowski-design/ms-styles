@@ -681,3 +681,17 @@ select.field__control {
 .cashCard--link { cursor: pointer; text-align: left; width: 100%; }
 .cashCard__head { display: flex; align-items: center; gap: 10px; }
 .cashCard__chev { font-size: 13px; color: var(--muted); }
+
+/* Nagłówek ekranu klasy aktywów — tytuł i wartość w przeciwnych rogach,
+   tak jak na wireframie 909:978. */
+.detailHead {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+}
+.detailTitle {
+  margin: 0; font-size: 28px; font-weight: var(--title-weight);
+  letter-spacing: -0.02em; line-height: 36px; color: var(--ink);
+}
+.detailValue { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.detailValue__label { font-size: 13px; color: var(--muted); }
+.detailValue .amount__int { font-size: 22px; }
+.detailValue .amount__dec { font-size: 17px; }

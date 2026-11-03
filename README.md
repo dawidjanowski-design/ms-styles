@@ -111,12 +111,14 @@ Co działa naprawdę: przełącznik Emitenci/Serie, zakładki transakcji
 typu transakcji i wyszukiwarka instrumentu. Licznik „X z 68" przelicza się
 wraz z filtrami.
 
+Nagłówek trzyma układ z wireframe'u: tytuł w lewym rogu, blok „Wartość"
+z kwotą w prawym, oba wyrównane do tej samej linii bazowej.
+
 Decyzje przy przenoszeniu wireframe'u na stylistykę nr 1:
 
 | Wireframe | Prototyp | Dlaczego |
 |---|---|---|
 | Karty z obrysem `#ebebeb`, radius 12 | białe karty, radius 16, `--shadow-card` | ten sam materiał co karty na pulpicie portfela |
-| H1 28px + blok „Wartość" po prawej | tytuł 18px + kwota 30px pod nim | układ nagłówka taki sam jak na ekranie Portfel |
 | Chipy rachunków `#292929` / `#f0f0f0` | `--pill-active-color` / `--pill-track-bg` | kolory przełączają się razem ze stylistyką |
 | Nazwa instrumentu 12px | 14px | spójnie z wierszami pozycji na kartach rachunków |
 

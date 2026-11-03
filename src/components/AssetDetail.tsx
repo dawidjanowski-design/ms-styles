@@ -223,9 +223,11 @@ export function AssetDetailScreen({
             />
           </div>
 
-          <section className="summary">
-            <div className="summary__titleBlock">
-              <h1 className="pageTitle">{DETAIL.title}</h1>
+          {/* Tytul i wartosc w przeciwnych rogach, tak jak na wireframie. */}
+          <section className="detailHead">
+            <h1 className="detailTitle">{DETAIL.title}</h1>
+            <div className="detailValue">
+              <span className="detailValue__label">Wartość</span>
               <Amount int={DETAIL.amount} dec={DETAIL.amountDecimals} />
             </div>
           </section>

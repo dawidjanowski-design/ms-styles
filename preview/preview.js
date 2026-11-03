@@ -391,10 +391,13 @@ function detailScreen() {
       ${pills(DETAIL_CURRENCIES, state.detailCurrency, 'detailCurrency')}
     </div>
 
-    <section class="summary"><div class="summary__titleBlock">
-      <h1 class="pageTitle">${DETAIL.title}</h1>
-      ${amount(DETAIL.amount, DETAIL.dec, '', 'detal-suma')}
-    </div></section>
+    <section class="detailHead">
+      <h1 class="detailTitle">${DETAIL.title}</h1>
+      <div class="detailValue">
+        <span class="detailValue__label">Wartość</span>
+        ${amount(DETAIL.amount, DETAIL.dec, '', 'detal-suma')}
+      </div>
+    </section>
 
     <section class="panel">
       <div class="panel__head">
