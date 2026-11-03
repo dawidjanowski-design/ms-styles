@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { DASHBOARD, EVENTS, OFFERS, type Offer } from '../data/dashboard';
-import { TOTAL } from '../data/portfolio';
+import { VIEWS } from '../data/currencies';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
@@ -41,6 +41,8 @@ export function DashboardScreen({
   onOpenPortfolio: () => void;
 }) {
   const [hot, setHot] = useState<string | null>(null);
+  /* Pulpit pokazuje zawsze widok „Łącznie" — przelacznik walut jest w Portfelu. */
+  const total = VIEWS['Łącznie'];
   const track = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: -1 | 1) => {
@@ -59,7 +61,7 @@ export function DashboardScreen({
             <div className="dashHead">
               <div className="summary__titleBlock">
                 <span className="dashHead__label">{DASHBOARD.label}</span>
-                <Amount int={TOTAL.amount} dec={DASHBOARD.amountDecimals} />
+                <Amount int={total.total} dec={total.decimals} />
               </div>
               <button type="button" className="btnGhost btnGhost--lg" onClick={onOpenPortfolio}>
                 {DASHBOARD.action}
@@ -67,9 +69,14 @@ export function DashboardScreen({
               </button>
             </div>
             <div className="dashChart">
-              <AllocationChart styleId={styleId} hot={hot} setHot={setHot} />
+              <AllocationChart
+                rows={total.allocation}
+                styleId={styleId}
+                hot={hot}
+                setHot={setHot}
+              />
             </div>
-            <Legend styleId={styleId} hot={hot} setHot={setHot} />
+            <Legend rows={total.allocation} styleId={styleId} hot={hot} setHot={setHot} />
           </section>
 
           <section className="offers">

@@ -64,44 +64,46 @@ const pills = (items, active, group) => `<div class="pills" role="group">${items
 const kv = (label, value, px = 0) =>
   `<div class="kv" style="--rowPx:${px}px"><span class="kv__label">${label}</span><span class="kv__value">${value}</span></div>`;
 
-function chart() {
-  const byId = Object.fromEntries(ASSETS.map((a) => [a.id, a]));
-  const segs = [...LEGEND_ORDER[state.style].map((id) => byId[id]), CASH];
-  const total = segs.reduce((s, a) => s + a.share, 0);
+
+function chart(rows) {
+  const segs = ordered(rows);
+  const total = segs.reduce((acc, a) => acc + a.share, 0);
   return `<div class="chart" data-chart>${segs
-    .map(
-      (s) => `<button type="button" class="chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dim(s.id)}"
-        data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:${s.colors[state.style].chart};--seg-foot:${s.colors[state.style].chartFoot || s.colors[state.style].chart}"
-        aria-label="${s.name}: ${pct(s.share)}">
-        <span class="chartSeg__body"></span><span class="chartSeg__foot"></span></button>`
-    )
+    .map((s) => {
+      const c = META[s.id].colors[state.style];
+      return `<button type="button" class="chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dim(s.id)}"
+        data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:${c.chart};--seg-foot:${c.chartFoot || c.chart}"
+        aria-label="${META[s.id].name}: ${pct(s.share)}">
+        <span class="chartSeg__body"></span><span class="chartSeg__foot"></span></button>`;
+    })
     .join('')}</div>`;
 }
 
-function legendRow(a) {
-  const link = DETAIL_ASSETS.has(a.id);
-  return `<button type="button" class="legendRow ${dim(a.id)}" data-hot="${a.id}"
-    ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[state.style].legend};cursor:${link ? 'pointer' : 'default'}">
+function legendRow(r) {
+  const link = DETAIL_ASSETS.has(r.id);
+  return `<button type="button" class="legendRow ${dim(r.id)}" data-hot="${r.id}"
+    ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[state.style].legend};cursor:${link ? 'pointer' : 'default'}">
     <span class="legendRow__dot"></span>
-    <span class="legendRow__name">${a.name}</span>
-    <span class="legendRow__share">${pct(a.share)}</span>
-    <span class="legendRow__value">${a.legendValue}</span></button>`;
+    <span class="legendRow__name">${META[r.id].name}</span>
+    <span class="legendRow__share">${pct(r.share)}</span>
+    <span class="legendRow__value">${r.value}</span></button>`;
 }
 
-function legend() {
-  const byId = Object.fromEntries(ASSETS.map((a) => [a.id, a]));
+function legend(rows) {
+  const all = ordered(rows);
+  const cashRow = all.find((r) => r.id === 'cash');
   return `<div class="legend">
-    <div class="legend__rows">${LEGEND_ORDER[state.style].map((id) => legendRow(byId[id])).join('')}</div>
-    <div class="legend__cash"><div class="legend__cashInner">
-      ${legendRow(CASH)}
-      <div class="legend__cashSub ${dim('cash')}">${CASH.sub}</div>
-    </div></div></div>`;
+    <div class="legend__rows">${all.filter((r) => r.id !== 'cash').map(legendRow).join('')}</div>
+    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner">
+      ${legendRow(cashRow)}
+      ${cashRow.sub ? `<div class="legend__cashSub ${dim('cash')}">${cashRow.sub}</div>` : ''}
+    </div></div>` : ''}</div>`;
 }
 
-function cash() {
+function cash(cards) {
   return `<section class="cash">
     <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
-    <div class="cash__grid">${CASH_CARDS.map(
+    <div class="cash__grid">${cards.map(
       (c) => `<article class="cashCard">
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="cashCard__label">${c.label}</span>
@@ -375,6 +377,129 @@ function detailScreen() {
 }
 
 
+/* ---------------- przelacznik walut (patrz src/data/currencies.ts) ----------------
+   To nie jest przeliczanie jednego portfela po kursie: kazda zakladka to osobny
+   zestaw rachunkow prowadzonych w danej walucie. Tylko „Lacznie" sumuje wszystko
+   do jednej liczby, bo taka suma musi byc w jakiejs walucie. */
+
+const asset = (id, over) => Object.assign({}, ASSETS.find((a) => a.id === id), over);
+/* W widoku jednowalutowym kolumna PLN/EUR/USD nie niesie nic poza myslnikami,
+   wiec karty gotowki pokazuja rozbicie na rachunki. */
+const onAccount = (name, value) => [[name, value]];
+
+const PLN_ASSETS = [
+  asset('corp', { share: 39.6, amount: '1 420 000', legendValue: '1 420 000 PLN' }),
+  asset('skarb', { share: 8.8 }),
+  asset('am', { share: 23.5 }),
+  asset('fio', { share: 16.5 }),
+  asset('fiz', { share: 6.2, amount: '221 864', legendValue: '221 864 PLN' }),
+];
+
+const EUR_ASSETS = [
+  asset('corp', { share: 80.5, amount: '200 000', dec: ',00 EUR', legendValue: '200 000 EUR',
+    rows: [['Emitent', '1'], ['Serie', '1']],
+    highlights: [['Śr. rentowność (ważona)', '5,10%'], ['Wypłacone odsetki 12M', '9 800 EUR'],
+                 ['Śr. oprocentowanie', '4,90%'], ['Najbliższy wykup', '12.09.2028']] }),
+  asset('fiz', { share: 14.7, amount: '36 400', dec: ',00 EUR', legendValue: '36 400 EUR',
+    rows: [['Fundusze', '1'], ['Najbliższe okno umorzenia', '31.12.2026']],
+    highlights: [['Stopa zwrotu 12M', '+3,40%'], ['Wynik od zakupu', '+1 180 EUR']] }),
+];
+
+const USD_ASSETS = [
+  asset('corp', { share: 78.7, amount: '48 000', dec: ',00 USD', legendValue: '48 000 USD',
+    rows: [['Emitent', '1'], ['Serie', '1']],
+    highlights: [['Śr. rentowność (ważona)', '6,20%'], ['Wypłacone odsetki 12M', '2 980 USD'],
+                 ['Śr. oprocentowanie', '6,00%'], ['Najbliższy wykup', '30.06.2029']] }),
+];
+
+const alloc = (list, cashRow) =>
+  [...list.map((a) => ({ id: a.id, share: a.share, value: a.legendValue })), cashRow];
+
+const VIEWS = {
+  'Łącznie': {
+    total: TOTAL.amount, dec: TOTAL.decimals,
+    note: 'Suma w PLN. Pozycje w EUR i USD przeliczone kursem NBP z 3.11.2026 — to jedyne miejsce w portfelu, w którym pojawia się przeliczenie.',
+    allocation: alloc(ASSETS, { id: 'cash', share: CASH.share, value: CASH.legendValue, sub: CASH.sub }),
+    cashCards: CASH_CARDS, assets: ASSETS, accounts: ACCOUNTS,
+  },
+  PLN: {
+    total: '3 586 420', dec: ',00 PLN',
+    allocation: alloc(PLN_ASSETS, { id: 'cash', share: 5.4, value: '193 820 PLN',
+      sub: 'Wolna 150 000 PLN · Zablokowana 25 000 PLN · W drodze 18 820 PLN' }),
+    cashCards: [
+      { label: 'Wolna gotówka', amount: '150 000', dec: ',00 PLN',
+        rows: [['Rachunek maklerski', '40 000,00'], ['Rachunek żony', '110 000,00']] },
+      { label: 'Zablokowana', amount: '25 000', dec: ',00 PLN',
+        rows: [['Rachunek maklerski', '11 128,00'], ['Rachunek żony', '13 872,00']] },
+      { label: 'W drodze', amount: '18 820', dec: ',00 PLN',
+        rows: [['Rachunek maklerski', '0,00'], ['Rachunek żony', '18 820,00']] },
+    ],
+    assets: PLN_ASSETS,
+    accounts: [
+      { id: 'maklerski', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski',
+        number: '00-00-006858', amount: '2 200 000', dec: ',00 PLN', rowsLabel: 'Pozycje',
+        action: 'Zobacz szczegóły',
+        rows: [['Obligacje korporacyjne', '1 420 000,00 PLN'], ['Obligacje skarbowe', '316 398,00 PLN'],
+               ['Fundusze zamknięte (FIZ)', '221 864,00 PLN'], ['Fundusze otwarte (FIO)', '190 610,00 PLN'],
+               ['Wolne środki', '51 128,00 PLN']] },
+      { id: 'ike', marker: { '1': '#ef4444', '2': '#11aebd' }, name: 'IKE', number: '00-00-007431',
+        amount: '400 000', dec: ',00 PLN', rowsLabel: 'Papiery', action: 'Zobacz szczegóły',
+        strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
+        rows: [['Fundusze otwarte (FIO)', '400 000,00 PLN']] },
+      { id: 'am', marker: { '1': '#9ec421', '2': '#9ec421' }, name: 'AM strategia konserwatywna',
+        number: '00-00-008801', amount: '843 728', dec: ',00 PLN', rows: [], action: 'Zobacz szczegóły' },
+      { id: 'zony', marker: { '1': '#0a21c8', '2': '#0a21c8' }, name: 'Rachunek żony',
+        number: '00-00-009120', amount: '142 692', dec: ',00 PLN', rowsLabel: 'Pozycje',
+        action: 'Zobacz szczegóły', rows: [['Wolne środki', '142 692,00 PLN']] },
+    ],
+  },
+  EUR: {
+    total: '248 400', dec: ',00 EUR',
+    allocation: alloc(EUR_ASSETS, { id: 'cash', share: 4.8, value: '12 000 EUR', sub: 'Wolna 12 000 EUR' }),
+    cashCards: [
+      { label: 'Wolna gotówka', amount: '12 000', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '12 000,00') },
+      { label: 'Zablokowana', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+      { label: 'W drodze', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+    ],
+    assets: EUR_ASSETS,
+    accounts: [
+      { id: 'maklerski-eur', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski EUR',
+        number: '00-00-006858/EUR', amount: '248 400', dec: ',00 EUR', rowsLabel: 'Pozycje',
+        action: 'Zobacz szczegóły',
+        rows: [['Obligacje korporacyjne', '200 000,00 EUR'], ['Fundusze zamknięte (FIZ)', '36 400,00 EUR'],
+               ['Wolne środki', '12 000,00 EUR']] },
+    ],
+  },
+  USD: {
+    total: '61 000', dec: ',00 USD',
+    allocation: alloc(USD_ASSETS, { id: 'cash', share: 21.3, value: '13 000 USD', sub: 'Wolna 13 000 USD' }),
+    cashCards: [
+      { label: 'Wolna gotówka', amount: '13 000', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '13 000,00') },
+      { label: 'Zablokowana', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+      { label: 'W drodze', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+    ],
+    assets: USD_ASSETS,
+    accounts: [
+      { id: 'maklerski-usd', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski USD',
+        number: '00-00-006858/USD', amount: '61 000', dec: ',00 USD', rowsLabel: 'Pozycje',
+        action: 'Zobacz szczegóły',
+        rows: [['Obligacje korporacyjne', '48 000,00 USD'], ['Wolne środki', '13 000,00 USD']] },
+    ],
+  },
+};
+
+const META = Object.fromEntries([
+  ...ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }]),
+  ['cash', { name: CASH.name, colors: CASH.colors }],
+]);
+
+function ordered(rows) {
+  const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
+  const out = LEGEND_ORDER[state.style].map((id) => byId[id]).filter(Boolean);
+  if (byId.cash) out.push(byId.cash);
+  return out;
+}
+
 /* ---------------- pulpit (Figma 920:7375) ---------------- */
 
 const DASHBOARD = { label: 'Twoje aktywa na wszystkich rachunkach',
@@ -405,13 +530,13 @@ function dashboardScreen() {
       <div class="dashHead">
         <div class="summary__titleBlock">
           <span class="dashHead__label">${DASHBOARD.label}</span>
-          ${amount(TOTAL.amount, DASHBOARD.dec)}
+          ${amount(VIEWS['Łącznie'].total, VIEWS['Łącznie'].dec)}
         </div>
         <button type="button" class="btnGhost btnGhost--lg" data-goto="portfel">
           ${DASHBOARD.action}<span>›</span></button>
       </div>
-      <div class="dashChart">${chart()}</div>
-      ${legend()}
+      <div class="dashChart">${chart(VIEWS['Łącznie'].allocation)}</div>
+      ${legend(VIEWS['Łącznie'].allocation)}
     </section>
 
     <section class="offers">
@@ -451,6 +576,7 @@ function dashboardScreen() {
 function portfolioScreen() {
   const titleInSummary = state.style === '1';
   const title = '<h1 class="pageTitle">Portfel</h1>';
+  const data = VIEWS[state.currency];
   return `
     <div class="screenOuter"><div class="screen"><div class="content">
       ${titleInSummary ? '' : title}
@@ -459,15 +585,16 @@ function portfolioScreen() {
           <div class="summary__titleBlock">
             ${titleInSummary ? title : ''}
             <div class="summary__head">
-              ${amount(TOTAL.amount, TOTAL.decimals)}
+              ${amount(data.total, data.dec)}
               ${pills(CURRENCIES, state.currency, 'currency')}
             </div>
           </div>
-          ${chart()}
+          ${data.note ? `<p class="summary__note">${data.note}</p>` : ''}
+          ${chart(data.allocation)}
         </div>
-        ${legend()}
+        ${legend(data.allocation)}
       </section>
-      ${cash()}
+      ${cash(data.cashCards)}
       <section class="assets">
         <div class="assets__head">
           <h2 class="sectionTitle">${state.view === 'Aktywa' ? 'Struktura aktywów' : 'Struktura rachunków'}</h2>
@@ -475,8 +602,8 @@ function portfolioScreen() {
         </div>
         <div class="assets__list">${
           state.view === 'Aktywa'
-            ? ASSETS.map(assetCard).join('')
-            : ACCOUNTS.map(accountCard).join('')
+            ? data.assets.map(assetCard).join('')
+            : data.accounts.map(accountCard).join('')
         }</div>
       </section>
     </div></div></div>

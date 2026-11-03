@@ -22,10 +22,10 @@ export type Event = {
   amount: string;
 };
 
+/* Kwota nie jest tutaj — pulpit bierze ją z widoku „Łącznie" w currencies.ts,
+   zeby ta sama liczba nie zyla w dwoch miejscach. */
 export const DASHBOARD = {
   label: 'Twoje aktywa na wszystkich rachunkach',
-  amount: '4 218 640',
-  amountDecimals: ',00 PLN',
   action: 'Przejdź do portfela',
 };
 

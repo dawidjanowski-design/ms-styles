@@ -495,3 +495,9 @@ select.field__control {
 /* Rozmiar bierze się z atrybutow width/height przy <img> — zadnego auto,
    bo auto kazaloby przegladarce uzyc natywnych 3x pikseli. */
 .offerCard__logo { display: block; }
+
+/* Przypis pod sumą — tylko w widoku „Łącznie" na ekranie Portfel. */
+.summary__note {
+  margin: 0; padding-top: 8px; max-width: 620px;
+  font-size: 11px; line-height: 16px; color: var(--muted);
+}

@@ -161,3 +161,36 @@ Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
 `preview/logos`) i są podpięte w `src/data/dashboard.ts`. Pliki mają gęstość 3x i są
 skalowane w dół do rozmiaru z `width`/`height`, więc zostają ostre także na
 ekranach retina. Oferta bez pola `logo` renderuje nazwę emitenta tekstem.
+
+## Przełącznik walutowy na Portfelu
+
+`src/data/currencies.ts`. **To nie jest przeliczanie jednego portfela po
+kursie** — każda zakładka to osobny zestaw rachunków prowadzonych w danej
+walucie. Przełączenie zmienia sumę, wykres, legendę, gotówkę, karty aktywów
+i rachunki naraz.
+
+| | suma | klasy aktywów | rachunki |
+|---|---|---|---|
+| Łącznie | 4 218 640,00 PLN | 5 + gotówka | 6 |
+| PLN | 3 586 420,00 PLN | 5 + gotówka | 4 |
+| EUR | 248 400,00 EUR | korpo + FIZ + gotówka | 1 |
+| USD | 61 000,00 USD | korpo + gotówka | 1 |
+
+Scenariusz jest policzony tak, żeby wszystko się spinało: udziały w każdym
+widoku sumują się do 100,0%, pozycje na rachunkach sumują się do salda
+rachunku, a salda rachunków do sumy widoku. W PLN gotówka 193 820 rozkłada
+się na wolną/zablokowaną/w drodze i jednocześnie na dwa rachunki — obie
+siatki się zgadzają.
+
+Dwie decyzje:
+
+- **„Łącznie" ma przypis o kursie NBP.** Jedna suma musi być w jednej
+  walucie, więc to jedyne miejsce w portfelu, gdzie w ogóle pojawia się
+  przeliczenie. Zakładki PLN/EUR/USD nie przeliczają niczego.
+- **W widokach jednowalutowych karty gotówki pokazują rozbicie na rachunki**,
+  a nie kolumnę PLN/EUR/USD — ta w widoku EUR czy USD byłaby kolumną
+  myślników. W „Łącznie" kolumna walut zostaje, bo tam niesie treść.
+
+Przy okazji: w Figmie wszystkie trzy karty gotówki mają podpis „Wolna
+gotówka", co wygląda na pomyłkę przy kopiowaniu. W „Łącznie" zostawione 1:1,
+w nowych widokach są poprawne podpisy — do ujednolicenia po Twojej decyzji.
