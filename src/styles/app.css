@@ -561,3 +561,29 @@ select.field__control {
 /* Logo emitentów to jedyny kolor, jaki zostawał na pulpicie w makiecie */
 [data-style='3'] .offerCard__logo { filter: grayscale(1); opacity: 0.6; }
 [data-style='3'] .offerCard__rate { font-weight: 400; }
+
+/* ---------------- licznik kwoty ----------------
+   Znak, ktory sie zmienil, wyjezdza w gore, a nowy wjezdza z dolu.
+   Wychodzacy jest wyjety z ukladu, wiec nic nie przeskakuje. */
+.amount { font-variant-numeric: tabular-nums; }
+.amount__int, .amount__dec { display: inline-flex; white-space: pre; }
+.roll { position: relative; display: inline-block; }
+.roll__out {
+  position: absolute; left: 0; top: 0; width: 100%;
+  animation: rollOut 320ms var(--ease) both;
+}
+.roll__in { display: inline-block; animation: rollIn 320ms var(--ease) both; }
+
+@keyframes rollOut {
+  from { transform: none; opacity: 1; }
+  to { transform: translateY(-0.7em); opacity: 0; }
+}
+@keyframes rollIn {
+  from { transform: translateY(0.7em); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll__out { display: none; }
+  .roll__in { animation: none; }
+}

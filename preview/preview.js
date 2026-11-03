@@ -53,7 +53,8 @@ const saved = localStorage.getItem('ms-style');
 const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
-  txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '' };
+  txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
+  lastAmounts: {} };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
@@ -61,8 +62,27 @@ const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 const pal = () => (state.style === '2' ? '2' : '1');
 const ord = () => (state.style === '1' ? '1' : '2');
 const dim = (id) => (state.hot === null ? '' : state.hot === id ? 'is-hot' : 'is-dim');
-const amount = (int, dec, cls = '') =>
-  `<div class="amount ${cls}"><span class="amount__int">${int}</span><span class="amount__dec">${dec}</span></div>`;
+/* Licznik kwoty. Wersja preview przerysowuje cala strone, wiec poprzednia
+   wartosc trzymamy w state.lastAmounts pod kluczem danego miejsca na ekranie —
+   dzieki temu wiemy, ktore znaki naprawde sie zmienily. */
+function roll(text, key) {
+  const prev = state.lastAmounts[key];
+  state.lastAmounts[key] = text;
+  const was = prev === undefined ? null : [...prev];
+  return [...text]
+    .map((ch, i) => {
+      const old = was ? was[i] : ch;
+      const changed = was !== null && old !== ch;
+      const delay = `animation-delay:${i * 18}ms`;
+      return `<span class="roll">${
+        changed ? `<span class="roll__out" aria-hidden="true" style="${delay}">${old === undefined ? '' : old}</span>` : ''
+      }<span class="${changed ? 'roll__in' : ''}" style="${changed ? delay : ''}">${ch}</span></span>`;
+    })
+    .join('');
+}
+
+const amount = (int, dec, cls = '', key = '') =>
+  `<div class="amount ${cls}"><span class="amount__int">${roll(int, key + '|int')}</span><span class="amount__dec">${roll(dec, key + '|dec')}</span></div>`;
 const pills = (items, active, group) => {
   const locked = state.style === '3';
   return `<div class="pills" role="group">${items
@@ -113,10 +133,10 @@ function cash(cards) {
   return `<section class="cash">
     <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
     <div class="cash__grid">${cards.map(
-      (c) => `<article class="cashCard">
+      (c, i) => `<article class="cashCard">
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="cashCard__label">${c.label}</span>
-          ${amount(c.amount, c.dec, 'cashCard__amount')}
+          ${amount(c.amount, c.dec, 'cashCard__amount', 'gotowka-' + i)}
         </div>
         <div class="divider"></div>
         <div style="display:flex;flex-direction:column;gap:4px">
@@ -159,7 +179,7 @@ function accountCard(a) {
         <span class="acctCard__name">${a.name}</span>
         <span class="acctCard__number">· ${a.number}</span>
       </div>
-      ${amount(a.amount, a.dec, 'acctCard__amount')}
+      ${amount(a.amount, a.dec, 'acctCard__amount', 'rachunek-' + a.id)}
     </div></div>
     ${a.strip ? `<div class="acctCard__limit">
         <span class="acctCard__limitLabel">${a.strip.label}</span>
@@ -198,7 +218,7 @@ function assetCard(a) {
         <span class="assetCard__name">${a.name}</span>
         ${state.style !== '2' ? '<span class="assetCard__dot"></span>' : ''}
       </div>
-      ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount')}
+      ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
     ${rows.length ? `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>` : ''}
@@ -363,7 +383,7 @@ function detailScreen() {
 
     <section class="summary"><div class="summary__titleBlock">
       <h1 class="pageTitle">${DETAIL.title}</h1>
-      ${amount(DETAIL.amount, DETAIL.dec)}
+      ${amount(DETAIL.amount, DETAIL.dec, '', 'detal-suma')}
     </div></section>
 
     <section class="panel">
@@ -542,7 +562,7 @@ function dashboardScreen() {
       <div class="dashHead">
         <div class="summary__titleBlock">
           <span class="dashHead__label">${DASHBOARD.label}</span>
-          ${amount(VIEWS['Łącznie'].total, VIEWS['Łącznie'].dec)}
+          ${amount(VIEWS['Łącznie'].total, VIEWS['Łącznie'].dec, '', 'pulpit-suma')}
         </div>
         <button type="button" class="btnGhost btnGhost--lg" data-goto="portfel">
           ${DASHBOARD.action}<span>›</span></button>
@@ -597,7 +617,7 @@ function portfolioScreen() {
           <div class="summary__titleBlock">
             ${titleInSummary ? title : ''}
             <div class="summary__head">
-              ${amount(data.total, data.dec)}
+              ${amount(data.total, data.dec, '', 'portfel-suma')}
               ${pills(CURRENCIES, state.currency, 'currency')}
             </div>
           </div>
@@ -660,6 +680,12 @@ function applyHot(id) {
   const sub = document.querySelector('.legend__cashSub');
   if (sub) sub.classList.toggle('is-dim', id !== null && id !== 'cash');
 }
+
+/* Po animacji wychodzacy znak znika z DOM-u, inaczej kwota kopiuje sie
+   jako przeplatanka starej i nowej wartosci. */
+document.addEventListener('animationend', (e) => {
+  if (e.target.classList && e.target.classList.contains('roll__out')) e.target.remove();
+});
 
 document.addEventListener('mouseover', (e) => {
   const el = e.target.closest ? e.target.closest('[data-hot]') : null;

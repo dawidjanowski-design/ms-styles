@@ -1,5 +1,55 @@
+import { useEffect, useState } from 'react';
 import { Logo, BellIcon } from '../icons/Logo';
 import { NAV } from '../data/portfolio';
+
+/* Kwota przewija sie jak licznik: znak, ktory sie zmienil, wyjezdza w gore,
+   a nowy wjezdza z dolu. Znaki bez zmiany stoja w miejscu, wiec przy zmianie
+   waluty rusza sie tylko to, co faktycznie jest inne.
+   Szerokosc trzymaja cyfry tabelaryczne — bez tego kwota by drgala. */
+function Roll({ text }: { text: string }) {
+  const [state, setState] = useState({ text, prev: text, gen: 0 });
+
+  if (state.text !== text) {
+    setState((s) => ({ text, prev: s.text, gen: s.gen + 1 }));
+  }
+
+  /* Po animacji wychodzace znaki musza zniknac z DOM-u, inaczej kwota
+     kopiuje sie jako przeplatanka starej i nowej wartosci. */
+  useEffect(() => {
+    if (state.prev === state.text) return;
+    const t = window.setTimeout(() => setState((s) => ({ ...s, prev: s.text })), 650);
+    return () => window.clearTimeout(t);
+  }, [state.prev, state.text]);
+
+  const chars = [...text];
+  const prevChars = [...state.prev];
+
+  return (
+    <>
+      {chars.map((ch, i) => {
+        const was = prevChars[i];
+        const changed = state.gen > 0 && was !== ch;
+        const delay = { animationDelay: `${i * 18}ms` };
+        return (
+          <span className="roll" key={i}>
+            {changed && (
+              <span className="roll__out" key={`o${state.gen}`} style={delay} aria-hidden="true">
+                {was ?? ''}
+              </span>
+            )}
+            <span
+              className={changed ? 'roll__in' : undefined}
+              key={changed ? `i${state.gen}` : 'i'}
+              style={changed ? delay : undefined}
+            >
+              {ch}
+            </span>
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
 export function Amount({
   int,
@@ -12,8 +62,12 @@ export function Amount({
 }) {
   return (
     <div className={`amount ${className}`}>
-      <span className="amount__int">{int}</span>
-      <span className="amount__dec">{dec}</span>
+      <span className="amount__int">
+        <Roll text={int} />
+      </span>
+      <span className="amount__dec">
+        <Roll text={dec} />
+      </span>
     </div>
   );
 }

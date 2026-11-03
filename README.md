@@ -213,3 +213,21 @@ forma.
 
 Dane w wireframie z Figmy są inne niż nasze (Emitenci 5, Serie 9, 7,62%).
 Zostały nasze — przy porównywaniu trzech wersji jedyną zmienną ma być forma.
+
+## Licznik kwoty
+
+Zmiana waluty przewija kwotę jak licznik: znak, który się zmienił, wyjeżdża
+w górę, a nowy wjeżdża z dołu, z opóźnieniem 18 ms na każdy kolejny znak od
+lewej. Znaki bez zmiany stoją w miejscu, więc rusza się tylko to, co
+faktycznie jest inne.
+
+Dwie rzeczy, bez których ten efekt by nie działał:
+
+- **cyfry tabelaryczne** (`font-variant-numeric: tabular-nums`) — bez nich
+  kwota drgałaby w poziomie przy każdej zmianie cyfry;
+- **wychodzący znak jest wyjęty z układu** (`position: absolute`), więc
+  animacja nie przesuwa niczego wokół. Po jej zakończeniu znika z DOM-u —
+  inaczej kwota kopiowałaby się jako przeplatanka starej i nowej wartości.
+
+Licznik działa wszędzie, gdzie jest kwota, więc przy zmianie waluty przewijają
+się też karty gotówki i aktywów. `prefers-reduced-motion` wyłącza animację.
