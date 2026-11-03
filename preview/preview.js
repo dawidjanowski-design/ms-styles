@@ -399,12 +399,6 @@ const EVENTS = [
   ['30.09.2026', 'Wykup, zwrot kapitału', 'Polmax Energia, Seria A', '2 450 000,00 PLN'],
 ];
 
-function offerColor(o) {
-  if (o.asset === 'cash') return CASH.colors[state.style].card;
-  const a = ASSETS.find((x) => x.id === o.asset);
-  return a ? a.colors[state.style].card : 'var(--ink)';
-}
-
 function dashboardScreen() {
   return `<div class="screenOuter"><div class="screen"><div class="content">
     <section class="summary">
@@ -428,14 +422,12 @@ function dashboardScreen() {
           <button type="button" class="iconBtn" data-scroll="1" aria-label="Następne oferty">›</button>
         </div>
       </div>
-      <div class="offers__track" data-track>${OFFERS.map((o) => `<article class="offerCard" style="--seg:${offerColor(o)}">
+      <div class="offers__track" data-track>${OFFERS.map((o) => `<article class="offerCard">
         <div class="offerCard__top">
           <span class="offerCard__kind">${o.kind}</span>
           <span class="offerCard__issuer">
-            ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
             ${o.logo ? `<img class="offerCard__logo" src="${o.logo.src}"
                  width="${o.logo.width}" height="${o.logo.height}" alt="${o.issuer}">` : o.issuer}
-            ${state.style === '1' ? '<span class="assetCard__dot"></span>' : ''}
           </span>
         </div>
         <div class="offerCard__bottom">

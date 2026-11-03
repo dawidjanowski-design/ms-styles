@@ -1,27 +1,17 @@
 import { useRef, useState } from 'react';
 import { DASHBOARD, EVENTS, OFFERS, type Offer } from '../data/dashboard';
-import { ASSETS, CASH, TOTAL } from '../data/portfolio';
+import { TOTAL } from '../data/portfolio';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
 type StyleId = '1' | '2';
 
-/** Kolor znacznika oferty bierzemy z tej samej palety co karty aktywów. */
-function offerColor(offer: Offer, styleId: StyleId) {
-  if (offer.asset === 'cash') return CASH.colors[styleId].card;
-  return ASSETS.find((a) => a.id === offer.asset)?.colors[styleId].card ?? 'var(--ink)';
-}
-
-function OfferCard({ offer, styleId }: { offer: Offer; styleId: StyleId }) {
+function OfferCard({ offer }: { offer: Offer }) {
   return (
-    <article
-      className="offerCard"
-      style={{ ['--seg' as string]: offerColor(offer, styleId) }}
-    >
+    <article className="offerCard">
       <div className="offerCard__top">
         <span className="offerCard__kind">{offer.kind}</span>
         <span className="offerCard__issuer">
-          {styleId === '2' && <span className="assetCard__bar" />}
           {offer.logo ? (
             <img
               className="offerCard__logo"
@@ -33,7 +23,6 @@ function OfferCard({ offer, styleId }: { offer: Offer; styleId: StyleId }) {
           ) : (
             offer.issuer
           )}
-          {styleId === '1' && <span className="assetCard__dot" />}
         </span>
       </div>
       <div className="offerCard__bottom">
@@ -107,7 +96,7 @@ export function DashboardScreen({
             </div>
             <div className="offers__track" ref={track}>
               {OFFERS.map((o) => (
-                <OfferCard key={o.id} offer={o} styleId={styleId} />
+                <OfferCard key={o.id} offer={o} />
               ))}
             </div>
           </section>

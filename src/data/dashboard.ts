@@ -5,7 +5,7 @@
 
 export type Offer = {
   id: string;
-  /** klasa aktywów — stąd bierze się kolor znacznika */
+  /** klasa aktywów, do której należy oferta */
   asset: string;
   kind: string;
   issuer: string;

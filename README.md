@@ -144,8 +144,8 @@ Z pliku wzięta jest treść i układ. Reszta pochodzi z prototypu:
   Pulpit i Portfel nie pokazują dwóch różnych portfeli;
 - gradientowe tło strony i tonowane wypełnienia słupków pominięte — kolor
   niesie wyłącznie paleta klas aktywów;
-- karty ofert mają znacznik klasy aktywów w tej samej konwencji co karty
-  aktywów: kropka w nr 1, pionowa kreska w nr 2.
+- karty ofert są bez znacznika klasy aktywów — logo emitenta samo mówi, czyja
+  jest oferta, a kropka obok niego tylko hałasowała.
 
 Dane legendy w Figmie (50,0% / 2 109 320 PLN dla obligacji korporacyjnych,
 bez obligacji skarbowych) różnią się od naszych — suma 4 218 640,00 PLN jest
