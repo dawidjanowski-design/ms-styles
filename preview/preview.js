@@ -52,7 +52,7 @@ const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp',
 const saved = localStorage.getItem('ms-style');
 const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
-  screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', accounts: [],
+  screen: 'pulpit', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
   transit: false, seriesExpanded: false, lastAmounts: {} };
 
@@ -249,26 +249,9 @@ function assetCard(a) {
 /* ---------------- ekran klasy aktywów (Figma 909:978) ---------------- */
 
 const DETAIL = { title: 'Obligacje korporacyjne', amount: '1 854 320', dec: ',00 PLN' };
-const DETAIL_CURRENCIES = ['Łącznie', 'PLN', 'EUR', 'USD', 'CHF'];
-const ACCOUNT_CHIPS = ['Wszystkie', 'Rachunek maklerski', 'OKI', 'IKE', 'XZ'];
-const CLASS_METRICS = [['Emitenci', '3'], ['Serie', '6'], ['Śr. rentowność (ważona)', '7,48%'],
-  ['Wypłacone odsetki 12M', '48 220 PLN'], ['Najbliższy wykup', '18.12.2026']];
 const INSTRUMENT_COLS = ['śr. oprocentowanie', 'najbliższy wykup', 'udział'];
 
-const ISSUERS = [
-  { id:'ms', name:'Michael / Ström SA', sub:'3 serie · F, G, H', rate:'7,65%', maturity:'14.03.2028', share:'28,4%', value:'600 000,00 PLN' },
-  { id:'vehis', name:'VEHIS', sub:'2 serie · K, M', rate:'7,90%', maturity:'09.06.2027', share:'33,2%', value:'700 000,00 PLN' },
-  { id:'victoria', name:'Victoria Dom', sub:'1 seria · B2', rate:'7,10%', maturity:'30.09.2029', share:'26,1%', value:'551 320,00 PLN' },
-];
 
-const SERIES = [
-  { id:'f', name:'Seria F', sub:'Michael / Ström SA', rate:'7,65%', maturity:'14.03.2028', share:'11,8%', value:'250 000,00 PLN' },
-  { id:'g', name:'Seria G', sub:'Michael / Ström SA', rate:'7,80%', maturity:'22.09.2028', share:'9,5%', value:'200 000,00 PLN' },
-  { id:'h', name:'Seria H', sub:'Michael / Ström SA', rate:'7,50%', maturity:'10.06.2029', share:'7,1%', value:'150 000,00 PLN' },
-  { id:'k', name:'Seria K', sub:'VEHIS', rate:'7,90%', maturity:'09.06.2027', share:'18,9%', value:'400 000,00 PLN' },
-  { id:'m', name:'Seria M', sub:'VEHIS', rate:'8,05%', maturity:'18.11.2028', share:'14,2%', value:'300 000,00 PLN' },
-  { id:'b2', name:'Seria B2', sub:'Victoria Dom', rate:'7,10%', maturity:'30.09.2029', share:'26,1%', value:'551 320,00 PLN' },
-];
 
 const TX_TABS = ['Wszystkie', 'Operacje', 'Przepływy', 'Zamknięte pozycje'];
 const TX_TAB_TYPES = {
@@ -302,6 +285,77 @@ const TRANSACTIONS = [
 ];
 
 const DETAIL_ASSETS = new Set(['corp']);
+
+
+/* ---------------- obligacje korpo: dane per waluta z rozbiciem na rachunki ----------------
+   Przelacznik walut dziala tak samo jak na Portfelu, a chipy rachunkow
+   naprawde filtruja: przelicza sie suma, pasek metryk i lista emitentow.
+   Suma w widoku Lacznie to 1 792 922 PLN, czyli tyle, co karta obligacji
+   na Portfelu; czesc na IKE w widoku PLN to 340 000 PLN, czyli tyle, co na
+   ekranie rachunku IKE. */
+
+const MAKL = 'Rachunek maklerski';
+
+const CORP_VIEWS = {
+  'Łącznie': { unit: 'PLN', issuers: [
+    { id:'ms', name:'Michael / Ström SA', rate:7.65, maturity:'14.03.2028', interest12m:28640,
+      parts:[[MAKL,400000,['F','G']],['OKI',200000,['H']]] },
+    { id:'vehis', name:'VEHIS', rate:7.90, maturity:'09.06.2027', interest12m:12480,
+      parts:[[MAKL,450000,['K']],['OKI',250000,['M']]] },
+    { id:'victoria', name:'Victoria Dom', rate:7.10, maturity:'30.09.2029', interest12m:7100,
+      parts:[[MAKL,213802,['B2']],['OKI',279120,['B2']]] },
+  ] },
+  PLN: { unit: 'PLN', issuers: [
+    { id:'ms', name:'Michael / Ström SA', rate:7.65, maturity:'14.03.2028', interest12m:24200,
+      parts:[[MAKL,400000,['G']],['IKE',200000,['F']]] },
+    { id:'vehis', name:'VEHIS', rate:7.90, maturity:'09.06.2027', interest12m:9800,
+      parts:[[MAKL,400000,['K']]] },
+    { id:'victoria', name:'Victoria Dom', rate:7.10, maturity:'30.09.2029', interest12m:6200,
+      parts:[[MAKL,280000,['B2']],['IKE',140000,['B2']]] },
+  ] },
+  EUR: { unit: 'EUR', issuers: [
+    { id:'ms', name:'Michael / Ström SA', rate:5.10, maturity:'12.09.2028', interest12m:9800,
+      parts:[['Rachunek maklerski EUR',200000,['R']]] },
+  ] },
+  USD: { unit: 'USD', issuers: [
+    { id:'vehis', name:'VEHIS', rate:6.20, maturity:'30.06.2029', interest12m:2980,
+      parts:[['Rachunek maklerski USD',48000,['U1']]] },
+  ] },
+};
+
+/* toLocaleString nie grupuje czterocyfrowych liczb po polsku (9800, nie 9 800). */
+const grosze = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const money = (n, unit) => `${grosze(n)},00 ${unit}`;
+const pct2 = (n) => `${n.toFixed(2).replace('.', ',')}%`;
+const partsOf = (i, acc) => i.parts.filter(([a]) => !acc.length || acc.includes(a));
+const issuerValue = (i, acc) => partsOf(i, acc).reduce((s, [, v]) => s + v, 0);
+const seriesOf = (i, acc) => [...new Set(partsOf(i, acc).flatMap(([, , se]) => se))];
+const accountsIn = (v) => {
+  const out = [];
+  v.issuers.forEach((i) => i.parts.forEach(([a]) => { if (!out.includes(a)) out.push(a); }));
+  return out;
+};
+const toDate = (s) => { const [d, m, y] = s.split('.').map(Number); return new Date(y, m - 1, d).getTime(); };
+
+function classMetrics(view, acc) {
+  const visible = view.issuers
+    .map((i) => ({ issuer: i, value: issuerValue(i, acc) }))
+    .filter((x) => x.value > 0);
+  const total = visible.reduce((s, x) => s + x.value, 0);
+  const serie = visible.reduce((s, x) => s + seriesOf(x.issuer, acc).length, 0);
+  const wazona = total ? visible.reduce((s, x) => s + x.issuer.rate * x.value, 0) / total : 0;
+  const odsetki = visible.reduce((s, x) => {
+    const pelna = x.issuer.parts.reduce((a, [, v]) => a + v, 0) || 1;
+    return s + Math.round((x.issuer.interest12m * x.value) / pelna);
+  }, 0);
+  const wykup = visible.map((x) => x.issuer.maturity).sort((a, b) => toDate(a) - toDate(b))[0];
+  return { visible, total, rows: [
+    ['Emitenci', String(visible.length)], ['Serie', String(serie)],
+    ['Śr. rentowność (ważona)', pct2(wazona)],
+    ['Wypłacone odsetki 12M', money(odsetki, view.unit)],
+    ['Najbliższy wykup', wykup || '—'],
+  ] };
+}
 
 function instrRow(it, withLabels, color) {
   const cells = [it.rate, it.maturity, it.share];
@@ -603,54 +657,71 @@ function accountScreen() {
 function detailScreen() {
   const corp = ASSETS.find((a) => a.id === 'corp');
   const color = corp.colors[pal()].card;
-  const items = state.grouping === 'Emitenci' ? ISSUERS : SERIES;
+  const view = CORP_VIEWS[state.currency];
+  const chipy = ['Wszystkie', ...accountsIn(view)];
+  const m = classMetrics(view, state.accounts);
+  const udzial = (v) => (m.total ? pct2((v / m.total) * 100) : '—');
+
+  /* „Emitenci" to jeden wiersz na emitenta, „Serie" rozbija go na pozycje
+     i dopisuje, z ktorego rachunku pochodzi dana czesc. */
+  const items = m.visible.flatMap(({ issuer, value }) => {
+    const parts = partsOf(issuer, state.accounts);
+    const serie = seriesOf(issuer, state.accounts);
+    if (state.grouping === 'Emitenci') {
+      const ile = serie.length;
+      return [{ id: issuer.id, name: issuer.name,
+        sub: `${ile} ${ile === 1 ? 'seria' : 'serie'} · ${serie.join(', ')} · ${parts.map(([a]) => a).join(', ')}`,
+        rate: pct2(issuer.rate), maturity: issuer.maturity,
+        share: udzial(value), value: money(value, view.unit) }];
+    }
+    return parts.map(([a, v, se]) => ({ id: `${issuer.id}-${a}`,
+      name: `${issuer.name}, seria ${se.join(', ')}`, sub: a,
+      rate: pct2(issuer.rate), maturity: issuer.maturity,
+      share: udzial(v), value: money(v, view.unit) }));
+  });
 
   return `<div class="screenOuter"><div class="screen"><div class="content">
     <div class="crumbRow">
-      <nav class="crumbs">
-        <button type="button" class="crumbs__link" data-back>Portfel</button>
-        <span class="crumbs__sep">›</span>
-        <button type="button" class="crumbs__link" data-back>Aktywa</button>
-        <span class="crumbs__sep">›</span>
-        <span class="crumbs__current">${DETAIL.title}</span>
-      </nav>
-      ${pills(DETAIL_CURRENCIES, state.detailCurrency, 'detailCurrency')}
+      ${crumbs([['Portfel', 'portfel'], ['Aktywa', 'portfel'], [DETAIL.title, null]])}
+      ${pills(CURRENCIES, state.currency, 'currency')}
     </div>
 
     <section class="detailHead">
       <h1 class="detailTitle">${DETAIL.title}</h1>
       <div class="detailValue">
         <span class="detailValue__label">Wartość</span>
-        ${amount(DETAIL.amount, DETAIL.dec, '', 'detal-suma')}
+        ${amount(grosze(m.total), ',00 ' + view.unit, '', 'detal-suma')}
       </div>
     </section>
 
     <section class="panel">
       <div class="panel__head">
         <h2 class="sectionTitle">Instrumenty i pozycje</h2>
-        <div class="panel__actions">
-          ${pills(['Emitenci', 'Serie'], state.grouping, 'grouping')}
-        </div>
+        <div class="panel__actions">${pills(['Emitenci', 'Serie'], state.grouping, 'grouping')}</div>
       </div>
+
       ${state.style === '3' ? '' : `<div class="chipGroup">
         <span class="chipGroup__label">Rachunki</span>
-        <div class="chips">${ACCOUNT_CHIPS.map((c, i) => {
+        <div class="chips">${chipy.map((c, i) => {
           const all = i === 0;
           const on = all ? state.accounts.length === 0 : state.accounts.includes(c);
           return `<button type="button" class="chip" data-chip="${c}" aria-pressed="${on}">${
             on ? '<span class="chip__check">✓</span>' : ''}${c}</button>`;
         }).join('')}</div>
       </div>`}
-      <div class="metricStrip">${CLASS_METRICS.map(([l, v]) =>
+
+      <div class="metricStrip">${m.rows.map(([l, v]) =>
         `<div class="strip__item metricStrip__item"><span class="strip__label">${l}</span>
          <span class="strip__value">${v}</span></div>`).join('')}</div>
-      <div class="instrList">${items.map((it, i) => instrRow(it, i === 0, color)).join('')}</div>
+
+      <div class="instrList">${
+        items.length ? items.map((it, i) => instrRow(it, i === 0, color)).join('')
+          : '<div class="table__empty">Brak pozycji dla wybranych rachunków</div>'}</div>
     </section>
 
     ${transactions(TRANSACTIONS, 'transakcji', 'column', TX_TOTAL)}
   </div></div></div>`;
 }
-
 
 /* ---------------- przelacznik walut (patrz src/data/currencies.ts) ----------------
    To nie jest przeliczanie jednego portfela po kursie: kazda zakladka to osobny
@@ -1030,7 +1101,7 @@ document.addEventListener('click', (e) => {
   const chip = e.target.closest('[data-chip]');
   if (chip) {
     const name = chip.dataset.chip;
-    if (name === ACCOUNT_CHIPS[0]) state.accounts = [];
+    if (name === 'Wszystkie') state.accounts = [];
     else state.accounts = state.accounts.includes(name)
       ? state.accounts.filter((a) => a !== name)
       : [...state.accounts, name];
@@ -1049,10 +1120,11 @@ document.addEventListener('click', (e) => {
   if (open) { state.screen = 'asset'; render(); window.scrollTo({ top: 0 }); return; }
   const p = e.target.closest('[data-pill]');
   if (p) {
-    const map = { currency: 'currency', view: 'view', detailCurrency: 'detailCurrency',
-      grouping: 'grouping', txtab: 'txTab' };
+    const map = { currency: 'currency', view: 'view', grouping: 'grouping', txtab: 'txTab' };
     const key = map[p.dataset.pill];
     if (key) state[key] = p.dataset.value;
+    /* Rachunki roznia sie miedzy walutami — stary filtr nie ma tam odpowiednika. */
+    if (key === 'currency') state.accounts = [];
     render();
   }
 });

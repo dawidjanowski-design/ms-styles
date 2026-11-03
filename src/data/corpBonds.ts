@@ -33,62 +33,8 @@ export const DETAIL = {
   breadcrumb: ['Portfel', 'Aktywa', 'Obligacje korporacyjne'],
 };
 
-export const DETAIL_CURRENCIES = ['Łącznie', 'PLN', 'EUR', 'USD', 'CHF'] as const;
-
-/** Chipy rachunków — na wireframie bez zdefiniowanego działania filtra. */
-export const ACCOUNT_CHIPS = ['Wszystkie', 'Rachunek maklerski', 'OKI', 'IKE', 'XZ'];
-
-export const CLASS_METRICS = [
-  { label: 'Emitenci', value: '3' },
-  { label: 'Serie', value: '6' },
-  { label: 'Śr. rentowność (ważona)', value: '7,48%' },
-  { label: 'Wypłacone odsetki 12M', value: '48 220 PLN' },
-  { label: 'Najbliższy wykup', value: '18.12.2026' },
-];
-
 /** Etykiety kolumn pokazane tylko przy pierwszym wierszu — tak jak w Figmie. */
 export const INSTRUMENT_COLS = ['śr. oprocentowanie', 'najbliższy wykup', 'udział'];
-
-export const ISSUERS: Instrument[] = [
-  {
-    id: 'ms',
-    name: 'Michael / Ström SA',
-    sub: '3 serie · F, G, H',
-    rate: '7,65%',
-    maturity: '14.03.2028',
-    share: '28,4%',
-    value: '600 000,00 PLN',
-  },
-  {
-    id: 'vehis',
-    name: 'VEHIS',
-    sub: '2 serie · K, M',
-    rate: '7,90%',
-    maturity: '09.06.2027',
-    share: '33,2%',
-    value: '700 000,00 PLN',
-  },
-  {
-    id: 'victoria',
-    name: 'Victoria Dom',
-    sub: '1 seria · B2',
-    rate: '7,10%',
-    maturity: '30.09.2029',
-    share: '26,1%',
-    value: '551 320,00 PLN',
-  },
-];
-
-/** Rozwinięcie tych samych emitentów na 6 serii („Serie 6" z paska metryk).
-   Udziały policzone wobec tej samej bazy co udziały emitentów. */
-export const SERIES: Instrument[] = [
-  { id: 'f', name: 'Seria F', sub: 'Michael / Ström SA', rate: '7,65%', maturity: '14.03.2028', share: '11,8%', value: '250 000,00 PLN' },
-  { id: 'g', name: 'Seria G', sub: 'Michael / Ström SA', rate: '7,80%', maturity: '22.09.2028', share: '9,5%', value: '200 000,00 PLN' },
-  { id: 'h', name: 'Seria H', sub: 'Michael / Ström SA', rate: '7,50%', maturity: '10.06.2029', share: '7,1%', value: '150 000,00 PLN' },
-  { id: 'k', name: 'Seria K', sub: 'VEHIS', rate: '7,90%', maturity: '09.06.2027', share: '18,9%', value: '400 000,00 PLN' },
-  { id: 'm', name: 'Seria M', sub: 'VEHIS', rate: '8,05%', maturity: '18.11.2028', share: '14,2%', value: '300 000,00 PLN' },
-  { id: 'b2', name: 'Seria B2', sub: 'Victoria Dom', rate: '7,10%', maturity: '30.09.2029', share: '26,1%', value: '551 320,00 PLN' },
-];
 
 export const TX_TABS = ['Wszystkie', 'Operacje', 'Przepływy', 'Zamknięte pozycje'];
 

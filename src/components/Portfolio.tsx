@@ -377,14 +377,17 @@ function AccountCard({
 
 export function PortfolioScreen({
   styleId,
+  currency,
+  onCurrencyChange,
   onOpenAsset,
   onOpenAccount,
 }: {
   styleId: StyleId;
+  currency: Currency;
+  onCurrencyChange: (c: Currency) => void;
   onOpenAsset: (id: string) => void;
   onOpenAccount: (id: string) => void;
 }) {
-  const [currency, setCurrency] = useState<Currency>('Łącznie');
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
@@ -406,7 +409,7 @@ export function PortfolioScreen({
                   <Pills
                     items={CURRENCIES}
                     value={currency}
-                    onChange={(v) => setCurrency(v as Currency)}
+                    onChange={(v) => onCurrencyChange(v as Currency)}
                     locked={styleId === '3'}
                   />
                 </div>

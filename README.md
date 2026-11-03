@@ -128,13 +128,6 @@ Zaznaczone chipy są wypełnione lekko, żeby kilka naraz nie krzyczało.
 Pusty zbiór znaczy „Wszystkie", dzięki czemu odznaczenie ostatniego rachunku
 wraca do pełnej listy samo. W makiecie filtra nie ma wcale.
 
-Dwie rzeczy do decyzji po stronie klienta:
-
-- **Suma się nie zgadza.** Nagłówek w Figmie mówi 1 854 320,00 PLN, a trzy
-  wiersze emitentów dają 1 851 320,00 PLN. Zostawione 1:1.
-- **Chipy rachunków nie filtrują.** Wireframe nie definiuje, jak pozycje
-  rozkładają się na rachunki, a dopisywanie takiego podziału z głowy trafiłoby
-  do klienta jako ustalenie. Na razie chipy tylko przełączają stan.
 
 Widok w stylistyce nr 2 dziedziczy tokeny i renderuje się poprawnie, ale nie
 był jeszcze dopracowywany.

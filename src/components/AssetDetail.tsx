@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import {
-  ACCOUNT_CHIPS,
-  CLASS_METRICS,
   DETAIL,
-  DETAIL_CURRENCIES,
   INSTRUMENT_COLS,
-  ISSUERS,
-  SERIES,
   TRANSACTIONS,
   TX_TOTAL,
   type Instrument,
 } from '../data/corpBonds';
+import {
+  CORP_VIEWS,
+  accountsIn,
+  amountParts,
+  classMetrics,
+  money,
+  partsOf,
+  pct,
+  seriesOf,
+} from '../data/corpViews';
+import { CURRENCIES, type Currency } from '../data/currencies';
 import { ASSETS } from '../data/portfolio';
 import { Amount, Pills } from './ui';
 import { Transactions } from './Transactions';
@@ -64,16 +70,19 @@ function InstrumentRow({
 
 export function AssetDetailScreen({
   styleId,
+  currency,
+  onCurrencyChange,
   onBack,
   onOpenIssuer,
   onOpenSeries,
 }: {
   styleId: StyleId;
+  currency: Currency;
+  onCurrencyChange: (c: Currency) => void;
   onBack: () => void;
   onOpenIssuer: (id: string) => void;
   onOpenSeries: (id: string) => void;
 }) {
-  const [currency, setCurrency] = useState<string>('PLN');
   const [grouping, setGrouping] = useState<string>('Emitenci');
   /* Filtr rachunkow jest wielokrotnego wyboru. Pusty zbior znaczy „Wszystkie",
      dzieki czemu odznaczenie ostatniego rachunku wraca do pelnej listy samo. */
@@ -87,7 +96,46 @@ export function AssetDetailScreen({
   const palette = styleId === '2' ? '2' : '1';
   const color = ASSETS.find((a) => a.id === 'corp')?.colors[palette].card ?? 'var(--ink)';
   const locked = styleId === '3';
-  const items = grouping === 'Emitenci' ? ISSUERS : SERIES;
+
+  const view = CORP_VIEWS[currency];
+  const chips = ['Wszystkie', ...accountsIn(view)];
+  const metrics = classMetrics(view, accounts);
+  const head = amountParts(metrics.total, view.unit);
+
+  /* Udzial liczony wzgledem tego, co aktualnie widac — inaczej po odfiltrowaniu
+     rachunku procenty nie sumowalyby sie do stu. */
+  const share = (v: number) => (metrics.total ? pct((v / metrics.total) * 100) : '—');
+
+  /* „Emitenci" pokazuje jeden wiersz na emitenta, „Serie" rozbija go na serie
+     i dopisuje, z ktorego rachunku pochodzi dana pozycja. */
+  const items: Instrument[] = metrics.visible.flatMap(({ issuer, value }) => {
+    const parts = partsOf(issuer, accounts);
+    const series = seriesOf(issuer, accounts);
+    if (grouping === 'Emitenci') {
+      return [
+        {
+          id: issuer.id,
+          name: issuer.name,
+          sub:
+            `${series.length} ${series.length === 1 ? 'seria' : 'serie'} · ` +
+            `${series.join(', ')} · ${parts.map((p) => p.account).join(', ')}`,
+          rate: pct(issuer.rate),
+          maturity: issuer.maturity,
+          share: share(value),
+          value: money(value, view.unit),
+        },
+      ];
+    }
+    return parts.map((p) => ({
+      id: `${issuer.id}-${p.account}`,
+      name: `${issuer.name}, seria ${p.series.join(', ')}`,
+      sub: p.account,
+      rate: pct(issuer.rate),
+      maturity: issuer.maturity,
+      share: share(p.value),
+      value: money(p.value, view.unit),
+    }));
+  });
 
   return (
     <div className="screenOuter">
@@ -110,9 +158,14 @@ export function AssetDetailScreen({
               <span className="crumbs__current">{DETAIL.breadcrumb[2]}</span>
             </nav>
             <Pills
-              items={DETAIL_CURRENCIES}
+              items={CURRENCIES}
               value={currency}
-              onChange={setCurrency}
+              onChange={(v) => {
+                onCurrencyChange(v as Currency);
+                /* Rachunki roznia sie miedzy walutami — stary filtr nie ma
+                   tam odpowiednika, wiec wraca do „Wszystkie". */
+                setAccounts([]);
+              }}
               locked={locked}
             />
           </div>
@@ -122,7 +175,7 @@ export function AssetDetailScreen({
             <h1 className="detailTitle">{DETAIL.title}</h1>
             <div className="detailValue">
               <span className="detailValue__label">Wartość</span>
-              <Amount int={DETAIL.amount} dec={DETAIL.amountDecimals} />
+              <Amount int={head.int} dec={head.dec} />
             </div>
           </section>
 
@@ -146,7 +199,7 @@ export function AssetDetailScreen({
               <div className="chipGroup">
                 <span className="chipGroup__label">Rachunki</span>
                 <div className="chips">
-                  {ACCOUNT_CHIPS.map((c, i) => {
+                  {chips.map((c, i) => {
                     const all = i === 0;
                     const on = all ? accounts.length === 0 : accounts.includes(c);
                     return (
@@ -167,7 +220,7 @@ export function AssetDetailScreen({
             )}
 
             <div className="metricStrip">
-              {CLASS_METRICS.map((m) => (
+              {metrics.rows.map((m) => (
                 <div className="strip__item metricStrip__item" key={m.label}>
                   <span className="strip__label">{m.label}</span>
                   <span className="strip__value">{m.value}</span>
@@ -176,6 +229,9 @@ export function AssetDetailScreen({
             </div>
 
             <div className="instrList">
+              {items.length === 0 && (
+                <div className="table__empty">Brak pozycji dla wybranych rachunków</div>
+              )}
               {items.map((item, i) => (
                 <InstrumentRow
                   key={item.id}

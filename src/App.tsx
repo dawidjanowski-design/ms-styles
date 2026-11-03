@@ -5,6 +5,7 @@ import { AssetDetailScreen } from './components/AssetDetail';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
+import { CURRENCIES, type Currency } from './data/currencies';
 
 type StyleId = '1' | '2' | '3';
 const STYLES: { id: StyleId; label: string }[] = [
@@ -33,6 +34,9 @@ export default function App() {
     }
   });
   const [screen, setScreen] = useState<Screen>({ name: 'pulpit' });
+  /* Waluta jest wspolna dla Portfela i ekranu klasy aktywow — wejscie w
+     obligacje z widoku EUR ma pokazac obligacje w EUR, a nie zaczynac od nowa. */
+  const [currency, setCurrency] = useState<Currency>(CURRENCIES[0]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-style', styleId);
@@ -66,6 +70,8 @@ export default function App() {
       {screen.name === 'portfel' && (
         <PortfolioScreen
           styleId={styleId}
+          currency={currency}
+          onCurrencyChange={setCurrency}
           onOpenAsset={(id) => setScreen({ name: 'asset', id })}
           onOpenAccount={(id) => setScreen({ name: 'account', id })}
         />
@@ -73,6 +79,8 @@ export default function App() {
       {screen.name === 'asset' && (
         <AssetDetailScreen
           styleId={styleId}
+          currency={currency}
+          onCurrencyChange={setCurrency}
           onBack={() => setScreen({ name: 'portfel' })}
           onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
           onOpenSeries={(id) => setScreen({ name: 'series', id })}
