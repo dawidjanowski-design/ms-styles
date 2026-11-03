@@ -268,3 +268,19 @@ Dwie rzeczy przy okazji:
 - **Panel otwiera się tylko w widoku „Łącznie".** Pokazuje rozbicie całości
   (45 118,00 PLN, w tym 3 500 EUR), więc w zakładce PLN czy EUR jego liczby
   by nie pasowały do reszty ekranu.
+
+## Ekran emitenta i ekran serii
+
+Figma `722:5483` (emitent) i `722:4654` (seria). Wchodzi się w nie z listy na
+ekranie klasy aktywów: w widoku „Emitenci" klik w wiersz otwiera emitenta,
+w widoku „Serie" — od razu serię. Z ekranu emitenta klik w serię prowadzi
+głębiej. Ścieżka nawigacji na górze cofa na każdy poziom.
+
+Oba istnieją **tylko w stylistykach nr 1 i nr 2** — w makiecie wiersze
+instrumentów nigdzie nie prowadzą, bo wireframe'u tych ekranów w wersji
+szkicowej nie ma.
+
+Tabela transakcji jest teraz wspólnym komponentem (`Transactions.tsx`) dla
+trzech ekranów. Różni je liczba kolumn: na ekranie klasy aktywów rachunek
+ma własną kolumnę i jest stopka z paginacją, na węższych ekranach rachunek
+schodzi pod nazwę instrumentu, a stopki nie ma — tak jak w wireframe'ach.

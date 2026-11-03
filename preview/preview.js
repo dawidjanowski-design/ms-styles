@@ -303,7 +303,10 @@ const DETAIL_ASSETS = new Set(['corp']);
 
 function instrRow(it, withLabels, color) {
   const cells = [it.rate, it.maturity, it.share];
-  return `<button type="button" class="instrRow" style="--seg:${color}">
+  /* Ekrany emitenta i serii istnieja tylko w stylistykach nr 1 i nr 2. */
+  const target = state.style === '3' ? null : state.grouping === 'Emitenci' ? 'issuer' : 'series';
+  return `<button type="button" class="instrRow" ${
+    target ? `data-goto-screen="${target}"` : ''} style="--seg:${color}">
     <span class="instrRow__dot"></span>
     <span class="instrRow__title">
       <span class="instrRow__name">${it.name}</span>
@@ -316,10 +319,10 @@ function instrRow(it, withLabels, color) {
     <span class="instrRow__chev">›</span></button>`;
 }
 
-function txRows() {
+function txRows(all) {
   const allowed = TX_TAB_TYPES[state.txTab];
   const q = state.txQuery.toLowerCase();
-  return TRANSACTIONS.filter((t) => {
+  return all.filter((t) => {
     if (allowed && !allowed.includes(t[1])) return false;
     if (!t[0].endsWith(state.txPeriod)) return false;
     if (state.txType !== 'Wszystkie typy' && t[1] !== state.txType) return false;
@@ -328,8 +331,11 @@ function txRows() {
   });
 }
 
-function transactions() {
-  const rows = txRows();
+/* Na ekranie klasy aktywow rachunek ma wlasna kolumne, na wezszych ekranach
+   schodzi pod nazwe instrumentu — tak jak w wireframe'ach. */
+function transactions(all, noun, accountAsSubline, total) {
+  const rows = txRows(all);
+  const columns = accountAsSubline ? TX_COLUMNS.slice(0, 5) : TX_COLUMNS;
   const field = (label, cls, control) =>
     `<label class="field ${cls}"><span class="field__label">${label}</span>${control}</label>`;
   const select = (name, items, active) =>
@@ -339,14 +345,14 @@ function transactions() {
   return `<section class="panel">
     <div class="panel__head">
       <h2 class="sectionTitle">Transakcje</h2>
-      <span class="panel__meta">${rows.length} transakcji</span>
+      <span class="panel__meta">${rows.length} ${noun}</span>
     </div>
     <div class="panel__toolbar">
       ${pills(TX_TABS, state.txTab, 'txtab')}
-      <div class="btnRow">
+      ${total === undefined ? '' : `<div class="btnRow">
         <button type="button" class="btnGhost">Eksport PDF</button>
         <button type="button" class="btnGhost">Eksport XLS</button>
-      </div>
+      </div>`}
     </div>
     <div class="filters">
       ${field('Okres', '', select('period', TX_PERIODS, state.txPeriod))}
@@ -354,24 +360,139 @@ function transactions() {
       ${field('Instrument', 'field--widest',
         `<input class="field__control" type="search" data-search placeholder="Szukaj instrumentu" value="${state.txQuery}">`)}
     </div>
-    <div class="table">
-      <div class="table__head">${TX_COLUMNS
+    <div class="table ${accountAsSubline ? 'table--narrow' : ''}">
+      <div class="table__head">${columns
         .map((c) => `<span class="table__th ${c === 'Kwota' ? 'is-right' : ''}">${c}</span>`).join('')}</div>
       ${rows.length === 0 ? '<div class="table__empty">Brak transakcji dla tych filtrów</div>' : ''}
       ${rows.map((t) => `<div class="table__row">
         <span class="table__td table__td--muted">${t[0]}</span>
         <span class="table__td">${t[1]}</span>
-        <span class="table__td">${t[2]}</span>
+        <span class="table__td">${t[2]}${
+          accountAsSubline ? `<span class="table__note">${t[6]}</span>` : ''}</span>
         <span class="table__td is-right"><span class="table__amount">${t[3]}</span>
           ${t[4] ? `<span class="table__note">${t[4]}</span>` : ''}</span>
         <span class="table__td"><span class="badge">${t[5]}</span></span>
-        <span class="table__td table__td--muted">${t[6]}</span>
+        ${accountAsSubline ? '' : `<span class="table__td table__td--muted">${t[6]}</span>`}
       </div>`).join('')}
-      <div class="table__foot">
+      ${total === undefined ? '' : `<div class="table__foot">
         <button type="button" class="btnGhost">Pokaż kolejne 15 transakcji</button>
-        <span class="table__caption">Wyświetlono ${rows.length} z ${TX_TOTAL} transakcji</span>
-      </div>
+        <span class="table__caption">Wyświetlono ${rows.length} z ${total} transakcji</span>
+      </div>`}
     </div></section>`;
+}
+
+
+/* ---------------- emitent (722:5483) i seria (722:4654) ---------------- */
+
+const ISSUER = { id: 'ms', name: 'Michael / Ström SA', valueLabel: 'Wartość w portfelu',
+  value: '600 000', dec: ',00 PLN' };
+
+const ISSUER_SUMMARY = [
+  ['Liczba serii', '3'], ['Wartość nominalna', '600 000,00 PLN'],
+  ['Średnie oprocentowanie (ważone)', '7,65%'], ['Najbliższa wypłata odsetek', '31.12.2026'],
+  ['Najbliższy wykup', '14.03.2028'], ['Wypłacone odsetki — łącznie', '28 640,00 PLN'],
+  ['Udział w klasie aktywów', '28,4%'],
+];
+
+const ISSUER_SERIES = [
+  { id:'f', name:'seria F', sub:'rynek pierwotny · 260 szt.', rate:'WIBOR 3M + 3,90 · 7,60%',
+    maturity:'14.03.2028', value:'260 000,00 PLN' },
+  { id:'g', name:'seria G', sub:'rynek pierwotny · 200 szt.', rate:'WIBOR 3M + 3,95 · 7,65%',
+    maturity:'30.09.2028', value:'200 000,00 PLN' },
+  { id:'h', name:'seria H', sub:'rynek wtórny · Catalyst · 140 szt.', rate:'WIBOR 3M + 3,80 · 7,70%',
+    maturity:'11.04.2029', value:'140 000,00 PLN' },
+];
+
+const SERIES_COLUMNS = ['Seria', 'Oprocentowanie', 'Wykup', 'Wartość'];
+
+const SERIES_DETAIL = { name: 'Michael / Ström SA, seria F', valueLabel: 'Wartość w portfelu',
+  value: '260 000', dec: ',00 PLN', groupLabel: 'Twoja pozycja', more: 'Pokaż więcej' };
+
+const SERIES_PARAMS = [
+  ['Liczba obligacji', '', '260 szt.'], ['Nominał jednostki', '', '1 000,00 PLN'],
+  ['Wartość nominalna', '', '260 000,00 PLN'],
+  ['Koszt nabycia', '2 transakcje — 12.05.2025, 02.04.2026', '258 400,00 PLN'],
+  ['Wartość bieżąca', '', '260 000,00 PLN'], ['Wypłacone odsetki', '', '14 820,00 PLN'],
+  ['Zysk / strata', 'metodyka w uzgodnieniu', '—'],
+  ['Stopa zwrotu', 'metodyka w uzgodnieniu', '—'],
+  ['Rachunek', '', 'Rachunek maklerski'],
+];
+
+const ISSUER_TX = [
+  ['30.09.2026', 'Wypłata odsetek', 'Michael / Ström SA, seria F', '5 420,00 PLN', '', 'Rozliczone', 'Rachunek maklerski'],
+  ['30.09.2026', 'Wypłata odsetek', 'Michael / Ström SA, seria F', '2 710,00 PLN', '', 'Rozliczone', 'IKE'],
+];
+
+const crumbs = (items) => `<nav class="crumbs">${items
+  .map(([label, target], i) => `${i ? '<span class="crumbs__sep">›</span>' : ''}${
+    target ? `<button type="button" class="crumbs__link" data-goto-screen="${target}">${label}</button>`
+           : `<span class="crumbs__current">${label}</span>`}`)
+  .join('')}</nav>`;
+
+const screenHead = (title, label, value, dec, key) => `<section class="detailHead">
+  <h1 class="detailTitle">${title}</h1>
+  <div class="detailValue">
+    <span class="detailValue__label">${label}</span>
+    ${amount(value, dec, '', key)}
+  </div></section>`;
+
+const infoList = (rows) => `<div class="infoList">${rows
+  .map(([label, sub, value]) => `<div class="infoRow">
+    <span class="infoRow__labelBlock"><span class="infoRow__label">${label}</span>
+      ${sub ? `<span class="infoRow__sub">${sub}</span>` : ''}</span>
+    <span class="infoRow__value">${value === undefined ? sub : value}</span></div>`)
+  .join('')}</div>`;
+
+function issuerScreen() {
+  return `<div class="screenOuter"><div class="screen"><div class="content">
+    <div class="crumbRow">${crumbs([['Portfel', 'portfel'], ['Aktywa', 'portfel'],
+      ['Obligacje korporacyjne', 'asset'], [ISSUER.name, null]])}</div>
+    ${screenHead(ISSUER.name, ISSUER.valueLabel, ISSUER.value, ISSUER.dec, 'emitent-suma')}
+
+    <section class="panel">
+      <h2 class="sectionTitle">Podsumowanie emitenta</h2>
+      ${infoList(ISSUER_SUMMARY.map(([l, v]) => [l, '', v]))}
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2 class="sectionTitle">Serie w portfelu</h2>
+        <span class="panel__meta">${ISSUER_SERIES.length} serie</span>
+      </div>
+      <div class="seriesTable">
+        <div class="seriesRow seriesRow--head">${SERIES_COLUMNS
+          .map((c, i) => `<span class="table__th ${i ? 'is-right' : ''}">${c}</span>`).join('')}<span></span></div>
+        ${ISSUER_SERIES.map((x) => `<button type="button" class="seriesRow" data-goto-screen="series">
+          <span class="seriesRow__titleBlock"><span class="seriesRow__name">${x.name}</span>
+            <span class="seriesRow__sub">${x.sub}</span></span>
+          <span class="seriesRow__cell">${x.rate}</span>
+          <span class="seriesRow__cell">${x.maturity}</span>
+          <span class="seriesRow__value">${x.value}</span>
+          <span class="seriesRow__chev">›</span></button>`).join('')}
+      </div>
+    </section>
+
+    ${transactions(ISSUER_TX, 'zdarzenia', true)}
+  </div></div></div>`;
+}
+
+function seriesScreen() {
+  return `<div class="screenOuter"><div class="screen"><div class="content">
+    <div class="crumbRow">${crumbs([['Portfel', 'portfel'], ['Aktywa', 'portfel'],
+      ['Obligacje korporacyjne', 'asset'], [ISSUER.name, 'issuer'], [SERIES_DETAIL.name, null]])}</div>
+    ${screenHead(SERIES_DETAIL.name, SERIES_DETAIL.valueLabel, SERIES_DETAIL.value, SERIES_DETAIL.dec, 'seria-suma')}
+
+    <section class="panel">
+      <h2 class="sectionTitle">Parametry inwestycji</h2>
+      <span class="panel__groupLabel">${SERIES_DETAIL.groupLabel}</span>
+      ${infoList(SERIES_PARAMS)}
+      <div class="panel__footAction">
+        <button type="button" class="btnGhost btnGhost--lg">${SERIES_DETAIL.more}</button>
+      </div>
+    </section>
+
+    ${transactions(ISSUER_TX, 'zdarzenia', true)}
+  </div></div></div>`;
 }
 
 function detailScreen() {
@@ -421,7 +542,7 @@ function detailScreen() {
       <div class="instrList">${items.map((it, i) => instrRow(it, i === 0, color)).join('')}</div>
     </section>
 
-    ${transactions()}
+    ${transactions(TRANSACTIONS, 'transakcji', false, TX_TOTAL)}
   </div></div></div>`;
 }
 
@@ -735,7 +856,11 @@ function render() {
       </div>
     </header>
 
-    ${state.screen === "pulpit" ? dashboardScreen() : state.screen === "portfel" ? portfolioScreen() : detailScreen()}
+    ${state.screen === "pulpit" ? dashboardScreen()
+      : state.screen === "portfel" ? portfolioScreen()
+      : state.screen === "issuer" ? issuerScreen()
+      : state.screen === "series" ? seriesScreen()
+      : detailScreen()}
     ${transitDrawer()}
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
@@ -806,6 +931,8 @@ document.addEventListener('click', (e) => {
     render();
     return;
   }
+  const gs = e.target.closest('[data-goto-screen]');
+  if (gs) { state.screen = gs.dataset.gotoScreen; render(); window.scrollTo({ top: 0 }); return; }
   const goto = e.target.closest('[data-goto]');
   if (goto) { state.screen = goto.dataset.goto; render(); window.scrollTo({ top: 0 }); return; }
   if (e.target.closest('[data-back]')) { state.screen = 'portfel'; render(); window.scrollTo({ top: 0 }); return; }

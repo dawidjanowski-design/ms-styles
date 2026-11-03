@@ -695,3 +695,52 @@ select.field__control {
 .detailValue__label { font-size: 13px; color: var(--muted); }
 .detailValue .amount__int { font-size: 22px; }
 .detailValue .amount__dec { font-size: 17px; }
+
+/* ========== ekran emitenta (722:5483) i serii (722:4654) ========== */
+
+/* Lista etykieta / wartość rozdzielona liniami */
+.infoList { display: flex; flex-direction: column; }
+.infoRow {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 24px;
+  padding: 13px 0; border-bottom: 1px solid var(--divider);
+}
+.infoList .infoRow:last-child { border-bottom: 0; padding-bottom: 0; }
+.infoRow__labelBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.infoRow__label { font-size: 14px; color: var(--muted); }
+.infoRow__sub { font-size: 11px; color: #b4aea8; }
+.infoRow__value {
+  font-size: 14px; font-weight: 500; color: var(--ink);
+  text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+
+.panel__groupLabel {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  margin-top: -8px;
+}
+.panel__footAction { display: flex; justify-content: center; padding-top: 4px; }
+
+/* Serie w portfelu */
+.seriesTable { display: flex; flex-direction: column; }
+.seriesRow {
+  display: grid; grid-template-columns: minmax(0, 1fr) 190px 110px 140px 14px;
+  align-items: center; gap: 16px;
+  padding: 14px 0; width: 100%; text-align: left;
+  border-bottom: 1px solid var(--divider);
+}
+.seriesTable .seriesRow:last-child { border-bottom: 0; padding-bottom: 0; }
+.seriesRow--head { padding: 0 0 10px; }
+.seriesRow__titleBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.seriesRow__name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.seriesRow__sub { font-size: 11px; color: var(--muted); }
+.seriesRow__cell { font-size: 13px; color: #686868; text-align: right; }
+.seriesRow__value {
+  font-size: 14px; font-weight: 500; color: #342717;
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+.seriesRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }
+
+/* Tabela transakcji bez kolumny rachunku */
+.table--narrow .table__head,
+.table--narrow .table__row {
+  grid-template-columns: 104px 180px minmax(0, 1fr) 150px 150px;
+}
