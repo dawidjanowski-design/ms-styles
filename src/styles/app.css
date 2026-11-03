@@ -496,12 +496,6 @@ select.field__control {
    bo auto kazaloby przegladarce uzyc natywnych 3x pikseli. */
 .offerCard__logo { display: block; }
 
-/* Przypis pod sumą — tylko w widoku „Łącznie" na ekranie Portfel. */
-.summary__note {
-  margin: 0; padding-top: 8px; max-width: 620px;
-  font-size: 11px; line-height: 16px; color: var(--muted);
-}
-
 /* ================= MAKIETA — warstwa wireframe'u =================
    Wszystko, co w nr 1 i nr 2 niesie kolor albo materiał, tu znika. */
 
@@ -540,6 +534,10 @@ select.field__control {
 /* Karta aktywa: nazwa z kropką, kwota z „≈", metryki w szarym pasku,
    pod nimi przycisk — tak jak na wireframie */
 [data-style='3'] .assetCard { gap: 14px; }
+/* Na wireframie nazwa i kwota stoja w jednej linii, przy przeciwnych krawedziach */
+[data-style='3'] .assetCard__head {
+  flex-direction: row; align-items: center; justify-content: space-between; gap: 16px;
+}
 [data-style='3'] .assetCard__name { font-size: 13px; font-weight: 400; }
 [data-style='3'] .assetCard__dot { width: 4px; height: 4px; background: #8d8d8d; }
 [data-style='3'] .assetCard__title { gap: 8px; flex-direction: row-reverse; justify-content: flex-end; }

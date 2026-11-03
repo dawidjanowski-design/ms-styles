@@ -372,7 +372,6 @@ export function PortfolioScreen({
                   />
                 </div>
               </div>
-              {data.note && <p className="summary__note">{data.note}</p>}
               <AllocationChart
                 rows={data.allocation}
                 styleId={styleId}

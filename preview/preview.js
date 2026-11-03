@@ -431,7 +431,6 @@ const alloc = (list, cashRow) =>
 const VIEWS = {
   'Łącznie': {
     total: TOTAL.amount, dec: TOTAL.decimals,
-    note: 'Suma w PLN. Pozycje w EUR i USD przeliczone kursem NBP z 3.11.2026 — to jedyne miejsce w portfelu, w którym pojawia się przeliczenie.',
     allocation: alloc(ASSETS, { id: 'cash', share: CASH.share, value: CASH.legendValue, sub: CASH.sub }),
     cashCards: CASH_CARDS, assets: ASSETS, accounts: ACCOUNTS,
   },
@@ -602,7 +601,6 @@ function portfolioScreen() {
               ${pills(CURRENCIES, state.currency, 'currency')}
             </div>
           </div>
-          ${data.note ? `<p class="summary__note">${data.note}</p>` : ''}
           ${chart(data.allocation)}
         </div>
         ${legend(data.allocation)}

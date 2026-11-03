@@ -182,11 +182,8 @@ rachunku, a salda rachunków do sumy widoku. W PLN gotówka 193 820 rozkłada
 się na wolną/zablokowaną/w drodze i jednocześnie na dwa rachunki — obie
 siatki się zgadzają.
 
-Dwie decyzje:
+Jedna decyzja:
 
-- **„Łącznie" ma przypis o kursie NBP.** Jedna suma musi być w jednej
-  walucie, więc to jedyne miejsce w portfelu, gdzie w ogóle pojawia się
-  przeliczenie. Zakładki PLN/EUR/USD nie przeliczają niczego.
 - **W widokach jednowalutowych karty gotówki pokazują rozbicie na rachunki**,
   a nie kolumnę PLN/EUR/USD — ta w widoku EUR czy USD byłaby kolumną
   myślników. W „Łącznie" kolumna walut zostaje, bo tam niesie treść.

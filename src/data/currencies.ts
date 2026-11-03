@@ -6,9 +6,7 @@
    za 200 tys. na rachunku EUR. Dlatego każdy widok ma własną sumę, własny
    podział na klasy aktywów, własną gotówkę i własne rachunki.
 
-   „Łącznie" jest jedynym widokiem, który sumuje wszystko do jednej liczby,
-   a taka suma musi być w jakiejś walucie — stąd przypis o kursie NBP.
-   To jedyne miejsce, w którym w ogóle pojawia się przeliczenie. */
+   „Łącznie" jest jedynym widokiem, który sumuje wszystko do jednej liczby. */
 
 import {
   ACCOUNTS,
@@ -39,8 +37,6 @@ export type CurrencyView = {
   /** jednostka dopisywana do kwot, np. ',00 EUR' */
   decimals: string;
   total: string;
-  /** przypis pod sumą — tylko w widoku „Łącznie" */
-  note?: string;
   allocation: AllocationRow[];
   cashCards: CashCard[];
   assets: AssetClass[];
@@ -221,7 +217,6 @@ export const VIEWS: Record<Currency, CurrencyView> = {
   Łącznie: {
     total: TOTAL.amount,
     decimals: TOTAL.decimals,
-    note: 'Suma w PLN. Pozycje w EUR i USD przeliczone kursem NBP z 3.11.2026 — to jedyne miejsce w portfelu, w którym pojawia się przeliczenie.',
     allocation: [
       ...ASSETS.map((a) => ({ id: a.id, share: a.share, value: a.legendValue })),
       { id: CASH.id, share: CASH.share, value: CASH.legendValue, sub: CASH.sub },
