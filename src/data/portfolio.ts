@@ -131,6 +131,8 @@ export const CASH = {
   } as Record<'1' | '2', Palette>,
 };
 
+/* Na wczesniejszym ekranie wszystkie trzy karty mialy ten sam podpis;
+   nowszy wireframe 733:825 nazywa je poprawnie i to jego trzymamy. */
 export const CASH_CARDS = [
   {
     label: 'Wolna gotówka',
@@ -143,7 +145,7 @@ export const CASH_CARDS = [
     ],
   },
   {
-    label: 'Wolna gotówka',
+    label: 'Gotówka zablokowana',
     amount: '50 118',
     decimals: ',00 PLN',
     rows: [
@@ -153,7 +155,7 @@ export const CASH_CARDS = [
     ],
   },
   {
-    label: 'Wolna gotówka',
+    label: 'Środki w drodze',
     amount: '45 118',
     decimals: ',00 PLN',
     rows: [

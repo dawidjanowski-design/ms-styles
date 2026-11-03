@@ -594,3 +594,85 @@ select.field__control {
   .roll__out { display: none; }
   .roll__in { animation: none; }
 }
+
+/* ================= panel „Środki w drodze" (Figma 733:825) =================
+   Wysuwany z prawej. Celowo nie dotyka krawędzi — 8 px marginesu dookoła
+   i promień 12 px, tak jak na wireframie. */
+
+.drawerRoot { position: fixed; inset: 0; z-index: 60; }
+.drawerBackdrop {
+  position: absolute; inset: 0;
+  background: rgba(20, 20, 22, 0.45);
+  animation: drawerFade 200ms var(--ease) both;
+}
+.drawer {
+  position: absolute; top: 8px; right: 8px; bottom: 8px;
+  width: 460px; max-width: calc(100% - 16px);
+  background: var(--card-bg); border-radius: 12px;
+  padding: 26px; overflow-y: auto;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  animation: drawerIn 260ms var(--ease) both;
+}
+@keyframes drawerFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes drawerIn {
+  from { transform: translateX(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawerBackdrop, .drawer { animation: none; }
+}
+
+.drawer__head { display: flex; align-items: flex-start; gap: 12px; }
+.drawer__titleBlock { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.drawer__title { margin: 0; font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+.drawer__sub { font-size: 11px; color: var(--muted); }
+.drawer__close {
+  width: 28px; height: 28px; margin: -4px -4px 0 0; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--muted);
+  transition: background 140ms var(--ease), color 140ms var(--ease);
+}
+.drawer__close:hover { background: var(--screen-bg); color: var(--ink); }
+
+.transitTotal {
+  margin-top: 16px; padding: 16px; border-radius: 10px;
+  background: var(--screen-bg);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.transitTotal__label { font-size: 11px; color: var(--muted); }
+.transitTotal__value {
+  font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.transitTotal__sub { font-size: 10px; color: var(--muted); }
+
+.transitGroups { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.transitGroup {
+  padding: 14px; border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--divider);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.transitGroup__head { display: flex; align-items: flex-start; gap: 10px; }
+.transitGroup__titleBlock { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.transitGroup__name { font-size: 12px; font-weight: 500; color: var(--ink); }
+.transitGroup__sub { font-size: 10px; color: var(--muted); }
+.transitGroup__total {
+  font-size: 12px; font-weight: 500; color: var(--ink); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.transitGroup__rows { display: flex; flex-direction: column; }
+.transitRow {
+  display: flex; align-items: center; gap: 10px; padding: 7px 0;
+  font-size: 10px; color: var(--muted);
+}
+.transitRow__date { width: 34px; flex: none; }
+.transitRow__title { flex: 1; min-width: 0; }
+.transitRow__amount { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.drawer__note { margin: 12px 0 0; font-size: 10px; line-height: 15px; color: var(--muted); }
+
+/* Karta gotówki, która otwiera panel */
+.cashCard--link { cursor: pointer; text-align: left; width: 100%; }
+.cashCard__head { display: flex; align-items: center; gap: 10px; }
+.cashCard__chev { font-size: 13px; color: var(--muted); }

@@ -249,7 +249,7 @@ export const VIEWS: Record<Currency, CurrencyView> = {
         ],
       },
       {
-        label: 'Zablokowana',
+        label: 'Gotówka zablokowana',
         amount: '25 000',
         decimals: ',00 PLN',
         rows: [
@@ -258,7 +258,7 @@ export const VIEWS: Record<Currency, CurrencyView> = {
         ],
       },
       {
-        label: 'W drodze',
+        label: 'Środki w drodze',
         amount: '18 820',
         decimals: ',00 PLN',
         rows: [
@@ -280,8 +280,8 @@ export const VIEWS: Record<Currency, CurrencyView> = {
     ],
     cashCards: [
       { label: 'Wolna gotówka', amount: '12 000', decimals: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '12 000,00') },
-      { label: 'Zablokowana', amount: '0', decimals: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
-      { label: 'W drodze', amount: '0', decimals: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+      { label: 'Gotówka zablokowana', amount: '0', decimals: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+      { label: 'Środki w drodze', amount: '0', decimals: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
     ],
     assets: EUR_ASSETS,
     accounts: EUR_ACCOUNTS,
@@ -296,8 +296,8 @@ export const VIEWS: Record<Currency, CurrencyView> = {
     ],
     cashCards: [
       { label: 'Wolna gotówka', amount: '13 000', decimals: ',00 USD', rows: onAccount('Rachunek maklerski USD', '13 000,00') },
-      { label: 'Zablokowana', amount: '0', decimals: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
-      { label: 'W drodze', amount: '0', decimals: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+      { label: 'Gotówka zablokowana', amount: '0', decimals: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+      { label: 'Środki w drodze', amount: '0', decimals: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
     ],
     assets: USD_ASSETS,
     accounts: USD_ACCOUNTS,

@@ -237,3 +237,23 @@ Dwie rzeczy, bez których ten efekt by nie działał:
 
 Licznik działa wszędzie, gdzie jest kwota, więc przy zmianie waluty przewijają
 się też karty gotówki i aktywów. `prefers-reduced-motion` wyłącza animację.
+
+## Panel „Środki w drodze"
+
+Figma `733:825`. Otwiera się po kliknięciu trzeciej karty w sekcji „Gotówka
+i środki rozliczeniowe", w stylistykach nr 1 i nr 2. Zamyka go ✕, kliknięcie
+w tło albo Esc.
+
+Panel **nie dochodzi do krawędzi** — 8 px marginesu z góry, z prawej i z dołu,
+promień 12 px, szerokość 460 px jak na wireframie. Wysuwa się z prawej, tło
+przyciemnia się pod nim.
+
+Dwie rzeczy przy okazji:
+
+- **Poprawione podpisy kart gotówki.** Wcześniejszy ekran miał trzy razy
+  „Wolna gotówka"; ten wireframe nazywa je poprawnie — Wolna gotówka,
+  Gotówka zablokowana, Środki w drodze — i tej wersji się trzymamy. Bez tego
+  karta „Wolna gotówka" otwierałaby panel „Środki w drodze".
+- **Panel otwiera się tylko w widoku „Łącznie".** Pokazuje rozbicie całości
+  (45 118,00 PLN, w tym 3 500 EUR), więc w zakładce PLN czy EUR jego liczby
+  by nie pasowały do reszty ekranu.

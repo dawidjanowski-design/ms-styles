@@ -15,6 +15,7 @@ import {
   type Currency,
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
+import { InTransitDrawer } from './InTransit';
 
 type StyleId = '1' | '2' | '3';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
@@ -176,15 +177,36 @@ export function Legend({
 
 /* ----------------------------- gotówka ----------------------------- */
 
-function CashOverview({ cards }: { cards: CashCard[] }) {
+function CashOverview({
+  cards,
+  onOpenTransit,
+}: {
+  cards: CashCard[];
+  onOpenTransit?: () => void;
+}) {
   return (
     <section className="cash">
       <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
       <div className="cash__grid">
-        {cards.map((card, i) => (
-          <article className="cashCard" key={i}>
+        {cards.map((card, i) => {
+          const link = onOpenTransit && card.label === 'Środki w drodze';
+          return (
+          <article
+            className={`cashCard ${link ? 'cashCard--link' : ''}`}
+            key={i}
+            onClick={link ? onOpenTransit : undefined}
+          >
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <span className="cashCard__label">{card.label}</span>
+              <span className="cashCard__head">
+                <span className="cashCard__label" style={{ flex: 1 }}>
+                  {card.label}
+                </span>
+                {link && (
+                  <span className="cashCard__chev" aria-hidden="true">
+                    ›
+                  </span>
+                )}
+              </span>
               <Amount int={card.amount} dec={card.decimals} className="cashCard__amount" />
             </div>
             <div className="divider" />
@@ -194,7 +216,8 @@ function CashOverview({ cards }: { cards: CashCard[] }) {
               ))}
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -347,6 +370,8 @@ export function PortfolioScreen({
   const [currency, setCurrency] = useState<Currency>('Łącznie');
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
+  /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
+  const [transit, setTransit] = useState(false);
 
   const data = VIEWS[currency];
   const title = <h1 className="pageTitle">Portfel</h1>;
@@ -385,7 +410,14 @@ export function PortfolioScreen({
             />
           </section>
 
-          <CashOverview cards={data.cashCards} />
+          <CashOverview
+            cards={data.cashCards}
+            /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
+                laczynm — w PLN/EUR/USD jego liczby by nie pasowaly. */
+            onOpenTransit={
+              styleId !== '3' && currency === 'Łącznie' ? () => setTransit(true) : undefined
+            }
+          />
 
           <section className="assets">
             <div className="assets__head">
@@ -416,6 +448,8 @@ export function PortfolioScreen({
           </section>
         </div>
       </div>
+
+      <InTransitDrawer open={transit} onClose={() => setTransit(false)} />
     </div>
   );
 }

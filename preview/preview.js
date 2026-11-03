@@ -41,9 +41,9 @@ const CASH = { id: 'cash', name: 'Gotówka', share: 8.3, legendValue: '≈ 348 3
 const CASH_CARDS = [
   { label: 'Wolna gotówka', amount: '253 118', dec: ',00 PLN',
     rows: [['PLN', '190 118,00'], ['EUR', '12 000,00'], ['USD', '3 000,00']] },
-  { label: 'Wolna gotówka', amount: '50 118', dec: ',00 PLN',
+  { label: 'Gotówka zablokowana', amount: '50 118', dec: ',00 PLN',
     rows: [['PLN', '50 118,00'], ['EUR', '-'], ['USD', '-']] },
-  { label: 'Wolna gotówka', amount: '45 118', dec: ',00 PLN',
+  { label: 'Środki w drodze', amount: '45 118', dec: ',00 PLN',
     rows: [['PLN', '30 000,00'], ['EUR', '3 500,00'], ['USD', '-']] },
 ];
 
@@ -54,7 +54,7 @@ const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
-  lastAmounts: {} };
+  transit: false, lastAmounts: {} };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
@@ -133,15 +133,20 @@ function cash(cards) {
   return `<section class="cash">
     <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
     <div class="cash__grid">${cards.map(
-      (c, i) => `<article class="cashCard">
+      (c, i) => {
+        const link = state.style !== '3' && state.currency === 'Łącznie'
+          && c.label === 'Środki w drodze';
+        return `<article class="cashCard ${link ? 'cashCard--link' : ''}" ${link ? 'data-open-drawer' : ''}>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <span class="cashCard__label">${c.label}</span>
+          <span class="cashCard__head"><span class="cashCard__label" style="flex:1">${c.label}</span>
+            ${link ? '<span class="cashCard__chev">›</span>' : ''}</span>
           ${amount(c.amount, c.dec, 'cashCard__amount', 'gotowka-' + i)}
         </div>
         <div class="divider"></div>
         <div style="display:flex;flex-direction:column;gap:4px">
           ${c.rows.map(([l, v]) => kv(l, v)).join('')}
-        </div></article>`
+        </div></article>`;
+      }
     ).join('')}</div></section>`;
 }
 
@@ -464,9 +469,9 @@ const VIEWS = {
     cashCards: [
       { label: 'Wolna gotówka', amount: '150 000', dec: ',00 PLN',
         rows: [['Rachunek maklerski', '40 000,00'], ['Rachunek żony', '110 000,00']] },
-      { label: 'Zablokowana', amount: '25 000', dec: ',00 PLN',
+      { label: 'Gotówka zablokowana', amount: '25 000', dec: ',00 PLN',
         rows: [['Rachunek maklerski', '11 128,00'], ['Rachunek żony', '13 872,00']] },
-      { label: 'W drodze', amount: '18 820', dec: ',00 PLN',
+      { label: 'Środki w drodze', amount: '18 820', dec: ',00 PLN',
         rows: [['Rachunek maklerski', '0,00'], ['Rachunek żony', '18 820,00']] },
     ],
     assets: PLN_ASSETS,
@@ -493,8 +498,8 @@ const VIEWS = {
     allocation: alloc(EUR_ASSETS, { id: 'cash', share: 4.8, value: '12 000 EUR', sub: 'Wolna 12 000 EUR' }),
     cashCards: [
       { label: 'Wolna gotówka', amount: '12 000', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '12 000,00') },
-      { label: 'Zablokowana', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
-      { label: 'W drodze', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+      { label: 'Gotówka zablokowana', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
+      { label: 'Środki w drodze', amount: '0', dec: ',00 EUR', rows: onAccount('Rachunek maklerski EUR', '0,00') },
     ],
     assets: EUR_ASSETS,
     accounts: [
@@ -510,8 +515,8 @@ const VIEWS = {
     allocation: alloc(USD_ASSETS, { id: 'cash', share: 21.3, value: '13 000 USD', sub: 'Wolna 13 000 USD' }),
     cashCards: [
       { label: 'Wolna gotówka', amount: '13 000', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '13 000,00') },
-      { label: 'Zablokowana', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
-      { label: 'W drodze', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+      { label: 'Gotówka zablokowana', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
+      { label: 'Środki w drodze', amount: '0', dec: ',00 USD', rows: onAccount('Rachunek maklerski USD', '0,00') },
     ],
     assets: USD_ASSETS,
     accounts: [
@@ -608,6 +613,67 @@ function dashboardScreen() {
   </div></div></div>`;
 }
 
+
+/* ---------------- panel „Środki w drodze" (Figma 733:825) ---------------- */
+
+const IN_TRANSIT = {
+  title: 'Środki w drodze',
+  sub: '8 transakcji · stan na 26.10.2026, 12:04',
+  totalLabel: 'Łącznie',
+  total: '45 118,00 PLN',
+  totalSub: 'w tym 30 000,00 PLN · 3 500,00 EUR',
+  footnote: 'Środki w drodze nie są dostępne do nowych dyspozycji. Pojawią się jako wolna gotówka albo jako instrumenty po rozliczeniu.',
+};
+
+const TRANSIT_GROUPS = [
+  { name: 'Obligacje', sub: 'Opłacenie zapisu · 2 transakcje', total: '− 20 000,00 PLN', entries: [
+    ['24.10', 'Michael / Ström SA, seria K · zapis', '− 15 000,00 PLN'],
+    ['25.10', 'Victoria Dom, seria C1 · zapis', '− 5 000,00 PLN'] ] },
+  { name: 'Fundusze zamknięte (FIZ)', sub: 'Żądanie wykupu · 2 transakcje', total: '+ 18 618,00 PLN', entries: [
+    ['22.10', 'M/S Obligacji Korporacyjnych FIZ · wykup', '+ 15 118,00 PLN'],
+    ['23.10', 'Rockbridge FIZ · wykup', '+ 3 500,00 EUR'] ] },
+  { name: 'Fundusze otwarte (FIO)', sub: 'Nabycie i umorzenie · 3 transakcje', total: '+ 36 500,00 PLN', entries: [
+    ['23.10', 'Quercus Obligacji Skarbowych · umorzenie', '+ 50 000,00 PLN'],
+    ['24.10', 'Schroder ISF Global Equity · nabycie', '− 13 500,00 PLN'] ] },
+  { name: 'Asset Management', sub: 'Alokacja środków · 1 transakcja', total: '− 10 000,00 PLN', entries: [
+    ['25.10', 'Strategia Dochodowa · alokacja na 12 funduszy', '− 10 000,00 PLN'] ] },
+];
+
+function transitDrawer() {
+  if (!state.transit) return '';
+  return `<div class="drawerRoot">
+    <div class="drawerBackdrop" data-close-drawer></div>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-label="${IN_TRANSIT.title}">
+      <div class="drawer__head">
+        <div class="drawer__titleBlock">
+          <h2 class="drawer__title">${IN_TRANSIT.title}</h2>
+          <span class="drawer__sub">${IN_TRANSIT.sub}</span>
+        </div>
+        <button type="button" class="drawer__close" aria-label="Zamknij" data-close-drawer>✕</button>
+      </div>
+      <div class="transitTotal">
+        <span class="transitTotal__label">${IN_TRANSIT.totalLabel}</span>
+        <span class="transitTotal__value">${IN_TRANSIT.total}</span>
+        <span class="transitTotal__sub">${IN_TRANSIT.totalSub}</span>
+      </div>
+      <div class="transitGroups">${TRANSIT_GROUPS.map((g) => `<section class="transitGroup">
+        <div class="transitGroup__head">
+          <div class="transitGroup__titleBlock">
+            <span class="transitGroup__name">${g.name}</span>
+            <span class="transitGroup__sub">${g.sub}</span>
+          </div>
+          <span class="transitGroup__total">${g.total}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="transitGroup__rows">${g.entries.map(([d, t, a]) => `<div class="transitRow">
+          <span class="transitRow__date">${d}</span>
+          <span class="transitRow__title">${t}</span>
+          <span class="transitRow__amount">${a}</span></div>`).join('')}</div>
+      </section>`).join('')}</div>
+      <p class="drawer__note">${IN_TRANSIT.footnote}</p>
+    </aside></div>`;
+}
+
 function portfolioScreen() {
   const title = '<h1 class="pageTitle">Portfel</h1>';
   const data = VIEWS[state.currency];
@@ -662,6 +728,7 @@ function render() {
     </header>
 
     ${state.screen === "pulpit" ? dashboardScreen() : state.screen === "portfel" ? portfolioScreen() : detailScreen()}
+    ${transitDrawer()}
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
@@ -684,6 +751,10 @@ function applyHot(id) {
 
 /* Po animacji wychodzacy znak znika z DOM-u, inaczej kwota kopiuje sie
    jako przeplatanka starej i nowej wartosci. */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && state.transit) { state.transit = false; render(); }
+});
+
 document.addEventListener('animationend', (e) => {
   if (e.target.classList && e.target.classList.contains('roll__out')) e.target.remove();
 });
@@ -715,6 +786,8 @@ document.addEventListener('click', (e) => {
     state.screen = nav.dataset.nav === 'Pulpit' ? 'pulpit' : 'portfel';
     render(); window.scrollTo({ top: 0 }); return;
   }
+  if (e.target.closest('[data-open-drawer]')) { state.transit = true; render(); return; }
+  if (e.target.closest('[data-close-drawer]')) { state.transit = false; render(); return; }
   const chip = e.target.closest('[data-chip]');
   if (chip) {
     const name = chip.dataset.chip;
