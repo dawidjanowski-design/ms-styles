@@ -486,7 +486,8 @@ select.field__control {
 .eventRow__amount { font-size: 14px; font-weight: 500; color: #342717; text-align: right; }
 .eventRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }
 
-/* Logo emitenta zamiast nazwy — bitmapy 1x prosto z Figmy, więc rysujemy je
-   w natywnym rozmiarze; na ekranach 2x będą lekko miękkie do czasu, aż
-   dostaniemy wersje @2x albo SVG. */
-.offerCard__logo { display: block; width: auto; height: auto; }
+/* Logo emitenta zamiast nazwy. Pliki są w gęstości 3x i skalowane w dół do
+   rozmiaru z atrybutów width/height, więc zostają ostre także na retinie. */
+/* Rozmiar bierze się z atrybutow width/height przy <img> — zadnego auto,
+   bo auto kazaloby przegladarce uzyc natywnych 3x pikseli. */
+.offerCard__logo { display: block; }

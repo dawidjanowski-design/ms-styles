@@ -152,7 +152,6 @@ bez obligacji skarbowych) różnią się od naszych — suma 4 218 640,00 PLN je
 ta sama, więc zostały nasze.
 
 Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
-`preview/logos`) i są podpięte w `src/data/dashboard.ts`. To bitmapy 1x
-prosto z Figmy, rysowane w natywnym rozmiarze — na ekranach 2x będą lekko
-miękkie do czasu, aż pojawią się wersje @2x albo SVG. Oferta bez pola
-`logo` renderuje nazwę emitenta tekstem.
+`preview/logos`) i są podpięte w `src/data/dashboard.ts`. Pliki mają gęstość 3x i są
+skalowane w dół do rozmiaru z `width`/`height`, więc zostają ostre także na
+ekranach retina. Oferta bez pola `logo` renderuje nazwę emitenta tekstem.
