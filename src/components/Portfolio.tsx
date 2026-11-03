@@ -349,19 +349,16 @@ export function PortfolioScreen({
   const [hot, setHot] = useState<string | null>(null);
 
   const data = VIEWS[currency];
-  const titleInSummary = styleId !== '2';
   const title = <h1 className="pageTitle">Portfel</h1>;
 
   return (
     <div className="screenOuter">
       <div className="screen">
         <div className="content">
-          {!titleInSummary && title}
-
           <section className="summary" style={{ paddingTop: 'var(--summary-pt)' }}>
             <div className="summary__top">
               <div className="summary__titleBlock">
-                {titleInSummary && title}
+                {title}
                 <div className="summary__head">
                   <Amount int={data.total} dec={data.decimals} />
                   <Pills

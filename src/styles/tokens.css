@@ -107,13 +107,15 @@
   --title-weight: 400;
   --title-color: var(--muted);
   --title-tracking: -0.02em;
-  --title-in-summary: 0;
+  --title-in-summary: 1;
 
-  --summary-pt: 24px;
-  --summary-gap: 24px;
-  --summary-top-gap: 24px;
-  --title-amount-gap: 0px;
-  --legend-pt: 0px;
+  /* Odstepy bloku podsumowania takie same jak w nr 1 — tytul, kwota, wykres
+     i legenda maja stac w tym samym rytmie w obu stylistykach. */
+  --summary-pt: 0px;
+  --summary-gap: 0px;
+  --summary-top-gap: 16px;
+  --title-amount-gap: 2px;
+  --legend-pt: 16px;
   --legend-gap: 8px;
   --cash-pt: 0px;
 

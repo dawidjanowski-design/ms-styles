@@ -609,16 +609,14 @@ function dashboardScreen() {
 }
 
 function portfolioScreen() {
-  const titleInSummary = state.style !== '2';
   const title = '<h1 class="pageTitle">Portfel</h1>';
   const data = VIEWS[state.currency];
   return `
     <div class="screenOuter"><div class="screen"><div class="content">
-      ${titleInSummary ? '' : title}
       <section class="summary" style="padding-top:var(--summary-pt)">
         <div class="summary__top">
           <div class="summary__titleBlock">
-            ${titleInSummary ? title : ''}
+            ${title}
             <div class="summary__head">
               ${amount(data.total, data.dec, '', 'portfel-suma')}
               ${pills(CURRENCIES, state.currency, 'currency')}
