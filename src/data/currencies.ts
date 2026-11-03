@@ -75,7 +75,6 @@ const PLN_ACCOUNTS: Account[] = [
     number: '00-00-006858',
     amount: '2 200 000',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '1 420 000,00 PLN' },
       { label: 'Obligacje skarbowe', value: '316 398,00 PLN' },
@@ -93,7 +92,6 @@ const PLN_ACCOUNTS: Account[] = [
     amount: '400 000',
     amountDecimals: ',00 PLN',
     strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
-    rowsLabel: 'Papiery',
     rows: [{ label: 'Fundusze otwarte (FIO)', value: '400 000,00 PLN' }],
     action: 'Zobacz szczegóły',
   },
@@ -114,7 +112,6 @@ const PLN_ACCOUNTS: Account[] = [
     number: '00-00-009120',
     amount: '142 692',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [{ label: 'Wolne środki', value: '142 692,00 PLN' }],
     action: 'Zobacz szczegóły',
   },
@@ -163,7 +160,6 @@ const EUR_ACCOUNTS: Account[] = [
     number: '00-00-006858/EUR',
     amount: '248 400',
     amountDecimals: ',00 EUR',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '200 000,00 EUR' },
       { label: 'Fundusze zamknięte (FIZ)', value: '36 400,00 EUR' },
@@ -202,7 +198,6 @@ const USD_ACCOUNTS: Account[] = [
     number: '00-00-006858/USD',
     amount: '61 000',
     amountDecimals: ',00 USD',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '48 000,00 USD' },
       { label: 'Wolne środki', value: '13 000,00 USD' },

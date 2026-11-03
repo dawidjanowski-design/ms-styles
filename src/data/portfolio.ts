@@ -178,8 +178,6 @@ export type Account = {
   number: string;
   amount: string;
   amountDecimals: string;
-  /** nagłówek listy pozycji — w Figmie raz „Pozycje", raz „Papiery" */
-  rowsLabel?: string;
   rows: AccountRow[];
   /** szary pasek w środku karty — na razie tylko limit wpłat IKE */
   strip?: { label: string; value: string; progress?: number };
@@ -196,7 +194,6 @@ export const ACCOUNTS: Account[] = [
     number: '00-00-006858',
     amount: '2 362 438',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '1 063 802,00 PLN' },
       { label: 'Obligacje skarbowe', value: '316 398,00 PLN' },
@@ -213,7 +210,6 @@ export const ACCOUNTS: Account[] = [
     number: '00-00-009120',
     amount: '180 000',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '150 000,00 PLN' },
       { label: 'Wolne środki', value: '30 000,00 PLN' },
@@ -227,7 +223,6 @@ export const ACCOUNTS: Account[] = [
     number: '00-00-009120',
     amount: '843 728',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje korporacyjne', value: '729 120,00 PLN' },
       { label: 'Wolne środki', value: '114 608,00 PLN' },
@@ -242,7 +237,6 @@ export const ACCOUNTS: Account[] = [
     amount: '506 237',
     amountDecimals: ',00 PLN',
     strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
-    rowsLabel: 'Papiery',
     rows: [
       { label: 'Obligacje', value: '340 000,00 PLN' },
       { label: 'Fundusze otwarte (FIO)', value: '120 000,00 PLN' },
@@ -257,7 +251,6 @@ export const ACCOUNTS: Account[] = [
     number: '00-00-007432',
     amount: '337 491',
     amountDecimals: ',00 PLN',
-    rowsLabel: 'Pozycje',
     rows: [
       { label: 'Obligacje', value: '240 000,00 PLN' },
       { label: 'Fundusze otwarte (FIO)', value: '50 000,00 PLN' },

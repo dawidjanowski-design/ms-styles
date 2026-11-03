@@ -350,7 +350,6 @@ function AccountCard({
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
-          {account.rowsLabel && <div className="acctCard__rowsLabel">{account.rowsLabel}</div>}
           <div className="acctCard__rows">
             {account.rows.map((r) => (
               <button type="button" className="acctRow" key={r.label}>

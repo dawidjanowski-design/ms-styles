@@ -157,24 +157,19 @@ function cash(cards) {
 
 
 const ACCOUNTS = [
-  { id:'maklerski', marker:{'1':'#042468','2':'#046816'}, name:'Rachunek maklerski', number:'00-00-006858', amount:'2 362 438', dec:',00 PLN',
-    rowsLabel:'Pozycje', action:'Zobacz szczegóły',
+  { id:'maklerski', marker:{'1':'#042468','2':'#046816'}, name:'Rachunek maklerski', number:'00-00-006858', amount:'2 362 438', dec:',00 PLN', action:'Zobacz szczegóły',
     rows:[['Obligacje korporacyjne','1 063 802,00 PLN'],['Obligacje skarbowe','316 398,00 PLN'],
           ['Fundusze zamknięte (FIZ)','421 864,00 PLN'],['Fundusze otwarte (FIO)','420 610,00 PLN'],
           ['Wolne środki','48 420,00 PLN']] },
-  { id:'zony', marker:{'1':'#0a21c8','2':'#0a21c8'}, name:'Rachunek żony', number:'00-00-009120', amount:'180 000', dec:',00 PLN',
-    rowsLabel:'Pozycje', action:'Zobacz szczegóły',
+  { id:'zony', marker:{'1':'#0a21c8','2':'#0a21c8'}, name:'Rachunek żony', number:'00-00-009120', amount:'180 000', dec:',00 PLN', action:'Zobacz szczegóły',
     rows:[['Obligacje korporacyjne','150 000,00 PLN'],['Wolne środki','30 000,00 PLN']] },
-  { id:'oki', marker:{'1':'#0aa6c8','2':'#b044ef'}, name:'OKI', number:'00-00-009120', amount:'843 728', dec:',00 PLN',
-    rowsLabel:'Pozycje', action:'Zobacz więcej (12)',
+  { id:'oki', marker:{'1':'#0aa6c8','2':'#b044ef'}, name:'OKI', number:'00-00-009120', amount:'843 728', dec:',00 PLN', action:'Zobacz więcej (12)',
     rows:[['Obligacje korporacyjne','729 120,00 PLN'],['Wolne środki','114 608,00 PLN']] },
   { id:'ike', marker:{'1':'#ef4444','2':'#11aebd'}, name:'IKE', number:'00-00-007431', amount:'506 237', dec:',00 PLN',
-    strip:{label:'Limit wpłat 2026', value:'30 000 PLN z 40 000 PLN', progress:0.75},
-    rowsLabel:'Papiery', action:'Zobacz więcej (12)',
+    strip:{label:'Limit wpłat 2026', value:'30 000 PLN z 40 000 PLN', progress:0.75}, action:'Zobacz więcej (12)',
     rows:[['Obligacje','340 000,00 PLN'],['Fundusze otwarte (FIO)','120 000,00 PLN'],
           ['Wolne środki','46 237,00 PLN']] },
-  { id:'xz', marker:{'1':'#e4b212','2':'#e4b212'}, name:'XZ', number:'00-00-007432', amount:'337 491', dec:',00 PLN',
-    rowsLabel:'Pozycje', action:'Zobacz więcej (12)',
+  { id:'xz', marker:{'1':'#e4b212','2':'#e4b212'}, name:'XZ', number:'00-00-007432', amount:'337 491', dec:',00 PLN', action:'Zobacz więcej (12)',
     rows:[['Obligacje','240 000,00 PLN'],['Fundusze otwarte (FIO)','50 000,00 PLN'],
           ['Wolne środki','22 491,00 PLN']] },
   { id:'am', marker:{'1':'#9ec421','2':'#9ec421'}, name:'AM strategia konserwatywna', number:'00-00-008801', amount:'168 746', dec:',00 PLN',
@@ -205,7 +200,6 @@ function accountCard(a) {
           : ''}
       </div>` : ''}
     ${a.rows.length ? `<div class="divider"></div>
-      ${a.rowsLabel ? `<div class="acctCard__rowsLabel">${a.rowsLabel}</div>` : ''}
       <div class="acctCard__rows">${a.rows.map(([l, v]) =>
         `<button type="button" class="acctRow"><span class="acctRow__label">${l}</span>
          <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
@@ -782,20 +776,18 @@ const VIEWS = {
     assets: PLN_ASSETS,
     accounts: [
       { id: 'maklerski', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski',
-        number: '00-00-006858', amount: '2 200 000', dec: ',00 PLN', rowsLabel: 'Pozycje',
-        action: 'Zobacz szczegóły',
+        number: '00-00-006858', amount: '2 200 000', dec: ',00 PLN', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '1 420 000,00 PLN'], ['Obligacje skarbowe', '316 398,00 PLN'],
                ['Fundusze zamknięte (FIZ)', '221 864,00 PLN'], ['Fundusze otwarte (FIO)', '190 610,00 PLN'],
                ['Wolne środki', '51 128,00 PLN']] },
       { id: 'ike', marker: { '1': '#ef4444', '2': '#11aebd' }, name: 'IKE', number: '00-00-007431',
-        amount: '400 000', dec: ',00 PLN', rowsLabel: 'Papiery', action: 'Zobacz szczegóły',
+        amount: '400 000', dec: ',00 PLN', action: 'Zobacz szczegóły',
         strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
         rows: [['Fundusze otwarte (FIO)', '400 000,00 PLN']] },
       { id: 'am', marker: { '1': '#9ec421', '2': '#9ec421' }, name: 'AM strategia konserwatywna',
         number: '00-00-008801', amount: '843 728', dec: ',00 PLN', rows: [], action: 'Zobacz szczegóły' },
       { id: 'zony', marker: { '1': '#0a21c8', '2': '#0a21c8' }, name: 'Rachunek żony',
-        number: '00-00-009120', amount: '142 692', dec: ',00 PLN', rowsLabel: 'Pozycje',
-        action: 'Zobacz szczegóły', rows: [['Wolne środki', '142 692,00 PLN']] },
+        number: '00-00-009120', amount: '142 692', dec: ',00 PLN', action: 'Zobacz szczegóły', rows: [['Wolne środki', '142 692,00 PLN']] },
     ],
   },
   EUR: {
@@ -809,8 +801,7 @@ const VIEWS = {
     assets: EUR_ASSETS,
     accounts: [
       { id: 'maklerski-eur', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski EUR',
-        number: '00-00-006858/EUR', amount: '248 400', dec: ',00 EUR', rowsLabel: 'Pozycje',
-        action: 'Zobacz szczegóły',
+        number: '00-00-006858/EUR', amount: '248 400', dec: ',00 EUR', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '200 000,00 EUR'], ['Fundusze zamknięte (FIZ)', '36 400,00 EUR'],
                ['Wolne środki', '12 000,00 EUR']] },
     ],
@@ -826,8 +817,7 @@ const VIEWS = {
     assets: USD_ASSETS,
     accounts: [
       { id: 'maklerski-usd', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski USD',
-        number: '00-00-006858/USD', amount: '61 000', dec: ',00 USD', rowsLabel: 'Pozycje',
-        action: 'Zobacz szczegóły',
+        number: '00-00-006858/USD', amount: '61 000', dec: ',00 USD', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '48 000,00 USD'], ['Wolne środki', '13 000,00 USD']] },
     ],
   },
