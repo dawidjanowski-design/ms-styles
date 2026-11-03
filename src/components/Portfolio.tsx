@@ -177,6 +177,10 @@ export function Legend({
 
 /* ----------------------------- gotówka ----------------------------- */
 
+/* Karta z zerowym saldem nie niesie zadnej informacji — w widoku EUR czy USD
+   byly to dwa puste prostokaty obok jednej realnej kwoty. */
+const isEmpty = (c: CashCard) => c.amount.replace(/\s/g, '') === '0';
+
 function CashOverview({
   cards,
   onOpenTransit,
@@ -184,11 +188,14 @@ function CashOverview({
   cards: CashCard[];
   onOpenTransit?: () => void;
 }) {
+  const visible = cards.filter((c) => !isEmpty(c));
+  if (visible.length === 0) return null;
+
   return (
     <section className="cash">
       <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
       <div className="cash__grid">
-        {cards.map((card, i) => {
+        {visible.map((card, i) => {
           const link = onOpenTransit && card.label === 'Środki w drodze';
           return (
           <article

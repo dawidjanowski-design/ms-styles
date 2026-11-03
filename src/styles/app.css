@@ -176,7 +176,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* ---------------- gotówka ---------------- */
 .cash { padding-top: var(--cash-pt); display: flex; flex-direction: column; gap: 16px; }
-.cash__grid { display: flex; gap: 16px; }
+/* Siatka, nie flex — przy jednej widocznej karcie ma ona zostac przy swojej
+   szerokosci, a nie rozciagnac sie na cala sekcje. */
+.cash__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .cashCard {
   flex: 1; background: var(--card-bg); border-radius: var(--card-radius);
   padding: 20px; display: flex; flex-direction: column; gap: 12px;
@@ -626,7 +628,7 @@ select.field__control {
 .drawer__head { display: flex; align-items: flex-start; gap: 12px; }
 .drawer__titleBlock { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 .drawer__title { margin: 0; font-size: 18px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
-.drawer__sub { font-size: 11px; color: var(--muted); }
+.drawer__sub { font-size: 13px; color: var(--muted); }
 .drawer__close {
   width: 28px; height: 28px; margin: -4px -4px 0 0; border-radius: 999px;
   display: inline-flex; align-items: center; justify-content: center;
@@ -640,39 +642,42 @@ select.field__control {
   background: var(--screen-bg);
   display: flex; flex-direction: column; gap: 4px;
 }
-.transitTotal__label { font-size: 11px; color: var(--muted); }
+.transitTotal__label { font-size: 13px; color: var(--muted); }
 .transitTotal__value {
   font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
-.transitTotal__sub { font-size: 10px; color: var(--muted); }
+.transitTotal__sub { font-size: 13px; color: var(--muted); }
 
 .transitGroups { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
 .transitGroup {
-  padding: 14px; border-radius: 10px;
+  padding: 16px; border-radius: 10px;
   box-shadow: inset 0 0 0 1px var(--divider);
   display: flex; flex-direction: column; gap: 10px;
 }
 .transitGroup__head { display: flex; align-items: flex-start; gap: 10px; }
 .transitGroup__titleBlock { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.transitGroup__name { font-size: 12px; font-weight: 500; color: var(--ink); }
-.transitGroup__sub { font-size: 10px; color: var(--muted); }
+.transitGroup__name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.transitGroup__sub { font-size: 13px; color: var(--muted); }
 .transitGroup__total {
-  font-size: 12px; font-weight: 500; color: var(--ink); white-space: nowrap;
+  font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .transitGroup__rows { display: flex; flex-direction: column; }
+
+/* Przy 13px nazwa transakcji nie miesci sie w jednej linii, wiec to ona sie
+   zawija. Kwota zostaje w swojej kolumnie, wyrownana do prawej. */
 .transitRow {
-  display: flex; align-items: center; gap: 10px; padding: 7px 0;
-  font-size: 10px; color: var(--muted);
+  display: grid; grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: baseline; gap: 10px; padding: 7px 0;
+  font-size: 13px; line-height: 19px; color: var(--muted);
 }
-.transitRow__date { width: 34px; flex: none; }
-.transitRow__title { flex: 1; min-width: 0; }
-.transitRow__amount { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.transitRow__amount {
+  white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink);
+}
 
-.drawer__note { margin: 12px 0 0; font-size: 10px; line-height: 15px; color: var(--muted); }
+.drawer__note { margin: 14px 0 0; font-size: 13px; line-height: 19px; color: var(--muted); }
 
-/* Karta gotówki, która otwiera panel */
 .cashCard--link { cursor: pointer; text-align: left; width: 100%; }
 .cashCard__head { display: flex; align-items: center; gap: 10px; }
 .cashCard__chev { font-size: 13px; color: var(--muted); }

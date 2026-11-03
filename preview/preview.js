@@ -129,10 +129,15 @@ function legend(rows) {
     </div></div>` : ''}</div>`;
 }
 
+/* Karta z zerowym saldem nie niesie zadnej informacji. */
+const isEmptyCash = (c) => String(c.amount).replace(/\s/g, '') === '0';
+
 function cash(cards) {
+  const visible = cards.filter((c) => !isEmptyCash(c));
+  if (!visible.length) return '';
   return `<section class="cash">
     <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
-    <div class="cash__grid">${cards.map(
+    <div class="cash__grid">${visible.map(
       (c, i) => {
         const link = state.style !== '3' && state.currency === 'Łącznie'
           && c.label === 'Środki w drodze';

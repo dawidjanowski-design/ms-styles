@@ -248,6 +248,15 @@ Panel **nie dochodzi do krawędzi** — 8 px marginesu z góry, z prawej i z do�
 promień 12 px, szerokość 460 px jak na wireframie. Wysuwa się z prawej, tło
 przyciemnia się pod nim.
 
+Najmniejszy font w panelu to 13 px. Przy tym rozmiarze nazwa transakcji nie
+mieści się w jednej linii obok daty i kwoty, więc zawija się ona, a kwota
+zostaje w swojej kolumnie wyrównana do prawej.
+
+Karty gotówki z zerowym saldem są ukryte — w EUR i USD były to dwa puste
+prostokąty obok jednej realnej kwoty. Sekcja stoi na siatce trzech kolumn,
+więc pojedyncza karta zostaje przy swojej szerokości zamiast rozciągać się
+na całość.
+
 Dwie rzeczy przy okazji:
 
 - **Poprawione podpisy kart gotówki.** Wcześniejszy ekran miał trzy razy
