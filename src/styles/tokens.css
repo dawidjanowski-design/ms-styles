@@ -67,7 +67,8 @@
   --pill-h: 33px;
   --pill-px: 13.714px;
   --pill-gap: 3.43px;
-  --pill-size: 12px;
+  /* 13px to przyjete minimum czytelnosci; w Figmie bylo 12. */
+  --pill-size: 13px;
   --pill-active-color: #342717;
 
   --section-title-size: 16px;

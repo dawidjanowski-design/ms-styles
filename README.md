@@ -284,3 +284,26 @@ Tabela transakcji jest teraz wspólnym komponentem (`Transactions.tsx`) dla
 trzech ekranów. Różni je liczba kolumn: na ekranie klasy aktywów rachunek
 ma własną kolumnę i jest stopka z paginacją, na węższych ekranach rachunek
 schodzi pod nazwę instrumentu, a stopki nie ma — tak jak w wireframe'ach.
+
+## Tabele i rozmiar pisma
+
+Tabele biorą kolory z tokenów stylistyki, nie z twardych szarości: tło
+nagłówka zniknęło (wystarcza waga pisma i jedna linia), obrysy i podziały
+idą z `--divider`, promień z `--card-radius`, a plakietki statusu z
+`--pill-track-bg` / `--pill-active-color`. Dzięki temu w nr 1 są ciepłe,
+w nr 2 chłodne, a w makiecie szare — bez osobnych reguł.
+
+**Najmniejszy font w stylistykach nr 1 i nr 2 to 13 px.** Dotyczy to całego
+interfejsu, nie tylko tabel: podpisy filtrów, plakietki, metryki, podlinie
+w wierszach, przyciski i pigułki. Sprawdzane automatycznie — przejście po
+wszystkich elementach tekstowych na obu ekranach nie znajduje nic poniżej.
+
+Dwa wyjątki, świadome:
+
+- **Makieta** zostaje przy swoim drobnym piśmie (9–12 px). To wireframe i
+  właśnie takie proporcje odróżniają go od gotowego UI.
+- **Przełącznik stylistyk** na dole ekranu to nasze narzędzie do przeglądania,
+  a nie element produktu.
+
+Przy okazji pigułki w nr 1 urosły z 12 na 13 px — w Figmie było 12, ale
+minimum wygrywa.
