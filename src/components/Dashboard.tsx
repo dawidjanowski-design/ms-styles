@@ -22,7 +22,17 @@ function OfferCard({ offer, styleId }: { offer: Offer; styleId: StyleId }) {
         <span className="offerCard__kind">{offer.kind}</span>
         <span className="offerCard__issuer">
           {styleId === '2' && <span className="assetCard__bar" />}
-          {offer.issuer}
+          {offer.logo ? (
+            <img
+              className="offerCard__logo"
+              src={offer.logo.src}
+              width={offer.logo.width}
+              height={offer.logo.height}
+              alt={offer.issuer}
+            />
+          ) : (
+            offer.issuer
+          )}
           {styleId === '1' && <span className="assetCard__dot" />}
         </span>
       </div>

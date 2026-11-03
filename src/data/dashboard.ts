@@ -9,6 +9,8 @@ export type Offer = {
   asset: string;
   kind: string;
   issuer: string;
+  /** plik w public/logos — ścieżka względna, bez przedrostka */
+  logo?: { src: string; width: number; height: number };
   rate: string;
   note: string;
 };
@@ -33,6 +35,7 @@ export const OFFERS: Offer[] = [
     asset: 'corp',
     kind: 'Emisja Publiczna. Obligacje serii K.',
     issuer: 'VEHIS',
+    logo: { src: 'logos/vehis.png', width: 61, height: 10 },
     rate: '7,66%',
     note: '(WIBOR 6M + 3,80 - 4,10 p.p.)',
   },
@@ -41,6 +44,7 @@ export const OFFERS: Offer[] = [
     asset: 'corp',
     kind: 'Emisja Publiczna. Obligacje serii R.',
     issuer: 'Michael / Ström',
+    logo: { src: 'logos/michael-strom.png', width: 94, height: 14 },
     rate: '5,42%',
     note: '(WIBOR 6M + 1,60 p.p.)',
   },
@@ -49,6 +53,7 @@ export const OFFERS: Offer[] = [
     asset: 'corp',
     kind: 'Emisja. Obligacje serii B2.',
     issuer: 'Victoria Dom',
+    logo: { src: 'logos/victoria-dom.png', width: 79, height: 14 },
     rate: '7,66%',
     note: '(WIBOR 6M + 3,80 - 4,10 p.p.)',
   },

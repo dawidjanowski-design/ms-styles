@@ -32,8 +32,9 @@ jobs:
 
       - name: Dołącz wersję bez zależności pod /preview/
         run: |
-          mkdir -p dist/preview dist/src/styles
+          mkdir -p dist/preview/logos dist/src/styles
           cp preview/index.html preview/preview.js dist/preview/
+          cp preview/logos/*.png dist/preview/logos/
           cp src/styles/tokens.css src/styles/app.css dist/src/styles/
 
       - uses: actions/upload-pages-artifact@v3

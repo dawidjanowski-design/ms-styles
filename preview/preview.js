@@ -382,11 +382,11 @@ const DASHBOARD = { label: 'Twoje aktywa na wszystkich rachunkach',
 
 const OFFERS = [
   { id:'vehis-k', asset:'corp', kind:'Emisja Publiczna. Obligacje serii K.', issuer:'VEHIS',
-    rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
+    logo:{ src:'logos/vehis.png', width:61, height:10 }, rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
   { id:'ms-r', asset:'corp', kind:'Emisja Publiczna. Obligacje serii R.', issuer:'Michael / Ström',
-    rate:'5,42%', note:'(WIBOR 6M + 1,60 p.p.)' },
+    logo:{ src:'logos/michael-strom.png', width:94, height:14 }, rate:'5,42%', note:'(WIBOR 6M + 1,60 p.p.)' },
   { id:'victoria-b2', asset:'corp', kind:'Emisja. Obligacje serii B2.', issuer:'Victoria Dom',
-    rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
+    logo:{ src:'logos/victoria-dom.png', width:79, height:14 }, rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
   { id:'am-konserwatywna', asset:'am', kind:'Strategia, konserwatywna', issuer:'Asset Management',
     rate:'5,20%', note:'(Cel roczny, netto)' },
 ];
@@ -433,7 +433,8 @@ function dashboardScreen() {
           <span class="offerCard__kind">${o.kind}</span>
           <span class="offerCard__issuer">
             ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
-            ${o.issuer}
+            ${o.logo ? `<img class="offerCard__logo" src="${o.logo.src}"
+                 width="${o.logo.width}" height="${o.logo.height}" alt="${o.issuer}">` : o.issuer}
             ${state.style === '1' ? '<span class="assetCard__dot"></span>' : ''}
           </span>
         </div>

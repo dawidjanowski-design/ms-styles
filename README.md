@@ -151,6 +151,8 @@ Dane legendy w Figmie (50,0% / 2 109 320 PLN dla obligacji korporacyjnych,
 bez obligacji skarbowych) różnią się od naszych — suma 4 218 640,00 PLN jest
 ta sama, więc zostały nasze.
 
-Logo emitentów na kartach ofert są w Figmie bitmapami i nie dało się ich
-wyeksportować; w prototypie są nazwami tekstowymi. Podmiana na pliki SVG
-to jedna zmiana w `src/data/dashboard.ts`.
+Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
+`preview/logos`) i są podpięte w `src/data/dashboard.ts`. To bitmapy 1x
+prosto z Figmy, rysowane w natywnym rozmiarze — na ekranach 2x będą lekko
+miękkie do czasu, aż pojawią się wersje @2x albo SVG. Oferta bez pola
+`logo` renderuje nazwę emitenta tekstem.

@@ -485,3 +485,8 @@ select.field__control {
 .eventRow__instrument { font-size: 14px; color: var(--muted); }
 .eventRow__amount { font-size: 14px; font-weight: 500; color: #342717; text-align: right; }
 .eventRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }
+
+/* Logo emitenta zamiast nazwy — bitmapy 1x prosto z Figmy, więc rysujemy je
+   w natywnym rozmiarze; na ekranach 2x będą lekko miękkie do czasu, aż
+   dostaniemy wersje @2x albo SVG. */
+.offerCard__logo { display: block; width: auto; height: auto; }
