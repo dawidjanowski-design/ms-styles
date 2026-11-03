@@ -114,6 +114,29 @@ wraz z filtrami.
 Nagłówek trzyma układ z wireframe'u: tytuł w lewym rogu, blok „Wartość"
 z kwotą w prawym, oba wyrównane do tej samej linii bazowej.
 
+### Waluty i rachunki
+
+Przełącznik walut działa tu tak samo jak na Portfelu i **dzieli z nim stan** —
+wejście w obligacje z widoku EUR pokazuje obligacje w EUR, a powrót zachowuje
+walutę. Każda waluta to osobny zestaw rachunków, nie przeliczenie.
+
+**Chipy rachunków naprawdę filtrują.** Po zmianie wyboru przeliczają się suma
+w nagłówku, cały pasek metryk (liczba emitentów, liczba serii, ważona
+rentowność, wypłacone odsetki, najbliższy wykup) i udziały w wierszach. Lista
+chipów zależy od waluty — pojawia się tylko rachunek, na którym faktycznie coś
+leży, więc nie ma filtrów dających pustą listę.
+
+Serie są przypisane do konkretnych rachunków, nie do emitenta. Po wybraniu IKE
+wiersz mówi „1 seria · F · IKE", zamiast chwalić się seriami leżącymi gdzie
+indziej.
+
+Liczby wiążą się z resztą prototypu: suma w widoku „Łącznie" to
+1 792 922,00 PLN — tyle, ile pokazuje karta obligacji na Portfelu — a część
+na IKE w widoku PLN to 340 000,00 PLN, dokładnie tyle, co na ekranie rachunku
+IKE. W Figmie nagłówek mówił 1 854 320,00 PLN przy wierszach sumujących się do
+1 851 320,00 PLN; żadna z tych liczb nie wiązała się z niczym innym w pliku,
+więc odpadły.
+
 Decyzje przy przenoszeniu wireframe'u na stylistykę nr 1:
 
 | Wireframe | Prototyp | Dlaczego |
