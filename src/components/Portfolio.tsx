@@ -1,0 +1,260 @@
+import { useState } from 'react';
+import {
+  ASSETS,
+  CASH,
+  CASH_CARDS,
+  CURRENCIES,
+  LEGEND_ORDER,
+  TOTAL,
+  type AssetClass,
+} from '../data/portfolio';
+import { Amount, KeyValue, Pills } from './ui';
+
+type StyleId = '1' | '2';
+type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
+
+const dimClass = (id: string, hot: string | null) =>
+  hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
+
+/* ----------------------------- wykres ----------------------------- */
+
+function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
+  const byId = new Map(ASSETS.map((a) => [a.id, a]));
+  const segments = [
+    ...LEGEND_ORDER[styleId].map((id) => {
+      const a = byId.get(id) as AssetClass;
+      return { id: a.id, share: a.share, colorVar: a.colorVar };
+    }),
+    { id: CASH.id, share: CASH.share, colorVar: CASH.colorVar },
+  ];
+  const total = segments.reduce((sum, s) => sum + s.share, 0);
+
+  return (
+    <div className="chart" onMouseLeave={() => setHot(null)}>
+      {segments.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          className={`chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dimClass(s.id, hot)}`}
+          style={{
+            flex: `${s.share / total} 1 0`,
+            ['--seg' as string]: `var(${s.colorVar})`,
+          }}
+          onMouseEnter={() => setHot(s.id)}
+          onFocus={() => setHot(s.id)}
+          onBlur={() => setHot(null)}
+          aria-label={`${s.id}: ${s.share}%`}
+        >
+          <span className="chartSeg__body" />
+          <span className="chartSeg__foot" />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ----------------------------- legenda ----------------------------- */
+
+function LegendRow({
+  id,
+  colorVar,
+  name,
+  share,
+  value,
+  hot,
+  setHot,
+}: {
+  id: string;
+  colorVar: string;
+  name: string;
+  share: string;
+  value: string;
+} & HoverProps) {
+  return (
+    <button
+      type="button"
+      className={`legendRow ${dimClass(id, hot)}`}
+      style={{ ['--seg' as string]: `var(${colorVar})` }}
+      onMouseEnter={() => setHot(id)}
+      onMouseLeave={() => setHot(null)}
+      onFocus={() => setHot(id)}
+      onBlur={() => setHot(null)}
+    >
+      <span className="legendRow__dot" />
+      <span className="legendRow__name">{name}</span>
+      <span className="legendRow__share">{share}</span>
+      <span className="legendRow__value">{value}</span>
+    </button>
+  );
+}
+
+function Legend({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
+  const order = LEGEND_ORDER[styleId];
+  const byId = new Map(ASSETS.map((a) => [a.id, a]));
+
+  return (
+    <div className="legend">
+      {order.map((id) => {
+        const a = byId.get(id) as AssetClass;
+        return (
+          <LegendRow
+            key={id}
+            id={a.id}
+            colorVar={a.colorVar}
+            name={a.name}
+            share={`${a.share.toFixed(1).replace('.', ',')}%`}
+            value={a.legendValue}
+            hot={hot}
+            setHot={setHot}
+          />
+        );
+      })}
+
+      <div className="legend__cash">
+        <div className="legend__cashInner">
+          <LegendRow
+            id={CASH.id}
+            colorVar={CASH.colorVar}
+            name={CASH.name}
+            share={`${CASH.share.toFixed(1).replace('.', ',')}%`}
+            value={CASH.legendValue}
+            hot={hot}
+            setHot={setHot}
+          />
+          <div className={`legend__cashSub ${dimClass(CASH.id, hot)}`}>{CASH.sub}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- gotówka ----------------------------- */
+
+function CashOverview() {
+  return (
+    <section className="cash">
+      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+      <div className="cash__grid">
+        {CASH_CARDS.map((card, i) => (
+          <article className="cashCard" key={i}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <span className="cashCard__label">{card.label}</span>
+              <Amount int={card.amount} dec={card.decimals} className="cashCard__amount" />
+            </div>
+            <div className="divider" />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {card.rows.map((r) => (
+                <KeyValue key={r.label} label={r.label} value={r.value} />
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------- karty aktywów ----------------------------- */
+
+function AssetCard({
+  asset,
+  styleId,
+  hot,
+  setHot,
+}: { asset: AssetClass; styleId: StyleId } & HoverProps) {
+  const strip = styleId === '1';
+  const rows = strip ? asset.rows : [...asset.highlights, ...asset.rows];
+
+  return (
+    <article
+      className={`assetCard ${dimClass(asset.id, hot)}`}
+      style={{ ['--seg' as string]: `var(${asset.colorVar})` }}
+      onMouseEnter={() => setHot(asset.id)}
+      onMouseLeave={() => setHot(null)}
+    >
+      <div className="assetCard__head">
+        <div className="assetCard__title">
+          {styleId === '2' && <span className="assetCard__bar" />}
+          <span className="assetCard__name">{asset.name}</span>
+          {styleId === '1' && <span className="assetCard__dot" />}
+        </div>
+        <Amount int={asset.amount} dec={asset.amountDecimals} className="assetCard__amount" />
+      </div>
+
+      <div className="divider" />
+
+      <div className="assetCard__rows">
+        {rows.map((r) => (
+          <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
+        ))}
+      </div>
+
+      {strip && asset.highlights.length > 0 && (
+        <div className="strip">
+          {asset.highlights.map((h) => (
+            <div className="strip__item" key={h.label}>
+              <span className="strip__label">{h.label}</span>
+              <span className="strip__value">{h.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </article>
+  );
+}
+
+/* ----------------------------- ekran ----------------------------- */
+
+export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
+  const [currency, setCurrency] = useState<string>('Łącznie');
+  const [view, setView] = useState<string>('Aktywa');
+  const [hot, setHot] = useState<string | null>(null);
+
+  const titleInSummary = styleId === '1';
+  const title = <h1 className="pageTitle">Portfel</h1>;
+
+  return (
+    <div className="screenOuter">
+      <div className="screen">
+        <div className="content">
+          {!titleInSummary && title}
+
+          <section
+            className="summary"
+            style={{ gap: styleId === '1' ? 16 : 24, paddingTop: styleId === '1' ? 0 : 24 }}
+          >
+            {titleInSummary && title}
+
+            <div className="summary__head">
+              <Amount int={TOTAL.amount} dec={TOTAL.decimals} />
+              <Pills items={CURRENCIES} value={currency} onChange={setCurrency} />
+            </div>
+
+            <AllocationChart styleId={styleId} hot={hot} setHot={setHot} />
+            <Legend styleId={styleId} hot={hot} setHot={setHot} />
+          </section>
+
+          <CashOverview />
+
+          <section className="assets">
+            <div className="assets__head">
+              <h2 className="sectionTitle">Struktura aktywów</h2>
+              <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={setView} />
+            </div>
+            <div className="assets__list">
+              {ASSETS.map((a) => (
+                <AssetCard
+                  key={a.id}
+                  asset={a}
+                  styleId={styleId}
+                  hot={hot}
+                  setHot={setHot}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}

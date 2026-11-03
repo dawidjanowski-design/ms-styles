@@ -1,0 +1,140 @@
+/* ---------------------------------------------------------------
+   Tokeny obu stylistyk — wartości przeniesione z Figmy 1:1
+   Stylistyka 1 → node 902:925
+   Stylistyka 2 → node 899:3329
+   --------------------------------------------------------------- */
+
+:root {
+  /* wspólne */
+  --page-bg: #f5f5f5;
+  --header-bg: #ffffff;
+  --header-h: 68px;
+  --header-px: 40px;
+
+  --screen-bg: #f8f7f7;
+  --screen-border: #f0f0f0;
+  --screen-radius: 16px;
+  --screen-pad-top: 40px;
+  --screen-pad-x: 28px;
+  --screen-pad-bottom: 120px;
+
+  --content-w: 1064px;
+
+  --card-bg: #ffffff;
+  --card-radius: 16px;
+  --divider: #f3f3f3;
+
+  --ink: #343434;
+  --muted: #98918b;
+  --legend-name: #4a4a4d;
+  --legend-sub: #929292;
+  --nav-idle: #888888;
+  --nav-hover: #555555;
+
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.03), inset 0 2px 2px rgba(255, 255, 255, 1),
+    0 6px 3px rgba(31, 33, 41, 0.012);
+  --shadow-pill: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.03), inset 0 2px 2px rgba(255, 255, 255, 1);
+  --shadow-track: inset 0 2px 2px rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08), 0 6px 3px rgba(31, 33, 41, 0.012);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ====================== STYLISTYKA 1 ====================== */
+[data-style='1'] {
+  --title-size: 18px;
+  --title-weight: 500;
+  --title-color: var(--muted);
+  --title-tracking: -0.02em;
+  --title-in-summary: 1;
+
+  --amount-size: 30px;
+  --amount-decimals: 21.6px;
+
+  --pill-track-bg: #f1eeea;
+  --pill-track-pad: 1.714px;
+  --pill-h: 33px;
+  --pill-px: 13.714px;
+  --pill-gap: 3.43px;
+  --pill-size: 12px;
+  --pill-active-color: #342717;
+
+  --section-title-size: 16px;
+  --section-title-color: var(--ink);
+  --section-title-tracking: -0.02em;
+
+  /* wykres */
+  --bar-h: 56px;
+  --bar-gap: 4px;
+  --bar-radius: 2px;
+  --bar-foot-h: 4px;
+  --bar-fill-alpha: 0.1;
+
+  /* karta aktywa */
+  --asset-card-pad: 20px 2px 2px 2px;
+  --asset-head-px: 18px;
+  --asset-row-px: 20px;
+  --asset-value-size: 21px;
+  --asset-value-decimals: 16px;
+  --asset-marker: dot;
+  --asset-marker-after: 1;
+  --highlight-strip: 1;
+
+  /* paleta — kolory legendy, które odpowiadają kropkom przy pozycjach */
+  --c-corp: #065eec;
+  --c-skarb: #e4b212;
+  --c-am: #0a21c8;
+  --c-fio: #0aa6c8;
+  --c-fiz: #ef4444;
+  --c-cash: #9ec421;
+  --c-cash-bg: #f2f5e3;
+}
+
+/* ====================== STYLISTYKA 2 ====================== */
+[data-style='2'] {
+  --title-size: 18px;
+  --title-weight: 400;
+  --title-color: var(--muted);
+  --title-tracking: -0.02em;
+  --title-in-summary: 0;
+
+  --amount-size: 30px;
+  --amount-decimals: 21.6px;
+
+  --pill-track-bg: #ececec;
+  --pill-track-pad: 2px;
+  --pill-h: 38px;
+  --pill-px: 16px;
+  --pill-gap: 4px;
+  --pill-size: 13px;
+  --pill-active-color: #171934;
+
+  --section-title-size: 16px;
+  --section-title-color: #4c4c4c;
+  --section-title-tracking: 0;
+
+  --bar-h: 56px;
+  --bar-gap: 4px;
+  --bar-radius: 2px;
+  --bar-foot-h: 4px;
+  --bar-fill-alpha: 0.1;
+
+  --asset-card-pad: 20px;
+  --asset-head-px: 0px;
+  --asset-row-px: 0px;
+  --asset-value-size: 24px;
+  --asset-value-decimals: 18px;
+  --asset-marker: bar;
+  --asset-marker-after: 0;
+  --highlight-strip: 0;
+
+  --c-corp: #046816;
+  --c-skarb: #0a21c8;
+  --c-am: #b044ef;
+  --c-fio: #11aebd;
+  --c-fiz: #e4b212;
+  --c-cash: #9ec421;
+  --c-cash-bg: #f2f5e3;
+}
