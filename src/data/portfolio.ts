@@ -71,6 +71,7 @@ export const ASSETS: AssetClass[] = [
   },
   {
     id: 'am',
+    marker: { '1': '#9ec421', '2': '#9ec421' },
     name: 'Asset Management',
     share: 20.0,
     amount: '843 728',
@@ -180,13 +181,16 @@ export type Account = {
   rowsLabel?: string;
   rows: AccountRow[];
   /** szary pasek w środku karty — na razie tylko limit wpłat IKE */
-  strip?: { label: string; value: string };
+  strip?: { label: string; value: string; progress?: number };
+  /** kolor znacznika przy nazwie, osobny dla każdej stylistyki */
+  marker: Record<'1' | '2', string>;
   action: string;
 };
 
 export const ACCOUNTS: Account[] = [
   {
     id: 'maklerski',
+    marker: { '1': '#042468', '2': '#046816' },
     name: 'Rachunek maklerski',
     number: '00-00-006858',
     amount: '2 362 438',
@@ -203,6 +207,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'zony',
+    marker: { '1': '#0a21c8', '2': '#0a21c8' },
     name: 'Rachunek żony',
     number: '00-00-009120',
     amount: '180 000',
@@ -216,6 +221,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'oki',
+    marker: { '1': '#0aa6c8', '2': '#b044ef' },
     name: 'OKI',
     number: '00-00-009120',
     amount: '843 728',
@@ -229,11 +235,12 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'ike',
+    marker: { '1': '#ef4444', '2': '#11aebd' },
     name: 'IKE',
     number: '00-00-007431',
     amount: '506 237',
     amountDecimals: ',00 PLN',
-    strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN' },
+    strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
     rowsLabel: 'Papiery',
     rows: [
       { label: 'Obligacje', value: '340 000,00 PLN' },
@@ -244,6 +251,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'xz',
+    marker: { '1': '#e4b212', '2': '#e4b212' },
     name: 'XZ',
     number: '00-00-007432',
     amount: '337 491',

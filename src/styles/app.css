@@ -236,7 +236,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .acctCard__head { display: flex; flex-direction: column; gap: 8px; padding: 0 var(--asset-head-px); }
 .acctCard__top { display: flex; align-items: center; gap: 12px; }
 .acctCard__title { display: flex; align-items: center; gap: 8px; flex: 1; }
-.acctCard__dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); flex: none; }
+.acctCard__dot { width: 6px; height: 6px; border-radius: 999px; background: var(--seg, var(--ink)); flex: none; }
 .acctCard__name { font-size: 13px; font-weight: 500; color: var(--ink); }
 .acctCard__number { font-size: 13px; color: var(--muted); }
 .acctCard__amount .amount__int { font-size: var(--asset-value-size); }
@@ -247,7 +247,15 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   padding: 12px 20px; display: flex; flex-direction: column; gap: 6px;
 }
 .acctCard__limitLabel { font-size: 11px; color: var(--muted); }
+.acctCard__limitTop { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .acctCard__limitValue { font-size: 14px; font-weight: 500; color: var(--ink); }
+.acctCard__limitPct { font-size: 11px; color: var(--muted); }
+.acctCard__limitTrack {
+  height: 6px; border-radius: 3px; background: var(--l2); overflow: hidden; margin-top: 2px;
+}
+/* Pasek celowo neutralny, nie w kolorze rachunku — kolor (zwlaszcza czerwony)
+   czytalby sie jak ostrzezenie, a wykorzystanie limitu nie jest problemem. */
+.acctCard__limitFill { height: 100%; border-radius: 3px; background: var(--ink); }
 
 .acctCard__rowsLabel {
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
@@ -257,11 +265,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .acctRow {
   display: flex; align-items: center; gap: 10px;
   padding: 4px var(--asset-row-px); width: 100%; text-align: left;
-  border-radius: 8px; transition: background 140ms var(--ease);
 }
-.acctRow:hover { background: var(--screen-bg); }
-.acctRow__label { flex: 1; font-size: 13px; color: var(--muted); }
-.acctRow__value { font-size: 13px; font-weight: 500; color: var(--ink); }
+.acctRow__label { flex: 1; font-size: 14px; color: var(--muted); }
+.acctRow__value { font-size: 14px; font-weight: 500; color: var(--ink); }
 .acctRow__chev { font-size: 13px; color: var(--muted); width: 10px; text-align: right; }
 
 .acctCard__foot { padding: 4px var(--asset-row-px) 0; }

@@ -203,9 +203,12 @@ function AssetCard({ asset, styleId }: { asset: AssetClass; styleId: StyleId }) 
 
 /* ----------------------------- rachunki ----------------------------- */
 
-function AccountCard({ account }: { account: Account }) {
+function AccountCard({ account, styleId }: { account: Account; styleId: StyleId }) {
   return (
-    <article className="acctCard">
+    <article
+      className="acctCard"
+      style={{ ['--seg' as string]: account.marker[styleId] }}
+    >
       <div className="acctCard__head">
         <div className="acctCard__top">
           <div className="acctCard__title">
@@ -224,7 +227,22 @@ function AccountCard({ account }: { account: Account }) {
       {account.strip && (
         <div className="acctCard__limit">
           <span className="acctCard__limitLabel">{account.strip.label}</span>
-          <span className="acctCard__limitValue">{account.strip.value}</span>
+          <div className="acctCard__limitTop">
+            <span className="acctCard__limitValue">{account.strip.value}</span>
+            {account.strip.progress !== undefined && (
+              <span className="acctCard__limitPct">
+                {Math.round(account.strip.progress * 100)}% wykorzystane
+              </span>
+            )}
+          </div>
+          {account.strip.progress !== undefined && (
+            <div className="acctCard__limitTrack">
+              <div
+                className="acctCard__limitFill"
+                style={{ width: `${account.strip.progress * 100}%` }}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -300,7 +318,9 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
                 ? ASSETS.map((a) => (
                     <AssetCard key={a.id} asset={a} styleId={styleId} />
                   ))
-                : ACCOUNTS.map((a) => <AccountCard key={a.id} account={a} />)}
+                : ACCOUNTS.map((a) => (
+                    <AccountCard key={a.id} account={a} styleId={styleId} />
+                  ))}
             </div>
           </section>
         </div>
