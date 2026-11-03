@@ -120,6 +120,11 @@ Decyzje przy przenoszeniu wireframe'u na stylistykę nr 1:
 | Chipy rachunków `#292929` / `#f0f0f0` | `--pill-active-color` / `--pill-track-bg` | kolory przełączają się razem ze stylistyką |
 | Nazwa instrumentu 12px | 14px | spójnie z wierszami pozycji na kartach rachunków |
 
+Wybór rachunku to ten sam segmentowany przełącznik co reszta kontrolek na
+ekranie. Wcześniej były to osobne chipy — drugi język sterowania na jednej
+karcie, z ciężkim ciemnym blokiem obok delikatnych pigułek. W makiecie
+przełącznika rachunków nie ma wcale.
+
 Dwie rzeczy do decyzji po stronie klienta:
 
 - **Suma się nie zgadza.** Nagłówek w Figmie mówi 1 854 320,00 PLN, a trzy

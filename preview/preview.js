@@ -394,11 +394,10 @@ function detailScreen() {
           <button type="button" class="btnGhost"><span>⤢</span> Pełna tabela</button>
         </div>
       </div>
-      <div class="chipGroup">
+      ${state.style === '3' ? '' : `<div class="chipGroup">
         <span class="chipGroup__label">Rachunki</span>
-        <div class="chips">${ACCOUNT_CHIPS.map((c) => `<button type="button" class="chip"
-          data-chip="${c}" aria-pressed="${c === state.account}">${c === state.account ? '<span>✓</span>' : ''}${c}</button>`).join('')}</div>
-      </div>
+        ${pills(ACCOUNT_CHIPS, state.account, 'account')}
+      </div>`}
       <div class="metricStrip">${CLASS_METRICS.map(([l, v]) =>
         `<div class="strip__item metricStrip__item"><span class="strip__label">${l}</span>
          <span class="strip__value">${v}</span></div>`).join('')}</div>
@@ -719,12 +718,10 @@ document.addEventListener('click', (e) => {
   if (e.target.closest('[data-back]')) { state.screen = 'portfel'; render(); window.scrollTo({ top: 0 }); return; }
   const open = e.target.closest('[data-open]');
   if (open) { state.screen = 'asset'; render(); window.scrollTo({ top: 0 }); return; }
-  const chip = e.target.closest('[data-chip]');
-  if (chip) { state.account = chip.dataset.chip; render(); return; }
   const p = e.target.closest('[data-pill]');
   if (p) {
     const map = { currency: 'currency', view: 'view', detailCurrency: 'detailCurrency',
-      grouping: 'grouping', txtab: 'txTab' };
+      grouping: 'grouping', txtab: 'txTab', account: 'account' };
     const key = map[p.dataset.pill];
     if (key) state[key] = p.dataset.value;
     render();

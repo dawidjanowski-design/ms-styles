@@ -240,23 +240,15 @@ export function AssetDetailScreen({
               </div>
             </div>
 
-            <div className="chipGroup">
-              <span className="chipGroup__label">Rachunki</span>
-              <div className="chips">
-                {ACCOUNT_CHIPS.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    className="chip"
-                    aria-pressed={c === account}
-                    onClick={() => setAccount(c)}
-                  >
-                    {c === account && <span aria-hidden="true">✓</span>}
-                    {c}
-                  </button>
-                ))}
+            {/* Wybor rachunku to ten sam segmentowany przelacznik co reszta
+                kontrolek na ekranie — jedna karta, jeden jezyk sterowania.
+                W makiecie nie pokazujemy go wcale. */}
+            {!locked && (
+              <div className="chipGroup">
+                <span className="chipGroup__label">Rachunki</span>
+                <Pills items={ACCOUNT_CHIPS} value={account} onChange={setAccount} />
               </div>
-            </div>
+            )}
 
             <div className="metricStrip">
               {CLASS_METRICS.map((m) => (
