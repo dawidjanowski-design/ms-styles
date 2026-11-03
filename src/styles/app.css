@@ -56,9 +56,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .appHeader__user { display: flex; align-items: center; gap: 16px; }
 .appHeader__userName { font-size: 13px; font-weight: 500; color: var(--ink); }
 .appHeader__avatar {
-  width: 32px; height: 32px; border-radius: 999px; object-fit: cover;
-  background: var(--avatar-bg); display: block;
+  width: 32px; height: 32px; border-radius: 999px; overflow: hidden;
+  background: var(--avatar-bg); display: block; flex: none;
 }
+.appHeader__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* W makiecie awatar zostaje szarym kolkiem — wireframe nie pokazuje zdjec. */
+[data-style='3'] .appHeader__avatar img { display: none; }
 
 /* ---------------- ekran ---------------- */
 .screenOuter { padding: 0 4px; background: var(--header-bg); }

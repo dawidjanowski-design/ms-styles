@@ -409,3 +409,12 @@ wierszami i między segmentami wykresu — nadal 11, wyjazd poza blok — 0.
 
 Legenda na **pulpicie** prowadzi do ekranu obligacji korporacyjnych, tak samo
 jak na Portfelu. W makiecie nie prowadzi nigdzie.
+
+## Awatar
+
+Zdjęcie w nagłówku pokazuje się w stylistykach nr 1 i nr 2. Plik leży
+w `public/avatar.jpg` (kopia dla wersji preview w `preview/avatar.jpg`),
+w gęstości 3x — 96 px rysowane na 32 px, tak samo jak logo emitentów.
+
+W makiecie awatar zostaje szarym kółkiem: wireframe nie pokazuje zdjęć,
+a kolorowa fotografia byłaby jedynym nasyconym elementem na całym ekranie.

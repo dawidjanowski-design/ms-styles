@@ -1018,7 +1018,7 @@ function render() {
         <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
         <div class="appHeader__user">
           <span class="appHeader__userName">Dawid Jankowski</span>
-          <span class="appHeader__avatar"></span>
+          <span class="appHeader__avatar"><img src="avatar.jpg" width="32" height="32" alt=""></span>
         </div>
       </div>
     </header>

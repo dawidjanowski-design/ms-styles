@@ -150,7 +150,9 @@ export function AppHeader({
         </button>
         <div className="appHeader__user">
           <span className="appHeader__userName">Dawid Jankowski</span>
-          <span className="appHeader__avatar" aria-hidden="true" />
+          <span className="appHeader__avatar">
+            <img src="avatar.jpg" width={32} height={32} alt="" />
+          </span>
         </div>
       </div>
     </header>
