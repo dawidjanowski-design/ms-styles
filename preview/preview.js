@@ -54,7 +54,7 @@ const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
-  transit: false, lastAmounts: {} };
+  transit: false, seriesExpanded: false, lastAmounts: {} };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
@@ -406,16 +406,25 @@ const ISSUER_SERIES = [
 const SERIES_COLUMNS = ['Seria', 'Oprocentowanie', 'Wykup', 'Wartość'];
 
 const SERIES_DETAIL = { name: 'Michael / Ström SA, seria F', valueLabel: 'Wartość w portfelu',
-  value: '260 000', dec: ',00 PLN', groupLabel: 'Twoja pozycja', more: 'Pokaż więcej' };
+  value: '260 000', dec: ',00 PLN', more: 'Pokaż więcej', less: 'Pokaż mniej' };
 
-const SERIES_PARAMS = [
-  ['Liczba obligacji', '', '260 szt.'], ['Nominał jednostki', '', '1 000,00 PLN'],
-  ['Wartość nominalna', '', '260 000,00 PLN'],
-  ['Koszt nabycia', '2 transakcje — 12.05.2025, 02.04.2026', '258 400,00 PLN'],
-  ['Wartość bieżąca', '', '260 000,00 PLN'], ['Wypłacone odsetki', '', '14 820,00 PLN'],
-  ['Zysk / strata', 'metodyka w uzgodnieniu', '—'],
-  ['Stopa zwrotu', 'metodyka w uzgodnieniu', '—'],
-  ['Rachunek', '', 'Rachunek maklerski'],
+/* Pierwsza grupa widoczna zawsze, reszta po rozwinieciu (Figma 722:4837). */
+const SERIES_GROUPS = [
+  { label: 'Twoja pozycja', rows: [
+    ['Liczba obligacji', '', '260 szt.'], ['Nominał jednostki', '', '1 000,00 PLN'],
+    ['Wartość nominalna', '', '260 000,00 PLN'],
+    ['Koszt nabycia', '2 transakcje — 12.05.2025, 02.04.2026', '258 400,00 PLN'],
+    ['Wartość bieżąca', '', '260 000,00 PLN'], ['Wypłacone odsetki', '', '14 820,00 PLN'],
+    ['Zysk / strata', 'metodyka w uzgodnieniu', '—'],
+    ['Stopa zwrotu', 'metodyka w uzgodnieniu', '—'],
+    ['Rachunek', '', 'Rachunek maklerski'] ] },
+  { label: 'Oprocentowanie', rows: [
+    ['Konstrukcja', '', 'WIBOR 3M + 3,90 p.p.'], ['Oprocentowanie bieżące', '', '7,60%'],
+    ['Częstotliwość wypłat', '', 'kwartalnie'], ['Najbliższa wypłata odsetek', '', '31.12.2026'] ] },
+  { label: 'Papier', rows: [
+    ['Typ instrumentu', '', 'Obligacja korporacyjna'], ['Emitent', '', 'Michael / Ström SA'],
+    ['Seria', '', 'F'], ['ISIN', '', 'PLMSTRM00123'], ['Rynek', '', 'pierwotny'],
+    ['Data emisji', '', '14.03.2025'], ['Data wykupu', '', '14.03.2028'] ] },
 ];
 
 const ISSUER_TX = [
@@ -484,10 +493,14 @@ function seriesScreen() {
 
     <section class="panel">
       <h2 class="sectionTitle">Parametry inwestycji</h2>
-      <span class="panel__groupLabel">${SERIES_DETAIL.groupLabel}</span>
-      ${infoList(SERIES_PARAMS)}
+      ${(state.seriesExpanded ? SERIES_GROUPS : SERIES_GROUPS.slice(0, 1))
+        .map((g) => `<div class="paramGroup">
+          <span class="panel__groupLabel">${g.label}</span>
+          ${infoList(g.rows)}</div>`).join('')}
       <div class="panel__footAction">
-        <button type="button" class="btnGhost btnGhost--lg">${SERIES_DETAIL.more}</button>
+        <button type="button" class="btnGhost btnGhost--lg" data-expand-series
+          aria-expanded="${state.seriesExpanded}">${
+          state.seriesExpanded ? SERIES_DETAIL.less : SERIES_DETAIL.more}</button>
       </div>
     </section>
 
@@ -930,6 +943,9 @@ document.addEventListener('click', (e) => {
       : [...state.accounts, name];
     render();
     return;
+  }
+  if (e.target.closest('[data-expand-series]')) {
+    state.seriesExpanded = !state.seriesExpanded; render(); return;
   }
   const gs = e.target.closest('[data-goto-screen]');
   if (gs) { state.screen = gs.dataset.gotoScreen; render(); window.scrollTo({ top: 0 }); return; }

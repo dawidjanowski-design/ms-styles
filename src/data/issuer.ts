@@ -76,20 +76,50 @@ export const SERIES_DETAIL = {
   valueLabel: 'Wartość w portfelu',
   value: '260 000',
   valueDecimals: ',00 PLN',
-  groupLabel: 'Twoja pozycja',
   more: 'Pokaż więcej',
+  less: 'Pokaż mniej',
 };
 
-export const SERIES_PARAMS: InfoRow[] = [
-  { label: 'Liczba obligacji', value: '260 szt.' },
-  { label: 'Nominał jednostki', value: '1 000,00 PLN' },
-  { label: 'Wartość nominalna', value: '260 000,00 PLN' },
-  { label: 'Koszt nabycia', sub: '2 transakcje — 12.05.2025, 02.04.2026', value: '258 400,00 PLN' },
-  { label: 'Wartość bieżąca', value: '260 000,00 PLN' },
-  { label: 'Wypłacone odsetki', value: '14 820,00 PLN' },
-  { label: 'Zysk / strata', sub: 'metodyka w uzgodnieniu', value: '—' },
-  { label: 'Stopa zwrotu', sub: 'metodyka w uzgodnieniu', value: '—' },
-  { label: 'Rachunek', value: 'Rachunek maklerski' },
+export type ParamGroup = { label: string; rows: InfoRow[] };
+
+/* Pierwsza grupa jest widoczna zawsze, pozostale odslania „Pokaz wiecej"
+   (Figma 722:4837 — stan rozwiniety). */
+export const SERIES_GROUPS: ParamGroup[] = [
+  {
+    label: 'Twoja pozycja',
+    rows: [
+      { label: 'Liczba obligacji', value: '260 szt.' },
+      { label: 'Nominał jednostki', value: '1 000,00 PLN' },
+      { label: 'Wartość nominalna', value: '260 000,00 PLN' },
+      { label: 'Koszt nabycia', sub: '2 transakcje — 12.05.2025, 02.04.2026', value: '258 400,00 PLN' },
+      { label: 'Wartość bieżąca', value: '260 000,00 PLN' },
+      { label: 'Wypłacone odsetki', value: '14 820,00 PLN' },
+      { label: 'Zysk / strata', sub: 'metodyka w uzgodnieniu', value: '—' },
+      { label: 'Stopa zwrotu', sub: 'metodyka w uzgodnieniu', value: '—' },
+      { label: 'Rachunek', value: 'Rachunek maklerski' },
+    ],
+  },
+  {
+    label: 'Oprocentowanie',
+    rows: [
+      { label: 'Konstrukcja', value: 'WIBOR 3M + 3,90 p.p.' },
+      { label: 'Oprocentowanie bieżące', value: '7,60%' },
+      { label: 'Częstotliwość wypłat', value: 'kwartalnie' },
+      { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
+    ],
+  },
+  {
+    label: 'Papier',
+    rows: [
+      { label: 'Typ instrumentu', value: 'Obligacja korporacyjna' },
+      { label: 'Emitent', value: 'Michael / Ström SA' },
+      { label: 'Seria', value: 'F' },
+      { label: 'ISIN', value: 'PLMSTRM00123' },
+      { label: 'Rynek', value: 'pierwotny' },
+      { label: 'Data emisji', value: '14.03.2025' },
+      { label: 'Data wykupu', value: '14.03.2028' },
+    ],
+  },
 ];
 
 /* Transakcje obu ekranow — te same dwa zdarzenia co w wireframe'ach. */

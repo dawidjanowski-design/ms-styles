@@ -744,3 +744,9 @@ select.field__control {
 .table--narrow .table__row {
   grid-template-columns: 104px 180px minmax(0, 1fr) 150px 150px;
 }
+
+/* Grupy parametrów na ekranie serii — kolejne odsłania „Pokaż więcej" */
+.paramGroup { display: flex; flex-direction: column; gap: 10px; }
+/* Ostatni wiersz grupy nie ma dolnego paddingu, wiec oddech przed etykieta
+   kolejnej grupy musi wejsc tutaj. */
+.paramGroup + .paramGroup { padding-top: 20px; }
