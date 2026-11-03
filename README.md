@@ -120,10 +120,11 @@ Decyzje przy przenoszeniu wireframe'u na stylistykę nr 1:
 | Chipy rachunków `#292929` / `#f0f0f0` | `--pill-active-color` / `--pill-track-bg` | kolory przełączają się razem ze stylistyką |
 | Nazwa instrumentu 12px | 14px | spójnie z wierszami pozycji na kartach rachunków |
 
-Wybór rachunku to ten sam segmentowany przełącznik co reszta kontrolek na
-ekranie. Wcześniej były to osobne chipy — drugi język sterowania na jednej
-karcie, z ciężkim ciemnym blokiem obok delikatnych pigułek. W makiecie
-przełącznika rachunków nie ma wcale.
+Filtr rachunków jest **wielokrotnego wyboru**, więc świadomie nie wygląda jak
+segmentowany przełącznik obok — to osobna kontrolka o innej semantyce.
+Zaznaczone chipy są wypełnione lekko, żeby kilka naraz nie krzyczało.
+Pusty zbiór znaczy „Wszystkie", dzięki czemu odznaczenie ostatniego rachunku
+wraca do pełnej listy samo. W makiecie filtra nie ma wcale.
 
 Dwie rzeczy do decyzji po stronie klienta:
 

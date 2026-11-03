@@ -52,7 +52,7 @@ const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp',
 const saved = localStorage.getItem('ms-style');
 const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
-  screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
+  screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
   lastAmounts: {} };
 
@@ -391,12 +391,16 @@ function detailScreen() {
         <h2 class="sectionTitle">Instrumenty i pozycje</h2>
         <div class="panel__actions">
           ${pills(['Emitenci', 'Serie'], state.grouping, 'grouping')}
-          <button type="button" class="btnGhost"><span>⤢</span> Pełna tabela</button>
         </div>
       </div>
       ${state.style === '3' ? '' : `<div class="chipGroup">
         <span class="chipGroup__label">Rachunki</span>
-        ${pills(ACCOUNT_CHIPS, state.account, 'account')}
+        <div class="chips">${ACCOUNT_CHIPS.map((c, i) => {
+          const all = i === 0;
+          const on = all ? state.accounts.length === 0 : state.accounts.includes(c);
+          return `<button type="button" class="chip" data-chip="${c}" aria-pressed="${on}">${
+            on ? '<span class="chip__check">✓</span>' : ''}${c}</button>`;
+        }).join('')}</div>
       </div>`}
       <div class="metricStrip">${CLASS_METRICS.map(([l, v]) =>
         `<div class="strip__item metricStrip__item"><span class="strip__label">${l}</span>
@@ -713,6 +717,16 @@ document.addEventListener('click', (e) => {
     state.screen = nav.dataset.nav === 'Pulpit' ? 'pulpit' : 'portfel';
     render(); window.scrollTo({ top: 0 }); return;
   }
+  const chip = e.target.closest('[data-chip]');
+  if (chip) {
+    const name = chip.dataset.chip;
+    if (name === ACCOUNT_CHIPS[0]) state.accounts = [];
+    else state.accounts = state.accounts.includes(name)
+      ? state.accounts.filter((a) => a !== name)
+      : [...state.accounts, name];
+    render();
+    return;
+  }
   const goto = e.target.closest('[data-goto]');
   if (goto) { state.screen = goto.dataset.goto; render(); window.scrollTo({ top: 0 }); return; }
   if (e.target.closest('[data-back]')) { state.screen = 'portfel'; render(); window.scrollTo({ top: 0 }); return; }
@@ -721,7 +735,7 @@ document.addEventListener('click', (e) => {
   const p = e.target.closest('[data-pill]');
   if (p) {
     const map = { currency: 'currency', view: 'view', detailCurrency: 'detailCurrency',
-      grouping: 'grouping', txtab: 'txTab', account: 'account' };
+      grouping: 'grouping', txtab: 'txTab' };
     const key = map[p.dataset.pill];
     if (key) state[key] = p.dataset.value;
     render();

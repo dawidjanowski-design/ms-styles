@@ -181,7 +181,13 @@ export function AssetDetailScreen({
 }) {
   const [currency, setCurrency] = useState<string>('PLN');
   const [grouping, setGrouping] = useState<string>('Emitenci');
-  const [account, setAccount] = useState<string>('Wszystkie');
+  /* Filtr rachunkow jest wielokrotnego wyboru. Pusty zbior znaczy „Wszystkie",
+     dzieki czemu odznaczenie ostatniego rachunku wraca do pelnej listy samo. */
+  const [accounts, setAccounts] = useState<string[]>([]);
+  const toggleAccount = (name: string) =>
+    setAccounts((prev) =>
+      prev.includes(name) ? prev.filter((a) => a !== name) : [...prev, name]
+    );
 
   /* Makieta nie ma palety — kolor i tak gasi CSS, wiec siegamy po nr 1. */
   const palette = styleId === '2' ? '2' : '1';
@@ -234,9 +240,6 @@ export function AssetDetailScreen({
                   onChange={setGrouping}
                   locked={locked}
                 />
-                <button type="button" className="btnGhost">
-                  <span aria-hidden="true">⤢</span> Pełna tabela
-                </button>
               </div>
             </div>
 
@@ -246,7 +249,24 @@ export function AssetDetailScreen({
             {!locked && (
               <div className="chipGroup">
                 <span className="chipGroup__label">Rachunki</span>
-                <Pills items={ACCOUNT_CHIPS} value={account} onChange={setAccount} />
+                <div className="chips">
+                  {ACCOUNT_CHIPS.map((c, i) => {
+                    const all = i === 0;
+                    const on = all ? accounts.length === 0 : accounts.includes(c);
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        className="chip"
+                        aria-pressed={on}
+                        onClick={() => (all ? setAccounts([]) : toggleAccount(c))}
+                      >
+                        {on && <span className="chip__check" aria-hidden="true">✓</span>}
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
