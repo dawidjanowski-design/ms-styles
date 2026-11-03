@@ -342,7 +342,7 @@ export function PortfolioScreen({
                       key={a.id}
                       asset={a}
                       styleId={styleId}
-                      onOpen={onOpenAsset && DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
+                      onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
                     />
                   ))
                 : ACCOUNTS.map((a) => (
