@@ -71,7 +71,6 @@ export const ASSETS: AssetClass[] = [
   },
   {
     id: 'am',
-    marker: { '1': '#9ec421', '2': '#9ec421' },
     name: 'Asset Management',
     share: 20.0,
     amount: '843 728',
@@ -129,7 +128,7 @@ export const CASH = {
   colors: {
     '1': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
     '2': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
-  },
+  } as Record<'1' | '2', Palette>,
 };
 
 export const CASH_CARDS = [
@@ -266,6 +265,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'am',
+    marker: { '1': '#9ec421', '2': '#9ec421' },
     name: 'AM strategia konserwatywna',
     number: '00-00-008801',
     amount: '168 746',

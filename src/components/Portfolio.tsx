@@ -223,7 +223,7 @@ function AccountCard({ account, styleId }: { account: Account; styleId: StyleId 
   return (
     <article
       className="acctCard"
-      style={{ ['--seg' as string]: account.marker[styleId] }}
+      style={{ ['--seg' as string]: account.marker?.[styleId] }}
     >
       <div className="acctCard__head">
         <div className="acctCard__top">
