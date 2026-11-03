@@ -50,7 +50,9 @@ const CASH_CARDS = [
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const state = { style: localStorage.getItem("ms-style") === "2" ? "2" : "1", hot: null,
-  currency: 'Łącznie', view: 'Aktywa' };
+  currency: 'Łącznie', view: 'Aktywa',
+  screen: 'portfel', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
+  txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '' };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 const dim = (id) => (state.hot === null ? '' : state.hot === id ? 'is-hot' : 'is-dim');
@@ -77,7 +79,9 @@ function chart() {
 }
 
 function legendRow(a) {
-  return `<button type="button" class="legendRow ${dim(a.id)}" data-hot="${a.id}" style="--seg:${a.colors[state.style].legend}">
+  const link = DETAIL_ASSETS.has(a.id);
+  return `<button type="button" class="legendRow ${dim(a.id)}" data-hot="${a.id}"
+    ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[state.style].legend};cursor:${link ? 'pointer' : 'default'}">
     <span class="legendRow__dot"></span>
     <span class="legendRow__name">${a.name}</span>
     <span class="legendRow__share">${pct(a.share)}</span>
@@ -173,7 +177,8 @@ function accountCard(a) {
 function assetCard(a) {
   const strip = state.style === '1';
   const rows = strip ? a.rows : [...a.highlights, ...a.rows];
-  return `<article class="assetCard" style="--seg:${a.colors[state.style].card}">
+  const link = DETAIL_ASSETS.has(a.id);
+  return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[state.style].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
         ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
@@ -193,26 +198,186 @@ function assetCard(a) {
     }</article>`;
 }
 
-function render() {
-  document.documentElement.setAttribute('data-style', state.style);
-  const titleInSummary = state.style === '1';
-  const title = '<h1 class="pageTitle">Portfel</h1>';
 
-  document.getElementById('root').innerHTML = `
-    <header class="appHeader">
-      <div class="appHeader__logo">${LOGO}</div>
-      <nav class="appHeader__nav">${NAV.map(
-        (n) => `<button type="button" class="navItem ${n === 'Portfel' ? 'navItem--active' : ''} ${n === 'Pulpit' ? 'navItem--prev' : ''}">${n}</button>`
-      ).join('')}</nav>
-      <div class="appHeader__right">
-        <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
-        <div class="appHeader__user">
-          <span class="appHeader__userName">Dawid Jankowski</span>
-          <span class="appHeader__avatar"></span>
+/* ---------------- ekran klasy aktywów (Figma 909:978) ---------------- */
+
+const DETAIL = { title: 'Obligacje korporacyjne', amount: '1 854 320', dec: ',00 PLN' };
+const DETAIL_CURRENCIES = ['Łącznie', 'PLN', 'EUR', 'USD', 'CHF'];
+const ACCOUNT_CHIPS = ['Wszystkie', 'Rachunek maklerski', 'OKI', 'IKE', 'XZ'];
+const CLASS_METRICS = [['Emitenci', '3'], ['Serie', '6'], ['Śr. rentowność (ważona)', '7,48%'],
+  ['Wypłacone odsetki 12M', '48 220 PLN'], ['Najbliższy wykup', '18.12.2026']];
+const INSTRUMENT_COLS = ['śr. oprocentowanie', 'najbliższy wykup', 'udział'];
+
+const ISSUERS = [
+  { id:'ms', name:'Michael / Ström SA', sub:'3 serie · F, G, H', rate:'7,65%', maturity:'14.03.2028', share:'28,4%', value:'600 000,00 PLN' },
+  { id:'vehis', name:'VEHIS', sub:'2 serie · K, M', rate:'7,90%', maturity:'09.06.2027', share:'33,2%', value:'700 000,00 PLN' },
+  { id:'victoria', name:'Victoria Dom', sub:'1 seria · B2', rate:'7,10%', maturity:'30.09.2029', share:'26,1%', value:'551 320,00 PLN' },
+];
+
+const SERIES = [
+  { id:'f', name:'Seria F', sub:'Michael / Ström SA', rate:'7,65%', maturity:'14.03.2028', share:'11,8%', value:'250 000,00 PLN' },
+  { id:'g', name:'Seria G', sub:'Michael / Ström SA', rate:'7,80%', maturity:'22.09.2028', share:'9,5%', value:'200 000,00 PLN' },
+  { id:'h', name:'Seria H', sub:'Michael / Ström SA', rate:'7,50%', maturity:'10.06.2029', share:'7,1%', value:'150 000,00 PLN' },
+  { id:'k', name:'Seria K', sub:'VEHIS', rate:'7,90%', maturity:'09.06.2027', share:'18,9%', value:'400 000,00 PLN' },
+  { id:'m', name:'Seria M', sub:'VEHIS', rate:'8,05%', maturity:'18.11.2028', share:'14,2%', value:'300 000,00 PLN' },
+  { id:'b2', name:'Seria B2', sub:'Victoria Dom', rate:'7,10%', maturity:'30.09.2029', share:'26,1%', value:'551 320,00 PLN' },
+];
+
+const TX_TABS = ['Wszystkie', 'Operacje', 'Przepływy', 'Zamknięte pozycje'];
+const TX_TAB_TYPES = {
+  'Wszystkie': null,
+  'Operacje': ['Zakup obligacji', 'Sprzedaż obligacji', 'Zapis na obligacje', 'Wykup obligacji'],
+  'Przepływy': ['Wypłata odsetek'],
+  'Zamknięte pozycje': ['Zakończenie inwestycji'],
+};
+const TX_PERIODS = ['2026', '2025', '2024'];
+const TX_TYPES = ['Wszystkie typy', 'Zakup obligacji', 'Sprzedaż obligacji', 'Zapis na obligacje',
+  'Wykup obligacji', 'Wypłata odsetek', 'Zakończenie inwestycji'];
+const TX_COLUMNS = ['Data', 'Typ transakcji', 'Instrument', 'Kwota', 'Status', 'Rachunek'];
+const TX_TOTAL = 68;
+
+const TRANSACTIONS = [
+  ['5.10.2026','Sprzedaż obligacji','VEHIS, seria H','41 226,00 PLN','','W rozliczeniu','Rachunek maklerski'],
+  ['2.10.2026','Zapis na obligacje','Orlen, seria C','-50 118,00 PLN','','Środki zablokowane','Rachunek maklerski'],
+  ['30.09.2026','Wypłata odsetek','Michael / Ström SA, seria F','5 420,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['30.09.2026','Wykup obligacji','Emitent DEF S.A., seria D','200 000,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['30.09.2026','Zakończenie inwestycji','Emitent DEF S.A., seria D','12 800,00 PLN','Wynik inwestycji','Zakończona','Rachunek maklerski'],
+  ['30.09.2026','Wypłata odsetek','Michael / Ström SA, seria F','2 710,00 PLN','','Rozliczone','IKE'],
+  ['30.09.2026','Wypłata odsetek','Nordvik Development, seria B','1 440,00 PLN','','Rozliczone','XZ'],
+  ['31.08.2026','Wypłata odsetek','Nordvik Development, seria B','4 140,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['10.07.2026','Sprzedaż obligacji','Victoria Dom, seria A4','121 800,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['10.07.2026','Zakończenie inwestycji','Victoria Dom, seria A4','11 400,00 PLN','Wynik inwestycji','Zakończona','Rachunek maklerski'],
+  ['30.06.2026','Wypłata odsetek','VEHIS, seria K','6 128,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['30.06.2026','Zakończenie inwestycji','Polmax Energia, seria Z','2 400,00 PLN','Wynik inwestycji','Zakończona','XZ'],
+  ['12.05.2026','Zakup obligacji','Polmax Energia, seria A','-150 000,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['2.04.2026','Zakup obligacji','Victoria Dom, seria B2','-280 200,00 PLN','','Rozliczone','Rachunek maklerski'],
+  ['31.03.2026','Zakończenie inwestycji','VEHIS, seria E','4 200,00 PLN','Wynik inwestycji','Zakończona','IKE'],
+];
+
+const DETAIL_ASSETS = new Set(['corp']);
+
+function instrRow(it, withLabels, color) {
+  const cells = [it.rate, it.maturity, it.share];
+  return `<button type="button" class="instrRow" style="--seg:${color}">
+    <span class="instrRow__dot"></span>
+    <span class="instrRow__title">
+      <span class="instrRow__name">${it.name}</span>
+      <span class="instrRow__sub">${it.sub}</span>
+    </span>
+    <span class="instrRow__cols">${cells.map((v, i) => `<span class="instrRow__col">
+      ${withLabels ? `<span class="instrRow__colLabel">${INSTRUMENT_COLS[i]}</span>` : ''}
+      <span class="instrRow__colValue">${v}</span></span>`).join('')}</span>
+    <span class="instrRow__value">${it.value}</span>
+    <span class="instrRow__chev">›</span></button>`;
+}
+
+function txRows() {
+  const allowed = TX_TAB_TYPES[state.txTab];
+  const q = state.txQuery.toLowerCase();
+  return TRANSACTIONS.filter((t) => {
+    if (allowed && !allowed.includes(t[1])) return false;
+    if (!t[0].endsWith(state.txPeriod)) return false;
+    if (state.txType !== 'Wszystkie typy' && t[1] !== state.txType) return false;
+    if (q && !t[2].toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function transactions() {
+  const rows = txRows();
+  const field = (label, cls, control) =>
+    `<label class="field ${cls}"><span class="field__label">${label}</span>${control}</label>`;
+  const select = (name, items, active) =>
+    `<select class="field__control" data-select="${name}">${items
+      .map((i) => `<option${i === active ? ' selected' : ''}>${i}</option>`).join('')}</select>`;
+
+  return `<section class="panel">
+    <div class="panel__head">
+      <h2 class="sectionTitle">Transakcje</h2>
+      <span class="panel__meta">${rows.length} transakcji</span>
+    </div>
+    <div class="panel__toolbar">
+      ${pills(TX_TABS, state.txTab, 'txtab')}
+      <div class="btnRow">
+        <button type="button" class="btnGhost">Eksport PDF</button>
+        <button type="button" class="btnGhost">Eksport XLS</button>
+      </div>
+    </div>
+    <div class="filters">
+      ${field('Okres', '', select('period', TX_PERIODS, state.txPeriod))}
+      ${field('Typ transakcji', 'field--wide', select('type', TX_TYPES, state.txType))}
+      ${field('Instrument', 'field--widest',
+        `<input class="field__control" type="search" data-search placeholder="Szukaj instrumentu" value="${state.txQuery}">`)}
+    </div>
+    <div class="table">
+      <div class="table__head">${TX_COLUMNS
+        .map((c) => `<span class="table__th ${c === 'Kwota' ? 'is-right' : ''}">${c}</span>`).join('')}</div>
+      ${rows.length === 0 ? '<div class="table__empty">Brak transakcji dla tych filtrów</div>' : ''}
+      ${rows.map((t) => `<div class="table__row">
+        <span class="table__td table__td--muted">${t[0]}</span>
+        <span class="table__td">${t[1]}</span>
+        <span class="table__td">${t[2]}</span>
+        <span class="table__td is-right"><span class="table__amount">${t[3]}</span>
+          ${t[4] ? `<span class="table__note">${t[4]}</span>` : ''}</span>
+        <span class="table__td"><span class="badge">${t[5]}</span></span>
+        <span class="table__td table__td--muted">${t[6]}</span>
+      </div>`).join('')}
+      <div class="table__foot">
+        <button type="button" class="btnGhost">Pokaż kolejne 15 transakcji</button>
+        <span class="table__caption">Wyświetlono ${rows.length} z ${TX_TOTAL} transakcji</span>
+      </div>
+    </div></section>`;
+}
+
+function detailScreen() {
+  const corp = ASSETS.find((a) => a.id === 'corp');
+  const color = corp.colors[state.style].card;
+  const items = state.grouping === 'Emitenci' ? ISSUERS : SERIES;
+
+  return `<div class="screenOuter"><div class="screen"><div class="content">
+    <div class="crumbRow">
+      <nav class="crumbs">
+        <button type="button" class="crumbs__link" data-back>Portfel</button>
+        <span class="crumbs__sep">›</span>
+        <button type="button" class="crumbs__link" data-back>Aktywa</button>
+        <span class="crumbs__sep">›</span>
+        <span class="crumbs__current">${DETAIL.title}</span>
+      </nav>
+      ${pills(DETAIL_CURRENCIES, state.detailCurrency, 'detailCurrency')}
+    </div>
+
+    <section class="summary"><div class="summary__titleBlock">
+      <h1 class="pageTitle">${DETAIL.title}</h1>
+      ${amount(DETAIL.amount, DETAIL.dec)}
+    </div></section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2 class="sectionTitle">Instrumenty i pozycje</h2>
+        <div class="panel__actions">
+          ${pills(['Emitenci', 'Serie'], state.grouping, 'grouping')}
+          <button type="button" class="btnGhost"><span>⤢</span> Pełna tabela</button>
         </div>
       </div>
-    </header>
+      <div class="chipGroup">
+        <span class="chipGroup__label">Rachunki</span>
+        <div class="chips">${ACCOUNT_CHIPS.map((c) => `<button type="button" class="chip"
+          data-chip="${c}" aria-pressed="${c === state.account}">${c === state.account ? '<span>✓</span>' : ''}${c}</button>`).join('')}</div>
+      </div>
+      <div class="metricStrip">${CLASS_METRICS.map(([l, v]) =>
+        `<div class="strip__item metricStrip__item"><span class="strip__label">${l}</span>
+         <span class="strip__value">${v}</span></div>`).join('')}</div>
+      <div class="instrList">${items.map((it, i) => instrRow(it, i === 0, color)).join('')}</div>
+    </section>
 
+    ${transactions()}
+  </div></div></div>`;
+}
+
+function portfolioScreen() {
+  const titleInSummary = state.style === '1';
+  const title = '<h1 class="pageTitle">Portfel</h1>';
+  return `
     <div class="screenOuter"><div class="screen"><div class="content">
       ${titleInSummary ? '' : title}
       <section class="summary" style="padding-top:var(--summary-pt)">
@@ -241,6 +406,28 @@ function render() {
         }</div>
       </section>
     </div></div></div>
+`;
+}
+
+function render() {
+  document.documentElement.setAttribute('data-style', state.style);
+
+  document.getElementById('root').innerHTML = `
+    <header class="appHeader">
+      <div class="appHeader__logo">${LOGO}</div>
+      <nav class="appHeader__nav">${NAV.map(
+        (n) => `<button type="button" class="navItem ${n === 'Portfel' ? 'navItem--active' : ''} ${n === 'Pulpit' ? 'navItem--prev' : ''}">${n}</button>`
+      ).join('')}</nav>
+      <div class="appHeader__right">
+        <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
+        <div class="appHeader__user">
+          <span class="appHeader__userName">Dawid Jankowski</span>
+          <span class="appHeader__avatar"></span>
+        </div>
+      </div>
+    </header>
+
+    ${state.screen === "portfel" ? portfolioScreen() : detailScreen()}
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
@@ -272,12 +459,38 @@ document.addEventListener('focusout', () => applyHot(null));
 document.addEventListener('click', (e) => {
   const s = e.target.closest('[data-style-btn]');
   if (s) { state.style = s.dataset.styleBtn; localStorage.setItem('ms-style', state.style); render(); return; }
+  if (e.target.closest('[data-back]')) { state.screen = 'portfel'; render(); window.scrollTo({ top: 0 }); return; }
+  const open = e.target.closest('[data-open]');
+  if (open) { state.screen = 'asset'; render(); window.scrollTo({ top: 0 }); return; }
+  const chip = e.target.closest('[data-chip]');
+  if (chip) { state.account = chip.dataset.chip; render(); return; }
   const p = e.target.closest('[data-pill]');
   if (p) {
-    if (p.dataset.pill === 'currency') state.currency = p.dataset.value;
-    else state.view = p.dataset.value;
+    const map = { currency: 'currency', view: 'view', detailCurrency: 'detailCurrency',
+      grouping: 'grouping', txtab: 'txTab' };
+    const key = map[p.dataset.pill];
+    if (key) state[key] = p.dataset.value;
     render();
   }
+});
+
+document.addEventListener('change', (e) => {
+  const sel = e.target.closest('[data-select]');
+  if (!sel) return;
+  if (sel.dataset.select === 'period') state.txPeriod = sel.value;
+  else state.txType = sel.value;
+  render();
+});
+
+/* Wyszukiwarka przerysowuje tylko wynik — pole nie może stracić kursora. */
+document.addEventListener('input', (e) => {
+  const inp = e.target.closest('[data-search]');
+  if (!inp) return;
+  state.txQuery = inp.value;
+  const pos = inp.selectionStart;
+  render();
+  const next = document.querySelector('[data-search]');
+  if (next) { next.focus(); try { next.setSelectionRange(pos, pos); } catch {} }
 });
 
 render();

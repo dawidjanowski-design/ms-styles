@@ -99,3 +99,34 @@ Jednorazowo trzeba włączyć Pages w repozytorium:
 Po pierwszym przebiegu strona będzie pod
 `https://dawidjanowski-design.github.io/ms-styles/`,
 a wersja bez zależności pod `.../ms-styles/preview/`.
+
+## Ekran klasy aktywów — obligacje korporacyjne
+
+Wireframe `909:978` przeniesiony na stylistykę nr 1. Wejście: klik w kartę
+„Obligacje korporacyjne" w Strukturze aktywów albo w ten sam wiersz legendy
+pod wykresem. Powrót — przez „Portfel" lub „Aktywa" w ścieżce nawigacji.
+
+Co działa naprawdę: przełącznik Emitenci/Serie, zakładki transakcji
+(Wszystkie / Operacje / Przepływy / Zamknięte pozycje), filtr okresu, filtr
+typu transakcji i wyszukiwarka instrumentu. Licznik „X z 68" przelicza się
+wraz z filtrami.
+
+Decyzje przy przenoszeniu wireframe'u na stylistykę nr 1:
+
+| Wireframe | Prototyp | Dlaczego |
+|---|---|---|
+| Karty z obrysem `#ebebeb`, radius 12 | białe karty, radius 16, `--shadow-card` | ten sam materiał co karty na pulpicie portfela |
+| H1 28px + blok „Wartość" po prawej | tytuł 18px + kwota 30px pod nim | układ nagłówka taki sam jak na ekranie Portfel |
+| Chipy rachunków `#292929` / `#f0f0f0` | `--pill-active-color` / `--pill-track-bg` | kolory przełączają się razem ze stylistyką |
+| Nazwa instrumentu 12px | 14px | spójnie z wierszami pozycji na kartach rachunków |
+
+Dwie rzeczy do decyzji po stronie klienta:
+
+- **Suma się nie zgadza.** Nagłówek w Figmie mówi 1 854 320,00 PLN, a trzy
+  wiersze emitentów dają 1 851 320,00 PLN. Zostawione 1:1.
+- **Chipy rachunków nie filtrują.** Wireframe nie definiuje, jak pozycje
+  rozkładają się na rachunki, a dopisywanie takiego podziału z głowy trafiłoby
+  do klienta jako ustalenie. Na razie chipy tylko przełączają stan.
+
+Widok w stylistyce nr 2 dziedziczy tokeny i renderuje się poprawnie, ale nie
+był jeszcze dopracowywany.
