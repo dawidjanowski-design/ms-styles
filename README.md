@@ -86,3 +86,15 @@ preview/                wersja bez zależności (ten sam CSS)
 
 Dodanie kolejnych ekranów z wireframe'ów sprowadza się do nowego komponentu
 korzystającego z tych samych tokenów — żadnych wartości na sztywno w markupie.
+
+## Publikacja (GitHub Pages)
+
+W repo jest workflow `.github/workflows/deploy.yml`, który przy każdym pushu na `main`
+buduje projekt i publikuje go na GitHub Pages.
+
+Jednorazowo trzeba włączyć Pages w repozytorium:
+**Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Po pierwszym przebiegu strona będzie pod
+`https://dawidjanowski-design.github.io/ms-styles/`,
+a wersja bez zależności pod `.../ms-styles/preview/`.
