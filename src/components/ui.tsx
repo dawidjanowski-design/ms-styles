@@ -60,20 +60,27 @@ export function KeyValue({
   );
 }
 
-export function AppHeader() {
+export function AppHeader({
+  active = 'Portfel',
+  onNavigate,
+}: {
+  active?: string;
+  onNavigate?: (item: string) => void;
+} = {}) {
   return (
     <header className="appHeader">
       <div className="appHeader__logo">
         <Logo />
       </div>
       <nav className="appHeader__nav">
-        {NAV.map((item) => (
+        {NAV.map((item, i) => (
           <button
             key={item}
             type="button"
-            className={`navItem ${item === 'Portfel' ? 'navItem--active' : ''} ${
-              item === 'Pulpit' ? 'navItem--prev' : ''
+            className={`navItem ${item === active ? 'navItem--active' : ''} ${
+              NAV[i + 1] === active ? 'navItem--prev' : ''
             }`}
+            onClick={() => onNavigate?.(item)}
           >
             {item}
           </button>

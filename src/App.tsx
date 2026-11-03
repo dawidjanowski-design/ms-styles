@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { AppHeader } from './components/ui';
 import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
+import { DashboardScreen } from './components/Dashboard';
 
 type StyleId = '1' | '2';
-/** Na razie dwa ekrany: pulpit portfela i klasa aktywów (obligacje korporacyjne). */
-type Screen = { name: 'portfel' } | { name: 'asset'; id: string };
+/** Pulpit, portfel i klasa aktywów (obligacje korporacyjne). */
+type Screen = { name: 'pulpit' } | { name: 'portfel' } | { name: 'asset'; id: string };
 
 const KEY = 'ms-style';
 
@@ -18,7 +19,7 @@ export default function App() {
       return '1';
     }
   });
-  const [screen, setScreen] = useState<Screen>({ name: 'portfel' });
+  const [screen, setScreen] = useState<Screen>({ name: 'pulpit' });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-style', styleId);
@@ -35,14 +36,27 @@ export default function App() {
 
   return (
     <>
-      <AppHeader />
+      <AppHeader
+        active={screen.name === 'pulpit' ? 'Pulpit' : 'Portfel'}
+        onNavigate={(item) => {
+          if (item === 'Pulpit') setScreen({ name: 'pulpit' });
+          if (item === 'Portfel') setScreen({ name: 'portfel' });
+        }}
+      />
 
-      {screen.name === 'portfel' ? (
+      {screen.name === 'pulpit' && (
+        <DashboardScreen
+          styleId={styleId}
+          onOpenPortfolio={() => setScreen({ name: 'portfel' })}
+        />
+      )}
+      {screen.name === 'portfel' && (
         <PortfolioScreen
           styleId={styleId}
           onOpenAsset={(id) => setScreen({ name: 'asset', id })}
         />
-      ) : (
+      )}
+      {screen.name === 'asset' && (
         <AssetDetailScreen styleId={styleId} onBack={() => setScreen({ name: 'portfel' })} />
       )}
 

@@ -421,3 +421,67 @@ select.field__control {
 /* karty aktywów i legenda prowadzą do ekranu klasy — bez efektu hovera,
    sam kursor; przygaszanie zostaje zarezerwowane dla wykresu. */
 .assetCard--link { cursor: pointer; }
+
+/* ================= pulpit (Figma 920:7375) =================
+   Treść i układ z pliku, wykres i paleta nasze. Gradientowe tło
+   i tonowane wypełnienia słupków celowo pominięte. */
+
+.dashHead { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+.dashHead__label { font-size: 13px; color: var(--muted); }
+.dashChart { padding-top: 24px; }
+
+.btnGhost--lg { height: 38px; padding: 0 16px; font-size: 13px; }
+
+/* ---- emisje i oferty ---- */
+.offers { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
+.offers__head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.offers__nav { display: flex; align-items: center; gap: 8px; }
+.iconBtn {
+  width: 38px; height: 38px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--card-bg); box-shadow: var(--shadow-pill);
+  font-size: 15px; color: var(--muted);
+  transition: color 140ms var(--ease);
+}
+.iconBtn:hover { color: var(--ink); }
+
+.offers__track {
+  display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 2px; margin: -2px; scrollbar-width: none;
+}
+.offers__track::-webkit-scrollbar { display: none; }
+.offerCard {
+  flex: 0 0 220px; scroll-snap-align: start; min-height: 211px;
+  background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card); padding: 20px 16px;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+}
+.offerCard__top { display: flex; flex-direction: column; gap: 10px; }
+.offerCard__kind { font-size: 10px; line-height: 15px; color: var(--muted); }
+.offerCard__issuer {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
+}
+.offerCard__bottom { display: flex; flex-direction: column; gap: 4px; }
+.offerCard__rate { font-size: 21px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+.offerCard__note { font-size: 12px; color: var(--muted); }
+
+/* ---- nadchodzące zdarzenia ---- */
+.events { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
+.eventsCard {
+  background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card); padding: 8px 20px;
+  display: flex; flex-direction: column;
+}
+.eventRow {
+  display: grid; grid-template-columns: 100px 232px minmax(0, 1fr) auto 16px;
+  align-items: center; gap: 16px;
+  padding: 14px 0; width: 100%; text-align: left;
+  border-bottom: 1px solid var(--divider);
+}
+.eventsCard .eventRow:last-child { border-bottom: 0; }
+.eventRow__date { font-size: 14px; color: var(--muted); }
+.eventRow__type { font-size: 14px; font-weight: 500; color: var(--ink); }
+.eventRow__instrument { font-size: 14px; color: var(--muted); }
+.eventRow__amount { font-size: 14px; font-weight: 500; color: #342717; text-align: right; }
+.eventRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }

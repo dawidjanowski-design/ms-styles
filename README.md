@@ -130,3 +130,27 @@ Dwie rzeczy do decyzji po stronie klienta:
 
 Widok w stylistyce nr 2 dziedziczy tokeny i renderuje się poprawnie, ale nie
 był jeszcze dopracowywany.
+
+## Pulpit
+
+Wireframe `920:7375` wdrożony w obu stylistykach. Jest ekranem startowym;
+nawigacja Pulpit ↔ Portfel działa z górnego menu, a przycisk „Przejdź do
+portfela" prowadzi na ten sam ekran.
+
+Z pliku wzięta jest treść i układ. Reszta pochodzi z prototypu:
+
+- **wykres i legenda to nasz komponent** z ekranu Portfel — ten sam podział,
+  te same kolory per stylistyka, to samo przygaszanie na hover; dzięki temu
+  Pulpit i Portfel nie pokazują dwóch różnych portfeli;
+- gradientowe tło strony i tonowane wypełnienia słupków pominięte — kolor
+  niesie wyłącznie paleta klas aktywów;
+- karty ofert mają znacznik klasy aktywów w tej samej konwencji co karty
+  aktywów: kropka w nr 1, pionowa kreska w nr 2.
+
+Dane legendy w Figmie (50,0% / 2 109 320 PLN dla obligacji korporacyjnych,
+bez obligacji skarbowych) różnią się od naszych — suma 4 218 640,00 PLN jest
+ta sama, więc zostały nasze.
+
+Logo emitentów na kartach ofert są w Figmie bitmapami i nie dało się ich
+wyeksportować; w prototypie są nazwami tekstowymi. Podmiana na pliki SVG
+to jedna zmiana w `src/data/dashboard.ts`.

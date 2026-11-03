@@ -51,7 +51,7 @@ const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp',
 
 const state = { style: localStorage.getItem("ms-style") === "2" ? "2" : "1", hot: null,
   currency: 'Łącznie', view: 'Aktywa',
-  screen: 'portfel', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
+  screen: 'pulpit', detailCurrency: 'PLN', grouping: 'Emitenci', account: 'Wszystkie',
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '' };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
@@ -374,6 +374,87 @@ function detailScreen() {
   </div></div></div>`;
 }
 
+
+/* ---------------- pulpit (Figma 920:7375) ---------------- */
+
+const DASHBOARD = { label: 'Twoje aktywa na wszystkich rachunkach',
+  dec: ',00 PLN', action: 'Przejdź do portfela' };
+
+const OFFERS = [
+  { id:'vehis-k', asset:'corp', kind:'Emisja Publiczna. Obligacje serii K.', issuer:'VEHIS',
+    rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
+  { id:'ms-r', asset:'corp', kind:'Emisja Publiczna. Obligacje serii R.', issuer:'Michael / Ström',
+    rate:'5,42%', note:'(WIBOR 6M + 1,60 p.p.)' },
+  { id:'victoria-b2', asset:'corp', kind:'Emisja. Obligacje serii B2.', issuer:'Victoria Dom',
+    rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
+  { id:'am-konserwatywna', asset:'am', kind:'Strategia, konserwatywna', issuer:'Asset Management',
+    rate:'5,20%', note:'(Cel roczny, netto)' },
+];
+
+const EVENTS = [
+  ['30.09.2026', 'Wypłata odsetek', 'Michael / Ström SA, Seria F', '8 388,00 PLN'],
+  ['30.09.2026', 'Wykup, zwrot kapitału', 'Emitent DEF S.A., Seria D', '200 000,00 PLN'],
+  ['30.09.2026', 'Kupon, obligacje korporacyjne', 'Nordvik Development, Seria B', '12 860,00 PLN'],
+  ['30.09.2026', 'Wypłata odsetek', 'Nordvik Development, Seria B', '24 000,00 PLN'],
+  ['30.09.2026', 'Wykup, zwrot kapitału', 'Polmax Energia, Seria A', '2 450 000,00 PLN'],
+];
+
+function offerColor(o) {
+  if (o.asset === 'cash') return CASH.colors[state.style].card;
+  const a = ASSETS.find((x) => x.id === o.asset);
+  return a ? a.colors[state.style].card : 'var(--ink)';
+}
+
+function dashboardScreen() {
+  return `<div class="screenOuter"><div class="screen"><div class="content">
+    <section class="summary">
+      <div class="dashHead">
+        <div class="summary__titleBlock">
+          <span class="dashHead__label">${DASHBOARD.label}</span>
+          ${amount(TOTAL.amount, DASHBOARD.dec)}
+        </div>
+        <button type="button" class="btnGhost btnGhost--lg" data-goto="portfel">
+          ${DASHBOARD.action}<span>›</span></button>
+      </div>
+      <div class="dashChart">${chart()}</div>
+      ${legend()}
+    </section>
+
+    <section class="offers">
+      <div class="offers__head">
+        <h2 class="sectionTitle">Emisje i oferty</h2>
+        <div class="offers__nav">
+          <button type="button" class="iconBtn" data-scroll="-1" aria-label="Poprzednie oferty">‹</button>
+          <button type="button" class="iconBtn" data-scroll="1" aria-label="Następne oferty">›</button>
+        </div>
+      </div>
+      <div class="offers__track" data-track>${OFFERS.map((o) => `<article class="offerCard" style="--seg:${offerColor(o)}">
+        <div class="offerCard__top">
+          <span class="offerCard__kind">${o.kind}</span>
+          <span class="offerCard__issuer">
+            ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
+            ${o.issuer}
+            ${state.style === '1' ? '<span class="assetCard__dot"></span>' : ''}
+          </span>
+        </div>
+        <div class="offerCard__bottom">
+          <span class="offerCard__rate">${o.rate}</span>
+          <span class="offerCard__note">${o.note}</span>
+        </div></article>`).join('')}</div>
+    </section>
+
+    <section class="events">
+      <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
+      <div class="eventsCard">${EVENTS.map(([d, t, i, a]) => `<button type="button" class="eventRow">
+        <span class="eventRow__date">${d}</span>
+        <span class="eventRow__type">${t}</span>
+        <span class="eventRow__instrument">${i}</span>
+        <span class="eventRow__amount">${a}</span>
+        <span class="eventRow__chev">›</span></button>`).join('')}</div>
+    </section>
+  </div></div></div>`;
+}
+
 function portfolioScreen() {
   const titleInSummary = state.style === '1';
   const title = '<h1 class="pageTitle">Portfel</h1>';
@@ -415,9 +496,10 @@ function render() {
   document.getElementById('root').innerHTML = `
     <header class="appHeader">
       <div class="appHeader__logo">${LOGO}</div>
-      <nav class="appHeader__nav">${NAV.map(
-        (n) => `<button type="button" class="navItem ${n === 'Portfel' ? 'navItem--active' : ''} ${n === 'Pulpit' ? 'navItem--prev' : ''}">${n}</button>`
-      ).join('')}</nav>
+      <nav class="appHeader__nav">${NAV.map((n, i) => {
+        const active = state.screen === 'pulpit' ? 'Pulpit' : 'Portfel';
+        return `<button type="button" data-nav="${n}" class="navItem ${n === active ? 'navItem--active' : ''} ${NAV[i + 1] === active ? 'navItem--prev' : ''}">${n}</button>`;
+      }).join('')}</nav>
       <div class="appHeader__right">
         <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
         <div class="appHeader__user">
@@ -427,7 +509,7 @@ function render() {
       </div>
     </header>
 
-    ${state.screen === "portfel" ? portfolioScreen() : detailScreen()}
+    ${state.screen === "pulpit" ? dashboardScreen() : state.screen === "portfel" ? portfolioScreen() : detailScreen()}
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
@@ -459,6 +541,19 @@ document.addEventListener('focusout', () => applyHot(null));
 document.addEventListener('click', (e) => {
   const s = e.target.closest('[data-style-btn]');
   if (s) { state.style = s.dataset.styleBtn; localStorage.setItem('ms-style', state.style); render(); return; }
+  const sc = e.target.closest('[data-scroll]');
+  if (sc) {
+    const t = document.querySelector('[data-track]');
+    if (t) t.scrollBy({ left: Number(sc.dataset.scroll) * 244, behavior: 'smooth' });
+    return;
+  }
+  const nav = e.target.closest('[data-nav]');
+  if (nav && (nav.dataset.nav === 'Pulpit' || nav.dataset.nav === 'Portfel')) {
+    state.screen = nav.dataset.nav === 'Pulpit' ? 'pulpit' : 'portfel';
+    render(); window.scrollTo({ top: 0 }); return;
+  }
+  const goto = e.target.closest('[data-goto]');
+  if (goto) { state.screen = goto.dataset.goto; render(); window.scrollTo({ top: 0 }); return; }
   if (e.target.closest('[data-back]')) { state.screen = 'portfel'; render(); window.scrollTo({ top: 0 }); return; }
   const open = e.target.closest('[data-open]');
   if (open) { state.screen = 'asset'; render(); window.scrollTo({ top: 0 }); return; }

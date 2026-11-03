@@ -23,7 +23,7 @@ const dimClass = (id: string, hot: string | null) =>
 
 /* ----------------------------- wykres ----------------------------- */
 
-function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
+export function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
   const byId = new Map(ASSETS.map((a) => [a.id, a]));
   const segments = [
     ...LEGEND_ORDER[styleId].map((id) => {
@@ -97,7 +97,7 @@ function LegendRow({
   );
 }
 
-function Legend({ styleId, hot, setHot, onOpenAsset }: { styleId: StyleId; onOpenAsset: (id: string) => void } & HoverProps) {
+export function Legend({ styleId, hot, setHot, onOpenAsset }: { styleId: StyleId; onOpenAsset?: (id: string) => void } & HoverProps) {
   const order = LEGEND_ORDER[styleId];
   const byId = new Map(ASSETS.map((a) => [a.id, a]));
 
@@ -116,7 +116,7 @@ function Legend({ styleId, hot, setHot, onOpenAsset }: { styleId: StyleId; onOpe
             value={a.legendValue}
             hot={hot}
             setHot={setHot}
-            onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
+            onOpen={onOpenAsset && DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
           />
         );
       })}
@@ -342,7 +342,7 @@ export function PortfolioScreen({
                       key={a.id}
                       asset={a}
                       styleId={styleId}
-                      onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
+                      onOpen={onOpenAsset && DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
                     />
                   ))
                 : ACCOUNTS.map((a) => (
