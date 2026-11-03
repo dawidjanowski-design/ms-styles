@@ -15,6 +15,9 @@ import { Amount, KeyValue, Pills } from './ui';
 type StyleId = '1' | '2';
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
+/* Klasy aktywów, które mają już własny ekran szczegółów. */
+export const DETAIL_ASSETS = new Set(['corp']);
+
 const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
@@ -66,18 +69,21 @@ function LegendRow({
   value,
   hot,
   setHot,
+  onOpen,
 }: {
   id: string;
   color: string;
   name: string;
   share: string;
   value: string;
+  onOpen?: () => void;
 } & HoverProps) {
   return (
     <button
       type="button"
       className={`legendRow ${dimClass(id, hot)}`}
-      style={{ ['--seg' as string]: color }}
+      style={{ ['--seg' as string]: color, cursor: onOpen ? 'pointer' : 'default' }}
+      onClick={onOpen}
       onMouseEnter={() => setHot(id)}
       onMouseLeave={() => setHot(null)}
       onFocus={() => setHot(id)}
@@ -91,7 +97,7 @@ function LegendRow({
   );
 }
 
-function Legend({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
+function Legend({ styleId, hot, setHot, onOpenAsset }: { styleId: StyleId; onOpenAsset: (id: string) => void } & HoverProps) {
   const order = LEGEND_ORDER[styleId];
   const byId = new Map(ASSETS.map((a) => [a.id, a]));
 
@@ -110,6 +116,7 @@ function Legend({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
             value={a.legendValue}
             hot={hot}
             setHot={setHot}
+            onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
           />
         );
       })}
@@ -161,14 +168,23 @@ function CashOverview() {
 
 /* ----------------------------- karty aktywów ----------------------------- */
 
-function AssetCard({ asset, styleId }: { asset: AssetClass; styleId: StyleId }) {
+function AssetCard({
+  asset,
+  styleId,
+  onOpen,
+}: {
+  asset: AssetClass;
+  styleId: StyleId;
+  onOpen?: () => void;
+}) {
   const strip = styleId === '1';
   const rows = strip ? asset.rows : [...asset.highlights, ...asset.rows];
 
   return (
     <article
-      className="assetCard"
+      className={`assetCard ${onOpen ? 'assetCard--link' : ''}`}
       style={{ ['--seg' as string]: asset.colors[styleId].card }}
+      onClick={onOpen}
     >
       <div className="assetCard__head">
         <div className="assetCard__title">
@@ -276,7 +292,13 @@ function AccountCard({ account, styleId }: { account: Account; styleId: StyleId 
 
 /* ----------------------------- ekran ----------------------------- */
 
-export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
+export function PortfolioScreen({
+  styleId,
+  onOpenAsset,
+}: {
+  styleId: StyleId;
+  onOpenAsset: (id: string) => void;
+}) {
   const [currency, setCurrency] = useState<string>('Łącznie');
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
@@ -301,7 +323,7 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
               </div>
               <AllocationChart styleId={styleId} hot={hot} setHot={setHot} />
             </div>
-            <Legend styleId={styleId} hot={hot} setHot={setHot} />
+            <Legend styleId={styleId} hot={hot} setHot={setHot} onOpenAsset={onOpenAsset} />
           </section>
 
           <CashOverview />
@@ -316,7 +338,12 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
             <div className="assets__list">
               {view === 'Aktywa'
                 ? ASSETS.map((a) => (
-                    <AssetCard key={a.id} asset={a} styleId={styleId} />
+                    <AssetCard
+                      key={a.id}
+                      asset={a}
+                      styleId={styleId}
+                      onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
+                    />
                   ))
                 : ACCOUNTS.map((a) => (
                     <AccountCard key={a.id} account={a} styleId={styleId} />

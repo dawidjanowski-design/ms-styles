@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AppHeader } from './components/ui';
 import { PortfolioScreen } from './components/Portfolio';
+import { AssetDetailScreen } from './components/AssetDetail';
 
 type StyleId = '1' | '2';
+/** Na razie dwa ekrany: pulpit portfela i klasa aktywów (obligacje korporacyjne). */
+type Screen = { name: 'portfel' } | { name: 'asset'; id: string };
+
 const KEY = 'ms-style';
 
 export default function App() {
@@ -14,6 +18,7 @@ export default function App() {
       return '1';
     }
   });
+  const [screen, setScreen] = useState<Screen>({ name: 'portfel' });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-style', styleId);
@@ -24,10 +29,22 @@ export default function App() {
     }
   }, [styleId]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [screen]);
+
   return (
     <>
       <AppHeader />
-      <PortfolioScreen styleId={styleId} />
+
+      {screen.name === 'portfel' ? (
+        <PortfolioScreen
+          styleId={styleId}
+          onOpenAsset={(id) => setScreen({ name: 'asset', id })}
+        />
+      ) : (
+        <AssetDetailScreen styleId={styleId} onBack={() => setScreen({ name: 'portfel' })} />
+      )}
 
       <div className="styleSwitch" role="group" aria-label="Wybór stylistyki">
         <span>Stylistyka</span>
