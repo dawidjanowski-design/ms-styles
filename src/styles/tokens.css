@@ -151,6 +151,9 @@
   --pill-size: 13px;
   --pill-active-color: #171934;
 
+  /* Tlo ekranu chlodniejsze niz w nr 1 (#f8f7f7). */
+  --screen-bg: #f7f7f7;
+
   --value-strong: #171934;
   --crumb-sep: #c9c9c9;
   --sub-faint: #aeaeae;
