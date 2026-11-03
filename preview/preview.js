@@ -113,7 +113,7 @@ function cash() {
 function assetCard(a) {
   const strip = state.style === '1';
   const rows = strip ? a.rows : [...a.highlights, ...a.rows];
-  return `<article class="assetCard ${dim(a.id)}" data-hot="${a.id}" style="--seg:${a.colors[state.style].card}">
+  return `<article class="assetCard" style="--seg:${a.colors[state.style].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
         ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}

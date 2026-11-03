@@ -159,21 +159,14 @@ function CashOverview() {
 
 /* ----------------------------- karty aktywów ----------------------------- */
 
-function AssetCard({
-  asset,
-  styleId,
-  hot,
-  setHot,
-}: { asset: AssetClass; styleId: StyleId } & HoverProps) {
+function AssetCard({ asset, styleId }: { asset: AssetClass; styleId: StyleId }) {
   const strip = styleId === '1';
   const rows = strip ? asset.rows : [...asset.highlights, ...asset.rows];
 
   return (
     <article
-      className={`assetCard ${dimClass(asset.id, hot)}`}
+      className="assetCard"
       style={{ ['--seg' as string]: asset.colors[styleId].card }}
-      onMouseEnter={() => setHot(asset.id)}
-      onMouseLeave={() => setHot(null)}
     >
       <div className="assetCard__head">
         <div className="assetCard__title">
@@ -245,13 +238,7 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
             </div>
             <div className="assets__list">
               {ASSETS.map((a) => (
-                <AssetCard
-                  key={a.id}
-                  asset={a}
-                  styleId={styleId}
-                  hot={hot}
-                  setHot={setHot}
-                />
+                <AssetCard key={a.id} asset={a} styleId={styleId} />
               ))}
             </div>
           </section>
