@@ -210,7 +210,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .assetCard__title { display: flex; align-items: center; gap: 8px; }
 .assetCard__name { font-size: 13px; font-weight: 500; color: var(--ink); }
 .assetCard__dot { width: 6px; height: 6px; border-radius: 999px; background: var(--seg); }
-.assetCard__bar { width: 16px; height: 4px; border-radius: 4px; background: var(--seg); }
+.assetCard__bar { width: 4px; height: 16px; border-radius: 4px; background: var(--seg); flex: none; }
 .assetCard__amount .amount__int { font-size: var(--asset-value-size); }
 .assetCard__amount .amount__dec { font-size: var(--asset-value-decimals); }
 .assetCard__rows { display: flex; flex-direction: column; gap: 4px; }
