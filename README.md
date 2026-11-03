@@ -181,10 +181,27 @@ odstępy wypełniają go co do piksela. U nas treść ma 1064 px, więc sztywne 
 zostawiało 112 px luki przy prawej krawędzi. Piąta oferta sprawi, że pas
 zacznie się przewijać, a strzałki przesuwają go dokładnie o jedną kartę.
 
+W stylistyce nr 1 oferty to **karuzela w pętli**. Liczba kart w widoku zależy
+od szerokości sekcji (4 / 3 / 2 / 1, min. 220 px na kartę), karty zawsze
+wypełniają ją do krawędzi, a strzałki działają także wtedy, gdy wszystkie
+oferty mieszczą się na ekranie — pierwsza karta przechodzi na koniec. Pas
+można też przeciągać myszą i palcem albo przesunąć poziomym gestem na
+gładziku. Technicznie: karty w pięciu kopiach, tor przesuwany transformem,
+po każdym ruchu cichy powrót do środkowej kopii (`OffersLoop` w
+`Dashboard.tsx`, to samo w `preview.js`). Nr 2 i makieta zostają przy
+zwykłym przewijanym pasie.
+
 Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
 `preview/logos`) i są podpięte w `src/data/dashboard.ts`. Pliki mają gęstość 3x i są
 skalowane w dół do rozmiaru z `width`/`height`, więc zostają ostre także na
-ekranach retina. Oferta bez pola `logo` renderuje nazwę emitenta tekstem.
+ekranach retina. Wyjątkiem jest Michael / Ström — `logo: 'wordmark'` rysuje
+ten sam wektor co w nagłówku (`Logo` z szerokością 94 px), więc pliku PNG już
+nie ma. Oferta bez pola `logo` renderuje nazwę emitenta tekstem.
+
+W nr 1 aktywne tło pigułek to osobny wskaźnik, który przy zmianie wyboru
+przesuwa się pod kolejny przycisk i dopasowuje szerokość (340 ms,
+`cubic-bezier(0.16, 1, 0.3, 1)`); przycisk „Przejdź do portfela" ma wygląd
+aktywnej pigułki „Łącznie".
 
 ## Przełącznik walutowy na Portfelu
 

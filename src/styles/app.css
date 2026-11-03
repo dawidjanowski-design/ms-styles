@@ -94,6 +94,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* ---------------- pigułki ---------------- */
 .pills {
+  position: relative;
   display: inline-flex; align-items: center; gap: var(--pill-gap);
   padding: var(--pill-track-pad); border-radius: 999px;
   background: var(--pill-track-bg); box-shadow: var(--shadow-track);
@@ -108,6 +109,22 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .pills button[aria-pressed='true'] {
   background: rgba(255, 255, 255, 0.7); color: var(--pill-active-color);
   box-shadow: var(--shadow-pill);
+}
+
+/* Stylistyka nr 1: tło aktywnej pigułki to osobny wskaźnik pod przyciskami,
+   który przy zmianie wyboru przesuwa się i zmienia szerokość (jak glide
+   w menu). W nr 2 zostaje statyczne tło na samym przycisku. */
+.pills__glide { display: none; }
+[data-style='1'] .pills__glide {
+  display: block; position: absolute; top: var(--pill-track-pad); left: 0;
+  height: var(--pill-h); border-radius: 999px; pointer-events: none;
+  background: rgba(255, 255, 255, 0.7); box-shadow: var(--shadow-pill);
+  transition: transform 340ms cubic-bezier(0.16, 1, 0.3, 1), width 340ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-style='1'] .pills button { position: relative; }
+[data-style='1'] .pills button[aria-pressed='true'] { background: none; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-style='1'] .pills__glide { transition: none; }
 }
 
 /* ---------------- podsumowanie ---------------- */
@@ -459,6 +476,17 @@ select.field__control {
 
 .btnGhost--lg { height: 38px; padding: 0 16px; font-size: 13px; }
 
+/* Stylistyka nr 1: „Przejdź do portfela” wygląda jak aktywna pigułka „Łącznie”
+   z Portfela. Tam biel 70% leży na torze pigułek; tutaj toru nie ma, więc
+   ten sam kolor mieszamy z góry. */
+[data-style='1'] .btnGhost--lg {
+  height: var(--pill-h); padding: 0 var(--pill-px); border: 0;
+  background: color-mix(in srgb, #fff 70%, var(--pill-track-bg));
+  box-shadow: var(--shadow-pill);
+  font-size: var(--pill-size); color: var(--pill-active-color);
+}
+[data-style='1'] .btnGhost--lg:hover { background: #fff; }
+
 /* ---- emisje i oferty ---- */
 .offers { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
 .offers__head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -497,6 +525,30 @@ select.field__control {
 .offerCard__rate { font-size: 21px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
 .offerCard__note { font-size: 13px; color: var(--muted); }
 
+/* Stylistyka nr 1: karuzela w pętli. Karty zawsze wypełniają całą szerokość
+   sekcji (tyle, ile się zmieści przy min. 220px na kartę), a tor przesuwamy
+   transformem o --pos kart; --drag to bieżące przeciąganie w px. Kopie kart
+   po obu stronach toru dają pętlę — logika w Dashboard.tsx / preview.js. */
+[data-style='1'] .offers { container-type: inline-size; }
+[data-style='1'] .offers__viewport {
+  overflow: hidden; padding: 2px; margin: -2px;
+  touch-action: pan-y; user-select: none; cursor: grab;
+}
+[data-style='1'] .offers__viewport:active { cursor: grabbing; }
+[data-style='1'] .offers__track {
+  --per: 1;
+  overflow: visible; padding: 0; margin: 0; scroll-snap-type: none;
+  transform: translateX(calc((100% + 24px) / var(--per) * var(--pos, 0) * -1 + var(--drag, 0px)));
+  transition: transform 420ms var(--ease);
+}
+[data-style='1'] .offerCard { flex: 0 0 calc((100% - (var(--per) - 1) * 24px) / var(--per)); }
+@container (min-width: 464px) { [data-style='1'] .offers__track { --per: 2; } }
+@container (min-width: 708px) { [data-style='1'] .offers__track { --per: 3; } }
+@container (min-width: 952px) { [data-style='1'] .offers__track { --per: 4; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-style='1'] .offers__track { transition: none; }
+}
+
 /* ---- nadchodzące zdarzenia ---- */
 .events { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
 .eventsCard {
@@ -518,7 +570,8 @@ select.field__control {
 .eventRow__chev { font-size: 14px; color: var(--chev); text-align: right; }
 
 /* Logo emitenta zamiast nazwy. Pliki są w gęstości 3x i skalowane w dół do
-   rozmiaru z atrybutów width/height, więc zostają ostre także na retinie. */
+   rozmiaru z atrybutów width/height, więc zostają ostre także na retinie.
+   Michael / Ström nie ma pliku — to wektor z nagłówka (Logo). */
 /* Rozmiar bierze się z atrybutow width/height przy <img> — zadnego auto,
    bo auto kazaloby przegladarce uzyc natywnych 3x pikseli. */
 .offerCard__logo { display: block; }
@@ -588,7 +641,8 @@ select.field__control {
 [data-style='3'] .offers__head { align-items: flex-start; }
 
 /* Logo emitentów to jedyny kolor, jaki zostawał na pulpicie w makiecie */
-[data-style='3'] .offerCard__logo { filter: grayscale(1); opacity: 0.6; }
+[data-style='3'] .offerCard__logo,
+[data-style='3'] .offerCard__issuer svg { filter: grayscale(1); opacity: 0.6; }
 [data-style='3'] .offerCard__rate { font-weight: 400; }
 
 /* ---------------- licznik kwoty ----------------

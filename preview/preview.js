@@ -85,7 +85,8 @@ const amount = (int, dec, cls = '', key = '') =>
   `<div class="amount ${cls}"><span class="amount__int">${roll(int, key + '|int')}</span><span class="amount__dec">${roll(dec, key + '|dec')}</span></div>`;
 const pills = (items, active, group) => {
   const locked = state.style === '3';
-  return `<div class="pills" role="group">${items
+  return `<div class="pills" role="group" data-pills="${group}">
+  <span class="pills__glide" aria-hidden="true"></span>${items
     .map((i) => `<button type="button" ${locked ? '' : `data-pill="${group}" `}data-value="${i}"
       aria-pressed="${i === active}"${locked ? ' aria-disabled="true"' : ''}>${i}</button>`)
     .join('')}</div>`;
@@ -845,7 +846,7 @@ const OFFERS = [
   { id:'vehis-k', asset:'corp', kind:'Emisja Publiczna. Obligacje serii K.', issuer:'VEHIS',
     logo:{ src:'logos/vehis.png', width:61, height:10 }, rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
   { id:'ms-r', asset:'corp', kind:'Emisja Publiczna. Obligacje serii R.', issuer:'Michael / Ström',
-    logo:{ src:'logos/michael-strom.png', width:94, height:14 }, rate:'5,42%', note:'(WIBOR 6M + 1,60 p.p.)' },
+    logo:'wordmark', rate:'5,42%', note:'(WIBOR 6M + 1,60 p.p.)' },
   { id:'victoria-b2', asset:'corp', kind:'Emisja. Obligacje serii B2.', issuer:'Victoria Dom',
     logo:{ src:'logos/victoria-dom.png', width:79, height:14 }, rate:'7,66%', note:'(WIBOR 6M + 3,80 - 4,10 p.p.)' },
   { id:'am-konserwatywna', asset:'am', kind:'Strategia, konserwatywna', issuer:'Asset Management',
@@ -859,6 +860,129 @@ const EVENTS = [
   ['30.09.2026', 'Wypłata odsetek', 'Nordvik Development, Seria B', '24 000,00 PLN'],
   ['30.09.2026', 'Wykup, zwrot kapitału', 'Polmax Energia, Seria A', '2 450 000,00 PLN'],
 ];
+
+/* Logo Michael / Ström w karcie oferty — ten sam wektor co w nagłówku, 94px szerokości */
+const WORDMARK_94 = LOGO.replace('width="112" height="17"',
+  `width="94" height="${(94 * 17) / 112}" aria-label="Michael / Ström Dom Maklerski"`);
+
+function issuerMark(o) {
+  if (o.logo === 'wordmark') return WORDMARK_94;
+  if (o.logo) return `<img class="offerCard__logo" src="${o.logo.src}"
+                 width="${o.logo.width}" height="${o.logo.height}" alt="${o.issuer}" draggable="false">`;
+  return o.issuer;
+}
+
+function offerCard(o, clone) {
+  return `<article class="offerCard"${clone ? ' aria-hidden="true"' : ''}>
+        <div class="offerCard__top">
+          <span class="offerCard__kind">${o.kind}</span>
+          <span class="offerCard__issuer">
+            ${issuerMark(o)}
+          </span>
+        </div>
+        <div class="offerCard__bottom">
+          <span class="offerCard__rate">${o.rate}</span>
+          <span class="offerCard__note">${o.note}</span>
+        </div></article>`;
+}
+
+/* Stylistyka nr 1: karuzela w pętli — ta sama logika co OffersLoop w Dashboard.tsx.
+   Karty w kilku kopiach, tor przesuwany o --pos kart, po każdym ruchu cichy
+   powrót do środkowej kopii. Strzałki, przeciąganie i poziomy gest na gładziku. */
+const COPIES = 5;
+const MID_COPY = Math.floor(COPIES / 2);
+const LOOP_MID = OFFERS.length * MID_COPY;
+const loop = { pos: LOOP_MID, drag: null };
+
+function offersTrack() {
+  if (state.style !== '1') {
+    return `<div class="offers__track" data-track>${OFFERS.map((o) => offerCard(o)).join('')}</div>`;
+  }
+  const cards = Array.from({ length: COPIES }, (_, c) =>
+    OFFERS.map((o) => offerCard(o, c !== MID_COPY)).join('')).join('');
+  return `<div class="offers__viewport" data-loop><div class="offers__track" style="--pos:${loop.pos}">${cards}</div></div>`;
+}
+
+function loopTrack() { return document.querySelector('[data-loop] .offers__track'); }
+
+function cardStep(t) {
+  const card = t.firstElementChild;
+  return card ? card.getBoundingClientRect().width + (parseFloat(getComputedStyle(t).columnGap) || 0) : 1;
+}
+
+function loopMove(p) {
+  loop.pos = p;
+  const t = loopTrack();
+  if (t) t.style.setProperty('--pos', String(p));
+}
+
+// ta sama karta, ale w środkowej kopii — skok bez animacji
+function loopRecenter() {
+  const t = loopTrack();
+  const n = OFFERS.length;
+  const p = ((((loop.pos - LOOP_MID) % n) + n) % n) + LOOP_MID;
+  if (!t || p === loop.pos) return;
+  t.style.transition = 'none';
+  loopMove(p);
+  void t.offsetWidth;
+  t.style.transition = '';
+}
+
+function loopStep(dir) {
+  const n = OFFERS.length;
+  const next = loop.pos + dir;
+  if (next < n || next > n * (COPIES - 1)) loopRecenter();
+  loopMove(loop.pos + dir);
+}
+
+/* Wywoływane po każdym render(), bo innerHTML podmienia elementy razem z nasłuchami. */
+function initOffersLoop() {
+  const view = document.querySelector('[data-loop]');
+  if (!view) return;
+  const track = view.firstElementChild;
+  loop.drag = null;
+
+  view.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    loopRecenter();
+    loop.drag = { id: e.pointerId, x: e.clientX, dx: 0 };
+    view.setPointerCapture(e.pointerId);
+    track.style.transition = 'none';
+  });
+  view.addEventListener('pointermove', (e) => {
+    const d = loop.drag;
+    if (!d || d.id !== e.pointerId) return;
+    const max = view.clientWidth;
+    d.dx = Math.max(-max, Math.min(max, e.clientX - d.x));
+    track.style.setProperty('--drag', `${d.dx}px`);
+  });
+  const end = (e) => {
+    const d = loop.drag;
+    if (!d || d.id !== e.pointerId) return;
+    loop.drag = null;
+    track.style.transition = '';
+    track.style.setProperty('--drag', '0px');
+    const cards = Math.abs(d.dx) < 30 ? 0 : Math.max(1, Math.round(Math.abs(d.dx) / cardStep(track)));
+    loopMove(loop.pos - Math.sign(d.dx) * cards);
+  };
+  view.addEventListener('pointerup', end);
+  view.addEventListener('pointercancel', end);
+  track.addEventListener('transitionend', (e) => {
+    if (e.target === track && e.propertyName === 'transform') loopRecenter();
+  });
+
+  // poziomy gest na gładziku: jeden gest (razem z bezwładnością) = jedna karta
+  let last = 0, acc = 0, fired = false;
+  view.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    if (e.timeStamp - last > 200) { acc = 0; fired = false; }
+    last = e.timeStamp;
+    if (fired) return;
+    acc += e.deltaX;
+    if (Math.abs(acc) > 30) { fired = true; loopStep(Math.sign(acc)); }
+  }, { passive: false });
+}
 
 function dashboardScreen() {
   return `<div class="screenOuter"><div class="screen"><div class="content">
@@ -883,18 +1007,7 @@ function dashboardScreen() {
           <button type="button" class="iconBtn" data-scroll="1" aria-label="Następne oferty">›</button>
         </div>
       </div>
-      <div class="offers__track" data-track>${OFFERS.map((o) => `<article class="offerCard">
-        <div class="offerCard__top">
-          <span class="offerCard__kind">${o.kind}</span>
-          <span class="offerCard__issuer">
-            ${o.logo ? `<img class="offerCard__logo" src="${o.logo.src}"
-                 width="${o.logo.width}" height="${o.logo.height}" alt="${o.issuer}">` : o.issuer}
-          </span>
-        </div>
-        <div class="offerCard__bottom">
-          <span class="offerCard__rate">${o.rate}</span>
-          <span class="offerCard__note">${o.note}</span>
-        </div></article>`).join('')}</div>
+      ${offersTrack()}
     </section>
 
     <section class="events">
@@ -1004,7 +1117,39 @@ function portfolioScreen() {
 `;
 }
 
+/* Wskaźnik aktywnej pigułki (Pills w ui.tsx). render() podmienia całe HTML,
+   więc zapamiętujemy, gdzie wskaźnik stał, i po przerysowaniu ruszamy z tego
+   miejsca do nowego przycisku. */
+function glidePositions() {
+  const out = {};
+  document.querySelectorAll('[data-pills]').forEach((p) => {
+    const g = p.querySelector('.pills__glide');
+    if (g && g.style.width) out[p.dataset.pills] = { x: g.style.transform, w: g.style.width };
+  });
+  return out;
+}
+
+function placeGlides(prev) {
+  document.querySelectorAll('[data-pills]').forEach((p) => {
+    const g = p.querySelector('.pills__glide');
+    const b = p.querySelector('[aria-pressed="true"]');
+    if (!g || !b) return;
+    const t = p.getBoundingClientRect();
+    const r = b.getBoundingClientRect();
+    const to = { x: `translateX(${r.left - t.left}px)`, w: `${r.width}px` };
+    const from = prev[p.dataset.pills] || to;
+    g.style.transition = 'none';
+    g.style.transform = from.x;
+    g.style.width = from.w;
+    void g.offsetWidth;
+    g.style.transition = '';
+    g.style.transform = to.x;
+    g.style.width = to.w;
+  });
+}
+
 function render() {
+  const glides = glidePositions();
   document.documentElement.setAttribute('data-style', state.style);
 
   document.getElementById('root').innerHTML = `
@@ -1036,6 +1181,8 @@ function render() {
       ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'Makieta']]
         .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
+  placeGlides(glides);
+  initOffersLoop();
 }
 
 /* Hover nie przerysowuje strony — przełącza wyłącznie klasy.
@@ -1078,12 +1225,10 @@ document.addEventListener('click', (e) => {
   if (s) { state.style = s.dataset.styleBtn; localStorage.setItem('ms-style', state.style); render(); return; }
   const sc = e.target.closest('[data-scroll]');
   if (sc) {
+    const dir = Number(sc.dataset.scroll);
     const t = document.querySelector('[data-track]');
-    if (t) {
-      const card = t.firstElementChild;
-      const step = card ? card.offsetWidth + 24 : t.clientWidth;
-      t.scrollBy({ left: Number(sc.dataset.scroll) * step, behavior: 'smooth' });
-    }
+    if (document.querySelector('[data-loop]')) loopStep(dir);
+    else if (t) t.scrollBy({ left: dir * cardStep(t), behavior: 'smooth' });
     return;
   }
   const nav = e.target.closest('[data-nav]');
@@ -1144,3 +1289,5 @@ document.addEventListener('input', (e) => {
 });
 
 render();
+// po doczytaniu fontu szerokości przycisków się zmieniają — ustawiamy wskaźniki od nowa
+document.fonts?.ready.then(() => placeGlides({}));

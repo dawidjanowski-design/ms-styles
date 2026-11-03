@@ -90,6 +90,13 @@
   /* 13px to przyjete minimum czytelnosci; w Figmie bylo 12. */
   --pill-size: 13px;
   --pill-active-color: #342717;
+  /* tor pigułek wprost z Figmy: cienki obrys i jasny refleks od góry, bez cienia na zewnątrz */
+  --shadow-track: inset 0 0 0 0.171px rgba(0, 0, 0, 0.08), inset 0 1.714px 1.714px rgba(255, 255, 255, 0.1);
+
+  /* tło ekranu — ciepła szarość z Figmy; idzie też do pasków w kartach, które je powtarzają */
+  --screen-bg: hsl(34deg 6% 96%);
+  --screen-border: hsl(35deg 6.544% 92.2374%);
+  --screen-radius: 1rem;
 
   --section-title-size: 16px;
   --section-title-color: var(--ink);

@@ -9,8 +9,9 @@ export type Offer = {
   asset: string;
   kind: string;
   issuer: string;
-  /** plik w public/logos — ścieżka względna, bez przedrostka */
-  logo?: { src: string; width: number; height: number };
+  /** plik w public/logos — ścieżka względna, bez przedrostka;
+      'wordmark' = wektorowe logo Michael / Ström z nagłówka */
+  logo?: { src: string; width: number; height: number } | 'wordmark';
   rate: string;
   note: string;
 };
@@ -44,7 +45,7 @@ export const OFFERS: Offer[] = [
     asset: 'corp',
     kind: 'Emisja Publiczna. Obligacje serii R.',
     issuer: 'Michael / Ström',
-    logo: { src: 'logos/michael-strom.png', width: 94, height: 14 },
+    logo: 'wordmark',
     rate: '5,42%',
     note: '(WIBOR 6M + 1,60 p.p.)',
   },

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Logo, BellIcon } from '../icons/Logo';
 import { NAV } from '../data/portfolio';
 
@@ -84,8 +84,35 @@ export function Pills({
   onChange: (v: string) => void;
   locked?: boolean;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [glide, setGlide] = useState<{ x: number; w: number } | null>(null);
+
+  // Wskaźnik aktywnej pigułki jedzie pod przyciskami z jednej na drugą.
+  // Mierzymy przed malowaniem, więc przy pierwszym renderze stoi już na miejscu.
+  useLayoutEffect(() => {
+    const track = ref.current;
+    const btn = track?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!track || !btn) return;
+    const measure = () => {
+      const t = track.getBoundingClientRect();
+      const b = btn.getBoundingClientRect();
+      setGlide({ x: b.left - t.left, w: b.width });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, [value]);
+
   return (
-    <div className="pills" role="group">
+    <div className="pills" role="group" ref={ref}>
+      {glide && (
+        <span
+          className="pills__glide"
+          aria-hidden="true"
+          style={{ width: glide.w, transform: `translateX(${glide.x}px)` }}
+        />
+      )}
       {items.map((it) => (
         <button
           key={it}
