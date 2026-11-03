@@ -388,3 +388,24 @@ ani jednego koloru wpisanego na sztywno.
 
 **Makieta zostaje szara.** Sprawdzane osobno: na jej ekranach nie ma ani
 jednego nasyconego koloru.
+
+## Podświetlenie na wykresie
+
+Przejazd myszką między wierszami legendy albo między segmentami wykresu nie
+wraca już na moment do stanu domyślnego. Wcześniej każdy element zerował
+podświetlenie przy opuszczeniu, więc 8-pikselowa szczelina między wierszami
+wystarczała, żeby wykres mrugnął.
+
+Teraz:
+
+- podświetlenie zeruje **cała sekcja** z wykresem i legendą, a nie
+  pojedynczy element — odstęp w środku bloku nic nie resetuje;
+- wiersze legendy nie mają już odstępu, tylko padding, więc ich pola
+  trafienia stykają się bez martwej przestrzeni (rytm wizualny bez zmian:
+  wiersz 27 px, lista 135 px).
+
+Zmierzone: najazd na wiersz przygasza 11 elementów, szczelina między
+wierszami i między segmentami wykresu — nadal 11, wyjazd poza blok — 0.
+
+Legenda na **pulpicie** prowadzi do ekranu obligacji korporacyjnych, tak samo
+jak na Portfelu. W makiecie nie prowadzi nigdzie.

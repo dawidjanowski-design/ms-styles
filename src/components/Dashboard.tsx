@@ -36,9 +36,11 @@ function OfferCard({ offer }: { offer: Offer }) {
 export function DashboardScreen({
   styleId,
   onOpenPortfolio,
+  onOpenAsset,
 }: {
   styleId: StyleId;
   onOpenPortfolio: () => void;
+  onOpenAsset: (id: string) => void;
 }) {
   const [hot, setHot] = useState<string | null>(null);
   /* Pulpit pokazuje zawsze widok „Łącznie" — przelacznik walut jest w Portfelu. */
@@ -57,7 +59,8 @@ export function DashboardScreen({
     <div className="screenOuter">
       <div className="screen">
         <div className="content">
-          <section className="summary">
+          {/* jak na Portfelu: reset dopiero po wyjsciu z calego bloku */}
+          <section className="summary" onMouseLeave={() => setHot(null)}>
             <div className="dashHead">
               <div className="summary__titleBlock">
                 <span className="dashHead__label">{DASHBOARD.label}</span>
@@ -76,7 +79,13 @@ export function DashboardScreen({
                 setHot={setHot}
               />
             </div>
-            <Legend rows={total.allocation} styleId={styleId} hot={hot} setHot={setHot} />
+            <Legend
+              rows={total.allocation}
+              styleId={styleId}
+              hot={hot}
+              setHot={setHot}
+              onOpenAsset={styleId === '3' ? undefined : onOpenAsset}
+            />
           </section>
 
           <section className="offers">

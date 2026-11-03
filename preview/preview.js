@@ -109,7 +109,8 @@ function chart(rows) {
 }
 
 function legendRow(r) {
-  const link = DETAIL_ASSETS.has(r.id);
+  /* Ekran klasy aktywow istnieje tylko w stylistykach nr 1 i nr 2. */
+  const link = state.style !== '3' && DETAIL_ASSETS.has(r.id);
   return `<button type="button" class="legendRow ${dim(r.id)}" data-hot="${r.id}"
     ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[pal()].legend};cursor:${link ? 'pointer' : 'default'}">
     <span class="legendRow__dot"></span>
@@ -861,7 +862,7 @@ const EVENTS = [
 
 function dashboardScreen() {
   return `<div class="screenOuter"><div class="screen"><div class="content">
-    <section class="summary">
+    <section class="summary" data-hot-group>
       <div class="dashHead">
         <div class="summary__titleBlock">
           <span class="dashHead__label">${DASHBOARD.label}</span>
@@ -974,7 +975,7 @@ function portfolioScreen() {
   const data = VIEWS[state.currency];
   return `
     <div class="screenOuter"><div class="screen"><div class="content">
-      <section class="summary" style="padding-top:var(--summary-pt)">
+      <section class="summary" data-hot-group style="padding-top:var(--summary-pt)">
         <div class="summary__top">
           <div class="summary__titleBlock">
             ${title}
@@ -1059,9 +1060,13 @@ document.addEventListener('animationend', (e) => {
   if (e.target.classList && e.target.classList.contains('roll__out')) e.target.remove();
 });
 
+/* Odstep miedzy wierszami czy segmentami nie zeruje podswietlenia — stan
+   wraca do domyslnego dopiero po wyjsciu poza caly blok wykresu i legendy. */
 document.addEventListener('mouseover', (e) => {
-  const el = e.target.closest ? e.target.closest('[data-hot]') : null;
-  applyHot(el ? el.dataset.hot : null);
+  if (!e.target.closest) return;
+  const el = e.target.closest('[data-hot]');
+  if (el) { applyHot(el.dataset.hot); return; }
+  if (!e.target.closest('[data-hot-group]')) applyHot(null);
 });
 document.addEventListener('focusin', (e) => {
   const el = e.target.closest ? e.target.closest('[data-hot]') : null;

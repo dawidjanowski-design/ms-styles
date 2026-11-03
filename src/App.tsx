@@ -65,6 +65,7 @@ export default function App() {
         <DashboardScreen
           styleId={styleId}
           onOpenPortfolio={() => setScreen({ name: 'portfel' })}
+          onOpenAsset={(id) => setScreen({ name: 'asset', id })}
         />
       )}
       {screen.name === 'portfel' && (

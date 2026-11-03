@@ -63,7 +63,7 @@ export function AllocationChart({
   const total = segments.reduce((sum, s) => sum + s.share, 0);
 
   return (
-    <div className="chart" onMouseLeave={() => setHot(null)}>
+    <div className="chart">
       {segments.map((s) => {
         const c = META[s.id].colors[paletteOf(styleId)];
         return (
@@ -116,7 +116,6 @@ function LegendRow({
       style={{ ['--seg' as string]: color, cursor: onOpen ? 'pointer' : 'default' }}
       onClick={onOpen}
       onMouseEnter={() => setHot(id)}
-      onMouseLeave={() => setHot(null)}
       onFocus={() => setHot(id)}
       onBlur={() => setHot(null)}
     >
@@ -399,7 +398,14 @@ export function PortfolioScreen({
     <div className="screenOuter">
       <div className="screen">
         <div className="content">
-          <section className="summary" style={{ paddingTop: 'var(--summary-pt)' }}>
+          {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
+              zerowal go kazdy element z osobna, przejazd myszka przez odstep
+              miedzy wierszami na moment wracalby do stanu domyslnego. */}
+          <section
+            className="summary"
+            style={{ paddingTop: 'var(--summary-pt)' }}
+            onMouseLeave={() => setHot(null)}
+          >
             <div className="summary__top">
               <div className="summary__titleBlock">
                 {title}
