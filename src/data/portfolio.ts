@@ -165,3 +165,104 @@ export const CASH_CARDS = [
 ];
 
 export const NAV = ['Pulpit', 'Portfel', 'Operacje', 'Dokumenty', 'Oferty'];
+
+/* ------------------------- widok „Rachunki" ------------------------- */
+
+export type AccountRow = { label: string; value: string };
+
+export type Account = {
+  id: string;
+  name: string;
+  number: string;
+  amount: string;
+  amountDecimals: string;
+  /** nagłówek listy pozycji — w Figmie raz „Pozycje", raz „Papiery" */
+  rowsLabel?: string;
+  rows: AccountRow[];
+  /** szary pasek w środku karty — na razie tylko limit wpłat IKE */
+  strip?: { label: string; value: string };
+  action: string;
+};
+
+export const ACCOUNTS: Account[] = [
+  {
+    id: 'maklerski',
+    name: 'Rachunek maklerski',
+    number: '00-00-006858',
+    amount: '2 362 438',
+    amountDecimals: ',00 PLN',
+    rowsLabel: 'Pozycje',
+    rows: [
+      { label: 'Obligacje korporacyjne', value: '1 063 802,00 PLN' },
+      { label: 'Obligacje skarbowe', value: '316 398,00 PLN' },
+      { label: 'Fundusze zamknięte (FIZ)', value: '421 864,00 PLN' },
+      { label: 'Fundusze otwarte (FIO)', value: '420 610,00 PLN' },
+      { label: 'Wolne środki', value: '48 420,00 PLN' },
+    ],
+    action: 'Zobacz szczegóły',
+  },
+  {
+    id: 'zony',
+    name: 'Rachunek żony',
+    number: '00-00-009120',
+    amount: '180 000',
+    amountDecimals: ',00 PLN',
+    rowsLabel: 'Pozycje',
+    rows: [
+      { label: 'Obligacje korporacyjne', value: '150 000,00 PLN' },
+      { label: 'Wolne środki', value: '30 000,00 PLN' },
+    ],
+    action: 'Zobacz szczegóły',
+  },
+  {
+    id: 'oki',
+    name: 'OKI',
+    number: '00-00-009120',
+    amount: '843 728',
+    amountDecimals: ',00 PLN',
+    rowsLabel: 'Pozycje',
+    rows: [
+      { label: 'Obligacje korporacyjne', value: '729 120,00 PLN' },
+      { label: 'Wolne środki', value: '114 608,00 PLN' },
+    ],
+    action: 'Zobacz więcej (12)',
+  },
+  {
+    id: 'ike',
+    name: 'IKE',
+    number: '00-00-007431',
+    amount: '506 237',
+    amountDecimals: ',00 PLN',
+    strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN' },
+    rowsLabel: 'Papiery',
+    rows: [
+      { label: 'Obligacje', value: '340 000,00 PLN' },
+      { label: 'Fundusze otwarte (FIO)', value: '120 000,00 PLN' },
+      { label: 'Wolne środki', value: '46 237,00 PLN' },
+    ],
+    action: 'Zobacz więcej (12)',
+  },
+  {
+    id: 'xz',
+    name: 'XZ',
+    number: '00-00-007432',
+    amount: '337 491',
+    amountDecimals: ',00 PLN',
+    rowsLabel: 'Pozycje',
+    rows: [
+      { label: 'Obligacje', value: '240 000,00 PLN' },
+      { label: 'Fundusze otwarte (FIO)', value: '50 000,00 PLN' },
+      { label: 'Wolne środki', value: '22 491,00 PLN' },
+    ],
+    action: 'Zobacz więcej (12)',
+  },
+  {
+    id: 'am',
+    name: 'AM strategia konserwatywna',
+    number: '00-00-008801',
+    amount: '168 746',
+    amountDecimals: ',00 PLN',
+    rows: [],
+    action: 'Zobacz szczegóły',
+  },
+];

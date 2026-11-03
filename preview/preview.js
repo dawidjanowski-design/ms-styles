@@ -110,6 +110,56 @@ function cash() {
     ).join('')}</div></section>`;
 }
 
+
+const ACCOUNTS = [
+  { id:'maklerski', name:'Rachunek maklerski', number:'00-00-006858', amount:'2 362 438', dec:',00 PLN',
+    rowsLabel:'Pozycje', action:'Zobacz szczegóły',
+    rows:[['Obligacje korporacyjne','1 063 802,00 PLN'],['Obligacje skarbowe','316 398,00 PLN'],
+          ['Fundusze zamknięte (FIZ)','421 864,00 PLN'],['Fundusze otwarte (FIO)','420 610,00 PLN'],
+          ['Wolne środki','48 420,00 PLN']] },
+  { id:'zony', name:'Rachunek żony', number:'00-00-009120', amount:'180 000', dec:',00 PLN',
+    rowsLabel:'Pozycje', action:'Zobacz szczegóły',
+    rows:[['Obligacje korporacyjne','150 000,00 PLN'],['Wolne środki','30 000,00 PLN']] },
+  { id:'oki', name:'OKI', number:'00-00-009120', amount:'843 728', dec:',00 PLN',
+    rowsLabel:'Pozycje', action:'Zobacz więcej (12)',
+    rows:[['Obligacje korporacyjne','729 120,00 PLN'],['Wolne środki','114 608,00 PLN']] },
+  { id:'ike', name:'IKE', number:'00-00-007431', amount:'506 237', dec:',00 PLN',
+    strip:{label:'Limit wpłat 2026', value:'30 000 PLN z 40 000 PLN'},
+    rowsLabel:'Papiery', action:'Zobacz więcej (12)',
+    rows:[['Obligacje','340 000,00 PLN'],['Fundusze otwarte (FIO)','120 000,00 PLN'],
+          ['Wolne środki','46 237,00 PLN']] },
+  { id:'xz', name:'XZ', number:'00-00-007432', amount:'337 491', dec:',00 PLN',
+    rowsLabel:'Pozycje', action:'Zobacz więcej (12)',
+    rows:[['Obligacje','240 000,00 PLN'],['Fundusze otwarte (FIO)','50 000,00 PLN'],
+          ['Wolne środki','22 491,00 PLN']] },
+  { id:'am', name:'AM strategia konserwatywna', number:'00-00-008801', amount:'168 746', dec:',00 PLN',
+    rows:[], action:'Zobacz szczegóły' },
+];
+
+function accountCard(a) {
+  return `<article class="acctCard">
+    <div class="acctCard__head"><div class="acctCard__top">
+      <div class="acctCard__title">
+        <span class="acctCard__dot"></span>
+        <span class="acctCard__name">${a.name}</span>
+        <span class="acctCard__number">· ${a.number}</span>
+      </div>
+      ${amount(a.amount, a.dec, 'acctCard__amount')}
+    </div></div>
+    ${a.strip ? `<div class="acctCard__limit">
+        <span class="acctCard__limitLabel">${a.strip.label}</span>
+        <span class="acctCard__limitValue">${a.strip.value}</span></div>` : ''}
+    ${a.rows.length ? `<div class="divider"></div>
+      ${a.rowsLabel ? `<div class="acctCard__rowsLabel">${a.rowsLabel}</div>` : ''}
+      <div class="acctCard__rows">${a.rows.map(([l, v]) =>
+        `<button type="button" class="acctRow"><span class="acctRow__label">${l}</span>
+         <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
+      </div>` : ''}
+    <div class="acctCard__foot">
+      <button type="button" class="acctCard__action">${a.action}<span aria-hidden="true">›</span></button>
+    </div></article>`;
+}
+
 function assetCard(a) {
   const strip = state.style === '1';
   const rows = strip ? a.rows : [...a.highlights, ...a.rows];
@@ -171,10 +221,14 @@ function render() {
       ${cash()}
       <section class="assets">
         <div class="assets__head">
-          <h2 class="sectionTitle">Struktura aktywów</h2>
+          <h2 class="sectionTitle">${state.view === 'Aktywa' ? 'Struktura aktywów' : 'Struktura rachunków'}</h2>
           ${pills(['Aktywa', 'Rachunki'], state.view, 'view')}
         </div>
-        <div class="assets__list">${ASSETS.map(assetCard).join('')}</div>
+        <div class="assets__list">${
+          state.view === 'Aktywa'
+            ? ASSETS.map(assetCard).join('')
+            : ACCOUNTS.map(accountCard).join('')
+        }</div>
       </section>
     </div></div></div>
 

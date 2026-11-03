@@ -226,3 +226,50 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* „Pulpit" ma w Figmie ciemniejszy odcień niż pozostałe pozycje nawigacji */
 .navItem--prev { color: #555555; }
+
+/* ---------------- widok „Rachunki" ---------------- */
+.acctCard {
+  background: var(--card-bg); border-radius: var(--card-radius);
+  padding: var(--asset-card-pad); display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--shadow-card);
+}
+.acctCard__head { display: flex; flex-direction: column; gap: 8px; padding: 0 var(--asset-head-px); }
+.acctCard__top { display: flex; align-items: center; gap: 12px; }
+.acctCard__title { display: flex; align-items: center; gap: 8px; flex: 1; }
+.acctCard__dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); flex: none; }
+.acctCard__name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.acctCard__number { font-size: 13px; color: var(--muted); }
+.acctCard__amount .amount__int { font-size: var(--asset-value-size); }
+.acctCard__amount .amount__dec { font-size: var(--asset-value-decimals); }
+
+.acctCard__limit {
+  margin: 0 2px; background: var(--screen-bg); border-radius: 8px;
+  padding: 12px 20px; display: flex; flex-direction: column; gap: 6px;
+}
+.acctCard__limitLabel { font-size: 11px; color: var(--muted); }
+.acctCard__limitValue { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+.acctCard__rowsLabel {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); padding: 0 var(--asset-row-px);
+}
+.acctCard__rows { display: flex; flex-direction: column; gap: 4px; }
+.acctRow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px var(--asset-row-px); width: 100%; text-align: left;
+  border-radius: 8px; transition: background 140ms var(--ease);
+}
+.acctRow:hover { background: var(--screen-bg); }
+.acctRow__label { flex: 1; font-size: 13px; color: var(--muted); }
+.acctRow__value { font-size: 13px; font-weight: 500; color: var(--ink); }
+.acctRow__chev { font-size: 13px; color: var(--muted); width: 10px; text-align: right; }
+
+.acctCard__foot { padding: 4px var(--asset-row-px) 0; }
+.acctCard__action {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 29px; padding: 0 11px; border-radius: 999px;
+  background: #fafafa; border: 1px solid var(--l2);
+  font-size: 11px; font-weight: 500; color: var(--ink);
+  transition: background 140ms var(--ease);
+}
+.acctCard__action:hover { background: #f3f3f3; }

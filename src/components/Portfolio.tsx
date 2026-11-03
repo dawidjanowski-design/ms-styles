@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import {
+  ACCOUNTS,
   ASSETS,
   CASH,
   CASH_CARDS,
   CURRENCIES,
   LEGEND_ORDER,
   TOTAL,
+  type Account,
   type AssetClass,
 } from '../data/portfolio';
 import { Amount, KeyValue, Pills } from './ui';
@@ -199,6 +201,61 @@ function AssetCard({ asset, styleId }: { asset: AssetClass; styleId: StyleId }) 
   );
 }
 
+/* ----------------------------- rachunki ----------------------------- */
+
+function AccountCard({ account }: { account: Account }) {
+  return (
+    <article className="acctCard">
+      <div className="acctCard__head">
+        <div className="acctCard__top">
+          <div className="acctCard__title">
+            <span className="acctCard__dot" />
+            <span className="acctCard__name">{account.name}</span>
+            <span className="acctCard__number">· {account.number}</span>
+          </div>
+          <Amount
+            int={account.amount}
+            dec={account.amountDecimals}
+            className="acctCard__amount"
+          />
+        </div>
+      </div>
+
+      {account.strip && (
+        <div className="acctCard__limit">
+          <span className="acctCard__limitLabel">{account.strip.label}</span>
+          <span className="acctCard__limitValue">{account.strip.value}</span>
+        </div>
+      )}
+
+      {account.rows.length > 0 && (
+        <>
+          <div className="divider" />
+          {account.rowsLabel && (
+            <div className="acctCard__rowsLabel">{account.rowsLabel}</div>
+          )}
+          <div className="acctCard__rows">
+            {account.rows.map((r) => (
+              <button type="button" className="acctRow" key={r.label}>
+                <span className="acctRow__label">{r.label}</span>
+                <span className="acctRow__value">{r.value}</span>
+                <span className="acctRow__chev">›</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div className="acctCard__foot">
+        <button type="button" className="acctCard__action">
+          {account.action}
+          <span aria-hidden="true">›</span>
+        </button>
+      </div>
+    </article>
+  );
+}
+
 /* ----------------------------- ekran ----------------------------- */
 
 export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
@@ -233,13 +290,17 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
 
           <section className="assets">
             <div className="assets__head">
-              <h2 className="sectionTitle">Struktura aktywów</h2>
+              <h2 className="sectionTitle">
+                {view === 'Aktywa' ? 'Struktura aktywów' : 'Struktura rachunków'}
+              </h2>
               <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={setView} />
             </div>
             <div className="assets__list">
-              {ASSETS.map((a) => (
-                <AssetCard key={a.id} asset={a} styleId={styleId} />
-              ))}
+              {view === 'Aktywa'
+                ? ASSETS.map((a) => (
+                    <AssetCard key={a.id} asset={a} styleId={styleId} />
+                  ))
+                : ACCOUNTS.map((a) => <AccountCard key={a.id} account={a} />)}
             </div>
           </section>
         </div>
