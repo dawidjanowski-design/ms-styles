@@ -43,33 +43,34 @@ Wszystkie wartości pochodzą z inspekcji węzłów Figmy, nie z oka:
 
 ## Interakcje
 
-- **Hover na wykresie, legendzie lub karcie** podświetla dane aktywo w **trzech miejscach
-  naraz** — segment wykresu przechodzi na pełny kolor i unosi się o 2 px, wiersz legendy
-  i karta zostają w pełnej jasności, a cała reszta gaśnie do 32 %.
+- **Hover na wykresie, legendzie lub karcie** wiąże te trzy miejsca ze sobą: element,
+  nad którym jest kursor, **nie zmienia się w żaden sposób**, a wszystko pozostałe gaśnie
+  do 32 %. Żadnych przesunięć, powiększeń ani zmian cienia — układ stoi w miejscu.
 - Przełączniki walut (`Łącznie / PLN / EUR / USD`) oraz `Aktywa / Rachunki` są klikalne
   i trzymają stan.
 - Wszystkie elementy interaktywne są dostępne z klawiatury — segmenty wykresu mają
   `:focus-visible` z obrysem w kolorze segmentu.
 
-## Trzy miejsca, gdzie makieta Figmy była niespójna
+## Jedno odstępstwo i jedna rzecz do decyzji
 
-Żeby prototyp dało się kliknąć, trzeba było te niespójności rozstrzygnąć. Wszystkie
-dotyczą **tylko stylistyki nr 1** — nr 2 jest spójna.
+**Szerokości segmentów wykresu** liczą się z danych, a nie z makiety. W Figmie są
+narysowane ręcznie i nie zgadzają się z procentami obok (56 px przy 7,5 %, a 142 px
+przy 7,7 %). W prototypie wykres zgadza się z liczbami w legendzie.
 
-1. **Kolory aktywów** — w nr 1 to samo aktywo ma trzy różne kolory: inny na wykresie
-   (`#11aebd`, `#7e2cb1`, `#ef7744`), inny w legendzie (`#0aa6c8`, `#0a21c8`, `#ef4444`)
-   i jeszcze inny na kropce karty (`#042468`). Przy podświetlaniu powiązanych elementów
-   trzy palety wyglądałyby na błąd, więc przyjęta jest **paleta z legendy** — ta jedyna
-   ma komplet sześciu pozycji i zgadza się z kolejnością.
-2. **Szerokości segmentów wykresu** — w obu makietach narysowane są ręcznie i nie
-   odpowiadają procentom z legendy (np. 185 px przy 14,0 %). W prototypie szerokości
-   liczą się z danych, więc wykres zgadza się z liczbami obok.
-3. **Kolejność segmentów** — na wykresie inna niż w legendzie. Prototyp używa jednej
-   kolejności (tej z legendy danej stylistyki), żeby najechanie na słupek trafiało
-   w oczywisty wiersz.
+**Kolory w stylistyce nr 1 są przeniesione dosłownie** — a to znaczy, że to samo aktywo
+ma trzy różne kolory, zależnie od miejsca:
 
-Do tego w makietach wszystkie trzy kafle gotówki mają etykietę „Wolna gotówka" —
-zostawione 1:1, choć docelowo to zapewne „wolna / zablokowana / w drodze".
+| Aktywo | Wykres | Legenda | Kropka na karcie |
+|---|---|---|---|
+| Obligacje korporacyjne | `#065eec` | `#065eec` | `#042468` |
+| Obligacje skarbowe | `#e4b212` | `#e4b212` | `#0a21c8` |
+| Asset Management | `#11aebd` | `#0a21c8` | `#0aa6c8` |
+| Fundusze otwarte (FIO) | `#7e2cb1` | `#0aa6c8` | `#ef4444` |
+| Fundusze zamknięte (FIZ) | `#ef7744` | `#ef4444` | `#e4b212` |
+
+Kropki na kartach to paleta legendy **przesunięta o jedną pozycję** — wygląda na
+pomyłkę przy kopiowaniu, nie na decyzję. Stylistyka nr 2 takiego rozjazdu nie ma,
+tam wszystkie trzy miejsca używają jednego koloru. Do rozstrzygnięcia.
 
 ## Struktura
 

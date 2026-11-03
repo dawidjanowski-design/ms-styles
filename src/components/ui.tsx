@@ -71,7 +71,9 @@ export function AppHeader() {
           <button
             key={item}
             type="button"
-            className={`navItem ${item === 'Portfel' ? 'navItem--active' : ''}`}
+            className={`navItem ${item === 'Portfel' ? 'navItem--active' : ''} ${
+              item === 'Pulpit' ? 'navItem--prev' : ''
+            }`}
           >
             {item}
           </button>

@@ -23,9 +23,9 @@ function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverP
   const segments = [
     ...LEGEND_ORDER[styleId].map((id) => {
       const a = byId.get(id) as AssetClass;
-      return { id: a.id, share: a.share, colorVar: a.colorVar };
+      return { id: a.id, name: a.name, share: a.share, c: a.colors[styleId] };
     }),
-    { id: CASH.id, share: CASH.share, colorVar: CASH.colorVar },
+    { id: CASH.id, name: CASH.name, share: CASH.share, c: CASH.colors[styleId] },
   ];
   const total = segments.reduce((sum, s) => sum + s.share, 0);
 
@@ -38,12 +38,13 @@ function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverP
           className={`chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dimClass(s.id, hot)}`}
           style={{
             flex: `${s.share / total} 1 0`,
-            ['--seg' as string]: `var(${s.colorVar})`,
+            ['--seg' as string]: s.c.chart,
+            ['--seg-foot' as string]: s.c.chartFoot ?? s.c.chart,
           }}
           onMouseEnter={() => setHot(s.id)}
           onFocus={() => setHot(s.id)}
           onBlur={() => setHot(null)}
-          aria-label={`${s.id}: ${s.share}%`}
+          aria-label={`${s.name}: ${s.share}%`}
         >
           <span className="chartSeg__body" />
           <span className="chartSeg__foot" />
@@ -57,7 +58,7 @@ function AllocationChart({ styleId, hot, setHot }: { styleId: StyleId } & HoverP
 
 function LegendRow({
   id,
-  colorVar,
+  color,
   name,
   share,
   value,
@@ -65,7 +66,7 @@ function LegendRow({
   setHot,
 }: {
   id: string;
-  colorVar: string;
+  color: string;
   name: string;
   share: string;
   value: string;
@@ -74,7 +75,7 @@ function LegendRow({
     <button
       type="button"
       className={`legendRow ${dimClass(id, hot)}`}
-      style={{ ['--seg' as string]: `var(${colorVar})` }}
+      style={{ ['--seg' as string]: color }}
       onMouseEnter={() => setHot(id)}
       onMouseLeave={() => setHot(null)}
       onFocus={() => setHot(id)}
@@ -94,13 +95,14 @@ function Legend({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
 
   return (
     <div className="legend">
+      <div className="legend__rows">
       {order.map((id) => {
         const a = byId.get(id) as AssetClass;
         return (
           <LegendRow
             key={id}
             id={a.id}
-            colorVar={a.colorVar}
+            color={a.colors[styleId].legend}
             name={a.name}
             share={`${a.share.toFixed(1).replace('.', ',')}%`}
             value={a.legendValue}
@@ -109,12 +111,13 @@ function Legend({ styleId, hot, setHot }: { styleId: StyleId } & HoverProps) {
           />
         );
       })}
+      </div>
 
       <div className="legend__cash">
         <div className="legend__cashInner">
           <LegendRow
             id={CASH.id}
-            colorVar={CASH.colorVar}
+            color={CASH.colors[styleId].legend}
             name={CASH.name}
             share={`${CASH.share.toFixed(1).replace('.', ',')}%`}
             value={CASH.legendValue}
@@ -168,7 +171,7 @@ function AssetCard({
   return (
     <article
       className={`assetCard ${dimClass(asset.id, hot)}`}
-      style={{ ['--seg' as string]: `var(${asset.colorVar})` }}
+      style={{ ['--seg' as string]: asset.colors[styleId].card }}
       onMouseEnter={() => setHot(asset.id)}
       onMouseLeave={() => setHot(null)}
     >
@@ -219,18 +222,17 @@ export function PortfolioScreen({ styleId }: { styleId: StyleId }) {
         <div className="content">
           {!titleInSummary && title}
 
-          <section
-            className="summary"
-            style={{ gap: styleId === '1' ? 16 : 24, paddingTop: styleId === '1' ? 0 : 24 }}
-          >
-            {titleInSummary && title}
-
-            <div className="summary__head">
-              <Amount int={TOTAL.amount} dec={TOTAL.decimals} />
-              <Pills items={CURRENCIES} value={currency} onChange={setCurrency} />
+          <section className="summary" style={{ paddingTop: 'var(--summary-pt)' }}>
+            <div className="summary__top">
+              <div className="summary__titleBlock">
+                {titleInSummary && title}
+                <div className="summary__head">
+                  <Amount int={TOTAL.amount} dec={TOTAL.decimals} />
+                  <Pills items={CURRENCIES} value={currency} onChange={setCurrency} />
+                </div>
+              </div>
+              <AllocationChart styleId={styleId} hot={hot} setHot={setHot} />
             </div>
-
-            <AllocationChart styleId={styleId} hot={hot} setHot={setHot} />
             <Legend styleId={styleId} hot={hot} setHot={setHot} />
           </section>
 

@@ -1,5 +1,9 @@
 export type Metric = { label: string; value: string };
 
+/** Kolory są w Figmie zdefiniowane osobno dla wykresu, legendy i kropki na karcie —
+ *  i w stylistyce nr 1 te trzy palety się różnią. Przeniesione dosłownie. */
+export type Palette = { chart: string; chartFoot?: string; legend: string; card: string };
+
 export type AssetClass = {
   id: string;
   name: string;
@@ -9,7 +13,7 @@ export type AssetClass = {
   amountDecimals: string;
   /** krótka wartość w legendzie */
   legendValue: string;
-  colorVar: string;
+  colors: Record<'1' | '2', Palette>;
   /** wiersze typu „ile sztuk / data” */
   rows: Metric[];
   /** metryki wynikowe — w stylistyce 1 trafiają do szarego paska */
@@ -34,7 +38,7 @@ export const ASSETS: AssetClass[] = [
     amount: '1 792 922',
     amountDecimals: ',00 PLN',
     legendValue: '1 792 922 PLN',
-    colorVar: '--c-corp',
+    colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -53,7 +57,7 @@ export const ASSETS: AssetClass[] = [
     amount: '316 398',
     amountDecimals: ',00 PLN',
     legendValue: '316 398 PLN',
-    colorVar: '--c-skarb',
+    colors: { '1': { chart: '#e4b212', legend: '#e4b212', card: '#0a21c8' }, '2': { chart: '#0a0ac8', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -72,7 +76,7 @@ export const ASSETS: AssetClass[] = [
     amount: '843 728',
     amountDecimals: ',00 PLN',
     legendValue: '843 728 PLN',
-    colorVar: '--c-am',
+    colors: { '1': { chart: '#11aebd', legend: '#0a21c8', card: '#0aa6c8' }, '2': { chart: '#b044ef', legend: '#b044ef', card: '#b044ef' } },
     rows: [
       { label: 'Strategie', value: '4' },
       { label: 'Rachunki', value: '4' },
@@ -86,7 +90,7 @@ export const ASSETS: AssetClass[] = [
     amount: '590 610',
     amountDecimals: ',00 PLN',
     legendValue: '590 610 PLN',
-    colorVar: '--c-fio',
+    colors: { '1': { chart: '#7e2cb1', chartFoot: '#7e22b6', legend: '#0aa6c8', card: '#ef4444' }, '2': { chart: '#11aebd', legend: '#11aebd', card: '#11aebd' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Ostatnia wycena', value: '30.10.2026' },
@@ -103,7 +107,7 @@ export const ASSETS: AssetClass[] = [
     amount: '421 864',
     amountDecimals: ',00 PLN',
     legendValue: '421 864 PLN',
-    colorVar: '--c-fiz',
+    colors: { '1': { chart: '#ef7744', legend: '#ef4444', card: '#e4b212' }, '2': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Najbliższe okno umorzenia', value: '31.12.2026' },
@@ -121,7 +125,10 @@ export const CASH = {
   share: 8.3,
   legendValue: '≈ 348 354 PLN',
   sub: 'Wolna 253 118 PLN · Zablokowana 50 118 PLN · W drodze 45 118 PLN',
-  colorVar: '--c-cash',
+  colors: {
+    '1': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
+    '2': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
+  },
 };
 
 export const CASH_CARDS = [

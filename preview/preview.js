@@ -11,31 +11,31 @@ const TOTAL = { amount: '4 218 640', decimals: ',00 PLN' };
 
 const ASSETS = [
   { id: 'corp', name: 'Obligacje korporacyjne', share: 42.5, amount: '1 792 922', dec: ',00 PLN',
-    legendValue: '1 792 922 PLN', colorVar: '--c-corp',
+    legendValue: '1 792 922 PLN', colors:{'1':{chart:'#065eec',legend:'#065eec',card:'#042468'},'2':{chart:'#046816',legend:'#046816',card:'#046816'}},
     rows: [['Emitent', '1'], ['Serie', '2']],
     highlights: [['Śr. rentowność (ważona)', '5,24%'], ['Wypłacone odsetki 12M', '5 240 PLN'],
                  ['Śr. oprocentowanie', '5,10%'], ['Najbliższy wykup', '25.03.2027']] },
   { id: 'skarb', name: 'Obligacje skarbowe', share: 7.5, amount: '316 398', dec: ',00 PLN',
-    legendValue: '316 398 PLN', colorVar: '--c-skarb',
+    legendValue: '316 398 PLN', colors:{'1':{chart:'#e4b212',legend:'#e4b212',card:'#0a21c8'},'2':{chart:'#0a0ac8',chartFoot:'#0a21c8',legend:'#0a21c8',card:'#0a21c8'}},
     rows: [['Emitent', '1'], ['Serie', '2']],
     highlights: [['Wypłacone odsetki 12M', '5 240 PLN'], ['Śr. rentowność (ważona)', '5,24%'],
                  ['Śr. oprocentowanie', '5,10%'], ['Najbliższy wykup', '25.03.2027']] },
   { id: 'am', name: 'Asset Management', share: 20.0, amount: '843 728', dec: ',00 PLN',
-    legendValue: '843 728 PLN', colorVar: '--c-am',
+    legendValue: '843 728 PLN', colors:{'1':{chart:'#11aebd',legend:'#0a21c8',card:'#0aa6c8'},'2':{chart:'#b044ef',legend:'#b044ef',card:'#b044ef'}},
     rows: [['Strategie', '4'], ['Rachunki', '4']],
     highlights: [['Stopa zwrotu', '+6,10%']] },
   { id: 'fio', name: 'Fundusze otwarte (FIO)', share: 14.0, amount: '590 610', dec: ',00 PLN',
-    legendValue: '590 610 PLN', colorVar: '--c-fio',
+    legendValue: '590 610 PLN', colors:{'1':{chart:'#7e2cb1',chartFoot:'#7e22b6',legend:'#0aa6c8',card:'#ef4444'},'2':{chart:'#11aebd',legend:'#11aebd',card:'#11aebd'}},
     rows: [['Fundusze', '4'], ['Ostatnia wycena', '30.10.2026']],
     highlights: [['Stopa zwrotu 12M', '+4,82%'], ['Wynik od zakupu', '+24 180 PLN']] },
   { id: 'fiz', name: 'Fundusze zamknięte (FIZ)', share: 7.7, amount: '421 864', dec: ',00 PLN',
-    legendValue: '421 864 PLN', colorVar: '--c-fiz',
+    legendValue: '421 864 PLN', colors:{'1':{chart:'#ef7744',legend:'#ef4444',card:'#e4b212'},'2':{chart:'#e4b212',legend:'#e4b212',card:'#e4b212'}},
     rows: [['Fundusze', '4'], ['Najbliższe okno umorzenia', '31.12.2026']],
     highlights: [['Stopa zwrotu 12M', '+4,82%'], ['Wynik od zakupu', '+24 180 PLN']] },
 ];
 
 const CASH = { id: 'cash', name: 'Gotówka', share: 8.3, legendValue: '≈ 348 354 PLN',
-  colorVar: '--c-cash',
+  colors:{'1':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'},'2':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'}},
   sub: 'Wolna 253 118 PLN · Zablokowana 50 118 PLN · W drodze 45 118 PLN' };
 
 const CASH_CARDS = [
@@ -49,7 +49,7 @@ const CASH_CARDS = [
 
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
-const state = { style: localStorage.getItem('ms-style') === '2' ? '2' : '1', hot: null,
+const state = { style: localStorage.getItem("ms-style") === "2" ? "2" : "1", hot: null,
   currency: 'Łącznie', view: 'Aktywa' };
 
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
@@ -69,7 +69,7 @@ function chart() {
   return `<div class="chart" data-chart>${segs
     .map(
       (s) => `<button type="button" class="chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dim(s.id)}"
-        data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:var(${s.colorVar})"
+        data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:${s.colors[state.style].chart};--seg-foot:${s.colors[state.style].chartFoot || s.colors[state.style].chart}"
         aria-label="${s.name}: ${pct(s.share)}">
         <span class="chartSeg__body"></span><span class="chartSeg__foot"></span></button>`
     )
@@ -77,7 +77,7 @@ function chart() {
 }
 
 function legendRow(a) {
-  return `<button type="button" class="legendRow ${dim(a.id)}" data-hot="${a.id}" style="--seg:var(${a.colorVar})">
+  return `<button type="button" class="legendRow ${dim(a.id)}" data-hot="${a.id}" style="--seg:${a.colors[state.style].legend}">
     <span class="legendRow__dot"></span>
     <span class="legendRow__name">${a.name}</span>
     <span class="legendRow__share">${pct(a.share)}</span>
@@ -87,7 +87,7 @@ function legendRow(a) {
 function legend() {
   const byId = Object.fromEntries(ASSETS.map((a) => [a.id, a]));
   return `<div class="legend">
-    ${LEGEND_ORDER[state.style].map((id) => legendRow(byId[id])).join('')}
+    <div class="legend__rows">${LEGEND_ORDER[state.style].map((id) => legendRow(byId[id])).join('')}</div>
     <div class="legend__cash"><div class="legend__cashInner">
       ${legendRow(CASH)}
       <div class="legend__cashSub ${dim('cash')}">${CASH.sub}</div>
@@ -113,7 +113,7 @@ function cash() {
 function assetCard(a) {
   const strip = state.style === '1';
   const rows = strip ? a.rows : [...a.highlights, ...a.rows];
-  return `<article class="assetCard ${dim(a.id)}" data-hot="${a.id}" style="--seg:var(${a.colorVar})">
+  return `<article class="assetCard ${dim(a.id)}" data-hot="${a.id}" style="--seg:${a.colors[state.style].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
         ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
@@ -142,7 +142,7 @@ function render() {
     <header class="appHeader">
       <div class="appHeader__logo">${LOGO}</div>
       <nav class="appHeader__nav">${NAV.map(
-        (n) => `<button type="button" class="navItem ${n === 'Portfel' ? 'navItem--active' : ''}">${n}</button>`
+        (n) => `<button type="button" class="navItem ${n === 'Portfel' ? 'navItem--active' : ''} ${n === 'Pulpit' ? 'navItem--prev' : ''}">${n}</button>`
       ).join('')}</nav>
       <div class="appHeader__right">
         <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
@@ -155,13 +155,17 @@ function render() {
 
     <div class="screenOuter"><div class="screen"><div class="content">
       ${titleInSummary ? '' : title}
-      <section class="summary" style="gap:${titleInSummary ? 16 : 24}px;padding-top:${titleInSummary ? 0 : 24}px">
-        ${titleInSummary ? title : ''}
-        <div class="summary__head">
-          ${amount(TOTAL.amount, TOTAL.decimals)}
-          ${pills(CURRENCIES, state.currency, 'currency')}
+      <section class="summary" style="padding-top:var(--summary-pt)">
+        <div class="summary__top">
+          <div class="summary__titleBlock">
+            ${titleInSummary ? title : ''}
+            <div class="summary__head">
+              ${amount(TOTAL.amount, TOTAL.decimals)}
+              ${pills(CURRENCIES, state.currency, 'currency')}
+            </div>
+          </div>
+          ${chart()}
         </div>
-        ${chart()}
         ${legend()}
       </section>
       ${cash()}
@@ -180,16 +184,27 @@ function render() {
     </div>`;
 }
 
+/* Hover nie przerysowuje strony — przełącza wyłącznie klasy.
+   Dzięki temu nic nie migocze, nic nie skacze i hover nie gubi się pod kursorem. */
+function applyHot(id) {
+  if (id === state.hot) return;
+  state.hot = id;
+  document.querySelectorAll('[data-hot]').forEach((el) => {
+    el.classList.toggle('is-dim', id !== null && el.dataset.hot !== id);
+  });
+  const sub = document.querySelector('.legend__cashSub');
+  if (sub) sub.classList.toggle('is-dim', id !== null && id !== 'cash');
+}
+
 document.addEventListener('mouseover', (e) => {
-  const el = e.target.closest('[data-hot]');
-  const next = el ? el.dataset.hot : null;
-  if (next !== state.hot) { state.hot = next; render(); }
+  const el = e.target.closest ? e.target.closest('[data-hot]') : null;
+  applyHot(el ? el.dataset.hot : null);
 });
-document.addEventListener('mouseleave', (e) => {
-  if (e.target.closest && e.target.closest('[data-hot]') && state.hot !== null) {
-    state.hot = null; render();
-  }
-}, true);
+document.addEventListener('focusin', (e) => {
+  const el = e.target.closest ? e.target.closest('[data-hot]') : null;
+  if (el) applyHot(el.dataset.hot);
+});
+document.addEventListener('focusout', () => applyHot(null));
 document.addEventListener('click', (e) => {
   const s = e.target.closest('[data-style-btn]');
   if (s) { state.style = s.dataset.styleBtn; localStorage.setItem('ms-style', state.style); render(); return; }
