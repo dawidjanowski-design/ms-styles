@@ -273,3 +273,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: background 140ms var(--ease);
 }
 .acctCard__action:hover { background: #f3f3f3; }
+
+/* Stylistyka nr 2 — znacznik rachunku jak przy aktywach: pionowa kreska zamiast kropki */
+[data-style='2'] .acctCard__dot {
+  width: 4px; height: 16px; border-radius: 4px;
+}
