@@ -159,7 +159,7 @@ export function IssuerScreen({
           <Transactions
             rows={ISSUER_TRANSACTIONS}
             countNoun="zdarzenia"
-            accountAsSubline
+            account="subline"
             locked={styleId === '3'}
           />
         </div>
@@ -232,7 +232,7 @@ export function SeriesScreen({
           <Transactions
             rows={ISSUER_TRANSACTIONS}
             countNoun="zdarzenia"
-            accountAsSubline
+            account="subline"
             locked={styleId === '3'}
           />
         </div>

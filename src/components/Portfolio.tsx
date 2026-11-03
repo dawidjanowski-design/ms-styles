@@ -299,7 +299,15 @@ function AssetCard({
 
 /* ----------------------------- rachunki ----------------------------- */
 
-function AccountCard({ account, styleId }: { account: Account; styleId: StyleId }) {
+function AccountCard({
+  account,
+  styleId,
+  onOpen,
+}: {
+  account: Account;
+  styleId: StyleId;
+  onOpen?: () => void;
+}) {
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
       <div className="acctCard__head">
@@ -356,7 +364,7 @@ function AccountCard({ account, styleId }: { account: Account; styleId: StyleId 
       )}
 
       <div className="acctCard__foot">
-        <button type="button" className="acctCard__action">
+        <button type="button" className="acctCard__action" onClick={onOpen}>
           {account.action}
           <span aria-hidden="true">›</span>
         </button>
@@ -370,9 +378,11 @@ function AccountCard({ account, styleId }: { account: Account; styleId: StyleId 
 export function PortfolioScreen({
   styleId,
   onOpenAsset,
+  onOpenAccount,
 }: {
   styleId: StyleId;
   onOpenAsset: (id: string) => void;
+  onOpenAccount: (id: string) => void;
 }) {
   const [currency, setCurrency] = useState<Currency>('Łącznie');
   const [view, setView] = useState<string>('Aktywa');
@@ -449,7 +459,18 @@ export function PortfolioScreen({
                     />
                   ))
                 : data.accounts.map((a) => (
-                    <AccountCard key={a.id} account={a} styleId={styleId} />
+                    <AccountCard
+                      key={a.id}
+                      account={a}
+                      styleId={styleId}
+                      /* Ekran rachunku istnieje na razie tylko dla IKE i tylko
+                         w widoku lacznym, gdzie liczby sie zgadzaja. */
+                      onOpen={
+                        styleId !== '3' && a.id === 'ike' && currency === 'Łącznie'
+                          ? () => onOpenAccount(a.id)
+                          : undefined
+                      }
+                    />
                   ))}
             </div>
           </section>

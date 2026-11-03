@@ -764,3 +764,56 @@ select.field__control {
 /* Ostatni wiersz grupy nie ma dolnego paddingu, wiec oddech przed etykieta
    kolejnej grupy musi wejsc tutaj. */
 .paramGroup + .paramGroup { padding-top: 20px; }
+
+/* ========== ekran rachunku IKE (722:3828) ========== */
+
+.acctHead { display: flex; flex-direction: column; gap: 2px; }
+.acctHead__number { font-size: 13px; color: var(--muted); }
+
+.panel--tight { padding: 20px 24px; }
+
+/* trzy kwoty obok siebie */
+.acctCash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.acctCash__item { display: flex; flex-direction: column; gap: 4px; }
+.acctCash__label { font-size: 13px; color: var(--muted); }
+.acctCash__value {
+  font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* limit wpłat */
+.limitCard { display: flex; flex-direction: column; gap: 12px; }
+.limitCard__row { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.limitCard__labelBlock { display: flex; flex-direction: column; gap: 3px; }
+.limitCard__label { font-size: 14px; font-weight: 500; color: var(--ink); }
+.limitCard__sub { font-size: 13px; color: var(--muted); }
+.limitCard__valueBlock { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.limitCard__value {
+  font-size: 14px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.limitCard__left { font-size: 13px; color: var(--muted); }
+
+/* aktywa na rachunku — grupy z nagłówkiem i pozycjami */
+.posGroups { display: flex; flex-direction: column; gap: 16px; }
+.posGroup {
+  border: 1px solid var(--divider); border-radius: var(--card-radius); overflow: hidden;
+}
+.posGroup__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 18px; background: var(--screen-bg);
+}
+.posGroup__name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.posGroup__total {
+  font-size: 14px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.posRow {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 18px; border-top: 1px solid var(--divider);
+}
+.posRow__titleBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.posRow__name { font-size: 14px; color: var(--ink); }
+.posRow__sub { font-size: 13px; color: var(--muted); }
+.posRow__value {
+  font-size: 14px; font-weight: 500; color: var(--ink);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}

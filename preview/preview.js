@@ -211,7 +211,9 @@ function accountCard(a) {
          <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
       </div>` : ''}
     <div class="acctCard__foot">
-      <button type="button" class="acctCard__action">${a.action}<span aria-hidden="true">›</span></button>
+      <button type="button" class="acctCard__action" ${
+        state.style !== '3' && a.id === 'ike' && state.currency === 'Łącznie'
+          ? 'data-goto-screen="account"' : ''}>${a.action}<span aria-hidden="true">›</span></button>
     </div></article>`;
 }
 
@@ -333,9 +335,9 @@ function txRows(all) {
 
 /* Na ekranie klasy aktywow rachunek ma wlasna kolumne, na wezszych ekranach
    schodzi pod nazwe instrumentu — tak jak w wireframe'ach. */
-function transactions(all, noun, accountAsSubline, total) {
+function transactions(all, noun, acc, total) {
   const rows = txRows(all);
-  const columns = accountAsSubline ? TX_COLUMNS.slice(0, 5) : TX_COLUMNS;
+  const columns = acc === 'column' ? TX_COLUMNS : TX_COLUMNS.slice(0, 5);
   const field = (label, cls, control) =>
     `<label class="field ${cls}"><span class="field__label">${label}</span>${control}</label>`;
   const select = (name, items, active) =>
@@ -360,7 +362,7 @@ function transactions(all, noun, accountAsSubline, total) {
       ${field('Instrument', 'field--widest',
         `<input class="field__control" type="search" data-search placeholder="Szukaj instrumentu" value="${state.txQuery}">`)}
     </div>
-    <div class="table ${accountAsSubline ? 'table--narrow' : ''}">
+    <div class="table ${acc === 'column' ? '' : 'table--narrow'}">
       <div class="table__head">${columns
         .map((c) => `<span class="table__th ${c === 'Kwota' ? 'is-right' : ''}">${c}</span>`).join('')}</div>
       ${rows.length === 0 ? '<div class="table__empty">Brak transakcji dla tych filtrów</div>' : ''}
@@ -368,11 +370,11 @@ function transactions(all, noun, accountAsSubline, total) {
         <span class="table__td table__td--muted">${t[0]}</span>
         <span class="table__td">${t[1]}</span>
         <span class="table__td">${t[2]}${
-          accountAsSubline ? `<span class="table__note">${t[6]}</span>` : ''}</span>
+          acc === 'subline' ? `<span class="table__note">${t[6]}</span>` : ''}</span>
         <span class="table__td is-right"><span class="table__amount">${t[3]}</span>
           ${t[4] ? `<span class="table__note">${t[4]}</span>` : ''}</span>
         <span class="table__td"><span class="badge">${t[5]}</span></span>
-        ${accountAsSubline ? '' : `<span class="table__td table__td--muted">${t[6]}</span>`}
+        ${acc === 'column' ? `<span class="table__td table__td--muted">${t[6]}</span>` : ''}
       </div>`).join('')}
       ${total === undefined ? '' : `<div class="table__foot">
         <button type="button" class="btnGhost">Pokaż kolejne 15 transakcji</button>
@@ -481,7 +483,7 @@ function issuerScreen() {
       </div>
     </section>
 
-    ${transactions(ISSUER_TX, 'zdarzenia', true)}
+    ${transactions(ISSUER_TX, 'zdarzenia', 'subline')}
   </div></div></div>`;
 }
 
@@ -504,7 +506,97 @@ function seriesScreen() {
       </div>
     </section>
 
-    ${transactions(ISSUER_TX, 'zdarzenia', true)}
+    ${transactions(ISSUER_TX, 'zdarzenia', 'subline')}
+  </div></div></div>`;
+}
+
+
+/* ---------------- rachunek IKE (Figma 722:3828) ----------------
+   Przyciski Aktywa / Transakcje z wireframe'u celowo pominiete. */
+
+const ACCOUNT = { number: '00-00-007431', title: 'Rachunek: IKE',
+  valueLabel: 'Wartość rachunku', value: '506 237', dec: ',00 PLN' };
+
+const ACCOUNT_CASH = [['Wolne środki', '46 237,00 PLN'], ['Zablokowane', '0,00 PLN'],
+  ['W drodze', '12 000,00 PLN']];
+
+const ACCOUNT_LIMIT = { label: 'Limit wpłat w 2026',
+  sub: 'Roczny limit dla IKE. Po przekroczeniu dalsze wpłaty nie są możliwe.',
+  value: '30 000,00 PLN z 40 000,00 PLN', left: 'pozostało 10 000,00 PLN', progress: 0.75 };
+
+/* 340 000 + 120 000 + 46 237 wolnych srodkow = 506 237 — zgadza sie z suma. */
+const ACCOUNT_GROUPS = [
+  { name: 'Obligacje korporacyjne', total: '340 000,00 PLN', positions: [
+    ['Michael / Ström SA', '1 seria · F', '200 000,00 PLN'],
+    ['Victoria Dom', '1 seria · B2', '140 000,00 PLN'] ] },
+  { name: 'Fundusze otwarte (FIO)', total: '120 000,00 PLN', positions: [
+    ['Skarbiec Value (Skarbiec FIO)', '800 jednostek', '120 000,00 PLN'] ] },
+];
+
+const ACCOUNT_TX = [
+  ['30.09.2026', 'Wypłata odsetek', 'Michael / Ström SA, seria F', '2 710,00 PLN', '', 'Rozliczone', 'IKE'],
+  ['1.07.2026', 'Nabycie jednostek', 'Skarbiec Value (Skarbiec FIO)', '-30 000,00 PLN', '', 'Rozliczone', 'IKE'],
+  ['31.03.2026', 'Zakończenie inwestycji', 'VEHIS, seria E', '4 200,00 PLN', 'Wynik inwestycji', 'Zakończona', 'IKE'],
+];
+
+function accountScreen() {
+  const pozycji = ACCOUNT_GROUPS.reduce((n, g) => n + g.positions.length, 0);
+  return `<div class="screenOuter"><div class="screen"><div class="content">
+    <div class="crumbRow">${crumbs([['Portfel', 'portfel'], ['Rachunki', 'portfel'], ['IKE', null]])}</div>
+
+    <section class="detailHead">
+      <div class="acctHead">
+        <span class="acctHead__number">${ACCOUNT.number}</span>
+        <h1 class="detailTitle">${ACCOUNT.title}</h1>
+      </div>
+      <div class="detailValue">
+        <span class="detailValue__label">${ACCOUNT.valueLabel}</span>
+        ${amount(ACCOUNT.value, ACCOUNT.dec, '', 'rachunek-suma')}
+      </div>
+    </section>
+
+    <section class="panel panel--tight">
+      <div class="acctCash">${ACCOUNT_CASH.map(([l, v]) => `<div class="acctCash__item">
+        <span class="acctCash__label">${l}</span>
+        <span class="acctCash__value">${v}</span></div>`).join('')}</div>
+    </section>
+
+    <section class="panel panel--tight">
+      <div class="limitCard">
+        <div class="limitCard__row">
+          <div class="limitCard__labelBlock">
+            <span class="limitCard__label">${ACCOUNT_LIMIT.label}</span>
+            <span class="limitCard__sub">${ACCOUNT_LIMIT.sub}</span>
+          </div>
+          <div class="limitCard__valueBlock">
+            <span class="limitCard__value">${ACCOUNT_LIMIT.value}</span>
+            <span class="limitCard__left">${ACCOUNT_LIMIT.left}</span>
+          </div>
+        </div>
+        <div class="acctCard__limitTrack">
+          <div class="acctCard__limitFill" style="width:${ACCOUNT_LIMIT.progress * 100}%"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2 class="sectionTitle">Aktywa na rachunku</h2>
+        <span class="badge">${pozycji} pozycje</span>
+      </div>
+      <div class="posGroups">${ACCOUNT_GROUPS.map((g) => `<div class="posGroup">
+        <div class="posGroup__head">
+          <span class="posGroup__name">${g.name}</span>
+          <span class="posGroup__total">${g.total}</span>
+        </div>
+        ${g.positions.map(([n, sub, v]) => `<div class="posRow">
+          <span class="posRow__titleBlock"><span class="posRow__name">${n}</span>
+            <span class="posRow__sub">${sub}</span></span>
+          <span class="posRow__value">${v}</span></div>`).join('')}
+      </div>`).join('')}</div>
+    </section>
+
+    ${transactions(ACCOUNT_TX, 'zdarzenia', 'none')}
   </div></div></div>`;
 }
 
@@ -555,7 +647,7 @@ function detailScreen() {
       <div class="instrList">${items.map((it, i) => instrRow(it, i === 0, color)).join('')}</div>
     </section>
 
-    ${transactions(TRANSACTIONS, 'transakcji', false, TX_TOTAL)}
+    ${transactions(TRANSACTIONS, 'transakcji', 'column', TX_TOTAL)}
   </div></div></div>`;
 }
 
@@ -873,6 +965,7 @@ function render() {
       : state.screen === "portfel" ? portfolioScreen()
       : state.screen === "issuer" ? issuerScreen()
       : state.screen === "series" ? seriesScreen()
+      : state.screen === "account" ? accountScreen()
       : detailScreen()}
     ${transitDrawer()}
 

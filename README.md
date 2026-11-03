@@ -307,3 +307,22 @@ Dwa wyjątki, świadome:
 
 Przy okazji pigułki w nr 1 urosły z 12 na 13 px — w Figmie było 12, ale
 minimum wygrywa.
+
+## Ekran rachunku (IKE)
+
+Figma `722:3828`. Wchodzi się z widoku „Rachunki" na ekranie Portfel —
+przyciskiem „Zobacz szczegóły" na karcie IKE.
+
+Trzy świadome odstępstwa od wireframe'u:
+
+- **Przyciski Aktywa / Transakcje na górze pominięte** — zgodnie z ustaleniem.
+- **Osobna karta „Wolne środki 46 237,00 PLN" pominięta.** Wireframe ma ją
+  zaraz pod paskiem limitu, ale ta sama kwota stoi 3 cm wyżej w pierwszej
+  karcie, jako pierwsza z trzech. Wygląda na pozostałość po wcześniejszej
+  wersji układu; łatwo przywrócić, jeśli miała inną rolę.
+- **Ekran działa tylko dla IKE i tylko w widoku „Łącznie".** Liczby na nim —
+  506 237,00 PLN, w tym 340 000 obligacji, 120 000 FIO i 46 237 wolnych
+  środków — zgadzają się z kartą IKE w widoku łącznym. W zakładce PLN ten
+  sam rachunek ma inną wartość, więc tam wejście jest wyłączone.
+
+W makiecie ekranu nie ma.

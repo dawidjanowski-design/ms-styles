@@ -14,13 +14,14 @@ import { Pills } from './ui';
 export function Transactions({
   rows: all,
   countNoun = 'transakcji',
-  accountAsSubline = false,
+  account = 'column',
   total,
   locked = false,
 }: {
   rows: Transaction[];
   countNoun?: string;
-  accountAsSubline?: boolean;
+  /** rachunek: wlasna kolumna, podlinia pod instrumentem albo wcale */
+  account?: 'column' | 'subline' | 'none';
   /** pelna liczba transakcji — stopka z paginacja pojawia sie tylko z nia */
   total?: number;
   locked?: boolean;
@@ -39,9 +40,8 @@ export function Transactions({
     return true;
   });
 
-  const columns = accountAsSubline
-    ? ['Data', 'Typ transakcji', 'Instrument', 'Kwota', 'Status']
-    : ['Data', 'Typ transakcji', 'Instrument', 'Kwota', 'Status', 'Rachunek'];
+  const columns = ['Data', 'Typ transakcji', 'Instrument', 'Kwota', 'Status'];
+  if (account === 'column') columns.push('Rachunek');
 
   return (
     <section className="panel">
@@ -99,7 +99,7 @@ export function Transactions({
         </label>
       </div>
 
-      <div className={`table ${accountAsSubline ? 'table--narrow' : ''}`}>
+      <div className={`table ${account === 'column' ? '' : 'table--narrow'}`}>
         <div className="table__head">
           {columns.map((c) => (
             <span key={c} className={`table__th ${c === 'Kwota' ? 'is-right' : ''}`}>
@@ -116,7 +116,7 @@ export function Transactions({
             <span className="table__td">{t.type}</span>
             <span className="table__td">
               {t.instrument}
-              {accountAsSubline && <span className="table__note">{t.account}</span>}
+              {account === 'subline' && <span className="table__note">{t.account}</span>}
             </span>
             <span className="table__td is-right">
               <span className="table__amount">{t.amount}</span>
@@ -125,7 +125,7 @@ export function Transactions({
             <span className="table__td">
               <span className="badge">{t.status}</span>
             </span>
-            {!accountAsSubline && (
+            {account === 'column' && (
               <span className="table__td table__td--muted">{t.account}</span>
             )}
           </div>

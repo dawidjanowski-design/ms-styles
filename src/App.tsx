@@ -4,6 +4,7 @@ import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
+import { AccountScreen } from './components/Account';
 
 type StyleId = '1' | '2' | '3';
 const STYLES: { id: StyleId; label: string }[] = [
@@ -17,7 +18,8 @@ type Screen =
   | { name: 'portfel' }
   | { name: 'asset'; id: string }
   | { name: 'issuer'; id: string }
-  | { name: 'series'; id: string };
+  | { name: 'series'; id: string }
+  | { name: 'account'; id: string };
 
 const KEY = 'ms-style';
 
@@ -65,6 +67,7 @@ export default function App() {
         <PortfolioScreen
           styleId={styleId}
           onOpenAsset={(id) => setScreen({ name: 'asset', id })}
+          onOpenAccount={(id) => setScreen({ name: 'account', id })}
         />
       )}
       {screen.name === 'asset' && (
@@ -74,6 +77,9 @@ export default function App() {
           onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
           onOpenSeries={(id) => setScreen({ name: 'series', id })}
         />
+      )}
+      {screen.name === 'account' && (
+        <AccountScreen styleId={styleId} onBack={() => setScreen({ name: 'portfel' })} />
       )}
       {screen.name === 'issuer' && (
         <IssuerScreen
