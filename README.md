@@ -151,6 +151,12 @@ Dane legendy w Figmie (50,0% / 2 109 320 PLN dla obligacji korporacyjnych,
 bez obligacji skarbowych) różnią się od naszych — suma 4 218 640,00 PLN jest
 ta sama, więc zostały nasze.
 
+Karty ofert mają liczoną szerokość `calc((100% - 3 * 24px) / 4)`, nie sztywne
+220 px z Figmy — tam kontener ofert ma 952 px i cztery karty po 220 plus trzy
+odstępy wypełniają go co do piksela. U nas treść ma 1064 px, więc sztywne 220
+zostawiało 112 px luki przy prawej krawędzi. Piąta oferta sprawi, że pas
+zacznie się przewijać, a strzałki przesuwają go dokładnie o jedną kartę.
+
 Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
 `preview/logos`) i są podpięte w `src/data/dashboard.ts`. Pliki mają gęstość 3x i są
 skalowane w dół do rozmiaru z `width`/`height`, więc zostają ostre także na

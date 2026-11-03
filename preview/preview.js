@@ -545,7 +545,11 @@ document.addEventListener('click', (e) => {
   const sc = e.target.closest('[data-scroll]');
   if (sc) {
     const t = document.querySelector('[data-track]');
-    if (t) t.scrollBy({ left: Number(sc.dataset.scroll) * 244, behavior: 'smooth' });
+    if (t) {
+      const card = t.firstElementChild;
+      const step = card ? card.offsetWidth + 24 : t.clientWidth;
+      t.scrollBy({ left: Number(sc.dataset.scroll) * step, behavior: 'smooth' });
+    }
     return;
   }
   const nav = e.target.closest('[data-nav]');

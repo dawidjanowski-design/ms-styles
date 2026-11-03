@@ -451,7 +451,11 @@ select.field__control {
 }
 .offers__track::-webkit-scrollbar { display: none; }
 .offerCard {
-  flex: 0 0 220px; scroll-snap-align: start; min-height: 211px;
+  /* Cztery karty wypelniaja szerokosc tresci co do piksela, tak jak w Figmie
+     (tam 4 x 220 + 3 x 24 = 952 = pelna szerokosc kontenera). U nas tresc ma
+     1064, wiec szerokosc liczymy, zamiast ja wpisywac — piata oferta sprawi,
+     ze pas zacznie sie przewijac, i wtedy strzalki maja co robic. */
+  flex: 0 0 calc((100% - 3 * 24px) / 4); scroll-snap-align: start; min-height: 211px;
   background: var(--card-bg); border-radius: var(--card-radius);
   box-shadow: var(--shadow-card); padding: 20px 16px;
   display: flex; flex-direction: column; justify-content: space-between; gap: 24px;

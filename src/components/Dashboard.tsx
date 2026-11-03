@@ -57,7 +57,9 @@ export function DashboardScreen({
   const scroll = (dir: -1 | 1) => {
     const el = track.current;
     if (!el) return;
-    el.scrollBy({ left: dir * 244, behavior: 'smooth' });
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 24 : el.clientWidth;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
 
   return (
