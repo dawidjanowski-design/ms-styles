@@ -270,7 +270,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .acctRow__value { font-size: 14px; font-weight: 500; color: var(--ink); }
 .acctRow__chev { font-size: 13px; color: var(--muted); width: 10px; text-align: right; }
 
-.acctCard__foot { padding: 4px var(--asset-row-px) 0; }
+/* Karta w stylistyce nr 1 ma doł 2px (pod szary pasek przy aktywach) — rachunki
+   paska nie maja, wiec oddech pod przyciskiem dokladamy tutaj. */
+.acctCard__foot { padding: 8px var(--asset-row-px) 18px; }
+[data-style='2'] .acctCard__foot { padding: 8px var(--asset-row-px) 0; }
 .acctCard__action {
   display: inline-flex; align-items: center; gap: 8px;
   height: 29px; padding: 0 11px; border-radius: 999px;
