@@ -45,6 +45,20 @@
   --progress-fill: #9ec421;
   --progress-track: #e8e5e1;
 
+  /* Odcienie, ktore wczesniej byly wpisane na sztywno w app.css. Kazda
+     stylistyka nadpisuje je u siebie, dzieki czemu nr 2 nie dziedziczy
+     cieplych bezow z nr 1. */
+  --value-strong: #342717;
+  --chev: #9c9c9c;
+  --crumb-sep: #c4bfba;
+  --sub-faint: #b4aea8;
+  --btn-bg: #fafafa;
+  --chip-border-hover: #e0ddd9;
+  --rule: #e2e2e2;
+  --avatar-bg: #ddd8d2;
+  --nav-active-bg: #f7f5f3;
+  --nav-active-color: #342717;
+
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -137,6 +151,14 @@
   --pill-size: 13px;
   --pill-active-color: #171934;
 
+  --value-strong: #171934;
+  --crumb-sep: #c9c9c9;
+  --sub-faint: #aeaeae;
+  --chip-border-hover: #dcdcdc;
+  --avatar-bg: #d9d9d9;
+  --nav-active-bg: #f0f0f2;
+  --nav-active-color: #171934;
+
   --section-title-size: 16px;
   --section-title-color: #4c4c4c;
   --section-title-tracking: 0;
@@ -225,6 +247,15 @@
   --seg-flat: #d6d6d6;
   --progress-fill: #a3a3a3;
   --progress-track: #e2e2e2;
+
+  --value-strong: var(--ink);
+  --chev: #b0b0b0;
+  --crumb-sep: #c9c9c9;
+  --sub-faint: #adadad;
+  --chip-border-hover: #dedede;
+  --avatar-bg: #dcdcdc;
+  --nav-active-bg: #ededed;
+  --nav-active-color: #343434;
 
   --card-bg: #ffffff;
   --card-radius: 10px;

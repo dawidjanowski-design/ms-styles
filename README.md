@@ -358,3 +358,33 @@ delikatnej linii.
 Wypełnienie celowo nie jest w kolorze rachunku: czerwień IKE czytałaby się
 jak ostrzeżenie, a wykorzystany limit wpłat nie jest problemem. W makiecie
 pasek zostaje szary.
+
+## Spójność: fonty i kolory
+
+Dwie rzeczy są pilnowane automatycznie, skryptem przechodzącym po wszystkich
+ekranach (pulpit, portfel, rachunki, rachunek IKE, obligacje, emitent, seria,
+panel środków w drodze) w stylistykach nr 1 i nr 2:
+
+1. **Żaden tekst nie schodzi poniżej 13 px.**
+2. **Żaden ciepły odcień z nr 1 nie pojawia się w nr 2.**
+
+Żeby to utrzymać, kolory wpisane wcześniej na sztywno w `app.css` trafiły do
+tokenów nadpisywanych per stylistyka:
+
+| token | nr 1 | nr 2 | co trzyma |
+|---|---|---|---|
+| `--value-strong` | `#342717` | `#171934` | kwoty w legendzie, wierszach i zdarzeniach |
+| `--nav-active-bg` / `--nav-active-color` | `#f7f5f3` / `#342717` | `#f0f0f2` / `#171934` | aktywna pozycja nawigacji |
+| `--avatar-bg` | `#ddd8d2` | `#d9d9d9` | awatar w nagłówku |
+| `--crumb-sep` | `#c4bfba` | `#c9c9c9` | separator ścieżki nawigacji |
+| `--sub-faint` | `#b4aea8` | `#aeaeae` | podlinie w listach parametrów |
+| `--chip-border-hover` | `#e0ddd9` | `#dcdcdc` | obrys chipa pod kursorem |
+| `--chev`, `--rule`, `--btn-bg` | wspólne | wspólne | strzałki, linie, tła przycisków |
+
+Wcześniej kwoty w nr 2 były brązowe, bo brały `#342717` prosto z nr 1.
+
+W całym `app.css` poza blokiem makiety i przełącznikiem stylistyk nie ma już
+ani jednego koloru wpisanego na sztywno.
+
+**Makieta zostaje szara.** Sprawdzane osobno: na jej ekranach nie ma ani
+jednego nasyconego koloru.

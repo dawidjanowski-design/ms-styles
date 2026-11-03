@@ -45,23 +45,23 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .navItem:hover { color: var(--nav-hover); }
 .navItem--active {
   height: 38px; padding: 0 16px; border-radius: 999px;
-  background: #f7f5f3; color: #342717;
+  background: var(--nav-active-bg); color: var(--nav-active-color);
 }
 .appHeader__right { display: flex; align-items: center; gap: 12px; padding-left: 8px; }
 .appHeader__bell {
   width: 31px; height: 31px; display: inline-flex; align-items: center; justify-content: center;
   border-radius: 999px; transition: background 140ms var(--ease);
 }
-.appHeader__bell:hover { background: #f5f5f5; }
+.appHeader__bell:hover { background: var(--screen-bg); }
 .appHeader__user { display: flex; align-items: center; gap: 16px; }
-.appHeader__userName { font-size: 13px; font-weight: 500; color: #37373a; }
+.appHeader__userName { font-size: 13px; font-weight: 500; color: var(--ink); }
 .appHeader__avatar {
   width: 32px; height: 32px; border-radius: 999px; object-fit: cover;
-  background: #ddd8d2; display: block;
+  background: var(--avatar-bg); display: block;
 }
 
 /* ---------------- ekran ---------------- */
-.screenOuter { padding: 0 4px; background: #fff; }
+.screenOuter { padding: 0 4px; background: var(--header-bg); }
 .screen {
   background: var(--screen-bg);
   border: 1px solid var(--screen-border);
@@ -166,10 +166,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 [data-style='2'] .legendRow__share { font-size: 13px; font-weight: 500; }
 .legendRow__value {
   width: 130px; text-align: right; font-size: 13px; font-weight: 500;
-  letter-spacing: -0.02em; line-height: 19px; color: #342717;
+  letter-spacing: -0.02em; line-height: 19px; color: var(--value-strong);
 }
 .legend__cash { padding-top: 4px; margin-top: 4px; }
-.legend__cashInner { border-top: 1px solid #e2e2e2; padding-top: 8px; }
+.legend__cashInner { border-top: 1px solid var(--rule); padding-top: 8px; }
 .legend__cashSub {
   font-size: 13px; line-height: 19px; color: var(--legend-sub); padding-left: 18px; padding-top: 6px;
 }
@@ -227,7 +227,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .strip__value { font-size: 14px; font-weight: 500; line-height: 17px; color: var(--ink); }
 
 /* „Pulpit" ma w Figmie ciemniejszy odcień niż pozostałe pozycje nawigacji */
-.navItem--prev { color: #555555; }
+.navItem--prev { color: var(--nav-hover); }
 
 /* ---------------- widok „Rachunki" ---------------- */
 .acctCard {
@@ -280,11 +280,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .acctCard__action {
   display: inline-flex; align-items: center; gap: 8px;
   height: 32px; padding: 0 12px; border-radius: 999px;
-  background: #fafafa; border: 1px solid var(--divider);
+  background: var(--btn-bg); border: 1px solid var(--divider);
   font-size: 13px; font-weight: 500; color: var(--ink);
   transition: background 140ms var(--ease);
 }
-.acctCard__action:hover { background: #f3f3f3; }
+.acctCard__action:hover { background: var(--screen-bg); }
 
 /* Stylistyka nr 2 — znacznik rachunku jak przy aktywach: pionowa kreska zamiast kropki */
 [data-style='2'] .acctCard__dot {
@@ -302,7 +302,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: color 140ms var(--ease);
 }
 .crumbs__link:hover { color: var(--ink); }
-.crumbs__sep { font-size: 13px; color: #c4bfba; }
+.crumbs__sep { font-size: 13px; color: var(--crumb-sep); }
 .crumbs__current { font-size: 13px; color: var(--legend-name); }
 
 /* karta sekcji — ten sam materiał co karty na pulpicie portfela */
@@ -320,7 +320,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .btnGhost {
   display: inline-flex; align-items: center; gap: 6px;
   height: 34px; padding: 0 14px; border-radius: 999px;
-  background: #fafafa; border: 1px solid var(--divider);
+  background: var(--btn-bg); border: 1px solid var(--divider);
   font-size: 13px; font-weight: 500; color: var(--ink);
   transition: background 140ms var(--ease);
 }
@@ -335,12 +335,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   height: var(--pill-h); padding: 0 var(--pill-px); border-radius: 999px;
-  background: #ffffff; box-shadow: inset 0 0 0 1px var(--divider);
+  background: var(--card-bg); box-shadow: inset 0 0 0 1px var(--divider);
   font-size: var(--pill-size); font-weight: 500; color: var(--muted);
   transition: background 140ms var(--ease), color 140ms var(--ease),
     box-shadow 140ms var(--ease);
 }
-.chip:hover { color: var(--pill-active-color); box-shadow: inset 0 0 0 1px #e0ddd9; }
+.chip:hover { color: var(--pill-active-color); box-shadow: inset 0 0 0 1px var(--chip-border-hover); }
 .chip[aria-pressed='true'] {
   background: var(--pill-track-bg); color: var(--pill-active-color);
   box-shadow: inset 0 0 0 1px transparent;
@@ -372,9 +372,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .instrRow__colLabel { font-size: 13px; color: var(--muted); white-space: nowrap; }
 .instrRow__colValue { font-size: 13px; color: var(--ink); }
 .instrRow__value {
-  width: 140px; text-align: right; font-size: 14px; font-weight: 500; color: #342717;
+  width: 140px; text-align: right; font-size: 14px; font-weight: 500; color: var(--value-strong);
 }
-.instrRow__chev { font-size: 14px; color: #9c9c9c; width: 12px; text-align: right; }
+.instrRow__chev { font-size: 14px; color: var(--chev); width: 12px; text-align: right; }
 
 /* filtry transakcji */
 .filters { display: flex; align-items: flex-end; gap: 12px; }
@@ -388,11 +388,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   font: inherit; font-size: 13px; color: var(--ink);
   appearance: none; width: 100%;
 }
-.field__control::placeholder { color: #a0a0a0; }
+.field__control::placeholder { color: var(--muted); }
 .field__control:focus-visible { outline: 2px solid var(--pill-active-color); outline-offset: 1px; }
 select.field__control {
-  background-image: linear-gradient(45deg, transparent 50%, #737373 50%),
-    linear-gradient(135deg, #737373 50%, transparent 50%);
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
   background-position: calc(100% - 15px) 16px, calc(100% - 11px) 16px;
   background-size: 4px 4px, 4px 4px;
   background-repeat: no-repeat;
@@ -512,8 +512,8 @@ select.field__control {
 .eventRow__date { font-size: 14px; color: var(--muted); }
 .eventRow__type { font-size: 14px; font-weight: 500; color: var(--ink); }
 .eventRow__instrument { font-size: 14px; color: var(--muted); }
-.eventRow__amount { font-size: 14px; font-weight: 500; color: #342717; text-align: right; }
-.eventRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }
+.eventRow__amount { font-size: 14px; font-weight: 500; color: var(--value-strong); text-align: right; }
+.eventRow__chev { font-size: 14px; color: var(--chev); text-align: right; }
 
 /* Logo emitenta zamiast nazwy. Pliki są w gęstości 3x i skalowane w dół do
    rozmiaru z atrybutów width/height, więc zostają ostre także na retinie. */
@@ -533,7 +533,9 @@ select.field__control {
 [data-style='3'] .instrRow__dot {
   background: var(--seg-flat);
 }
-[data-style='3'] .chartSeg__foot { display: none; }
+/* Stopka slupka jest ukryta, ale kolor gasimy i tak — zeby nie wrocil
+   przy jakiejkolwiek zmianie widocznosci. */
+[data-style='3'] .chartSeg__foot { display: none; background: var(--seg-flat); }
 [data-style='3'] .chartSeg--cash .chartSeg__body {
   background: repeating-linear-gradient(-45deg, #d0d0d0 0 3px, #ededed 3px 7px);
 }
@@ -723,7 +725,7 @@ select.field__control {
 .infoList .infoRow:last-child { border-bottom: 0; padding-bottom: 0; }
 .infoRow__labelBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .infoRow__label { font-size: 14px; color: var(--muted); }
-.infoRow__sub { font-size: 13px; color: #b4aea8; }
+.infoRow__sub { font-size: 13px; color: var(--sub-faint); }
 .infoRow__value {
   font-size: 14px; font-weight: 500; color: var(--ink);
   text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums;
@@ -750,10 +752,10 @@ select.field__control {
 .seriesRow__sub { font-size: 13px; color: var(--muted); }
 .seriesRow__cell { font-size: 13px; color: var(--ink); text-align: right; }
 .seriesRow__value {
-  font-size: 14px; font-weight: 500; color: #342717;
+  font-size: 14px; font-weight: 500; color: var(--value-strong);
   text-align: right; font-variant-numeric: tabular-nums;
 }
-.seriesRow__chev { font-size: 14px; color: #9c9c9c; text-align: right; }
+.seriesRow__chev { font-size: 14px; color: var(--chev); text-align: right; }
 
 /* Tabela transakcji bez kolumny rachunku */
 .table--narrow .table__head,
