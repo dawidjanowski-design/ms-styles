@@ -39,6 +39,12 @@
   --shadow-track: inset 0 2px 2px rgba(255, 255, 255, 0.1),
     inset 0 0 0 1px rgba(0, 0, 0, 0.08), 0 6px 3px rgba(31, 33, 41, 0.012);
 
+  /* Pasek postepu: wypelnienie zielone, pod nim widoczna szara reszta.
+     Zielen jest ta sama, co pozycja gotowki w legendzie — paleta zostaje
+     zamknieta, nie dokladamy nowego koloru do systemu. */
+  --progress-fill: #9ec421;
+  --progress-track: #e8e5e1;
+
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -150,6 +156,8 @@
   --asset-marker-after: 0;
   --highlight-strip: 0;
 
+  --progress-track: #e7e7e7;
+
   --c-corp: #046816;
   --c-skarb: #0a21c8;
   --c-am: #b044ef;
@@ -215,6 +223,8 @@
   /* Jeden odcień zamiast palety — tym jednym nadpisaniem gasną wszystkie
      kolory ustawiane inline przez --seg. */
   --seg-flat: #d6d6d6;
+  --progress-fill: #a3a3a3;
+  --progress-track: #e2e2e2;
 
   --card-bg: #ffffff;
   --card-radius: 10px;

@@ -342,3 +342,19 @@ Trzy świadome odstępstwa od wireframe'u:
   sam rachunek ma inną wartość, więc tam wejście jest wyłączone.
 
 W makiecie ekranu nie ma.
+
+## Pasek limitu wpłat
+
+Wypełnienie jest zielone (`--progress-fill`, ta sama zieleń co pozycja
+gotówki w legendzie — paleta zostaje zamknięta), a pod nim widać szary tor
+(`--progress-track`), więc wiadomo, gdzie postęp się kończy.
+
+Wcześniej tor miał `background: var(--l2)` — token, którego nigdy nie było
+w pliku. Tło rozwiązywało się do przezroczystego i pasek wyglądał, jakby
+kończył się na końcu wypełnienia. Ten sam nieistniejący token był obrysem
+przycisku na karcie rachunku, przez co przycisk brał kolor tekstu zamiast
+delikatnej linii.
+
+Wypełnienie celowo nie jest w kolorze rachunku: czerwień IKE czytałaby się
+jak ostrzeżenie, a wykorzystany limit wpłat nie jest problemem. W makiecie
+pasek zostaje szary.
