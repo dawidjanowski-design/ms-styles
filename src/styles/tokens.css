@@ -359,9 +359,14 @@
   --nav-active-color: #00255a;
 }
 
-/* Pasmo podsumowania nie jest tu pelnoekranowe: to zaokraglony prostokat
-   1432x391 wsuniety po 4 px z boku, promien 12 (Figma 976:17671). */
-[data-style='4'] .screenOuter { padding: 0 4px; }
+/* Caly kontener ekranu jest tu zawiniety: 8 px marginesu z lewej i prawej,
+   promien 16 na gornych rogach, bialy spod (Figma 983:19196 — ramka
+   PortfolioScreen:margin z paddingiem 0/8 i PortfolioScreen 1424 szerokosci).
+   Pasmo podsumowania w srodku zostaje osobnym prostokatem o promieniu 12. */
+[data-style='4'] {
+  --screen-outer-px: 8px;
+  --screen-radius: 16px 16px 0 0;
+}
 [data-style='4'] .content > section:nth-child(odd) { border-radius: 12px; }
 
 /* ====================== MAKIETA ======================

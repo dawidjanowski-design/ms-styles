@@ -870,7 +870,7 @@ select.field__control {
    Rozne od nr 1 i nr 2 nie tylko kolorem. Zamiast jednej zaokraglonej
    karty ekranu sa pelnoekranowe pasma, na przemian biale i szare, a tresc
    w srodku trzyma stala, szersza niz dotad kolumne 1140 px. */
-[data-family='v3'] .screenOuter { padding: 0; background: var(--page-bg); }
+[data-family='v3'] .screenOuter { padding: 0 var(--screen-outer-px, 0px); background: var(--page-bg); }
 [data-family='v3'] .screen { align-items: stretch; }
 [data-family='v3'] .content { width: 100%; max-width: none; gap: 0; }
 /* Pasmo: tlo na calej szerokosci okna, tresc wysrodkowana do --content-w. */

@@ -147,6 +147,12 @@ function legend(rows, cashTooltip) {
 }
 
 /* Karta z zerowym saldem nie niesie zadnej informacji. */
+/* Strzalka 1:1 z Figmy 983:19622: pole 16x16, obrys 1,33 px, zaokraglone
+   konce. Kolor z currentColor, wiec hover i stylistyki dzialaja jak dotad. */
+const chevron = (dir) => `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="${dir === 'left' ? 'M10 12L6 8L10 4' : 'M6 4L10 8L6 12'}" stroke="currentColor"
+    stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 const isEmptyCash = (c) => String(c.amount).replace(/\s/g, '') === '0';
 
 function cash(cards) {
@@ -906,8 +912,8 @@ function dashboardScreen() {
       <div class="offers__head">
         <h2 class="sectionTitle">Emisje i oferty</h2>
         <div class="offers__nav">
-          <button type="button" class="iconBtn" data-scroll="-1" aria-label="Poprzednie oferty">‹</button>
-          <button type="button" class="iconBtn" data-scroll="1" aria-label="Następne oferty">›</button>
+          <button type="button" class="iconBtn" data-scroll="-1" aria-label="Poprzednie oferty">${chevron('left')}</button>
+          <button type="button" class="iconBtn" data-scroll="1" aria-label="Następne oferty">${chevron('right')}</button>
         </div>
       </div>
       <div class="offers__track" data-track>${OFFERS.map((o) => `<article class="offerCard">

@@ -7,6 +7,23 @@ import { Amount } from './ui';
 type StyleId = '1' | '2' | '3' | '4' | 'makieta';
 const isV3 = (s: StyleId) => s === '3' || s === '4';
 
+/* Strzalka 1:1 z Figmy 983:19622: pole 16x16, obrys 1,33 px, zaokraglone
+   konce i zlaczenia. Kolor z currentColor, zeby kazda stylistyka trzymala
+   swoj odcien i zeby dzialal hover. */
+function Chevron({ dir }: { dir: 'left' | 'right' }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d={dir === 'left' ? 'M10 12L6 8L10 4' : 'M6 4L10 8L6 12'}
+        stroke="currentColor"
+        strokeWidth="1.33"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function OfferCard({ offer }: { offer: Offer }) {
   return (
     <article className="offerCard">
@@ -102,7 +119,7 @@ export function DashboardScreen({
                   aria-label="Poprzednie oferty"
                   onClick={() => scroll(-1)}
                 >
-                  ‹
+                  <Chevron dir="left" />
                 </button>
                 <button
                   type="button"
@@ -110,7 +127,7 @@ export function DashboardScreen({
                   aria-label="Następne oferty"
                   onClick={() => scroll(1)}
                 >
-                  ›
+                  <Chevron dir="right" />
                 </button>
               </div>
             </div>
