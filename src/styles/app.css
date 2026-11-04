@@ -962,4 +962,15 @@ select.field__control {
 [data-style='3'] .acctRow__label,
 [data-style='3'] .acctRow__value { font-size: 13px; }
 [data-style='3'] .acctCard__foot { padding: 8px 0 0; }
-[data-style='3'] .acctCard__limit { margin: 0; border-radius: 10px; }
+/* Pasek limitu IKE. W nr 3 tlo ekranu jest biale, wiec panel w --screen-bg
+   byl niewidoczny i zostawal po nim tylko wciety margines. Teraz to wyrazny
+   kafelek w szarosci pasma, rowny z krawedzia tresci karty. */
+[data-style='3'] .acctCard__limit {
+  margin: 0; padding: 14px 16px; border-radius: 12px;
+  background: var(--band-alt); gap: 8px;
+}
+[data-style='3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
+[data-style='3'] .acctCard__limitValue { font-size: 15px; }
+[data-style='3'] .acctCard__limitTrack {
+  height: 6px; margin-top: 2px; background: #e2e2e8;
+}
