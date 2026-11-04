@@ -95,11 +95,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------------- pigułki ---------------- */
 .pills {
   display: inline-flex; align-items: center; gap: var(--pill-gap);
-  padding: var(--pill-track-pad); border-radius: 999px;
+  padding: var(--pill-track-pad); border-radius: var(--pill-radius, 999px);
   background: var(--pill-track-bg); box-shadow: var(--shadow-track);
 }
 .pills button {
-  height: var(--pill-h); padding: 0 var(--pill-px); border-radius: 999px;
+  height: var(--pill-h); padding: 0 var(--pill-px); border-radius: var(--pill-radius, 999px);
   font-size: var(--pill-size); font-weight: 500; color: var(--muted);
   display: inline-flex; align-items: center; justify-content: center;
   transition: background 180ms var(--ease), color 180ms var(--ease), box-shadow 180ms var(--ease);
