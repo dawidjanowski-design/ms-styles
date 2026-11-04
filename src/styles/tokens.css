@@ -233,8 +233,8 @@
   --screen-pad-bottom: 0px;
 
   /* Szerszy niz 1064 z nr 1 i nr 2 — feedback mowil, ze bylo za wasko.
-     Figma ma tu 1140, plik klienta 70% szerokosci okna; stanelo na 1200. */
-  --content-w: 1200px;
+     Figma ma tu 1140, plik klienta 70% szerokosci okna; stanelo na 1280. */
+  --content-w: 1280px;
   --band-gutter: 24px;
   --band-pt: 40px;
   --band-pb: 32px;
