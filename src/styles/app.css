@@ -909,22 +909,31 @@ select.field__control {
 [data-style='3'] .btnAction { background: #ffffff; height: 40px; }
 [data-style='3'] .btnAction:hover { background: var(--accent-soft); color: var(--accent); }
 
-/* karty gotowki i klas aktywow — cienki obrys, maly promien */
+/* karty gotowki i klas aktywow — cienki obrys, promien 16 jak w Figmie */
 [data-style='3'] .cashCard { padding: 20px 22px; gap: 10px; }
+[data-style='3'] .cash__grid { gap: 16px; }
 [data-style='3'] .cashCard__amount .amount__int { font-size: 22px; }
 [data-style='3'] .cashCard__amount .amount__dec { font-size: 16px; }
 /* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
+/* Karty w jednym rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278
+   parami, wiec siatka rozciaga je, zamiast przycinac do tresci. */
 [data-style='3'] .assets__list {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px; align-items: start;
+  gap: 24px; align-items: stretch;
 }
 
 /* oferty: cztery karty z cienkim obrysem, bez cienia */
-[data-style='3'] .offers__track { gap: 20px; }
-[data-style='3'] .offerCard { flex-basis: calc((100% - 3 * 20px) / 4); }
+[data-style='3'] .offers__track { gap: 24px; }
+[data-style='3'] .offerCard {
+  flex-basis: calc((100% - 3 * 24px) / 4);
+  border-radius: var(--card-radius-lg);
+}
 
 /* zdarzenia: tabela z naglowkiem i podswietleniem wiersza */
-[data-style='3'] .eventsCard { padding: 0; background: var(--table-bg); overflow: hidden; }
+[data-style='3'] .eventsCard {
+  padding: 0; background: var(--table-bg);
+  border-radius: var(--card-radius-lg); overflow: hidden;
+}
 [data-style='3'] .eventRow { padding: 14px 20px; transition: background 140ms var(--ease); }
 [data-style='3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
 [data-style='3'] .eventRow--head {
@@ -943,3 +952,7 @@ select.field__control {
 [data-style='3'] .assetCard__rows .kv:last-child,
 [data-style='3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
 [data-style='3'] .kv { padding: 8px 0; }
+
+/* Przy wezszych kartach czesc opisow lamie sie na dwie linie — rezerwujemy
+   stala wysokosc, zeby logo emitentow stalo w jednej linii we wszystkich. */
+[data-style='3'] .offerCard__kind { min-height: 36px; }

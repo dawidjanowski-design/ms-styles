@@ -232,8 +232,11 @@
   --screen-pad-x: 0px;
   --screen-pad-bottom: 0px;
 
-  /* Szersza kolumna tresci — glowna zmiana ukladu wzgledem nr 1 i nr 2. */
-  --content-w: 1140px;
+  /* Szerokosc tresci jak w pliku klienta: <main max-width:70%>, czyli po 15%
+     marginesu z kazdej strony, plynnie razem z oknem. Figma pokazuje 1140 px
+     przy 1440, czyli po 150 px — to prawie to samo przy tej szerokosci, ale
+     na szerszym monitorze wersja plynna rosnie, a sztywna by nie rosla. */
+  --content-w: 70%;
   --band-gutter: 24px;
   --band-pt: 40px;
   --band-pb: 32px;
@@ -297,7 +300,9 @@
   --highlight-strip: 0;
 
   --card-bg: #ffffff;
-  --card-radius: 4px;
+  /* Z Figmy: karty gotowki i klas aktywow 16, karty ofert i tabela zdarzen 20. */
+  --card-radius: 16px;
+  --card-radius-lg: 20px;
   --divider: #f1f1f4;
   --rule: #e9e9e9;
   --shadow-card: 0 0 0 1px #e8e8ec;
