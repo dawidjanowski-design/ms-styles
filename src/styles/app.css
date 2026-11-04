@@ -934,10 +934,17 @@ select.field__control {
   padding: 0; background: var(--table-bg);
   border-radius: var(--card-radius-lg); overflow: hidden;
 }
-[data-family='v3'] .eventRow { padding: 14px 20px; transition: background 140ms var(--ease); }
+/* Stala wysokosc wiersza zamiast paddingu wokol tekstu. Przy line-height
+   normal kazdy wiersz mierzyl tyle, ile jego najwyzsza komorka, wiec ostatni
+   wychodzil o piksel nizszy od pozostalych. Figma: naglowek 44, wiersz 56. */
+[data-family='v3'] .eventRow {
+  min-height: 56px; padding: 0 20px;
+  transition: background 140ms var(--ease);
+}
+[data-family='v3'] .eventRow > span { line-height: 20px; }
 [data-family='v3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
 [data-family='v3'] .eventRow--head {
-  padding-top: 12px; padding-bottom: 12px;
+  min-height: 44px;
   border-bottom: 1px solid var(--divider); pointer-events: none;
 }
 [data-family='v3'] .eventRow--head span { font-size: 14px; color: var(--muted); font-weight: 400; }
