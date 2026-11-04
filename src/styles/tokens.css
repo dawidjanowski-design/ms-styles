@@ -232,11 +232,9 @@
   --screen-pad-x: 0px;
   --screen-pad-bottom: 0px;
 
-  /* Szerokosc tresci jak w pliku klienta: <main max-width:70%>, czyli po 15%
-     marginesu z kazdej strony, plynnie razem z oknem. Figma pokazuje 1140 px
-     przy 1440, czyli po 150 px — to prawie to samo przy tej szerokosci, ale
-     na szerszym monitorze wersja plynna rosnie, a sztywna by nie rosla. */
-  --content-w: 70%;
+  /* Szerszy niz 1064 z nr 1 i nr 2 — feedback mowil, ze bylo za wasko.
+     Figma ma tu 1140, plik klienta 70% szerokosci okna; stanelo na 1200. */
+  --content-w: 1200px;
   --band-gutter: 24px;
   --band-pt: 40px;
   --band-pb: 32px;

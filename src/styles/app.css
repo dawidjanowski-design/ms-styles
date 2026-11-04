@@ -952,7 +952,3 @@ select.field__control {
 [data-style='3'] .assetCard__rows .kv:last-child,
 [data-style='3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
 [data-style='3'] .kv { padding: 8px 0; }
-
-/* Przy wezszych kartach czesc opisow lamie sie na dwie linie — rezerwujemy
-   stala wysokosc, zeby logo emitentow stalo w jednej linii we wszystkich. */
-[data-style='3'] .offerCard__kind { min-height: 36px; }
