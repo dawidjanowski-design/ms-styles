@@ -219,8 +219,7 @@ function accountCard(a) {
     ${a.rows.length ? `<div class="divider"></div>
       ${isV3()
         ? `<div class="metrics">${a.rows.map(([l, v]) =>
-            `<div class="metric"><span class="metric__label"><span class="metric__dot"
-               style="background:${colorForLabel(l, pal()) || 'var(--divider)'}"></span>${l}</span>
+            `<div class="metric"><span class="metric__label">${l}</span>
              <span class="metric__value">${v}</span></div>`).join('')}</div>`
         : `<div class="acctCard__rows">${a.rows.map(([l, v]) =>
             `<button type="button" class="acctRow"><span class="acctRow__label">${l}</span>
@@ -856,17 +855,6 @@ const META = Object.fromEntries([
   ['cash', { name: CASH.name, colors: CASH.colors }],
 ]);
 
-/* Kolor klasy aktywow po nazwie pozycji — kolejnosc ma znaczenie, bo
-   „Obligacje korporacyjne" musi trafic przed samo „Obligacje". */
-const CLASS_BY_LABEL = [
-  [/korporacyjn/i, 'corp'], [/skarbow/i, 'skarb'], [/asset management/i, 'am'],
-  [/otwart|\bfio\b/i, 'fio'], [/zamkni|\bfiz\b/i, 'fiz'],
-  [/wolne|gotówk/i, 'cash'], [/obligacj/i, 'corp'],
-];
-const colorForLabel = (label, palette) => {
-  const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
-  return hit && META[hit[1]] ? META[hit[1]].colors[palette].card : undefined;
-};
 
 function ordered(rows) {
   const byId = Object.fromEntries(rows.map((r) => [r.id, r]));

@@ -56,24 +56,6 @@ function ordered(rows: AllocationRow[], styleId: StyleId): AllocationRow[] {
   return out;
 }
 
-/* Kolor klasy aktywow po nazwie pozycji — dzieki temu wiersz rachunku ma ten
-   sam odcien, co ta klasa na wykresie i na karcie aktywa. Kolejnosc ma
-   znaczenie: „Obligacje korporacyjne" musi trafic przed samo „Obligacje". */
-const CLASS_BY_LABEL: [RegExp, string][] = [
-  [/korporacyjn/i, 'corp'],
-  [/skarbow/i, 'skarb'],
-  [/asset management/i, 'am'],
-  [/otwart|\bfio\b/i, 'fio'],
-  [/zamkni|\bfiz\b/i, 'fiz'],
-  [/wolne|gotówk/i, 'cash'],
-  [/obligacj/i, 'corp'],
-];
-
-const colorForLabel = (label: string, palette: '1' | '2' | '3' | '4') => {
-  const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
-  return hit ? META[hit[1]]?.colors[palette].card : undefined;
-};
-
 const pct = (n: number) => `${n.toFixed(1).replace('.', ',')}%`;
 
 /* ----------------------------- wykres ----------------------------- */
@@ -369,11 +351,6 @@ function AccountCard({
   onOpen?: () => void;
 }) {
   const v3 = isV3(styleId);
-  /* Kropka przy wierszu w kolorze klasy aktywow — tyle wystarczy, zeby
-     powiazac pozycje z wykresem. Pasek proporcji nad lista byl za ciezki. */
-  const parts = v3
-    ? account.rows.map((r) => ({ label: r.label, color: colorForLabel(r.label, paletteOf(styleId)) }))
-    : [];
 
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
@@ -422,15 +399,9 @@ function AccountCard({
                rachunku jako kafelki. Lista zostawiala pol karty pustej, gdy
                rachunek mial dwie pozycje, a sasiad piec. */
             <div className="metrics">
-              {account.rows.map((r, i) => (
+              {account.rows.map((r) => (
                 <div className="metric" key={r.label}>
-                  <span className="metric__label">
-                    <span
-                      className="metric__dot"
-                      style={{ background: parts[i]?.color ?? 'var(--divider)' }}
-                    />
-                    {r.label}
-                  </span>
+                  <span className="metric__label">{r.label}</span>
                   <span className="metric__value">{r.value}</span>
                 </div>
               ))}

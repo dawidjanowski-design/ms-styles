@@ -1016,8 +1016,4 @@ select.field__control {
 [data-family='v3'] .assetCard__head,
 [data-family='v3'] .acctCard__top { gap: 10px; }
 
-/* ---- nr 3: kropka klasy przy pozycji rachunku ---- */
-[data-family='v3'] .metric__label { display: flex; align-items: flex-end; gap: 8px; }
-[data-family='v3'] .metric__dot {
-  width: 6px; height: 6px; border-radius: 999px; flex: none; margin-bottom: 6px;
-}
+[data-family='v3'] .metric__label { display: flex; align-items: flex-end; }
