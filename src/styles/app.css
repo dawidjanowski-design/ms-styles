@@ -901,10 +901,12 @@ select.field__control {
 [data-family='v3'] .legend__cash { padding-top: 8px; margin-top: 8px; }
 [data-family='v3'] .legend__cashInner { padding-top: 14px; }
 
-/* przelacznik walut i Aktywa/Rachunki — biala pigulka na szarym torze */
-[data-family='v3'] .pills { background: #ebebef; box-shadow: none; }
+/* Przelacznik walut i Aktywa/Rachunki: biala pigulka na szarym torze.
+   Kolory ida przez tokeny, bo nr 3 i nr 4 maja tu inne odcienie, a ta
+   regula i tak wygrywalaby zrodlowo z blokiem numeru w tokens.css. */
+[data-family='v3'] .pills { background: var(--pill-track-bg); box-shadow: none; }
 [data-family='v3'] .pills button[aria-pressed='true'] {
-  background: #ffffff; box-shadow: var(--shadow-pill); color: var(--ink);
+  background: var(--pill-active-bg, #ffffff); box-shadow: var(--shadow-pill); color: var(--ink);
 }
 
 /* przycisk „Przejdz do portfela” */

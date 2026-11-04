@@ -345,6 +345,7 @@
 [data-style='3'] {
   --card-radius: 8px;
   --card-radius-lg: 10px;
+  --pill-track-bg: #ebebef;
 }
 
 /* ====================== STYLISTYKA 4 ======================
@@ -373,13 +374,10 @@
   --card-radius-lg: 8px;
   --pill-radius: 8px;
   --pill-track-bg: #f1eeea;
+  --pill-active-bg: rgba(255, 255, 255, 0.7);
 }
 
-/* Przelacznik: tor cieply, aktywna pigulka biala na 70% z cieniem. */
-[data-style='4'] .pills { background: var(--pill-track-bg); box-shadow: none; }
-[data-style='4'] .pills button[aria-pressed='true'] {
-  background: rgba(255, 255, 255, 0.7); box-shadow: var(--shadow-pill);
-}
+
 
 /* Caly kontener ekranu jest tu zawiniety: 8 px marginesu z lewej i prawej,
    promien 16 na gornych rogach, bialy spod (Figma 983:19196 — ramka
