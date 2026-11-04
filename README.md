@@ -433,3 +433,21 @@ Figma ma w tym miejscu `#171934`, czyli dokładnie wartość nr 2.
 
 Klasa `.btnGhost--lg` została przy „Pokaż więcej" na ekranie serii, gdzie
 wireframe pokazuje zwykły szary przycisk.
+
+## Dymek „Wolna gotówka wg walut"
+
+Figma `613:56579`. Pokazuje się po najechaniu na wiersz gotówki w legendzie
+pod wykresem — **tylko na pulpicie**, zgodnie z ustaleniem. Wymiary z pliku:
+280 px szerokości, padding 20/22, promień 12, cień `0 6px 20px rgba(0,0,0,.12)`,
+tytuł 14 px Medium, wiersze 13 px co 11 px.
+
+Dymek nie łapie myszy (`pointer-events: none`), więc nie odbiera wierszowi
+podświetlenia — po najechaniu na gotówkę reszta wykresu nadal przygasa.
+
+Kwoty są te same, co karta „Wolna gotówka" na Portfelu, żeby obie liczby
+mówiły to samo. **Figma ma w dymku jeszcze CHF i inne wartości PLN/USD**
+(149 018 PLN, 7 500 USD, 5 000 CHF) — CHF nie występuje u nas nigdzie
+indziej, a przełącznik walut go nie ma, więc nie dokładaliśmy go w jednym
+miejscu. Łatwo zmienić w `CASH_BY_CURRENCY`.
+
+W makiecie dymka nie ma.

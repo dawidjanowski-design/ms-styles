@@ -34,6 +34,11 @@ const ASSETS = [
     highlights: [['Stopa zwrotu 12M', '+4,82%'], ['Wynik od zakupu', '+24 180 PLN']] },
 ];
 
+/* Rozbicie wolnej gotowki na waluty — dymek na legendzie (Figma 613:56579).
+   Kwoty te same, co karta „Wolna gotowka" na Portfelu. */
+const CASH_BY_CURRENCY = { title: 'Wolna gotówka', rows: [
+  ['PLN', '190 118,00 PLN'], ['EUR', '12 000,00 EUR'], ['USD', '3 000,00 USD'] ] };
+
 const CASH = { id: 'cash', name: 'Gotówka', share: 8.3, legendValue: '≈ 348 354 PLN',
   colors:{'1':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'},'2':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'}},
   sub: 'Wolna 253 118 PLN · Zablokowana 50 118 PLN · W drodze 45 118 PLN' };
@@ -119,13 +124,20 @@ function legendRow(r) {
     <span class="legendRow__value">${r.value}</span></button>`;
 }
 
-function legend(rows) {
+function legend(rows, cashTooltip) {
   const all = ordered(rows);
   const cashRow = all.find((r) => r.id === 'cash');
+  const tip = cashTooltip && state.style !== '3';
   return `<div class="legend">
     <div class="legend__rows">${all.filter((r) => r.id !== 'cash').map(legendRow).join('')}</div>
-    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner">
+    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner ${tip ? 'legend__cashInner--tip' : ''}">
       ${legendRow(cashRow)}
+      ${tip ? `<div class="cashTip" role="tooltip">
+        <span class="cashTip__title">${CASH_BY_CURRENCY.title}</span>
+        <div class="cashTip__rows">${CASH_BY_CURRENCY.rows.map(([l, v]) => `<div class="cashTip__row">
+          <span class="cashTip__label">${l}</span>
+          <span class="cashTip__value">${v}</span></div>`).join('')}</div>
+      </div>` : ''}
       ${cashRow.sub ? `<div class="legend__cashSub ${dim('cash')}">${cashRow.sub}</div>` : ''}
     </div></div>` : ''}</div>`;
 }
@@ -872,7 +884,7 @@ function dashboardScreen() {
           ${DASHBOARD.action}<span class="btnAction__chev">›</span></button>
       </div>
       <div class="dashChart">${chart(VIEWS['Łącznie'].allocation)}</div>
-      ${legend(VIEWS['Łącznie'].allocation)}
+      ${legend(VIEWS['Łącznie'].allocation, true)}
     </section>
 
     <section class="offers">

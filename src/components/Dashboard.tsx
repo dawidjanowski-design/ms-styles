@@ -87,6 +87,7 @@ export function DashboardScreen({
               hot={hot}
               setHot={setHot}
               onOpenAsset={styleId === '3' ? undefined : onOpenAsset}
+              cashTooltip={styleId !== '3'}
             />
           </section>
 
