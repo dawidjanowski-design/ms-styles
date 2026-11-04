@@ -974,7 +974,7 @@ select.field__control {
    wystarczy przestawic kolejnosc. */
 [data-family='v3'] .acctCard__limit { order: 1; }
 [data-family='v3'] .acctCard__limit {
-  margin: 0; padding: 14px 16px; border-radius: 12px;
+  margin: 0; padding: 14px 16px; border-radius: var(--card-radius);
   background: var(--band-alt); gap: 8px;
 }
 [data-family='v3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }

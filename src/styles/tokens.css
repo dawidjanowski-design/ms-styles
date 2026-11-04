@@ -338,6 +338,15 @@
   --cash-hatch: 47, 163, 155;
 }
 
+/* Promienie w nr 3. Z Figmy wyszly nasze 16 i 20, a klient ma u siebie
+   w pliku 4 px na kartach. Stajemy posrodku, blizej niego: 8 na kartach
+   i 10 na duzych plaszczyznach. Nr 4 zostaje przy 16 i 20, bo tam Figma
+   wprost podaje tabele zdarzen o promieniu 20 (983:19196). */
+[data-style='3'] {
+  --card-radius: 8px;
+  --card-radius-lg: 10px;
+}
+
 /* ====================== STYLISTYKA 4 ======================
    Uklad identyczny jak nr 3 — nr 4 sluzy wylacznie do eksperymentow
    z kolorem. Punkt wyjscia: w Figmie 976:18261 klasy sa znakowane
