@@ -18,7 +18,7 @@ const ASSETS = [
   { id: 'skarb', name: 'Obligacje skarbowe', share: 7.5, amount: '316 398', dec: ',00 PLN',
     legendValue: '316 398 PLN', colors:{'1':{chart:'#e4b212',legend:'#e4b212',card:'#0a21c8'},'2':{chart:'#0a0ac8',chartFoot:'#0a21c8',legend:'#0a21c8',card:'#0a21c8'},'3':{chart:'#a8aaa8',chartFoot:'#383a36',legend:'#383a36',card:'#383a36'},'4':{chart:'#dfdbef',chartFoot:'#1357b7',legend:'#3b7ddb',card:'#3b7ddb'}},
     rows: [['Emitent', '1'], ['Serie', '2']],
-    highlights: [['Wypłacone odsetki 12M', '5 240 PLN'], ['Śr. rentowność (ważona)', '5,24%'],
+    highlights: [['Śr. rentowność (ważona)', '5,24%'], ['Wypłacone odsetki 12M', '5 240 PLN'],
                  ['Śr. oprocentowanie', '5,10%'], ['Najbliższy wykup', '25.03.2027']] },
   { id: 'am', name: 'Asset Management', share: 20.0, amount: '843 728', dec: ',00 PLN',
     legendValue: '843 728 PLN', colors:{'1':{chart:'#11aebd',legend:'#0a21c8',card:'#0aa6c8'},'2':{chart:'#b044ef',legend:'#b044ef',card:'#b044ef'},'3':{chart:'#f7bfcc',chartFoot:'#fb6f90',legend:'#fb6f90',card:'#fb6f90'},'4':{chart:'#f7bfcc',chartFoot:'#f65279',legend:'#fb6f90',card:'#fb6f90'}},
@@ -255,12 +255,21 @@ function assetCard(a) {
       ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
-    ${rows.length
-      ? (isV3()
-        ? `<div class="metrics">${rows.map(([l, v]) =>
-            `<div class="metric"><span class="metric__label">${l}</span><span class="metric__value">${v}</span></div>`).join('')}</div>`
-        : `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>`)
-      : ''}
+    ${isV3()
+      ? /* Hierarchia: pierwszy wynik duzym stopniem, reszta w siatce,
+           liczniki w cichej stopce. */
+        (a.highlights.length
+          ? `<div class="metricLead"><span class="metric__label">${a.highlights[0][0]}</span>
+             <span class="metricLead__value">${a.highlights[0][1]}</span></div>` : '')
+        + (a.highlights.length > 1
+          ? `<div class="metrics">${a.highlights.slice(1).map(([l, v]) =>
+              `<div class="metric"><span class="metric__label">${l}</span><span class="metric__value">${v}</span></div>`).join('')}</div>` : '')
+        + (a.rows.length
+          ? `<div class="metricFoot">${a.rows.map(([l, v]) =>
+              `<span class="metricFoot__item">${l}<strong>${v}</strong></span>`).join('')}</div>` : '')
+      : (rows.length
+        ? `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>`
+        : '')}
     ${
       strip && stripItems.length
         ? `<div class="strip">${stripItems

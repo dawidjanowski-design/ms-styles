@@ -69,9 +69,12 @@ export const ASSETS: AssetClass[] = [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
     ],
+    /* Rentownosc przed odsetkami, tak jak przy obligacjach korporacyjnych —
+       obie karty obligacji prowadza teraz ta sama metryka. W Figmie kolejnosc
+       byla odwrotna, co przy wyroznionej pierwszej metryce zaczelo razic. */
     highlights: [
-      { label: 'Wypłacone odsetki 12M', value: '5 240 PLN' },
       { label: 'Śr. rentowność (ważona)', value: '5,24%' },
+      { label: 'Wypłacone odsetki 12M', value: '5 240 PLN' },
       { label: 'Śr. oprocentowanie', value: '5,10%' },
       { label: 'Najbliższy wykup', value: '25.03.2027' },
     ],

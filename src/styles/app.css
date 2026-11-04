@@ -1019,3 +1019,29 @@ select.field__control {
 [data-family='v3'] .acctCard__top { gap: 10px; }
 
 [data-family='v3'] .metric__label { display: flex; align-items: flex-end; }
+
+/* ---- nr 3 i nr 4: hierarchia w karcie klasy aktywow ----
+   Pierwszy wynik duzym stopniem, reszta w siatce, liczniki w cichej stopce.
+   Rowny grid wszystkiego sprawial, ze „Emitent 1" wazyl tyle, co rentownosc. */
+[data-family='v3'] .metricLead { display: flex; flex-direction: column; gap: 4px; margin-top: -18px; }
+[data-family='v3'] .metricLead__value {
+  font-size: 28px; font-weight: 500; line-height: 34px;
+  letter-spacing: -0.02em; color: var(--ink);
+}
+/* Gdy jest tez siatka pod spodem, lead nie potrzebuje wlasnego marginesu. */
+[data-family='v3'] .metricLead + .metrics { margin-top: 2px; }
+
+[data-family='v3'] .metricFoot {
+  display: flex; flex-wrap: wrap; gap: 4px 20px;
+  padding-top: 16px; margin-top: auto;
+  border-top: 1px solid var(--divider);
+}
+[data-family='v3'] .metricFoot__item {
+  display: inline-flex; gap: 6px; font-size: 13px; line-height: 18px; color: var(--muted);
+}
+[data-family='v3'] .metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
+
+/* Karta, na ktora mozna wejsc, reaguje na kursor — statyczne kafelki czytaja
+   sie jak zrzut ekranu, a nie jak interfejs. */
+[data-family='v3'] .assetCard--link { cursor: pointer; transition: box-shadow 160ms var(--ease); }
+[data-family='v3'] .assetCard--link:hover { box-shadow: 0 0 0 1px var(--seg); }

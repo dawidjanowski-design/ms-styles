@@ -296,26 +296,48 @@ function AssetCard({
 
       {!makieta && <div className="divider" />}
 
-      {rows.length > 0 &&
-        (isV3(styleId) ? (
-          /* Kafelki zamiast listy wierszy — karty maja rozna liczbe metryk,
-             wiec siatka sama dobiera liczbe kolumn i nie zostawia rwanej
-             kolumny wartosci po prawej. */
-          <div className="metrics">
-            {rows.map((r) => (
-              <div className="metric" key={r.label}>
-                <span className="metric__label">{r.label}</span>
-                <span className="metric__value">{r.value}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
+      {isV3(styleId) ? (
+        /* Hierarchia zamiast rownego gridu. Dane same sie dziela: highlights
+           to wyniki, rows to liczniki w rodzaju „Emitent 1". Pierwszy wynik
+           idzie na gore duzym stopniem, reszta w siatce, a liczniki schodza
+           do cichej stopki — dzieki temu karta mowi, co jest wazne. */
+        <>
+          {asset.highlights.length > 0 && (
+            <div className="metricLead">
+              <span className="metric__label">{asset.highlights[0].label}</span>
+              <span className="metricLead__value">{asset.highlights[0].value}</span>
+            </div>
+          )}
+          {asset.highlights.length > 1 && (
+            <div className="metrics">
+              {asset.highlights.slice(1).map((r) => (
+                <div className="metric" key={r.label}>
+                  <span className="metric__label">{r.label}</span>
+                  <span className="metric__value">{r.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {asset.rows.length > 0 && (
+            <div className="metricFoot">
+              {asset.rows.map((r) => (
+                <span className="metricFoot__item" key={r.label}>
+                  {r.label}
+                  <strong>{r.value}</strong>
+                </span>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        rows.length > 0 && (
           <div className="assetCard__rows">
             {rows.map((r) => (
               <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
             ))}
           </div>
-        ))}
+        )
+      )}
 
       {strip && stripItems.length > 0 && (
         <div className="strip">
