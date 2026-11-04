@@ -343,7 +343,10 @@
    i 10 na duzych plaszczyznach. Nr 4 zostaje przy 16 i 20, bo tam Figma
    wprost podaje tabele zdarzen o promieniu 20 (983:19196). */
 [data-style='3'] {
-  --card-radius: 8px;
+  /* Jedna wartosc na wszystko. Dwa stopnie — 8 na kartach i 10 na duzych
+     plaszczyznach — rozjechaly sie miedzy pulpitem a portfelem, a roznicy
+     2 px i tak nikt nie czyta jako intencji. */
+  --card-radius: 10px;
   --card-radius-lg: 10px;
   --pill-track-bg: #ebebef;
 }
