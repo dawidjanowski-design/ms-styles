@@ -912,8 +912,6 @@ select.field__control {
 /* karty gotowki i klas aktywow — cienki obrys, promien 16 jak w Figmie */
 [data-style='3'] .cashCard { padding: 20px 22px; gap: 10px; }
 [data-style='3'] .cash__grid { gap: 16px; }
-[data-style='3'] .cashCard__amount .amount__int { font-size: 22px; }
-[data-style='3'] .cashCard__amount .amount__dec { font-size: 16px; }
 /* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
 /* Karty w jednym rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278
    parami, wiec siatka rozciaga je, zamiast przycinac do tresci. */
@@ -940,11 +938,7 @@ select.field__control {
   padding-top: 12px; padding-bottom: 12px;
   border-bottom: 1px solid var(--divider); pointer-events: none;
 }
-[data-style='3'] .eventRow--head span { font-size: 13px; color: var(--muted); font-weight: 400; }
-[data-style='3'] .eventRow__date,
-[data-style='3'] .eventRow__instrument { font-size: 13px; }
-[data-style='3'] .eventRow__type,
-[data-style='3'] .eventRow__amount { font-size: 14px; }
+[data-style='3'] .eventRow--head span { font-size: 14px; color: var(--muted); font-weight: 400; }
 
 /* Wiersze w karcie klasy aktywow rozdzielone cienka linia — jak w Figmie. */
 [data-style='3'] .assetCard__rows .kv,
@@ -970,7 +964,7 @@ select.field__control {
   background: var(--band-alt); gap: 8px;
 }
 [data-style='3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
-[data-style='3'] .acctCard__limitValue { font-size: 15px; }
+[data-style='3'] .acctCard__limitValue { font-size: 14px; }
 [data-style='3'] .acctCard__limitTrack {
   height: 6px; margin-top: 2px; background: #e2e2e8;
 }
