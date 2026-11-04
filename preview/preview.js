@@ -149,9 +149,9 @@ function legend(rows, cashTooltip) {
 /* Karta z zerowym saldem nie niesie zadnej informacji. */
 /* Strzalka 1:1 z Figmy 983:19622: pole 16x16, obrys 1,33 px, zaokraglone
    konce. Kolor z currentColor, wiec hover i stylistyki dzialaja jak dotad. */
-const chevron = (dir) => `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+const chevron = (dir, weight = 1.33) => `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
   <path d="${dir === 'left' ? 'M10 12L6 8L10 4' : 'M6 4L10 8L6 12'}" stroke="currentColor"
-    stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 const isEmptyCash = (c) => String(c.amount).replace(/\s/g, '') === '0';
 
@@ -913,7 +913,7 @@ function dashboardScreen() {
           ${amount(VIEWS['Łącznie'].total, VIEWS['Łącznie'].dec, '', 'pulpit-suma')}
         </div>
         <button type="button" class="btnAction" data-goto="portfel">
-          ${DASHBOARD.action}<span class="btnAction__chev">›</span></button>
+          ${DASHBOARD.action}<span class="btnAction__chev">${chevron('right', 1.5)}</span></button>
       </div>
       <div class="dashChart">${chart(VIEWS['Łącznie'].allocation)}</div>
       ${legend(VIEWS['Łącznie'].allocation, true)}

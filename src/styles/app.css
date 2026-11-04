@@ -470,7 +470,7 @@ select.field__control {
   transition: background 140ms var(--ease);
 }
 .btnAction:hover { background: #ffffff; }
-.btnAction__chev { font-size: 16px; line-height: 1; color: var(--crumb-sep); }
+.btnAction__chev { display: inline-flex; color: var(--crumb-sep); }
 
 /* ---- emisje i oferty ---- */
 .offers { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }

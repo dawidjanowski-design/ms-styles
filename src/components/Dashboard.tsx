@@ -7,16 +7,17 @@ import { Amount } from './ui';
 type StyleId = '1' | '2' | '3' | '4' | 'makieta';
 const isV3 = (s: StyleId) => s === '3' || s === '4';
 
-/* Strzalka 1:1 z Figmy 983:19622: pole 16x16, obrys 1,33 px, zaokraglone
-   konce i zlaczenia. Kolor z currentColor, zeby kazda stylistyka trzymala
-   swoj odcien i zeby dzialal hover. */
-function Chevron({ dir }: { dir: 'left' | 'right' }) {
+/* Strzalka 1:1 z Figmy: pole 16x16, zaokraglone konce i zlaczenia, kolor
+   z currentColor, zeby kazda stylistyka trzymala swoj odcien i zeby dzialal
+   hover. Obrys 1,33 px w karuzeli ofert (983:19622) i 1,5 px w glownym
+   przycisku (986:21678) — w pliku te dwie ikony roznia sie gruboscia. */
+function Chevron({ dir, weight = 1.33 }: { dir: 'left' | 'right'; weight?: number }) {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
         d={dir === 'left' ? 'M10 12L6 8L10 4' : 'M6 4L10 8L6 12'}
         stroke="currentColor"
-        strokeWidth="1.33"
+        strokeWidth={weight}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -87,7 +88,7 @@ export function DashboardScreen({
               <button type="button" className="btnAction" onClick={onOpenPortfolio}>
                 {DASHBOARD.action}
                 <span className="btnAction__chev" aria-hidden="true">
-                  ›
+                  <Chevron dir="right" weight={1.5} />
                 </span>
               </button>
             </div>
