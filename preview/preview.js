@@ -214,9 +214,20 @@ function accountCard(a) {
                style="width:${a.strip.progress * 100}%"></div></div>`
           : ''}
       </div>` : ''}
+    ${(() => {
+      if (state.style !== '3') return '';
+      const parts = a.rows.map(([l, v]) => ({ v: toNumber(v), c: colorForLabel(l, '3') }));
+      const total = parts.reduce((s2, p) => s2 + p.v, 0);
+      if (!total) return '';
+      return `<div class="splitBar" aria-hidden="true">${parts.filter((p) => p.v > 0)
+        .map((p) => `<span style="flex:${p.v / total};background:${p.c || 'var(--divider)'}"></span>`)
+        .join('')}</div>`;
+    })()}
     ${a.rows.length ? `<div class="divider"></div>
       <div class="acctCard__rows">${a.rows.map(([l, v]) =>
-        `<button type="button" class="acctRow"><span class="acctRow__label">${l}</span>
+        `<button type="button" class="acctRow">${state.style === '3'
+          ? `<span class="acctRow__dot" style="background:${colorForLabel(l, '3') || 'var(--divider)'}"></span>` : ''}
+         <span class="acctRow__label">${l}</span>
          <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
       </div>` : ''}
     <div class="acctCard__foot">
@@ -243,7 +254,12 @@ function assetCard(a) {
       ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
-    ${rows.length ? `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>` : ''}
+    ${rows.length
+      ? (state.style === '3'
+        ? `<div class="metrics">${rows.map(([l, v]) =>
+            `<div class="metric"><span class="metric__label">${l}</span><span class="metric__value">${v}</span></div>`).join('')}</div>`
+        : `<div class="assetCard__rows">${rows.map(([l, v]) => kv(l, v, strip ? 20 : 0)).join('')}</div>`)
+      : ''}
     ${
       strip && stripItems.length
         ? `<div class="strip">${stripItems
@@ -843,6 +859,21 @@ const META = Object.fromEntries([
   ...ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }]),
   ['cash', { name: CASH.name, colors: CASH.colors }],
 ]);
+
+/* Kolor klasy aktywow po nazwie pozycji — kolejnosc ma znaczenie, bo
+   „Obligacje korporacyjne" musi trafic przed samo „Obligacje". */
+const CLASS_BY_LABEL = [
+  [/korporacyjn/i, 'corp'], [/skarbow/i, 'skarb'], [/asset management/i, 'am'],
+  [/otwart|\bfio\b/i, 'fio'], [/zamkni|\bfiz\b/i, 'fiz'],
+  [/wolne|gotówk/i, 'cash'], [/obligacj/i, 'corp'],
+];
+const colorForLabel = (label, palette) => {
+  const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
+  return hit && META[hit[1]] ? META[hit[1]].colors[palette].card : undefined;
+};
+/** „1 063 802,00 PLN” → 1063802 */
+const toNumber = (s) =>
+  Number(String(s).replace(/[^\d,]/g, '').replace(/,\d*$/, '').replace(/\s/g, '')) || 0;
 
 function ordered(rows) {
   const byId = Object.fromEntries(rows.map((r) => [r.id, r]));

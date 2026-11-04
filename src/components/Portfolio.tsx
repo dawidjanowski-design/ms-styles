@@ -51,6 +51,28 @@ function ordered(rows: AllocationRow[], styleId: StyleId): AllocationRow[] {
   return out;
 }
 
+/* Kolor klasy aktywow po nazwie pozycji — dzieki temu wiersz rachunku ma ten
+   sam odcien, co ta klasa na wykresie i na karcie aktywa. Kolejnosc ma
+   znaczenie: „Obligacje korporacyjne" musi trafic przed samo „Obligacje". */
+const CLASS_BY_LABEL: [RegExp, string][] = [
+  [/korporacyjn/i, 'corp'],
+  [/skarbow/i, 'skarb'],
+  [/asset management/i, 'am'],
+  [/otwart|\bfio\b/i, 'fio'],
+  [/zamkni|\bfiz\b/i, 'fiz'],
+  [/wolne|gotówk/i, 'cash'],
+  [/obligacj/i, 'corp'],
+];
+
+const colorForLabel = (label: string, palette: '1' | '2' | '3') => {
+  const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
+  return hit ? META[hit[1]]?.colors[palette].card : undefined;
+};
+
+/** „1 063 802,00 PLN” → 1063802. Zwraca 0, gdy w napisie nie ma liczby. */
+const toNumber = (s: string) =>
+  Number(s.replace(/[^\d,]/g, '').replace(/,\d*$/, '').replace(/\s/g, '')) || 0;
+
 const pct = (n: number) => `${n.toFixed(1).replace('.', ',')}%`;
 
 /* ----------------------------- wykres ----------------------------- */
@@ -291,13 +313,26 @@ function AssetCard({
 
       {!makieta && <div className="divider" />}
 
-      {rows.length > 0 && (
-        <div className="assetCard__rows">
-          {rows.map((r) => (
-            <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
-          ))}
-        </div>
-      )}
+      {rows.length > 0 &&
+        (styleId === '3' ? (
+          /* Kafelki zamiast listy wierszy — karty maja rozna liczbe metryk,
+             wiec siatka sama dobiera liczbe kolumn i nie zostawia rwanej
+             kolumny wartosci po prawej. */
+          <div className="metrics">
+            {rows.map((r) => (
+              <div className="metric" key={r.label}>
+                <span className="metric__label">{r.label}</span>
+                <span className="metric__value">{r.value}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="assetCard__rows">
+            {rows.map((r) => (
+              <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
+            ))}
+          </div>
+        ))}
 
       {strip && stripItems.length > 0 && (
         <div className="strip">
@@ -332,6 +367,18 @@ function AccountCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
+  const v3 = styleId === '3';
+  /* Sklad rachunku liczony z samych wierszy — pasek i kropki pokazuja, w czym
+     naprawde siedza pieniadze, zamiast zostawiac puste miejsce w karcie. */
+  const parts = v3
+    ? account.rows.map((r) => ({
+        label: r.label,
+        value: toNumber(r.value),
+        color: colorForLabel(r.label, '3'),
+      }))
+    : [];
+  const partsTotal = parts.reduce((sum, p) => sum + p.value, 0);
+
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
       <div className="acctCard__head">
@@ -371,12 +418,31 @@ function AccountCard({
         </div>
       )}
 
+      {v3 && partsTotal > 0 && (
+        <div className="splitBar" aria-hidden="true">
+          {parts
+            .filter((p) => p.value > 0)
+            .map((p) => (
+              <span
+                key={p.label}
+                style={{ flex: p.value / partsTotal, background: p.color ?? 'var(--divider)' }}
+              />
+            ))}
+        </div>
+      )}
+
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
           <div className="acctCard__rows">
-            {account.rows.map((r) => (
+            {account.rows.map((r, i) => (
               <button type="button" className="acctRow" key={r.label}>
+                {v3 && (
+                  <span
+                    className="acctRow__dot"
+                    style={{ background: parts[i]?.color ?? 'var(--divider)' }}
+                  />
+                )}
                 <span className="acctRow__label">{r.label}</span>
                 <span className="acctRow__value">{r.value}</span>
                 <span className="acctRow__chev">›</span>

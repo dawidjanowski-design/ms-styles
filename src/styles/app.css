@@ -971,3 +971,29 @@ select.field__control {
 [data-style='3'] .acctCard__limitTrack {
   height: 6px; margin-top: 2px; background: #e2e2e8;
 }
+
+/* ---- nr 3: metryki klas aktywow jako kafelki ----
+   Karty maja od dwoch do szesciu metryk. Lista wierszy robila z tego rwana
+   kolumne wartosci; siatka sama dobiera liczbe kolumn, wiec dwie metryki
+   rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
+[data-style='3'] .metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px 24px; align-content: start;
+}
+[data-style='3'] .metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+[data-style='3'] .metric__label { font-size: 13px; line-height: 18px; color: var(--muted); }
+[data-style='3'] .metric__value {
+  font-size: 16px; font-weight: 500; line-height: 22px;
+  letter-spacing: -0.01em; color: var(--ink);
+}
+
+/* ---- nr 3: sklad rachunku ----
+   Cienki pasek proporcji nad lista pozycji plus kropka przy wierszu w kolorze
+   tej samej klasy, co na wykresie — karta mowi, w czym siedza pieniadze. */
+[data-style='3'] .splitBar {
+  display: flex; gap: 2px; height: 6px; margin-top: 2px;
+}
+[data-style='3'] .splitBar > span { border-radius: 2px; min-width: 2px; }
+[data-style='3'] .acctRow__dot {
+  width: 6px; height: 6px; border-radius: 999px; flex: none;
+}
