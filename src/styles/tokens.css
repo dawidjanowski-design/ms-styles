@@ -343,15 +343,26 @@
    z kolorem. Punkt wyjscia: w Figmie 976:18261 klasy sa znakowane
    nasyconymi odcieniami z nr 2, nie pastelami z nr 3. */
 [data-style='4'] {
-  --c-corp: #046816;
-  --c-skarb: #0a21c8;
-  --c-am: #b044ef;
-  --c-fio: #11aebd;
-  --c-fiz: #e4b212;
-  --c-cash: #9ec421;
-  --c-cash-bg: #f1f6de;
-  --cash-hatch: 158, 196, 33;
+  /* Paleta klienta z Figmy 983:19119 i 976:17671. Podkreslenie slupka bywa
+     ciemniejsze niz kropka w legendzie (skarbowe, AM, gotowka) — przeniesione
+     tak, jak jest w pliku. */
+  --c-corp: #11aebd;
+  --c-skarb: #3b7ddb;
+  --c-am: #fb6f90;
+  --c-fio: #e4b212;
+  --c-fiz: #9712e4;
+  --c-cash: #2fa39b;
+  --c-cash-bg: #e9f0cf;
+  --cash-hatch: 138, 175, 18;
+
+  --band-alt: #f5f5f4;
+  --nav-active-color: #00255a;
 }
+
+/* Pasmo podsumowania nie jest tu pelnoekranowe: to zaokraglony prostokat
+   1432x391 wsuniety po 4 px z boku, promien 12 (Figma 976:17671). */
+[data-style='4'] .screenOuter { padding: 0 4px; }
+[data-style='4'] .content > section:nth-child(odd) { border-radius: 12px; }
 
 /* ====================== MAKIETA ======================
    Wireframe z Figmy 920:7575. Ta sama treść co w nr 1 i nr 2, tylko bez
