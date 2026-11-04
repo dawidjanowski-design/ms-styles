@@ -952,3 +952,14 @@ select.field__control {
 [data-style='3'] .assetCard__rows .kv:last-child,
 [data-style='3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
 [data-style='3'] .kv { padding: 8px 0; }
+
+/* Karta rachunku w nr 3 oddycha tak samo jak karta klasy aktywow: nazwa
+   i numer w jednej linii, kwota pod spodem, wiersze z tym samym paddingiem
+   i krojem co w .kv, znacznik jako kreska zamiast kropki. */
+[data-style='3'] .acctCard__top { flex-direction: column; align-items: stretch; gap: 8px; }
+[data-style='3'] .acctCard__dot { width: 4px; height: 16px; border-radius: 4px; }
+[data-style='3'] .acctRow { padding: 8px 0; gap: 10px; }
+[data-style='3'] .acctRow__label,
+[data-style='3'] .acctRow__value { font-size: 13px; }
+[data-style='3'] .acctCard__foot { padding: 8px 0 0; }
+[data-style='3'] .acctCard__limit { margin: 0; border-radius: 10px; }
