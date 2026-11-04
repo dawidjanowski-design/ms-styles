@@ -3,7 +3,7 @@ html, body, #root { height: 100%; }
 body {
   margin: 0;
   background: var(--page-bg);
-  font-family: Inter, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font), -apple-system, 'Segoe UI', sans-serif;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
@@ -61,7 +61,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .appHeader__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* W makiecie awatar zostaje szarym kolkiem — wireframe nie pokazuje zdjec. */
-[data-style='3'] .appHeader__avatar img { display: none; }
+[data-style='makieta'] .appHeader__avatar img { display: none; }
 
 /* ---------------- ekran ---------------- */
 .screenOuter { padding: 0 4px; background: var(--header-bg); }
@@ -153,8 +153,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   opacity: 1;
   background: repeating-linear-gradient(
       -45deg,
-      rgba(158, 196, 33, 0.22) 0 3px,
-      rgba(158, 196, 33, 0) 3px 7px
+      rgba(var(--cash-hatch), 0.22) 0 3px,
+      rgba(var(--cash-hatch), 0) 3px 7px
     ),
     var(--c-cash-bg);
 }
@@ -593,70 +593,70 @@ select.field__control {
    Wszystko, co w nr 1 i nr 2 niesie kolor albo materiał, tu znika. */
 
 /* Kolor pozycji ustawiany inline przez --seg ustępuje jednemu odcieniowi. */
-[data-style='3'] .chartSeg__body,
-[data-style='3'] .legendRow__dot,
-[data-style='3'] .assetCard__dot,
-[data-style='3'] .assetCard__bar,
-[data-style='3'] .acctCard__dot,
-[data-style='3'] .instrRow__dot {
+[data-style='makieta'] .chartSeg__body,
+[data-style='makieta'] .legendRow__dot,
+[data-style='makieta'] .assetCard__dot,
+[data-style='makieta'] .assetCard__bar,
+[data-style='makieta'] .acctCard__dot,
+[data-style='makieta'] .instrRow__dot {
   background: var(--seg-flat);
 }
 /* Stopka slupka jest ukryta, ale kolor gasimy i tak — zeby nie wrocil
    przy jakiejkolwiek zmianie widocznosci. */
-[data-style='3'] .chartSeg__foot { display: none; background: var(--seg-flat); }
-[data-style='3'] .chartSeg--cash .chartSeg__body {
+[data-style='makieta'] .chartSeg__foot { display: none; background: var(--seg-flat); }
+[data-style='makieta'] .chartSeg--cash .chartSeg__body {
   background: repeating-linear-gradient(-45deg, #d0d0d0 0 3px, #ededed 3px 7px);
 }
 
 /* Znacznik pozycji w legendzie to w makiecie kropka tekstowa, nie plamka koloru */
-[data-style='3'] .legendRow__dot {
+[data-style='makieta'] .legendRow__dot {
   width: 3px; height: 3px; background: #9a9a9a;
 }
-[data-style='3'] .legendRow__name { font-size: 11px; font-weight: 400; }
-[data-style='3'] .legendRow__share,
-[data-style='3'] .legendRow__value { font-size: 11px; font-weight: 400; color: var(--muted); }
-[data-style='3'] .legend__cashSub { font-size: 9px; }
+[data-style='makieta'] .legendRow__name { font-size: 11px; font-weight: 400; }
+[data-style='makieta'] .legendRow__share,
+[data-style='makieta'] .legendRow__value { font-size: 11px; font-weight: 400; color: var(--muted); }
+[data-style='makieta'] .legend__cashSub { font-size: 9px; }
 
 /* Pigułki są w makiecie tylko etykietą układu — nie klikają */
-[data-style='3'] .pills button { cursor: default; }
-[data-style='3'] .pills button[aria-pressed='true'] { background: #ffffff; }
+[data-style='makieta'] .pills button { cursor: default; }
+[data-style='makieta'] .pills button[aria-pressed='true'] { background: #ffffff; }
 
 /* Karty bez cienia, z cienkim obrysem */
-[data-style='3'] .cashCard__amount .amount__int { font-size: 22px; }
-[data-style='3'] .cashCard__amount .amount__dec { font-size: 17px; }
-[data-style='3'] .cashCard__label { font-size: 12px; }
+[data-style='makieta'] .cashCard__amount .amount__int { font-size: 22px; }
+[data-style='makieta'] .cashCard__amount .amount__dec { font-size: 17px; }
+[data-style='makieta'] .cashCard__label { font-size: 12px; }
 
 /* Karta aktywa: nazwa z kropką, kwota z „≈", metryki w szarym pasku,
    pod nimi przycisk — tak jak na wireframie */
-[data-style='3'] .assetCard { gap: 14px; }
+[data-style='makieta'] .assetCard { gap: 14px; }
 /* Na wireframie nazwa i kwota stoja w jednej linii, przy przeciwnych krawedziach */
-[data-style='3'] .assetCard__head {
+[data-style='makieta'] .assetCard__head {
   flex-direction: row; align-items: center; justify-content: space-between; gap: 16px;
 }
-[data-style='3'] .assetCard__name { font-size: 13px; font-weight: 400; }
-[data-style='3'] .assetCard__dot { width: 4px; height: 4px; background: #8d8d8d; }
-[data-style='3'] .assetCard__title { gap: 8px; flex-direction: row-reverse; justify-content: flex-end; }
-[data-style='3'] .strip {
+[data-style='makieta'] .assetCard__name { font-size: 13px; font-weight: 400; }
+[data-style='makieta'] .assetCard__dot { width: 4px; height: 4px; background: #8d8d8d; }
+[data-style='makieta'] .assetCard__title { gap: 8px; flex-direction: row-reverse; justify-content: flex-end; }
+[data-style='makieta'] .strip {
   border-radius: 8px; padding: 12px 16px; gap: 28px; flex-wrap: wrap;
   background: #f4f4f4;
 }
-[data-style='3'] .strip__item { width: auto; min-width: 72px; gap: 4px; }
-[data-style='3'] .strip__label { font-size: 9px; }
-[data-style='3'] .strip__value { font-size: 12px; font-weight: 400; }
+[data-style='makieta'] .strip__item { width: auto; min-width: 72px; gap: 4px; }
+[data-style='makieta'] .strip__label { font-size: 9px; }
+[data-style='makieta'] .strip__value { font-size: 12px; font-weight: 400; }
 .assetCard__more { display: flex; }
-[data-style='3'] .acctCard__name { font-weight: 400; }
+[data-style='makieta'] .acctCard__name { font-weight: 400; }
 
 /* Na wireframie przełącznik stoi nad tytułem sekcji, nie obok niego */
-[data-style='3'] .assets__head {
+[data-style='makieta'] .assets__head {
   flex-direction: column-reverse; align-items: flex-start;
   gap: 12px; height: auto;
 }
-[data-style='3'] .offers__head { align-items: flex-start; }
+[data-style='makieta'] .offers__head { align-items: flex-start; }
 
 /* Logo emitentów to jedyny kolor, jaki zostawał na pulpicie w makiecie */
-[data-style='3'] .offerCard__logo,
-[data-style='3'] .offerCard__issuer svg { filter: grayscale(1); opacity: 0.6; }
-[data-style='3'] .offerCard__rate { font-weight: 400; }
+[data-style='makieta'] .offerCard__logo,
+[data-style='makieta'] .offerCard__issuer svg { filter: grayscale(1); opacity: 0.6; }
+[data-style='makieta'] .offerCard__rate { font-weight: 400; }
 
 /* ---------------- licznik kwoty ----------------
    Znak, ktory sie zmienil, wyjezdza w gore, a nowy wjezdza z dolu.
@@ -894,9 +894,10 @@ select.field__control {
 /* ---------------- dymek: wolna gotówka wg walut (Figma 613:56579) ----------------
    Pokazuje się po najechaniu na wiersz gotówki w legendzie pod wykresem,
    tylko na pulpicie. Nie łapie myszy, żeby nie odbierać wierszowi hovera. */
-.legend__cashInner--tip { position: relative; }
+.cashAnchor { position: relative; }
 .cashTip {
-  position: absolute; top: calc(100% + 10px); left: 0; z-index: 40;
+  /* Przy kwocie, czyli przy prawej krawedzi wiersza — nie przy nazwie. */
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 40;
   width: 280px; padding: 20px 22px; border-radius: 12px;
   background: var(--card-bg);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
@@ -905,8 +906,8 @@ select.field__control {
   transition: opacity 160ms var(--ease), transform 160ms var(--ease), visibility 160ms;
   pointer-events: none;
 }
-.legend__cashInner--tip:hover .cashTip,
-.legend__cashInner--tip:focus-within .cashTip {
+.cashAnchor:hover .cashTip,
+.cashAnchor:focus-within .cashTip {
   opacity: 1; visibility: visible; transform: none;
 }
 .cashTip__title { font-size: 14px; font-weight: 500; color: var(--ink); }
@@ -918,3 +919,81 @@ select.field__control {
 @media (prefers-reduced-motion: reduce) {
   .cashTip { transition: none; }
 }
+
+/* =================== STYLISTYKA 3 — wersja klienta ===================
+   Rozne od nr 1 i nr 2 nie tylko kolorem. Zamiast jednej zaokraglonej
+   karty ekranu sa pelnoekranowe pasma, na przemian biale i szare, a tresc
+   w srodku trzyma stala, szersza niz dotad kolumne 1140 px. */
+[data-style='3'] .screenOuter { padding: 0; background: var(--page-bg); }
+[data-style='3'] .screen { align-items: stretch; }
+[data-style='3'] .content { width: 100%; max-width: none; gap: 0; }
+/* Pasmo: tlo na calej szerokosci okna, tresc wysrodkowana do --content-w. */
+[data-style='3'] .content > section {
+  padding: var(--band-pt)
+    max(var(--band-gutter), calc((100% - var(--content-w)) / 2))
+    var(--band-pb);
+}
+[data-style='3'] .content > section:nth-child(odd) { background: var(--band-alt); }
+[data-style='3'] .content > section:nth-child(even) { background: #ffffff; }
+[data-style='3'] .content > section:last-child { padding-bottom: 72px; }
+
+[data-style='3'] .pageTitle { line-height: 18px; }
+
+/* nawigacja: aktywna pozycja kolorem akcentu, bez pigulki */
+[data-style='3'] .navItem--active { background: transparent; font-weight: 500; }
+
+/* wykres: pastel na calej wysokosci slupka, pod nim nasycona kreska */
+[data-style='3'] .chartSeg__body { border-radius: var(--bar-radius); }
+
+/* legenda: udzial i kwota wyrownane do prawej, wiersze luzniej */
+[data-style='3'] .legendRow { padding: 5px 0; gap: 14px; }
+[data-style='3'] .legendRow__name { font-weight: 400; }
+[data-style='3'] .legendRow__share { width: 90px; text-align: right; }
+[data-style='3'] .legendRow__value { width: 150px; }
+[data-style='3'] .legend__cash { padding-top: 8px; margin-top: 8px; }
+[data-style='3'] .legend__cashInner { padding-top: 14px; }
+
+/* przelacznik walut i Aktywa/Rachunki — biala pigulka na szarym torze */
+[data-style='3'] .pills { background: #ebebef; box-shadow: none; }
+[data-style='3'] .pills button[aria-pressed='true'] {
+  background: #ffffff; box-shadow: var(--shadow-pill); color: var(--ink);
+}
+
+/* przycisk „Przejdz do portfela” */
+[data-style='3'] .btnAction { background: #ffffff; height: 40px; }
+[data-style='3'] .btnAction:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* karty gotowki i klas aktywow — cienki obrys, maly promien */
+[data-style='3'] .cashCard { padding: 20px 22px; gap: 10px; }
+[data-style='3'] .cashCard__amount .amount__int { font-size: 22px; }
+[data-style='3'] .cashCard__amount .amount__dec { font-size: 16px; }
+/* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
+[data-style='3'] .assets__list {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px; align-items: start;
+}
+
+/* oferty: cztery karty z cienkim obrysem, bez cienia */
+[data-style='3'] .offers__track { gap: 20px; }
+[data-style='3'] .offerCard { flex-basis: calc((100% - 3 * 20px) / 4); }
+
+/* zdarzenia: tabela z naglowkiem i podswietleniem wiersza */
+[data-style='3'] .eventsCard { padding: 0; background: var(--table-bg); overflow: hidden; }
+[data-style='3'] .eventRow { padding: 14px 20px; transition: background 140ms var(--ease); }
+[data-style='3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
+[data-style='3'] .eventRow--head {
+  padding-top: 12px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--divider); pointer-events: none;
+}
+[data-style='3'] .eventRow--head span { font-size: 13px; color: var(--muted); font-weight: 400; }
+[data-style='3'] .eventRow__date,
+[data-style='3'] .eventRow__instrument { font-size: 13px; }
+[data-style='3'] .eventRow__type,
+[data-style='3'] .eventRow__amount { font-size: 14px; }
+
+/* Wiersze w karcie klasy aktywow rozdzielone cienka linia — jak w Figmie. */
+[data-style='3'] .assetCard__rows .kv,
+[data-style='3'] .acctCard__rows .acctRow { border-bottom: 1px solid var(--divider); }
+[data-style='3'] .assetCard__rows .kv:last-child,
+[data-style='3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
+[data-style='3'] .kv { padding: 8px 0; }

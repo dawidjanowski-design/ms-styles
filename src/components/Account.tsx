@@ -8,7 +8,7 @@ import {
 import { Amount } from './ui';
 import { Transactions } from './Transactions';
 
-type StyleId = '1' | '2' | '3';
+type StyleId = '1' | '2' | '3' | 'makieta';
 
 export function AccountScreen({
   styleId,
@@ -115,7 +115,7 @@ export function AccountScreen({
             rows={ACCOUNT_TRANSACTIONS}
             countNoun="zdarzenia"
             account="none"
-            locked={styleId === '3'}
+            locked={styleId === 'makieta'}
           />
         </div>
       </div>

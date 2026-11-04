@@ -7,12 +7,14 @@ import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
 
-type StyleId = '1' | '2' | '3';
+type StyleId = '1' | '2' | '3' | 'makieta';
 const STYLES: { id: StyleId; label: string }[] = [
   { id: '1', label: 'nr 1' },
   { id: '2', label: 'nr 2' },
-  { id: '3', label: 'Makieta' },
+  { id: '3', label: 'nr 3' },
+  { id: 'makieta', label: 'Makieta' },
 ];
+const IDS = STYLES.map((s) => s.id) as string[];
 /** Pulpit, portfel i klasa aktywów (obligacje korporacyjne). */
 type Screen =
   | { name: 'pulpit' }
@@ -28,7 +30,7 @@ export default function App() {
   const [styleId, setStyleId] = useState<StyleId>(() => {
     try {
       const saved = localStorage.getItem(KEY);
-      return saved === '2' || saved === '3' ? saved : '1';
+      return saved && IDS.includes(saved) ? (saved as StyleId) : '1';
     } catch {
       return '1';
     }

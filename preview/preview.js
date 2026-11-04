@@ -11,25 +11,25 @@ const TOTAL = { amount: '4 218 640', decimals: ',00 PLN' };
 
 const ASSETS = [
   { id: 'corp', name: 'Obligacje korporacyjne', share: 42.5, amount: '1 792 922', dec: ',00 PLN',
-    legendValue: '1 792 922 PLN', colors:{'1':{chart:'#065eec',legend:'#065eec',card:'#042468'},'2':{chart:'#046816',legend:'#046816',card:'#046816'}},
+    legendValue: '1 792 922 PLN', colors:{'1':{chart:'#065eec',legend:'#065eec',card:'#042468'},'2':{chart:'#046816',legend:'#046816',card:'#046816'},'3':{chart:'#c2e6ee',chartFoot:'#78d2e5',legend:'#78d2e5',card:'#78d2e5'}},
     rows: [['Emitent', '1'], ['Serie', '2']],
     highlights: [['Śr. rentowność (ważona)', '5,24%'], ['Wypłacone odsetki 12M', '5 240 PLN'],
                  ['Śr. oprocentowanie', '5,10%'], ['Najbliższy wykup', '25.03.2027']] },
   { id: 'skarb', name: 'Obligacje skarbowe', share: 7.5, amount: '316 398', dec: ',00 PLN',
-    legendValue: '316 398 PLN', colors:{'1':{chart:'#e4b212',legend:'#e4b212',card:'#0a21c8'},'2':{chart:'#0a0ac8',chartFoot:'#0a21c8',legend:'#0a21c8',card:'#0a21c8'}},
+    legendValue: '316 398 PLN', colors:{'1':{chart:'#e4b212',legend:'#e4b212',card:'#0a21c8'},'2':{chart:'#0a0ac8',chartFoot:'#0a21c8',legend:'#0a21c8',card:'#0a21c8'},'3':{chart:'#a8aaa8',chartFoot:'#383a36',legend:'#383a36',card:'#383a36'}},
     rows: [['Emitent', '1'], ['Serie', '2']],
     highlights: [['Wypłacone odsetki 12M', '5 240 PLN'], ['Śr. rentowność (ważona)', '5,24%'],
                  ['Śr. oprocentowanie', '5,10%'], ['Najbliższy wykup', '25.03.2027']] },
   { id: 'am', name: 'Asset Management', share: 20.0, amount: '843 728', dec: ',00 PLN',
-    legendValue: '843 728 PLN', colors:{'1':{chart:'#11aebd',legend:'#0a21c8',card:'#0aa6c8'},'2':{chart:'#b044ef',legend:'#b044ef',card:'#b044ef'}},
+    legendValue: '843 728 PLN', colors:{'1':{chart:'#11aebd',legend:'#0a21c8',card:'#0aa6c8'},'2':{chart:'#b044ef',legend:'#b044ef',card:'#b044ef'},'3':{chart:'#f7bfcc',chartFoot:'#fb6f90',legend:'#fb6f90',card:'#fb6f90'}},
     rows: [['Strategie', '4'], ['Rachunki', '4']],
     highlights: [['Stopa zwrotu', '+6,10%']] },
   { id: 'fio', name: 'Fundusze otwarte (FIO)', share: 14.0, amount: '590 610', dec: ',00 PLN',
-    legendValue: '590 610 PLN', colors:{'1':{chart:'#7e2cb1',chartFoot:'#7e22b6',legend:'#0aa6c8',card:'#ef4444'},'2':{chart:'#11aebd',legend:'#11aebd',card:'#11aebd'}},
+    legendValue: '590 610 PLN', colors:{'1':{chart:'#7e2cb1',chartFoot:'#7e22b6',legend:'#0aa6c8',card:'#ef4444'},'2':{chart:'#11aebd',legend:'#11aebd',card:'#11aebd'},'3':{chart:'#dad3fe',chartFoot:'#9b8cfa',legend:'#9b8cfa',card:'#9b8cfa'}},
     rows: [['Fundusze', '4'], ['Ostatnia wycena', '30.10.2026']],
     highlights: [['Stopa zwrotu 12M', '+4,82%'], ['Wynik od zakupu', '+24 180 PLN']] },
   { id: 'fiz', name: 'Fundusze zamknięte (FIZ)', share: 7.7, amount: '421 864', dec: ',00 PLN',
-    legendValue: '421 864 PLN', colors:{'1':{chart:'#ef7744',legend:'#ef4444',card:'#e4b212'},'2':{chart:'#e4b212',legend:'#e4b212',card:'#e4b212'}},
+    legendValue: '421 864 PLN', colors:{'1':{chart:'#ef7744',legend:'#ef4444',card:'#e4b212'},'2':{chart:'#e4b212',legend:'#e4b212',card:'#e4b212'},'3':{chart:'#f9eaa7',chartFoot:'#ffdb32',legend:'#ffdb32',card:'#ffdb32'}},
     rows: [['Fundusze', '4'], ['Najbliższe okno umorzenia', '31.12.2026']],
     highlights: [['Stopa zwrotu 12M', '+4,82%'], ['Wynik od zakupu', '+24 180 PLN']] },
 ];
@@ -40,7 +40,7 @@ const CASH_BY_CURRENCY = { title: 'Wolna gotówka', rows: [
   ['PLN', '190 118,00 PLN'], ['EUR', '12 000,00 EUR'], ['USD', '3 000,00 USD'] ] };
 
 const CASH = { id: 'cash', name: 'Gotówka', share: 8.3, legendValue: '≈ 348 354 PLN',
-  colors:{'1':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'},'2':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'}},
+  colors:{'1':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'},'2':{chart:'#9ec421',legend:'#9ec421',card:'#9ec421'},'3':{chart:'#a3d2ce',chartFoot:'#2fa39b',legend:'#2fa39b',card:'#2fa39b'}},
   sub: 'Wolna 253 118 PLN · Zablokowana 50 118 PLN · W drodze 45 118 PLN' };
 
 const CASH_CARDS = [
@@ -52,10 +52,10 @@ const CASH_CARDS = [
     rows: [['PLN', '30 000,00'], ['EUR', '3 500,00'], ['USD', '-']] },
 ];
 
-const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
+const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const saved = localStorage.getItem('ms-style');
-const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
+const state = { style: ['2', '3', 'makieta'].includes(saved) ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
@@ -64,8 +64,8 @@ const state = { style: saved === '2' || saved === '3' ? saved : '1', hot: null,
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
    Kolejnosc pozycji ma taka jak nr 2. */
-const pal = () => (state.style === '2' ? '2' : '1');
-const ord = () => (state.style === '1' ? '1' : '2');
+const pal = () => (state.style === '2' ? '2' : state.style === '3' ? '3' : '1');
+const ord = () => (state.style === '1' ? '1' : state.style === '3' ? '3' : '2');
 const dim = (id) => (state.hot === null ? '' : state.hot === id ? 'is-hot' : 'is-dim');
 /* Licznik kwoty. Wersja preview przerysowuje cala strone, wiec poprzednia
    wartosc trzymamy w state.lastAmounts pod kluczem danego miejsca na ekranie —
@@ -89,7 +89,7 @@ function roll(text, key) {
 const amount = (int, dec, cls = '', key = '') =>
   `<div class="amount ${cls}"><span class="amount__int">${roll(int, key + '|int')}</span><span class="amount__dec">${roll(dec, key + '|dec')}</span></div>`;
 const pills = (items, active, group) => {
-  const locked = state.style === '3';
+  const locked = state.style === 'makieta';
   return `<div class="pills" role="group" data-pills="${group}">
   <span class="pills__glide" aria-hidden="true"></span>${items
     .map((i) => `<button type="button" ${locked ? '' : `data-pill="${group}" `}data-value="${i}"
@@ -116,7 +116,7 @@ function chart(rows) {
 
 function legendRow(r) {
   /* Ekran klasy aktywow istnieje tylko w stylistykach nr 1 i nr 2. */
-  const link = state.style !== '3' && DETAIL_ASSETS.has(r.id);
+  const link = state.style !== 'makieta' && DETAIL_ASSETS.has(r.id);
   return `<button type="button" class="legendRow ${dim(r.id)}" data-hot="${r.id}"
     ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[pal()].legend};cursor:${link ? 'pointer' : 'default'}">
     <span class="legendRow__dot"></span>
@@ -128,10 +128,11 @@ function legendRow(r) {
 function legend(rows, cashTooltip) {
   const all = ordered(rows);
   const cashRow = all.find((r) => r.id === 'cash');
-  const tip = cashTooltip && state.style !== '3';
+  const tip = cashTooltip && state.style !== 'makieta';
   return `<div class="legend">
     <div class="legend__rows">${all.filter((r) => r.id !== 'cash').map(legendRow).join('')}</div>
-    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner ${tip ? 'legend__cashInner--tip' : ''}">
+    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner">
+      <div class="${tip ? 'cashAnchor' : ''}">
       ${legendRow(cashRow)}
       ${tip ? `<div class="cashTip" role="tooltip">
         <span class="cashTip__title">${CASH_BY_CURRENCY.title}</span>
@@ -139,6 +140,7 @@ function legend(rows, cashTooltip) {
           <span class="cashTip__label">${l}</span>
           <span class="cashTip__value">${v}</span></div>`).join('')}</div>
       </div>` : ''}
+      </div>
       ${cashRow.sub ? `<div class="legend__cashSub ${dim('cash')}">${cashRow.sub}</div>` : ''}
     </div></div>` : ''}</div>`;
 }
@@ -153,7 +155,7 @@ function cash(cards) {
     <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
     <div class="cash__grid">${visible.map(
       (c, i) => {
-        const link = state.style !== '3' && state.currency === 'Łącznie'
+        const link = state.style !== 'makieta' && state.currency === 'Łącznie'
           && c.label === 'Środki w drodze';
         return `<article class="cashCard ${link ? 'cashCard--link' : ''}" ${link ? 'data-open-drawer' : ''}>
         <div style="display:flex;flex-direction:column;gap:8px">
@@ -171,22 +173,22 @@ function cash(cards) {
 
 
 const ACCOUNTS = [
-  { id:'maklerski', marker:{'1':'#042468','2':'#046816'}, name:'Rachunek maklerski', number:'00-00-006858', amount:'2 362 438', dec:',00 PLN', action:'Zobacz szczegóły',
+  { id:'maklerski', marker:{'1':'#042468','2':'#046816','3':'#78d2e5'}, name:'Rachunek maklerski', number:'00-00-006858', amount:'2 362 438', dec:',00 PLN', action:'Zobacz szczegóły',
     rows:[['Obligacje korporacyjne','1 063 802,00 PLN'],['Obligacje skarbowe','316 398,00 PLN'],
           ['Fundusze zamknięte (FIZ)','421 864,00 PLN'],['Fundusze otwarte (FIO)','420 610,00 PLN'],
           ['Wolne środki','48 420,00 PLN']] },
-  { id:'zony', marker:{'1':'#0a21c8','2':'#0a21c8'}, name:'Rachunek żony', number:'00-00-009120', amount:'180 000', dec:',00 PLN', action:'Zobacz szczegóły',
+  { id:'zony', marker:{'1':'#0a21c8','2':'#0a21c8','3':'#383a36'}, name:'Rachunek żony', number:'00-00-009120', amount:'180 000', dec:',00 PLN', action:'Zobacz szczegóły',
     rows:[['Obligacje korporacyjne','150 000,00 PLN'],['Wolne środki','30 000,00 PLN']] },
-  { id:'oki', marker:{'1':'#0aa6c8','2':'#b044ef'}, name:'OKI', number:'00-00-009120', amount:'843 728', dec:',00 PLN', action:'Zobacz więcej (12)',
+  { id:'oki', marker:{'1':'#0aa6c8','2':'#b044ef','3':'#fb6f90'}, name:'OKI', number:'00-00-009120', amount:'843 728', dec:',00 PLN', action:'Zobacz więcej (12)',
     rows:[['Obligacje korporacyjne','729 120,00 PLN'],['Wolne środki','114 608,00 PLN']] },
-  { id:'ike', marker:{'1':'#ef4444','2':'#11aebd'}, name:'IKE', number:'00-00-007431', amount:'506 237', dec:',00 PLN',
+  { id:'ike', marker:{'1':'#ef4444','2':'#11aebd','3':'#9b8cfa'}, name:'IKE', number:'00-00-007431', amount:'506 237', dec:',00 PLN',
     strip:{label:'Limit wpłat 2026', value:'30 000 PLN z 40 000 PLN', progress:0.75}, action:'Zobacz więcej (12)',
     rows:[['Obligacje','340 000,00 PLN'],['Fundusze otwarte (FIO)','120 000,00 PLN'],
           ['Wolne środki','46 237,00 PLN']] },
-  { id:'xz', marker:{'1':'#e4b212','2':'#e4b212'}, name:'XZ', number:'00-00-007432', amount:'337 491', dec:',00 PLN', action:'Zobacz więcej (12)',
+  { id:'xz', marker:{'1':'#e4b212','2':'#e4b212','3':'#ffdb32'}, name:'XZ', number:'00-00-007432', amount:'337 491', dec:',00 PLN', action:'Zobacz więcej (12)',
     rows:[['Obligacje','240 000,00 PLN'],['Fundusze otwarte (FIO)','50 000,00 PLN'],
           ['Wolne środki','22 491,00 PLN']] },
-  { id:'am', marker:{'1':'#9ec421','2':'#9ec421'}, name:'AM strategia konserwatywna', number:'00-00-008801', amount:'168 746', dec:',00 PLN',
+  { id:'am', marker:{'1':'#9ec421','2':'#9ec421','3':'#2fa39b'}, name:'AM strategia konserwatywna', number:'00-00-008801', amount:'168 746', dec:',00 PLN',
     rows:[], action:'Zobacz szczegóły' },
 ];
 
@@ -220,23 +222,24 @@ function accountCard(a) {
       </div>` : ''}
     <div class="acctCard__foot">
       <button type="button" class="acctCard__action" ${
-        state.style !== '3' && a.id === 'ike' && state.currency === 'Łącznie'
+        state.style !== 'makieta' && a.id === 'ike' && state.currency === 'Łącznie'
           ? 'data-goto-screen="account"' : ''}>${a.action}<span aria-hidden="true">›</span></button>
     </div></article>`;
 }
 
 function assetCard(a) {
-  const makieta = state.style === '3';
-  const strip = state.style !== '2';
+  const makieta = state.style === 'makieta';
+  const flat = state.style === '2' || state.style === '3';
+  const strip = !flat;
   const rows = makieta ? [] : strip ? a.rows : [...a.highlights, ...a.rows];
   const stripItems = makieta ? [...a.rows, ...a.highlights] : a.highlights;
   const link = DETAIL_ASSETS.has(a.id);
   return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
-        ${state.style === '2' ? '<span class="assetCard__bar"></span>' : ''}
+        ${flat ? '<span class="assetCard__bar"></span>' : ''}
         <span class="assetCard__name">${a.name}</span>
-        ${state.style !== '2' ? '<span class="assetCard__dot"></span>' : ''}
+        ${flat ? '' : '<span class="assetCard__dot"></span>'}
       </div>
       ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
@@ -368,7 +371,7 @@ function classMetrics(view, acc) {
 function instrRow(it, withLabels, color) {
   const cells = [it.rate, it.maturity, it.share];
   /* Ekrany emitenta i serii istnieja tylko w stylistykach nr 1 i nr 2. */
-  const target = state.style === '3' ? null : state.grouping === 'Emitenci' ? 'issuer' : 'series';
+  const target = state.style === 'makieta' ? null : state.grouping === 'Emitenci' ? 'issuer' : 'series';
   return `<button type="button" class="instrRow" ${
     target ? `data-goto-screen="${target}"` : ''} style="--seg:${color}">
     <span class="instrRow__dot"></span>
@@ -708,7 +711,7 @@ function detailScreen() {
         <div class="panel__actions">${pills(['Emitenci', 'Serie'], state.grouping, 'grouping')}</div>
       </div>
 
-      ${state.style === '3' ? '' : `<div class="chipGroup">
+      ${state.style === 'makieta' ? '' : `<div class="chipGroup">
         <span class="chipGroup__label">Rachunki</span>
         <div class="chips">${chipy.map((c, i) => {
           const all = i === 0;
@@ -789,18 +792,18 @@ const VIEWS = {
     ],
     assets: PLN_ASSETS,
     accounts: [
-      { id: 'maklerski', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski',
+      { id: 'maklerski', marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' }, name: 'Rachunek maklerski',
         number: '00-00-006858', amount: '2 200 000', dec: ',00 PLN', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '1 420 000,00 PLN'], ['Obligacje skarbowe', '316 398,00 PLN'],
                ['Fundusze zamknięte (FIZ)', '221 864,00 PLN'], ['Fundusze otwarte (FIO)', '190 610,00 PLN'],
                ['Wolne środki', '51 128,00 PLN']] },
-      { id: 'ike', marker: { '1': '#ef4444', '2': '#11aebd' }, name: 'IKE', number: '00-00-007431',
+      { id: 'ike', marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa' }, name: 'IKE', number: '00-00-007431',
         amount: '400 000', dec: ',00 PLN', action: 'Zobacz szczegóły',
         strip: { label: 'Limit wpłat 2026', value: '30 000 PLN z 40 000 PLN', progress: 0.75 },
         rows: [['Fundusze otwarte (FIO)', '400 000,00 PLN']] },
-      { id: 'am', marker: { '1': '#9ec421', '2': '#9ec421' }, name: 'AM strategia konserwatywna',
+      { id: 'am', marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b' }, name: 'AM strategia konserwatywna',
         number: '00-00-008801', amount: '843 728', dec: ',00 PLN', rows: [], action: 'Zobacz szczegóły' },
-      { id: 'zony', marker: { '1': '#0a21c8', '2': '#0a21c8' }, name: 'Rachunek żony',
+      { id: 'zony', marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36' }, name: 'Rachunek żony',
         number: '00-00-009120', amount: '142 692', dec: ',00 PLN', action: 'Zobacz szczegóły', rows: [['Wolne środki', '142 692,00 PLN']] },
     ],
   },
@@ -814,7 +817,7 @@ const VIEWS = {
     ],
     assets: EUR_ASSETS,
     accounts: [
-      { id: 'maklerski-eur', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski EUR',
+      { id: 'maklerski-eur', marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' }, name: 'Rachunek maklerski EUR',
         number: '00-00-006858/EUR', amount: '248 400', dec: ',00 EUR', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '200 000,00 EUR'], ['Fundusze zamknięte (FIZ)', '36 400,00 EUR'],
                ['Wolne środki', '12 000,00 EUR']] },
@@ -830,7 +833,7 @@ const VIEWS = {
     ],
     assets: USD_ASSETS,
     accounts: [
-      { id: 'maklerski-usd', marker: { '1': '#042468', '2': '#046816' }, name: 'Rachunek maklerski USD',
+      { id: 'maklerski-usd', marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' }, name: 'Rachunek maklerski USD',
         number: '00-00-006858/USD', amount: '61 000', dec: ',00 USD', action: 'Zobacz szczegóły',
         rows: [['Obligacje korporacyjne', '48 000,00 USD'], ['Wolne środki', '13 000,00 USD']] },
     ],
@@ -1024,7 +1027,12 @@ function dashboardScreen() {
 
     <section class="events">
       <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
-      <div class="eventsCard">${EVENTS.map(([d, t, i, a]) => `<button type="button" class="eventRow">
+      <div class="eventsCard">${state.style === '3' ? `<div class="eventRow eventRow--head" aria-hidden="true">
+        <span class="eventRow__date">Data</span>
+        <span class="eventRow__type">Zdarzenie / instrument</span>
+        <span></span>
+        <span class="eventRow__amount">Kwota</span>
+        <span></span></div>` : ''}${EVENTS.map(([d, t, i, a]) => `<button type="button" class="eventRow">
         <span class="eventRow__date">${d}</span>
         <span class="eventRow__type">${t}</span>
         <span class="eventRow__instrument">${i}</span>
@@ -1190,7 +1198,7 @@ function render() {
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
-      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'Makieta']]
+      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['makieta', 'Makieta']]
         .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
   placeGlides(glides);

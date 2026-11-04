@@ -12,7 +12,7 @@ import {
 import { Amount } from './ui';
 import { Transactions } from './Transactions';
 
-type StyleId = '1' | '2' | '3';
+type StyleId = '1' | '2' | '3' | 'makieta';
 
 /* ----------------------------- wspólne części ----------------------------- */
 
@@ -160,7 +160,7 @@ export function IssuerScreen({
             rows={ISSUER_TRANSACTIONS}
             countNoun="zdarzenia"
             account="subline"
-            locked={styleId === '3'}
+            locked={styleId === 'makieta'}
           />
         </div>
       </div>
@@ -233,7 +233,7 @@ export function SeriesScreen({
             rows={ISSUER_TRANSACTIONS}
             countNoun="zdarzenia"
             account="subline"
-            locked={styleId === '3'}
+            locked={styleId === 'makieta'}
           />
         </div>
       </div>
