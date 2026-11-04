@@ -214,15 +214,6 @@ function accountCard(a) {
                style="width:${a.strip.progress * 100}%"></div></div>`
           : ''}
       </div>` : ''}
-    ${(() => {
-      if (state.style !== '3') return '';
-      const parts = a.rows.map(([l, v]) => ({ v: toNumber(v), c: colorForLabel(l, '3') }));
-      const total = parts.reduce((s2, p) => s2 + p.v, 0);
-      if (!total) return '';
-      return `<div class="splitBar" aria-hidden="true">${parts.filter((p) => p.v > 0)
-        .map((p) => `<span style="flex:${p.v / total};background:${p.c || 'var(--divider)'}"></span>`)
-        .join('')}</div>`;
-    })()}
     ${a.rows.length ? `<div class="divider"></div>
       <div class="acctCard__rows">${a.rows.map(([l, v]) =>
         `<button type="button" class="acctRow">${state.style === '3'
@@ -871,9 +862,6 @@ const colorForLabel = (label, palette) => {
   const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
   return hit && META[hit[1]] ? META[hit[1]].colors[palette].card : undefined;
 };
-/** „1 063 802,00 PLN” → 1063802 */
-const toNumber = (s) =>
-  Number(String(s).replace(/[^\d,]/g, '').replace(/,\d*$/, '').replace(/\s/g, '')) || 0;
 
 function ordered(rows) {
   const byId = Object.fromEntries(rows.map((r) => [r.id, r]));

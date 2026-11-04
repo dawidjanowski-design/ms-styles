@@ -69,10 +69,6 @@ const colorForLabel = (label: string, palette: '1' | '2' | '3') => {
   return hit ? META[hit[1]]?.colors[palette].card : undefined;
 };
 
-/** „1 063 802,00 PLN” → 1063802. Zwraca 0, gdy w napisie nie ma liczby. */
-const toNumber = (s: string) =>
-  Number(s.replace(/[^\d,]/g, '').replace(/,\d*$/, '').replace(/\s/g, '')) || 0;
-
 const pct = (n: number) => `${n.toFixed(1).replace('.', ',')}%`;
 
 /* ----------------------------- wykres ----------------------------- */
@@ -368,16 +364,11 @@ function AccountCard({
   onOpen?: () => void;
 }) {
   const v3 = styleId === '3';
-  /* Sklad rachunku liczony z samych wierszy — pasek i kropki pokazuja, w czym
-     naprawde siedza pieniadze, zamiast zostawiac puste miejsce w karcie. */
+  /* Kropka przy wierszu w kolorze klasy aktywow — tyle wystarczy, zeby
+     powiazac pozycje z wykresem. Pasek proporcji nad lista byl za ciezki. */
   const parts = v3
-    ? account.rows.map((r) => ({
-        label: r.label,
-        value: toNumber(r.value),
-        color: colorForLabel(r.label, '3'),
-      }))
+    ? account.rows.map((r) => ({ label: r.label, color: colorForLabel(r.label, '3') }))
     : [];
-  const partsTotal = parts.reduce((sum, p) => sum + p.value, 0);
 
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
@@ -415,19 +406,6 @@ function AccountCard({
               />
             </div>
           )}
-        </div>
-      )}
-
-      {v3 && partsTotal > 0 && (
-        <div className="splitBar" aria-hidden="true">
-          {parts
-            .filter((p) => p.value > 0)
-            .map((p) => (
-              <span
-                key={p.label}
-                style={{ flex: p.value / partsTotal, background: p.color ?? 'var(--divider)' }}
-              />
-            ))}
         </div>
       )}
 
