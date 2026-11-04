@@ -130,7 +130,8 @@ function legend(rows, cashTooltip) {
   const tip = cashTooltip && state.style !== '3';
   return `<div class="legend">
     <div class="legend__rows">${all.filter((r) => r.id !== 'cash').map(legendRow).join('')}</div>
-    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner ${tip ? 'legend__cashInner--tip' : ''}">
+    ${cashRow ? `<div class="legend__cash"><div class="legend__cashInner">
+      <div class="${tip ? 'cashAnchor' : ''}">
       ${legendRow(cashRow)}
       ${tip ? `<div class="cashTip" role="tooltip">
         <span class="cashTip__title">${CASH_BY_CURRENCY.title}</span>
@@ -138,6 +139,7 @@ function legend(rows, cashTooltip) {
           <span class="cashTip__label">${l}</span>
           <span class="cashTip__value">${v}</span></div>`).join('')}</div>
       </div>` : ''}
+      </div>
       ${cashRow.sub ? `<div class="legend__cashSub ${dim('cash')}">${cashRow.sub}</div>` : ''}
     </div></div>` : ''}</div>`;
 }

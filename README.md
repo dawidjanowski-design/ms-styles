@@ -441,7 +441,10 @@ pod wykresem — **tylko na pulpicie**, zgodnie z ustaleniem. Wymiary z pliku:
 280 px szerokości, padding 20/22, promień 12, cień `0 6px 20px rgba(0,0,0,.12)`,
 tytuł 14 px Medium, wiersze 13 px co 11 px.
 
-Wyrównany do prawej krawędzi, czyli do kwoty w wierszu — nie do nazwy.
+Wyrównany do prawej krawędzi, czyli do kwoty w wierszu — nie do nazwy — i
+zakotwiczony do samego wiersza, 6 px pod nim. Gdyby kotwicą był cały blok
+gotówki, dymek odjeżdżałby o wysokość podlinii „Wolna · Zablokowana ·
+W drodze".
 Dymek nie łapie myszy (`pointer-events: none`), więc nie odbiera wierszowi
 podświetlenia: po najechaniu na gotówkę reszta wykresu nadal przygasa.
 
