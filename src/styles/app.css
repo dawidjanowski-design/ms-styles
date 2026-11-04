@@ -459,6 +459,19 @@ select.field__control {
 
 .btnGhost--lg { height: 38px; padding: 0 16px; font-size: 13px; }
 
+/* Przycisk akcji na pulpicie (Figma 963:9934) */
+.btnAction {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 38px; padding: 0 16px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-action);
+  font-size: 13px; font-weight: 500; line-height: 19px;
+  color: var(--pill-active-color);
+  transition: background 140ms var(--ease);
+}
+.btnAction:hover { background: #ffffff; }
+.btnAction__chev { font-size: 16px; line-height: 1; color: var(--crumb-sep); }
+
 /* ---- emisje i oferty ---- */
 .offers { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
 .offers__head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }

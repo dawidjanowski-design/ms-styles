@@ -418,3 +418,18 @@ w gęstości 3x — 96 px rysowane na 32 px, tak samo jak logo emitentów.
 
 W makiecie awatar zostaje szarym kółkiem: wireframe nie pokazuje zdjęć,
 a kolorowa fotografia byłaby jedynym nasyconym elementem na całym ekranie.
+
+## Przycisk „Przejdź do portfela"
+
+Figma `963:9934`. Wcześniej był płaskim przyciskiem z obrysem (`.btnGhost`)
+i gubił się na szarym tle pulpitu. Teraz ma wartości odczytane z pliku:
+białe tło na 70%, promień 999, tekst 13 px Medium i pełny stos sześciu cieni
+(`--shadow-action`) — ten sam materiał, co pigułki i karty, więc guzik jest
+lekko wypukły zamiast wtapiać się w tło.
+
+Kolor tekstu idzie z `--pill-active-color`, a strzałka z `--crumb-sep`, więc
+przycisk ciepleje w nr 1 i chłodnieje w nr 2 razem z resztą stylistyki.
+Figma ma w tym miejscu `#171934`, czyli dokładnie wartość nr 2.
+
+Klasa `.btnGhost--lg` została przy „Pokaż więcej" na ekranie serii, gdzie
+wireframe pokazuje zwykły szary przycisk.
