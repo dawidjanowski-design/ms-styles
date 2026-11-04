@@ -343,11 +343,11 @@
    i 10 na duzych plaszczyznach. Nr 4 zostaje przy 16 i 20, bo tam Figma
    wprost podaje tabele zdarzen o promieniu 20 (983:19196). */
 [data-style='3'] {
-  /* 4 px na wszystkim — dokladnie tyle, ile klient ma na kartach w swoim
-     pliku HTML, i wyrazna roznica wobec 8 px w nr 4. Jedna wartosc, bo dwa
-     stopnie rozjechaly sie wczesniej miedzy pulpitem a portfelem. */
-  --card-radius: 4px;
-  --card-radius-lg: 4px;
+  /* 6 px na wszystkim. Klient ma u siebie 4, nr 4 ma 8 — szostka lezy
+     posrodku: ostrzej niz nr 4, bez twardosci czystej czworki. Jedna
+     wartosc, bo dwa stopnie rozjechaly sie miedzy pulpitem a portfelem. */
+  --card-radius: 6px;
+  --card-radius-lg: 6px;
   --pill-track-bg: #ebebef;
 }
 
