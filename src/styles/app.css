@@ -985,7 +985,12 @@ select.field__control {
    rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
 [data-family='v3'] .metrics {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 28px 32px; align-content: start; padding: 6px 0 2px;
+  gap: 10px 32px; align-content: start;
+  /* Etykieta rezerwuje dwie linie, wiec przy jednolinijkowej nazwie nad
+     tekstem zostaje pusta linia. Miedzy rzedami czyta sie ona jak odstep,
+     ale pod kreska dokladala sie do odstepu karty i dawala 42 px zamiast
+     24. Odejmujemy ja raz, na gorze bloku. */
+  margin-top: -18px;
 }
 [data-family='v3'] .metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 /* Dwie linie miejsca na etykiete — „Fundusze zamkniete (FIZ)" lamie sie
@@ -1003,7 +1008,7 @@ select.field__control {
 
 /* Wiecej powietrza wokol kreski pod kwota — karta ma oddychac. */
 [data-family='v3'] .assetCard,
-[data-family='v3'] .acctCard { gap: 18px; }
+[data-family='v3'] .acctCard { gap: 24px; }
 [data-family='v3'] .assetCard__head,
 [data-family='v3'] .acctCard__top { gap: 10px; }
 
