@@ -870,105 +870,105 @@ select.field__control {
    Rozne od nr 1 i nr 2 nie tylko kolorem. Zamiast jednej zaokraglonej
    karty ekranu sa pelnoekranowe pasma, na przemian biale i szare, a tresc
    w srodku trzyma stala, szersza niz dotad kolumne 1140 px. */
-[data-style='3'] .screenOuter { padding: 0; background: var(--page-bg); }
-[data-style='3'] .screen { align-items: stretch; }
-[data-style='3'] .content { width: 100%; max-width: none; gap: 0; }
+[data-family='v3'] .screenOuter { padding: 0; background: var(--page-bg); }
+[data-family='v3'] .screen { align-items: stretch; }
+[data-family='v3'] .content { width: 100%; max-width: none; gap: 0; }
 /* Pasmo: tlo na calej szerokosci okna, tresc wysrodkowana do --content-w. */
-[data-style='3'] .content > section {
+[data-family='v3'] .content > section {
   padding: var(--band-pt)
     max(var(--band-gutter), calc((100% - var(--content-w)) / 2))
     var(--band-pb);
 }
-[data-style='3'] .content > section:nth-child(odd) { background: var(--band-alt); }
-[data-style='3'] .content > section:nth-child(even) { background: #ffffff; }
+[data-family='v3'] .content > section:nth-child(odd) { background: var(--band-alt); }
+[data-family='v3'] .content > section:nth-child(even) { background: #ffffff; }
 /* Ostatnie pasmo zostaje biale — szarosc konczy sie na podsumowaniu, zamiast
    ciagnac sie szarym tlem az do stopki. */
-[data-style='3'] .content > section:last-child { background: #ffffff; padding-bottom: 72px; }
+[data-family='v3'] .content > section:last-child { background: #ffffff; padding-bottom: 72px; }
 
-[data-style='3'] .pageTitle { line-height: 18px; }
+[data-family='v3'] .pageTitle { line-height: 18px; }
 
 /* nawigacja: aktywna pozycja kolorem akcentu, bez pigulki */
-[data-style='3'] .navItem--active { background: transparent; font-weight: 500; }
+[data-family='v3'] .navItem--active { background: transparent; font-weight: 500; }
 
 /* wykres: pastel na calej wysokosci slupka, pod nim nasycona kreska */
-[data-style='3'] .chartSeg__body { border-radius: var(--bar-radius); }
+[data-family='v3'] .chartSeg__body { border-radius: var(--bar-radius); }
 
 /* legenda: udzial i kwota wyrownane do prawej, wiersze luzniej */
-[data-style='3'] .legendRow { padding: 5px 0; gap: 14px; }
-[data-style='3'] .legendRow__name { font-weight: 400; }
-[data-style='3'] .legendRow__share { width: 90px; text-align: right; }
-[data-style='3'] .legendRow__value { width: 150px; }
-[data-style='3'] .legend__cash { padding-top: 8px; margin-top: 8px; }
-[data-style='3'] .legend__cashInner { padding-top: 14px; }
+[data-family='v3'] .legendRow { padding: 5px 0; gap: 14px; }
+[data-family='v3'] .legendRow__name { font-weight: 400; }
+[data-family='v3'] .legendRow__share { width: 90px; text-align: right; }
+[data-family='v3'] .legendRow__value { width: 150px; }
+[data-family='v3'] .legend__cash { padding-top: 8px; margin-top: 8px; }
+[data-family='v3'] .legend__cashInner { padding-top: 14px; }
 
 /* przelacznik walut i Aktywa/Rachunki — biala pigulka na szarym torze */
-[data-style='3'] .pills { background: #ebebef; box-shadow: none; }
-[data-style='3'] .pills button[aria-pressed='true'] {
+[data-family='v3'] .pills { background: #ebebef; box-shadow: none; }
+[data-family='v3'] .pills button[aria-pressed='true'] {
   background: #ffffff; box-shadow: var(--shadow-pill); color: var(--ink);
 }
 
 /* przycisk „Przejdz do portfela” */
-[data-style='3'] .btnAction { background: #ffffff; height: 40px; }
-[data-style='3'] .btnAction:hover { background: var(--accent-soft); color: var(--accent); }
+[data-family='v3'] .btnAction { background: #ffffff; height: 40px; }
+[data-family='v3'] .btnAction:hover { background: var(--accent-soft); color: var(--accent); }
 
 /* karty gotowki i klas aktywow — cienki obrys, promien 16 jak w Figmie */
-[data-style='3'] .cashCard { padding: 20px 22px; gap: 10px; }
-[data-style='3'] .cash__grid { gap: 16px; }
+[data-family='v3'] .cashCard { padding: 20px 22px; gap: 10px; }
+[data-family='v3'] .cash__grid { gap: 16px; }
 /* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
 /* Karty w jednym rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278
    parami, wiec siatka rozciaga je, zamiast przycinac do tresci. */
-[data-style='3'] .assets__list {
+[data-family='v3'] .assets__list {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px; align-items: stretch;
 }
 
 /* oferty: cztery karty z cienkim obrysem, bez cienia */
-[data-style='3'] .offers__track { gap: 24px; }
-[data-style='3'] .offerCard {
+[data-family='v3'] .offers__track { gap: 24px; }
+[data-family='v3'] .offerCard {
   flex-basis: calc((100% - 3 * 24px) / 4);
   border-radius: var(--card-radius-lg);
 }
 
 /* zdarzenia: tabela z naglowkiem i podswietleniem wiersza */
-[data-style='3'] .eventsCard {
+[data-family='v3'] .eventsCard {
   padding: 0; background: var(--table-bg);
   border-radius: var(--card-radius-lg); overflow: hidden;
 }
-[data-style='3'] .eventRow { padding: 14px 20px; transition: background 140ms var(--ease); }
-[data-style='3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
-[data-style='3'] .eventRow--head {
+[data-family='v3'] .eventRow { padding: 14px 20px; transition: background 140ms var(--ease); }
+[data-family='v3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
+[data-family='v3'] .eventRow--head {
   padding-top: 12px; padding-bottom: 12px;
   border-bottom: 1px solid var(--divider); pointer-events: none;
 }
-[data-style='3'] .eventRow--head span { font-size: 14px; color: var(--muted); font-weight: 400; }
+[data-family='v3'] .eventRow--head span { font-size: 14px; color: var(--muted); font-weight: 400; }
 
 /* Wiersze w karcie klasy aktywow rozdzielone cienka linia — jak w Figmie. */
-[data-style='3'] .assetCard__rows .kv,
-[data-style='3'] .acctCard__rows .acctRow { border-bottom: 1px solid var(--divider); }
-[data-style='3'] .assetCard__rows .kv:last-child,
-[data-style='3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
-[data-style='3'] .kv { padding: 8px 0; }
+[data-family='v3'] .assetCard__rows .kv,
+[data-family='v3'] .acctCard__rows .acctRow { border-bottom: 1px solid var(--divider); }
+[data-family='v3'] .assetCard__rows .kv:last-child,
+[data-family='v3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
+[data-family='v3'] .kv { padding: 8px 0; }
 
 /* Karta rachunku w nr 3 oddycha tak samo jak karta klasy aktywow: nazwa
    i numer w jednej linii, kwota pod spodem, wiersze z tym samym paddingiem
    i krojem co w .kv, znacznik jako kreska zamiast kropki. */
-[data-style='3'] .acctCard__top { flex-direction: column; align-items: stretch; gap: 8px; }
-[data-style='3'] .acctCard__dot { width: 4px; height: 16px; border-radius: 4px; }
-[data-style='3'] .acctRow { padding: 8px 0; gap: 10px; }
-[data-style='3'] .acctRow__label,
-[data-style='3'] .acctRow__value { font-size: 13px; }
+[data-family='v3'] .acctCard__top { flex-direction: column; align-items: stretch; gap: 8px; }
+[data-family='v3'] .acctCard__dot { width: 4px; height: 16px; border-radius: 4px; }
+[data-family='v3'] .acctRow { padding: 8px 0; gap: 10px; }
+[data-family='v3'] .acctRow__label,
+[data-family='v3'] .acctRow__value { font-size: 13px; }
 /* Karty rachunkow bez przyciskow — wiersze same prowadza dalej. */
-[data-style='3'] .acctCard__foot { display: none; }
+[data-family='v3'] .acctCard__foot { display: none; }
 /* Pasek limitu IKE. W nr 3 tlo ekranu jest biale, wiec panel w --screen-bg
    byl niewidoczny i zostawal po nim tylko wciety margines. Teraz to wyrazny
    kafelek w szarosci pasma, rowny z krawedzia tresci karty. */
-[data-style='3'] .acctCard__limit {
+[data-family='v3'] .acctCard__limit {
   margin: 0; padding: 14px 16px; border-radius: 12px;
   background: var(--band-alt); gap: 8px;
 }
-[data-style='3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
-[data-style='3'] .acctCard__limitValue { font-size: 14px; }
-[data-style='3'] .acctCard__limitTrack {
+[data-family='v3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
+[data-family='v3'] .acctCard__limitValue { font-size: 14px; }
+[data-family='v3'] .acctCard__limitTrack {
   height: 6px; margin-top: 2px; background: #e2e2e8;
 }
 
@@ -976,30 +976,34 @@ select.field__control {
    Karty maja od dwoch do szesciu metryk. Lista wierszy robila z tego rwana
    kolumne wartosci; siatka sama dobiera liczbe kolumn, wiec dwie metryki
    rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
-[data-style='3'] .metrics {
+[data-family='v3'] .metrics {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 28px 32px; align-content: start; padding: 6px 0 2px;
 }
-[data-style='3'] .metric { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+[data-family='v3'] .metric { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
 /* Dwie linie miejsca na etykiete — „Fundusze zamkniete (FIZ)" lamie sie
    w waskiej kolumnie i bez tego kwota w tym kafelku zjezdzalaby nizej
    niz w sasiednich. */
-[data-style='3'] .metric__label {
+[data-family='v3'] .metric__label {
   font-size: 13px; line-height: 18px; color: var(--muted); min-height: 36px;
 }
-[data-style='3'] .metric__value {
+[data-family='v3'] .metric__value {
   font-size: 16px; font-weight: 500; line-height: 22px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
 /* Wiecej powietrza wokol kreski pod kwota — karta ma oddychac. */
-[data-style='3'] .assetCard,
-[data-style='3'] .acctCard { gap: 18px; }
-[data-style='3'] .assetCard__head,
-[data-style='3'] .acctCard__top { gap: 10px; }
+[data-family='v3'] .assetCard,
+[data-family='v3'] .acctCard { gap: 18px; }
+[data-family='v3'] .assetCard__head,
+[data-family='v3'] .acctCard__top { gap: 10px; }
 
 /* ---- nr 3: kropka klasy przy pozycji rachunku ---- */
-[data-style='3'] .metric__label { display: flex; align-items: flex-start; gap: 8px; }
-[data-style='3'] .metric__dot {
+[data-family='v3'] .metric__label { display: flex; align-items: flex-start; gap: 8px; }
+[data-family='v3'] .metric__dot {
   width: 6px; height: 6px; border-radius: 999px; flex: none; margin-top: 6px;
 }
+
+/* W nr 4 karty gotowki siedza w pasmie podsumowania, wiec nie potrzebuja
+   wlasnego tytulu ani odstepu sekcji — tylko oddechu nad soba. */
+[data-style='4'] .cash--inline { padding-top: 28px; }

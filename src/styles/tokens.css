@@ -219,8 +219,11 @@
    Dwa kolory w Figmie zostaly po starych komponentach (#342717 w legendzie,
    #171934 na przycisku) — to cieple i granatowe odcienie z nr 1 i nr 2,
    ktore w tej palecie nie maja czego szukac. Uzywam tu #343434, czyli tego
-   samego, co wielka kwota na tym samym ekranie. */
-[data-style='3'] {
+   samego, co wielka kwota na tym samym ekranie.
+
+   Nr 4 dziedziczy caly ten blok — rozni sie portfelem i paleta klas. */
+[data-style='3'],
+[data-style='4'] {
   /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
   --font: Roboto;
 
@@ -333,6 +336,23 @@
   --c-cash: #2fa39b;
   --c-cash-bg: #a3d2ce;
   --cash-hatch: 47, 163, 155;
+}
+
+/* ====================== STYLISTYKA 4 ======================
+   To samo, co nr 3, z dwiema roznicami. Portfel nie powtarza wykresu
+   z pulpitu: zostaje kwota, przelacznik walut i karty gotowki w pasmie
+   podsumowania, a pod spodem struktura (Figma 976:18261). Druga roznica
+   to kolor — w tym samym wezle Figmy klasy sa znakowane nasyconymi
+   odcieniami z nr 2, nie pastelami, i stad bierze sie ta paleta. */
+[data-style='4'] {
+  --c-corp: #046816;
+  --c-skarb: #0a21c8;
+  --c-am: #b044ef;
+  --c-fio: #11aebd;
+  --c-fiz: #e4b212;
+  --c-cash: #9ec421;
+  --c-cash-bg: #f1f6de;
+  --cash-hatch: 158, 196, 33;
 }
 
 /* ====================== MAKIETA ======================

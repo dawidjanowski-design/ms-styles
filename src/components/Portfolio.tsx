@@ -18,12 +18,17 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
-const paletteOf = (s: StyleId): '1' | '2' | '3' =>
-  s === '2' ? '2' : s === '3' ? '3' : '1';
+const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' =>
+  s === '2' ? '2' : s === '3' ? '3' : s === '4' ? '4' : '1';
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
-const orderOf = (s: StyleId): '1' | '2' | '3' => (s === '1' ? '1' : s === '3' ? '3' : '2');
+const orderOf = (s: StyleId): '1' | '2' | '3' | '4' =>
+  s === '1' ? '1' : s === '3' ? '3' : s === '4' ? '4' : '2';
+
+/* Nr 4 to nr 3 z innym portfelem i inna paleta — uklad i typografia te same,
+   wiec wszedzie, gdzie liczy sie wyglad, pytamy o rodzine, nie o numer. */
+const isV3 = (s: StyleId) => s === '3' || s === '4';
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -64,7 +69,7 @@ const CLASS_BY_LABEL: [RegExp, string][] = [
   [/obligacj/i, 'corp'],
 ];
 
-const colorForLabel = (label: string, palette: '1' | '2' | '3') => {
+const colorForLabel = (label: string, palette: '1' | '2' | '3' | '4') => {
   const hit = CLASS_BY_LABEL.find(([re]) => re.test(label));
   return hit ? META[hit[1]]?.colors[palette].card : undefined;
 };
@@ -223,16 +228,18 @@ const isEmpty = (c: CashCard) => c.amount.replace(/\s/g, '') === '0';
 function CashOverview({
   cards,
   onOpenTransit,
+  /* W nr 4 karty gotowki stoja w pasmie podsumowania, tuz pod kwota — bez
+     wlasnego tytulu i bez wlasnej sekcji, bo sekcja to u nas pasmo tla. */
+  inline = false,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
+  inline?: boolean;
 }) {
   const visible = cards.filter((c) => !isEmpty(c));
   if (visible.length === 0) return null;
 
-  return (
-    <section className="cash">
-      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+  const grid = (
       <div className="cash__grid">
         {visible.map((card, i) => {
           const link = onOpenTransit && card.label === 'Środki w drodze';
@@ -265,6 +272,16 @@ function CashOverview({
           );
         })}
       </div>
+  );
+
+  /* Inline to <div> w pasmie podsumowania, zwykly tryb to wlasna sekcja,
+     czyli u nas osobne pasmo tla. */
+  return inline ? (
+    <div className="cash cash--inline">{grid}</div>
+  ) : (
+    <section className="cash">
+      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+      {grid}
     </section>
   );
 }
@@ -283,7 +300,7 @@ function AssetCard({
   const makieta = styleId === 'makieta';
   /* Nr 2 i nr 3 pokazuja wszystko jako wiersze etykieta/wartosc i znacza
      klase paskiem przed nazwa; nr 1 i makieta maja szary pasek metryk. */
-  const flat = styleId === '2' || styleId === '3';
+  const flat = styleId === '2' || isV3(styleId);
   const strip = !flat;
   const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
@@ -310,7 +327,7 @@ function AssetCard({
       {!makieta && <div className="divider" />}
 
       {rows.length > 0 &&
-        (styleId === '3' ? (
+        (isV3(styleId) ? (
           /* Kafelki zamiast listy wierszy — karty maja rozna liczbe metryk,
              wiec siatka sama dobiera liczbe kolumn i nie zostawia rwanej
              kolumny wartosci po prawej. */
@@ -363,11 +380,11 @@ function AccountCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
-  const v3 = styleId === '3';
+  const v3 = isV3(styleId);
   /* Kropka przy wierszu w kolorze klasy aktywow — tyle wystarczy, zeby
      powiazac pozycje z wykresem. Pasek proporcji nad lista byl za ciezki. */
   const parts = v3
-    ? account.rows.map((r) => ({ label: r.label, color: colorForLabel(r.label, '3') }))
+    ? account.rows.map((r) => ({ label: r.label, color: colorForLabel(r.label, paletteOf(styleId)) }))
     : [];
 
   return (
@@ -476,6 +493,11 @@ export function PortfolioScreen({
 
   const data = VIEWS[currency];
   const title = <h1 className="pageTitle">Portfel</h1>;
+  const v4 = styleId === '4';
+  /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
+     lacznym — w PLN/EUR/USD jego liczby by nie pasowaly. */
+  const transitHandler =
+    styleId !== 'makieta' && currency === 'Łącznie' ? () => setTransit(true) : undefined;
 
   return (
     <div className="screenOuter">
@@ -502,30 +524,30 @@ export function PortfolioScreen({
                   />
                 </div>
               </div>
-              <AllocationChart
+              {/* Nr 4 nie powtarza wykresu z pulpitu — na portfelu zostaje
+                  sama kwota, przelacznik walut i gotowka. */}
+              {!v4 && (
+                <AllocationChart
+                  rows={data.allocation}
+                  styleId={styleId}
+                  hot={hot}
+                  setHot={setHot}
+                />
+              )}
+            </div>
+            {!v4 && (
+              <Legend
                 rows={data.allocation}
                 styleId={styleId}
                 hot={hot}
                 setHot={setHot}
+                onOpenAsset={onOpenAsset}
               />
-            </div>
-            <Legend
-              rows={data.allocation}
-              styleId={styleId}
-              hot={hot}
-              setHot={setHot}
-              onOpenAsset={onOpenAsset}
-            />
+            )}
+            {v4 && <CashOverview cards={data.cashCards} inline onOpenTransit={transitHandler} />}
           </section>
 
-          <CashOverview
-            cards={data.cashCards}
-            /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
-                laczynm — w PLN/EUR/USD jego liczby by nie pasowaly. */
-            onOpenTransit={
-              styleId !== 'makieta' && currency === 'Łącznie' ? () => setTransit(true) : undefined
-            }
-          />
+          {!v4 && <CashOverview cards={data.cashCards} onOpenTransit={transitHandler} />}
 
           <section className="assets">
             <div className="assets__head">
