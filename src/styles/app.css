@@ -978,17 +978,28 @@ select.field__control {
    rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
 [data-style='3'] .metrics {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 18px 24px; align-content: start;
+  gap: 28px 32px; align-content: start; padding: 6px 0 2px;
 }
-[data-style='3'] .metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-[data-style='3'] .metric__label { font-size: 13px; line-height: 18px; color: var(--muted); }
+[data-style='3'] .metric { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+/* Dwie linie miejsca na etykiete — „Fundusze zamkniete (FIZ)" lamie sie
+   w waskiej kolumnie i bez tego kwota w tym kafelku zjezdzalaby nizej
+   niz w sasiednich. */
+[data-style='3'] .metric__label {
+  font-size: 13px; line-height: 18px; color: var(--muted); min-height: 36px;
+}
 [data-style='3'] .metric__value {
   font-size: 16px; font-weight: 500; line-height: 22px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
+/* Wiecej powietrza wokol kreski pod kwota — karta ma oddychac. */
+[data-style='3'] .assetCard,
+[data-style='3'] .acctCard { gap: 18px; }
+[data-style='3'] .assetCard__head,
+[data-style='3'] .acctCard__top { gap: 10px; }
+
 /* ---- nr 3: kropka klasy przy pozycji rachunku ---- */
-[data-style='3'] .metric__label { display: flex; align-items: center; gap: 8px; }
+[data-style='3'] .metric__label { display: flex; align-items: flex-start; gap: 8px; }
 [data-style='3'] .metric__dot {
-  width: 6px; height: 6px; border-radius: 999px; flex: none;
+  width: 6px; height: 6px; border-radius: 999px; flex: none; margin-top: 6px;
 }

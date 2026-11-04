@@ -288,7 +288,8 @@
   --bar-foot-h: 4px;
   --bar-fill-alpha: 1;
 
-  --asset-card-pad: 20px;
+  /* Padding kart jak w pliku klienta: 24px 28px. */
+  --asset-card-pad: 24px 28px;
   --asset-head-px: 0px;
   --asset-row-px: 0px;
   --asset-value-size: 24px;
