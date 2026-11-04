@@ -131,6 +131,19 @@ export const CASH = {
   } as Record<'1' | '2', Palette>,
 };
 
+/* Rozbicie wolnej gotowki na waluty — dymek na legendzie (Figma 613:56579).
+   Kwoty te same, co karta „Wolna gotowka" na Portfelu, zeby obie liczby
+   mowily to samo. Figma ma tam jeszcze CHF, ale u nas tej waluty nie ma
+   nigdzie indziej, wiec nie dokladamy jej tylko w tym jednym miejscu. */
+export const CASH_BY_CURRENCY = {
+  title: 'Wolna gotówka',
+  rows: [
+    { label: 'PLN', value: '190 118,00 PLN' },
+    { label: 'EUR', value: '12 000,00 EUR' },
+    { label: 'USD', value: '3 000,00 USD' },
+  ],
+};
+
 /* Na wczesniejszym ekranie wszystkie trzy karty mialy ten sam podpis;
    nowszy wireframe 733:825 nazywa je poprawnie i to jego trzymamy. */
 export const CASH_CARDS = [

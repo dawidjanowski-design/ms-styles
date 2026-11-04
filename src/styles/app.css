@@ -890,3 +890,31 @@ select.field__control {
   font-size: 14px; font-weight: 500; color: var(--ink);
   white-space: nowrap; font-variant-numeric: tabular-nums;
 }
+
+/* ---------------- dymek: wolna gotówka wg walut (Figma 613:56579) ----------------
+   Pokazuje się po najechaniu na wiersz gotówki w legendzie pod wykresem,
+   tylko na pulpicie. Nie łapie myszy, żeby nie odbierać wierszowi hovera. */
+.legend__cashInner--tip { position: relative; }
+.cashTip {
+  position: absolute; top: calc(100% + 10px); left: 0; z-index: 40;
+  width: 280px; padding: 20px 22px; border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  display: flex; flex-direction: column; gap: 14px;
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity 160ms var(--ease), transform 160ms var(--ease), visibility 160ms;
+  pointer-events: none;
+}
+.legend__cashInner--tip:hover .cashTip,
+.legend__cashInner--tip:focus-within .cashTip {
+  opacity: 1; visibility: visible; transform: none;
+}
+.cashTip__title { font-size: 14px; font-weight: 500; color: var(--ink); }
+.cashTip__rows { display: flex; flex-direction: column; gap: 11px; }
+.cashTip__row { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+.cashTip__label { font-size: 13px; color: var(--muted); }
+.cashTip__value { font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cashTip { transition: none; }
+}

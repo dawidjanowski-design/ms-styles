@@ -455,3 +455,21 @@ Wyjątek: w nr 1 przycisk jest identyczny jak aktywna pigułka „Łącznie" z
 Portfela — wysokość, padding i rozmiar tekstu z tokenów `--pill-*`, cień
 `--shadow-pill`, a tło to biel 70% zmieszana z `--pill-track-bg`, bo tutaj
 pod przyciskiem nie ma toru pigułek. Nr 2 i makieta mają wartości z Figmy.
+
+## Dymek „Wolna gotówka wg walut"
+
+Figma `613:56579`. Pokazuje się po najechaniu na wiersz gotówki w legendzie
+pod wykresem — **tylko na pulpicie**, zgodnie z ustaleniem. Wymiary z pliku:
+280 px szerokości, padding 20/22, promień 12, cień `0 6px 20px rgba(0,0,0,.12)`,
+tytuł 14 px Medium, wiersze 13 px co 11 px.
+
+Dymek nie łapie myszy (`pointer-events: none`), więc nie odbiera wierszowi
+podświetlenia — po najechaniu na gotówkę reszta wykresu nadal przygasa.
+
+Kwoty są te same, co karta „Wolna gotówka" na Portfelu, żeby obie liczby
+mówiły to samo. **Figma ma w dymku jeszcze CHF i inne wartości PLN/USD**
+(149 018 PLN, 7 500 USD, 5 000 CHF) — CHF nie występuje u nas nigdzie
+indziej, a przełącznik walut go nie ma, więc nie dokładaliśmy go w jednym
+miejscu. Łatwo zmienić w `CASH_BY_CURRENCY`.
+
+W makiecie dymka nie ma.

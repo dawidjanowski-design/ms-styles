@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   ASSETS,
   CASH,
+  CASH_BY_CURRENCY,
   LEGEND_ORDER,
   type Account,
   type AssetClass,
@@ -133,10 +134,13 @@ export function Legend({
   hot,
   setHot,
   onOpenAsset,
+  cashTooltip = false,
 }: {
   rows: AllocationRow[];
   styleId: StyleId;
   onOpenAsset?: (id: string) => void;
+  /** dymek z rozbiciem wolnej gotowki na waluty — tylko na pulpicie */
+  cashTooltip?: boolean;
 } & HoverProps) {
   const all = ordered(rows, styleId);
   const cash = all.find((r) => r.id === CASH.id);
@@ -162,8 +166,21 @@ export function Legend({
 
       {cash && (
         <div className="legend__cash">
-          <div className="legend__cashInner">
+          <div className={`legend__cashInner ${cashTooltip ? 'legend__cashInner--tip' : ''}`}>
             {row(cash)}
+            {cashTooltip && (
+              <div className="cashTip" role="tooltip">
+                <span className="cashTip__title">{CASH_BY_CURRENCY.title}</span>
+                <div className="cashTip__rows">
+                  {CASH_BY_CURRENCY.rows.map((r) => (
+                    <div className="cashTip__row" key={r.label}>
+                      <span className="cashTip__label">{r.label}</span>
+                      <span className="cashTip__value">{r.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             {cash.sub && (
               <div className={`legend__cashSub ${dimClass(CASH.id, hot)}`}>{cash.sub}</div>
             )}
