@@ -273,6 +273,10 @@ function AssetCard({
   const flat = styleId === '2' || isV3(styleId);
   const strip = !flat;
   const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
+  /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
+     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
+  const lead = asset.highlights.length >= 3 ? asset.highlights[0] : null;
+  const grid = lead ? asset.highlights.slice(1) : asset.highlights;
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
 
   return (
@@ -302,15 +306,15 @@ function AssetCard({
            idzie na gore duzym stopniem, reszta w siatce, a liczniki schodza
            do cichej stopki — dzieki temu karta mowi, co jest wazne. */
         <>
-          {asset.highlights.length > 0 && (
+          {lead && (
             <div className="metricLead">
-              <span className="metric__label">{asset.highlights[0].label}</span>
-              <span className="metricLead__value">{asset.highlights[0].value}</span>
+              <span className="metric__label">{lead.label}</span>
+              <span className="metricLead__value">{lead.value}</span>
             </div>
           )}
-          {asset.highlights.length > 1 && (
+          {grid.length > 0 && (
             <div className="metrics">
-              {asset.highlights.slice(1).map((r) => (
+              {grid.map((r) => (
                 <div className="metric" key={r.label}>
                   <span className="metric__label">{r.label}</span>
                   <span className="metric__value">{r.value}</span>

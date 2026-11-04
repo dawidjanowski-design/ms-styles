@@ -245,6 +245,8 @@ function assetCard(a) {
   const rows = makieta ? [] : strip ? a.rows : [...a.highlights, ...a.rows];
   const stripItems = makieta ? [...a.rows, ...a.highlights] : a.highlights;
   const link = DETAIL_ASSETS.has(a.id);
+  const lead = a.highlights.length >= 3 ? a.highlights[0] : null;
+  const grid = lead ? a.highlights.slice(1) : a.highlights;
   return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
@@ -256,13 +258,13 @@ function assetCard(a) {
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
     ${isV3()
-      ? /* Hierarchia: pierwszy wynik duzym stopniem, reszta w siatce,
-           liczniki w cichej stopce. */
-        (a.highlights.length
-          ? `<div class="metricLead"><span class="metric__label">${a.highlights[0][0]}</span>
-             <span class="metricLead__value">${a.highlights[0][1]}</span></div>` : '')
-        + (a.highlights.length > 1
-          ? `<div class="metrics">${a.highlights.slice(1).map(([l, v]) =>
+      ? /* Hierarchia: pierwszy wynik duzym stopniem, ale dopiero przy trzech
+           i wiecej — przy dwoch stawiamy je obok siebie w siatce. */
+        (lead
+          ? `<div class="metricLead"><span class="metric__label">${lead[0]}</span>
+             <span class="metricLead__value">${lead[1]}</span></div>` : '')
+        + (grid.length
+          ? `<div class="metrics">${grid.map(([l, v]) =>
               `<div class="metric"><span class="metric__label">${l}</span><span class="metric__value">${v}</span></div>`).join('')}</div>` : '')
         + (a.rows.length
           ? `<div class="metricFoot">${a.rows.map(([l, v]) =>
