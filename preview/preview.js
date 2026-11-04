@@ -52,7 +52,7 @@ const CASH_CARDS = [
     rows: [['PLN', '30 000,00'], ['EUR', '3 500,00'], ['USD', '-']] },
 ];
 
-const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['corp', 'skarb', 'am', 'fio', 'fiz'], '4': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
+const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['fiz', 'am', 'fio', 'skarb', 'corp'], '4': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const saved = localStorage.getItem('ms-style');
 const state = { style: ['2', '3', '4', 'makieta'].includes(saved) ? saved : '1', hot: null,

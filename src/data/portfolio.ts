@@ -28,7 +28,11 @@ export const CURRENCIES = ['Łącznie', 'PLN', 'EUR', 'USD'] as const;
 export const LEGEND_ORDER: Record<'1' | '2' | '3' | '4', string[]> = {
   '1': ['corp', 'am', 'fio', 'fiz', 'skarb'],
   '2': ['corp', 'skarb', 'am', 'fio', 'fiz'],
-  '3': ['corp', 'skarb', 'am', 'fio', 'fiz'],
+  /* Nr 3 ustawia klasy wedlug temperatury koloru, od najcieplejszej do
+     najzimniejszej: zolty, rozowy, fioletowy, szary jako punkt zwrotny,
+     blekitny — a gotowka w turkusie i tak zawsze zamyka liste pod kreska.
+     W Figmie kolory szly na przemian i wykres sie zlewal. */
+  '3': ['fiz', 'am', 'fio', 'skarb', 'corp'],
   '4': ['corp', 'skarb', 'am', 'fio', 'fiz'],
 };
 
