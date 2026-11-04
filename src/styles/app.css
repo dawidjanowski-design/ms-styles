@@ -957,7 +957,8 @@ select.field__control {
 [data-style='3'] .acctRow { padding: 8px 0; gap: 10px; }
 [data-style='3'] .acctRow__label,
 [data-style='3'] .acctRow__value { font-size: 13px; }
-[data-style='3'] .acctCard__foot { padding: 8px 0 0; }
+/* Karty rachunkow bez przyciskow — wiersze same prowadza dalej. */
+[data-style='3'] .acctCard__foot { display: none; }
 /* Pasek limitu IKE. W nr 3 tlo ekranu jest biale, wiec panel w --screen-bg
    byl niewidoczny i zostawal po nim tylko wciety margines. Teraz to wyrazny
    kafelek w szarosci pasma, rowny z krawedzia tresci karty. */
