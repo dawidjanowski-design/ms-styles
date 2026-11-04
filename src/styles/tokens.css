@@ -66,6 +66,12 @@
   --nav-active-bg: #f7f5f3;
   --nav-active-color: #342717;
 
+  /* Kreskowanie gotowki w wykresie — kolor jako skladowe RGB, zeby dalo sie
+     zmienic go w stylistyce bez przepisywania calego gradientu. */
+  --cash-hatch: 158, 196, 33;
+
+  --font: Inter;
+
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -199,11 +205,137 @@
   --c-cash-bg: #f2f5e3;
 }
 
-/* ====================== MAKIETA (stylistyka 3) ======================
+/* ====================== STYLISTYKA 3 ======================
+   Wersja klienta: Figma 975:12297 (pulpit), 976:13984 (hover na tabeli),
+   976:13415 (portfel) plus przyslana paleta w HTML.
+
+   Trzy rzeczy odrozniaja ja od nr 1 i nr 2:
+   1. Tresc jest szersza — 1140 px zamiast 1064 (feedback: „za wasko”).
+   2. Nie ma zaokraglonej karty ekranu; sekcje sa pelnoekranowymi pasmami,
+      na przemian bialymi i szarymi, a tresc w srodku trzyma stala szerokosc.
+   3. Paleta jest chlodna i pastelowa: akcent #3b1ef5, wykres w pastelach
+      z nasyconym podkresleniem.
+
+   Dwa kolory w Figmie zostaly po starych komponentach (#342717 w legendzie,
+   #171934 na przycisku) — to cieple i granatowe odcienie z nr 1 i nr 2,
+   ktore w tej palecie nie maja czego szukac. Uzywam tu #343434, czyli tego
+   samego, co wielka kwota na tym samym ekranie. */
+[data-style='3'] {
+  /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
+  --font: Roboto;
+
+  --page-bg: #ffffff;
+  --screen-bg: #ffffff;
+  --screen-border: transparent;
+  --screen-radius: 0px;
+  --screen-pad-top: 0px;
+  --screen-pad-x: 0px;
+  --screen-pad-bottom: 0px;
+
+  /* Szersza kolumna tresci — glowna zmiana ukladu wzgledem nr 1 i nr 2. */
+  --content-w: 1140px;
+  --band-gutter: 24px;
+  --band-pt: 40px;
+  --band-pb: 32px;
+  --band-alt: #f3f3f5;
+
+  --ink: #343434;
+  --muted: #6b6b73;
+  --legend-name: #4a4a4d;
+  --legend-sub: #87878d;
+  --nav-idle: #767676;
+  --nav-hover: #343434;
+
+  --accent: #3b1ef5;
+  --accent-soft: #f0eeff;
+
+  --title-size: 13px;
+  --title-weight: 400;
+  --title-color: #87878d;
+  --title-tracking: 0;
+  --title-in-summary: 1;
+
+  /* Blok podsumowania ma inline padding-top z --summary-pt, wiec gora pasma
+     musi przyjsc stad, a nie z reguly .content > section. */
+  --summary-pt: 40px;
+  --summary-gap: 0px;
+  --summary-top-gap: 14px;
+  --title-amount-gap: 4px;
+  --legend-pt: 24px;
+  --legend-gap: 0px;
+  --cash-pt: 0px;
+
+  --amount-size: 30px;
+  --amount-decimals: 21.6px;
+
+  --pill-track-bg: #ffffff;
+  --pill-track-pad: 3px;
+  --pill-h: 30px;
+  --pill-px: 14px;
+  --pill-gap: 2px;
+  --pill-size: 13px;
+  --pill-active-color: var(--ink);
+
+  --section-title-size: 14px;
+  --section-title-color: #4b4b4d;
+  --section-title-tracking: 0;
+
+  /* wykres: pelne pastelowe wypelnienie i nasycone podkreslenie */
+  --bar-h: 56px;
+  --bar-gap: 5px;
+  --bar-radius: 2px;
+  --bar-foot-h: 4px;
+  --bar-fill-alpha: 1;
+
+  --asset-card-pad: 20px;
+  --asset-head-px: 0px;
+  --asset-row-px: 0px;
+  --asset-value-size: 24px;
+  --asset-value-decimals: 18px;
+  --asset-marker: bar;
+  --asset-marker-after: 0;
+  --highlight-strip: 0;
+
+  --card-bg: #ffffff;
+  --card-radius: 4px;
+  --divider: #f1f1f4;
+  --rule: #e9e9e9;
+  --shadow-card: 0 0 0 1px #e8e8ec;
+  --shadow-pill: 0 0 0 1px #e8e8ec;
+  --shadow-track: 0 0 0 1px #e8e8ec;
+  --shadow-action: 0 0 0 1px #e8e8ec;
+
+  --value-strong: var(--ink);
+  --chev: #b0b0b6;
+  --crumb-sep: #c4c4ca;
+  --sub-faint: #9a9aa2;
+  --btn-bg: #ffffff;
+  --chip-border-hover: #e8e8ec;
+  --avatar-bg: #e3e3e8;
+  --nav-active-bg: transparent;
+  --nav-active-color: var(--accent);
+
+  --progress-fill: #2fa39b;
+  --progress-track: #e8e8ec;
+
+  --row-hover: #f2f6fa;
+  --table-bg: #fbfbfc;
+
+  --c-corp: #78d2e5;
+  --c-skarb: #383a36;
+  --c-am: #fb6f90;
+  --c-fio: #9b8cfa;
+  --c-fiz: #ffdb32;
+  --c-cash: #2fa39b;
+  --c-cash-bg: #a3d2ce;
+  --cash-hatch: 47, 163, 155;
+}
+
+/* ====================== MAKIETA ======================
    Wireframe z Figmy 920:7575. Ta sama treść co w nr 1 i nr 2, tylko bez
    koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,
    co jest układem, a co już decyzją wizualną. */
-[data-style='3'] {
+[data-style='makieta'] {
   --page-bg: #f2f2f2;
   --screen-bg: #f6f6f6;
   --screen-border: #e8e8e8;

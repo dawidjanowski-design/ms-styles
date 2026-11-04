@@ -4,7 +4,7 @@ import { VIEWS } from '../data/currencies';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3';
+type StyleId = '1' | '2' | '3' | 'makieta';
 
 function OfferCard({ offer }: { offer: Offer }) {
   return (
@@ -86,8 +86,8 @@ export function DashboardScreen({
               styleId={styleId}
               hot={hot}
               setHot={setHot}
-              onOpenAsset={styleId === '3' ? undefined : onOpenAsset}
-              cashTooltip={styleId !== '3'}
+              onOpenAsset={styleId === 'makieta' ? undefined : onOpenAsset}
+              cashTooltip={styleId !== 'makieta'}
             />
           </section>
 
@@ -123,6 +123,17 @@ export function DashboardScreen({
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
             <div className="eventsCard">
+              {/* Naglowek kolumn ma tylko nr 3 — w nr 1 i nr 2 lista zdarzen
+                  zostaje lista, bez ramki tabeli. */}
+              {styleId === '3' && (
+                <div className="eventRow eventRow--head" aria-hidden="true">
+                  <span className="eventRow__date">Data</span>
+                  <span className="eventRow__type">Zdarzenie / instrument</span>
+                  <span />
+                  <span className="eventRow__amount">Kwota</span>
+                  <span />
+                </div>
+              )}
               {EVENTS.map((e, i) => (
                 <button type="button" className="eventRow" key={i}>
                   <span className="eventRow__date">{e.date}</span>

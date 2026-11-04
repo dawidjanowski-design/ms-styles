@@ -18,11 +18,12 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3';
+type StyleId = '1' | '2' | '3' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
-const paletteOf = (s: StyleId): '1' | '2' => (s === '2' ? '2' : '1');
+const paletteOf = (s: StyleId): '1' | '2' | '3' =>
+  s === '2' ? '2' : s === '3' ? '3' : '1';
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
-const orderOf = (s: StyleId): '1' | '2' => (s === '1' ? '1' : '2');
+const orderOf = (s: StyleId): '1' | '2' | '3' => (s === '1' ? '1' : s === '3' ? '3' : '2');
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -32,7 +33,7 @@ const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
 /** Nazwa i paleta po id — wspólne dla wszystkich walut. */
-const META: Record<string, { name: string; colors: Record<'1' | '2', Palette> }> = {
+const META: Record<string, { name: string; colors: Record<'1' | '2' | '3', Palette> }> = {
   ...Object.fromEntries(ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }])),
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
@@ -261,8 +262,11 @@ function AssetCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
-  const makieta = styleId === '3';
-  const strip = styleId !== '2';
+  const makieta = styleId === 'makieta';
+  /* Nr 2 i nr 3 pokazuja wszystko jako wiersze etykieta/wartosc i znacza
+     klase paskiem przed nazwa; nr 1 i makieta maja szary pasek metryk. */
+  const flat = styleId === '2' || styleId === '3';
+  const strip = !flat;
   const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
 
@@ -274,9 +278,9 @@ function AssetCard({
     >
       <div className="assetCard__head">
         <div className="assetCard__title">
-          {styleId === '2' && <span className="assetCard__bar" />}
+          {flat && <span className="assetCard__bar" />}
           <span className="assetCard__name">{asset.name}</span>
-          {styleId !== '2' && <span className="assetCard__dot" />}
+          {!flat && <span className="assetCard__dot" />}
         </div>
         <Amount
           int={makieta ? `≈ ${asset.amount}` : asset.amount}
@@ -436,7 +440,7 @@ export function PortfolioScreen({
                     items={CURRENCIES}
                     value={currency}
                     onChange={(v) => onCurrencyChange(v as Currency)}
-                    locked={styleId === '3'}
+                    locked={styleId === 'makieta'}
                   />
                 </div>
               </div>
@@ -461,7 +465,7 @@ export function PortfolioScreen({
             /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
                 laczynm — w PLN/EUR/USD jego liczby by nie pasowaly. */
             onOpenTransit={
-              styleId !== '3' && currency === 'Łącznie' ? () => setTransit(true) : undefined
+              styleId !== 'makieta' && currency === 'Łącznie' ? () => setTransit(true) : undefined
             }
           />
 
@@ -474,7 +478,7 @@ export function PortfolioScreen({
                 items={['Aktywa', 'Rachunki']}
                 value={view}
                 onChange={setView}
-                locked={styleId === '3'}
+                locked={styleId === 'makieta'}
               />
             </div>
             <div className="assets__list">
@@ -495,7 +499,7 @@ export function PortfolioScreen({
                       /* Ekran rachunku istnieje na razie tylko dla IKE i tylko
                          w widoku lacznym, gdzie liczby sie zgadzaja. */
                       onOpen={
-                        styleId !== '3' && a.id === 'ike' && currency === 'Łącznie'
+                        styleId !== 'makieta' && a.id === 'ike' && currency === 'Łącznie'
                           ? () => onOpenAccount(a.id)
                           : undefined
                       }
