@@ -881,7 +881,9 @@ select.field__control {
 }
 [data-style='3'] .content > section:nth-child(odd) { background: var(--band-alt); }
 [data-style='3'] .content > section:nth-child(even) { background: #ffffff; }
-[data-style='3'] .content > section:last-child { padding-bottom: 72px; }
+/* Ostatnie pasmo zostaje biale — szarosc konczy sie na podsumowaniu, zamiast
+   ciagnac sie szarym tlem az do stopki. */
+[data-style='3'] .content > section:last-child { background: #ffffff; padding-bottom: 72px; }
 
 [data-style='3'] .pageTitle { line-height: 18px; }
 
