@@ -5,7 +5,26 @@ import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | 'makieta';
+const isV3 = (s: StyleId) => s === '3' || s === '4';
+
+/* Strzalka 1:1 z Figmy: pole 16x16, zaokraglone konce i zlaczenia, kolor
+   z currentColor, zeby kazda stylistyka trzymala swoj odcien i zeby dzialal
+   hover. Obrys 1,33 px w karuzeli ofert (983:19622) i 1,5 px w glownym
+   przycisku (986:21678) — w pliku te dwie ikony roznia sie gruboscia. */
+function Chevron({ dir, weight = 1.33 }: { dir: 'left' | 'right'; weight?: number }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d={dir === 'left' ? 'M10 12L6 8L10 4' : 'M6 4L10 8L6 12'}
+        stroke="currentColor"
+        strokeWidth={weight}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function IssuerMark({ offer }: { offer: Offer }) {
   if (offer.logo === 'wordmark') return <Logo width={94} />;
@@ -47,10 +66,10 @@ function OffersHead({ onStep }: { onStep: (dir: -1 | 1) => void }) {
       <h2 className="sectionTitle">Emisje i oferty</h2>
       <div className="offers__nav">
         <button type="button" className="iconBtn" aria-label="Poprzednie oferty" onClick={() => onStep(-1)}>
-          ‹
+          <Chevron dir="left" />
         </button>
         <button type="button" className="iconBtn" aria-label="Następne oferty" onClick={() => onStep(1)}>
-          ›
+          <Chevron dir="right" />
         </button>
       </div>
     </div>
@@ -64,7 +83,7 @@ function cardStep(track: HTMLElement) {
   return card.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0);
 }
 
-/** Stylistyki nr 2, nr 3 i makieta: zwykły tor z przewijaniem. */
+/** Stylistyki nr 2, nr 3, nr 4 i makieta: zwykły tor z przewijaniem. */
 function OffersScroll() {
   const track = useRef<HTMLDivElement>(null);
 
@@ -230,7 +249,7 @@ export function DashboardScreen({
               <button type="button" className="btnAction" onClick={onOpenPortfolio}>
                 {DASHBOARD.action}
                 <span className="btnAction__chev" aria-hidden="true">
-                  ›
+                  <Chevron dir="right" weight={1.5} />
                 </span>
               </button>
             </div>
@@ -259,7 +278,7 @@ export function DashboardScreen({
             <div className="eventsCard">
               {/* Naglowek kolumn ma tylko nr 3 — w nr 1 i nr 2 lista zdarzen
                   zostaje lista, bez ramki tabeli. */}
-              {styleId === '3' && (
+              {isV3(styleId) && (
                 <div className="eventRow eventRow--head" aria-hidden="true">
                   <span className="eventRow__date">Data</span>
                   <span className="eventRow__type">Zdarzenie / instrument</span>

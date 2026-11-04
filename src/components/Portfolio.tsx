@@ -18,12 +18,17 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
-const paletteOf = (s: StyleId): '1' | '2' | '3' =>
-  s === '2' ? '2' : s === '3' ? '3' : '1';
+const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' =>
+  s === '2' ? '2' : s === '3' ? '3' : s === '4' ? '4' : '1';
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
-const orderOf = (s: StyleId): '1' | '2' | '3' => (s === '1' ? '1' : s === '3' ? '3' : '2');
+const orderOf = (s: StyleId): '1' | '2' | '3' | '4' =>
+  s === '1' ? '1' : s === '3' ? '3' : s === '4' ? '4' : '2';
+
+/* Nr 4 to nr 3 z innym portfelem i inna paleta — uklad i typografia te same,
+   wiec wszedzie, gdzie liczy sie wyglad, pytamy o rodzine, nie o numer. */
+const isV3 = (s: StyleId) => s === '3' || s === '4';
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -33,7 +38,7 @@ const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
 /** Nazwa i paleta po id — wspólne dla wszystkich walut. */
-const META: Record<string, { name: string; colors: Record<'1' | '2' | '3', Palette> }> = {
+const META: Record<string, { name: string; colors: Record<'1' | '2' | '3' | '4', Palette> }> = {
   ...Object.fromEntries(ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }])),
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
@@ -265,9 +270,13 @@ function AssetCard({
   const makieta = styleId === 'makieta';
   /* Nr 2 i nr 3 pokazuja wszystko jako wiersze etykieta/wartosc i znacza
      klase paskiem przed nazwa; nr 1 i makieta maja szary pasek metryk. */
-  const flat = styleId === '2' || styleId === '3';
+  const flat = styleId === '2' || isV3(styleId);
   const strip = !flat;
   const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
+  /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
+     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
+  const lead = asset.highlights.length >= 3 ? asset.highlights[0] : null;
+  const grid = lead ? asset.highlights.slice(1) : asset.highlights;
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
 
   return (
@@ -291,12 +300,47 @@ function AssetCard({
 
       {!makieta && <div className="divider" />}
 
-      {rows.length > 0 && (
-        <div className="assetCard__rows">
-          {rows.map((r) => (
-            <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
-          ))}
-        </div>
+      {isV3(styleId) ? (
+        /* Hierarchia zamiast rownego gridu. Dane same sie dziela: highlights
+           to wyniki, rows to liczniki w rodzaju „Emitent 1". Pierwszy wynik
+           idzie na gore duzym stopniem, reszta w siatce, a liczniki schodza
+           do cichej stopki — dzieki temu karta mowi, co jest wazne. */
+        <>
+          {lead && (
+            <div className="metricLead">
+              <span className="metric__label">{lead.label}</span>
+              <span className="metricLead__value">{lead.value}</span>
+            </div>
+          )}
+          {grid.length > 0 && (
+            <div className="metrics">
+              {grid.map((r) => (
+                <div className="metric" key={r.label}>
+                  <span className="metric__label">{r.label}</span>
+                  <span className="metric__value">{r.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {asset.rows.length > 0 && (
+            <div className="metricFoot">
+              {asset.rows.map((r) => (
+                <span className="metricFoot__item" key={r.label}>
+                  {r.label}
+                  <strong>{r.value}</strong>
+                </span>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        rows.length > 0 && (
+          <div className="assetCard__rows">
+            {rows.map((r) => (
+              <KeyValue key={r.label} label={r.label} value={r.value} px={strip ? 20 : 0} />
+            ))}
+          </div>
+        )
       )}
 
       {strip && stripItems.length > 0 && (
@@ -332,6 +376,8 @@ function AccountCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
+  const v3 = isV3(styleId);
+
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
       <div className="acctCard__head">
@@ -374,15 +420,29 @@ function AccountCard({
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
-          <div className="acctCard__rows">
-            {account.rows.map((r) => (
-              <button type="button" className="acctRow" key={r.label}>
-                <span className="acctRow__label">{r.label}</span>
-                <span className="acctRow__value">{r.value}</span>
-                <span className="acctRow__chev">›</span>
-              </button>
-            ))}
-          </div>
+          {v3 ? (
+            /* Ten sam wzorzec, co po drugiej stronie przelacznika: pozycje
+               rachunku jako kafelki. Lista zostawiala pol karty pustej, gdy
+               rachunek mial dwie pozycje, a sasiad piec. */
+            <div className="metrics">
+              {account.rows.map((r) => (
+                <div className="metric" key={r.label}>
+                  <span className="metric__label">{r.label}</span>
+                  <span className="metric__value">{r.value}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="acctCard__rows">
+              {account.rows.map((r) => (
+                <button type="button" className="acctRow" key={r.label}>
+                  <span className="acctRow__label">{r.label}</span>
+                  <span className="acctRow__value">{r.value}</span>
+                  <span className="acctRow__chev">›</span>
+                </button>
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -418,6 +478,10 @@ export function PortfolioScreen({
 
   const data = VIEWS[currency];
   const title = <h1 className="pageTitle">Portfel</h1>;
+  /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
+     lacznym — w PLN/EUR/USD jego liczby by nie pasowaly. */
+  const transitHandler =
+    styleId !== 'makieta' && currency === 'Łącznie' ? () => setTransit(true) : undefined;
 
   return (
     <div className="screenOuter">
@@ -460,14 +524,7 @@ export function PortfolioScreen({
             />
           </section>
 
-          <CashOverview
-            cards={data.cashCards}
-            /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
-                laczynm — w PLN/EUR/USD jego liczby by nie pasowaly. */
-            onOpenTransit={
-              styleId !== 'makieta' && currency === 'Łącznie' ? () => setTransit(true) : undefined
-            }
-          />
+          <CashOverview cards={data.cashCards} onOpenTransit={transitHandler} />
 
           <section className="assets">
             <div className="assets__head">

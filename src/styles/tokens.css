@@ -226,8 +226,11 @@
    Dwa kolory w Figmie zostaly po starych komponentach (#342717 w legendzie,
    #171934 na przycisku) — to cieple i granatowe odcienie z nr 1 i nr 2,
    ktore w tej palecie nie maja czego szukac. Uzywam tu #343434, czyli tego
-   samego, co wielka kwota na tym samym ekranie. */
-[data-style='3'] {
+   samego, co wielka kwota na tym samym ekranie.
+
+   Nr 4 dziedziczy caly ten blok — rozni sie portfelem i paleta klas. */
+[data-style='3'],
+[data-style='4'] {
   /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
   --font: Roboto;
 
@@ -239,8 +242,9 @@
   --screen-pad-x: 0px;
   --screen-pad-bottom: 0px;
 
-  /* Szersza kolumna tresci — glowna zmiana ukladu wzgledem nr 1 i nr 2. */
-  --content-w: 1140px;
+  /* Szerszy niz 1064 z nr 1 i nr 2 — feedback mowil, ze bylo za wasko.
+     Figma ma tu 1140, plik klienta 70% szerokosci okna; stanelo na 1280. */
+  --content-w: 1280px;
   --band-gutter: 24px;
   --band-pt: 40px;
   --band-pb: 32px;
@@ -283,7 +287,7 @@
   --pill-size: 13px;
   --pill-active-color: var(--ink);
 
-  --section-title-size: 14px;
+  --section-title-size: 16px;
   --section-title-color: #4b4b4d;
   --section-title-tracking: 0;
 
@@ -294,7 +298,8 @@
   --bar-foot-h: 4px;
   --bar-fill-alpha: 1;
 
-  --asset-card-pad: 20px;
+  /* Padding kart jak w pliku klienta: 24px 28px. */
+  --asset-card-pad: 24px 28px;
   --asset-head-px: 0px;
   --asset-row-px: 0px;
   --asset-value-size: 24px;
@@ -304,7 +309,9 @@
   --highlight-strip: 0;
 
   --card-bg: #ffffff;
-  --card-radius: 4px;
+  /* Z Figmy: karty gotowki i klas aktywow 16, karty ofert i tabela zdarzen 20. */
+  --card-radius: 16px;
+  --card-radius-lg: 20px;
   --divider: #f1f1f4;
   --rule: #e9e9e9;
   --shadow-card: 0 0 0 1px #e8e8ec;
@@ -326,7 +333,7 @@
   --progress-track: #e8e8ec;
 
   --row-hover: #f2f6fa;
-  --table-bg: #fbfbfc;
+  --table-bg: #ffffff;
 
   --c-corp: #78d2e5;
   --c-skarb: #383a36;
@@ -337,6 +344,68 @@
   --c-cash-bg: #a3d2ce;
   --cash-hatch: 47, 163, 155;
 }
+
+/* Promienie w nr 3. Z Figmy wyszly nasze 16 i 20, a klient ma u siebie
+   w pliku 4 px na kartach. Stajemy posrodku, blizej niego: 8 na kartach
+   i 10 na duzych plaszczyznach. Nr 4 zostaje przy 16 i 20, bo tam Figma
+   wprost podaje tabele zdarzen o promieniu 20 (983:19196). */
+[data-style='3'] {
+  /* 6 px na wszystkim. Klient ma u siebie 4, nr 4 ma 8 — szostka lezy
+     posrodku: ostrzej niz nr 4, bez twardosci czystej czworki. Jedna
+     wartosc, bo dwa stopnie rozjechaly sie miedzy pulpitem a portfelem. */
+  --card-radius: 6px;
+  --card-radius-lg: 6px;
+  --pill-track-bg: #ebebef;
+}
+
+/* ====================== STYLISTYKA 4 ======================
+   Uklad identyczny jak nr 3 — nr 4 sluzy wylacznie do eksperymentow
+   z kolorem. Punkt wyjscia: w Figmie 976:18261 klasy sa znakowane
+   nasyconymi odcieniami z nr 2, nie pastelami z nr 3. */
+[data-style='4'] {
+  /* Paleta klienta z Figmy 983:19119 i 976:17671. Podkreslenie slupka bywa
+     ciemniejsze niz kropka w legendzie (skarbowe, AM, gotowka) — przeniesione
+     tak, jak jest w pliku. */
+  --c-corp: #11aebd;
+  --c-skarb: #3b7ddb;
+  --c-am: #fb6f90;
+  --c-fio: #e4b212;
+  --c-fiz: #9712e4;
+  --c-cash: #2fa39b;
+  --c-cash-bg: #e9f0cf;
+  --cash-hatch: 138, 175, 18;
+
+  --band-alt: #f5f5f4;
+  --nav-active-color: #00255a;
+
+  /* Hover glownego przycisku w granacie stylistyki, nie w indygo z nr 3.
+     Tlo zostaje biale, a przycisk unosi sie cieniem — na szarym pasmie
+     czyta sie to lepiej niz zmiana tla. */
+  --btn-hover-bg: #ffffff;
+  --btn-hover-color: #00255a;
+  --btn-hover-shadow: 0 0 0 1px #d7dde7, 0 4px 10px rgba(0, 37, 90, 0.1),
+    0 1px 2px rgba(0, 37, 90, 0.06);
+
+  /* Update z 986:20769: boxy schodza na 8, przelaczniki dostaja cieply tor
+     #f1eeea i tez promien 8 zamiast pelnego zaokraglenia. */
+  --card-radius: 8px;
+  --card-radius-lg: 8px;
+  --pill-radius: 8px;
+  --pill-track-bg: #f1eeea;
+  --pill-active-bg: rgba(255, 255, 255, 0.7);
+}
+
+
+
+/* Caly kontener ekranu jest tu zawiniety: 8 px marginesu z lewej i prawej,
+   promien 16 na gornych rogach, bialy spod (Figma 983:19196 — ramka
+   PortfolioScreen:margin z paddingiem 0/8 i PortfolioScreen 1424 szerokosci).
+   Pasmo podsumowania w srodku zostaje osobnym prostokatem o promieniu 12. */
+[data-style='4'] {
+  --screen-outer-px: 8px;
+  --screen-radius: 16px 16px 0 0;
+}
+[data-style='4'] .content > section:nth-child(odd) { border-radius: 8px; }
 
 /* ====================== MAKIETA ======================
    Wireframe z Figmy 920:7575. Ta sama treść co w nr 1 i nr 2, tylko bez

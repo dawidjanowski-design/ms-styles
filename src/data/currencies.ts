@@ -70,7 +70,7 @@ const PLN_ASSETS: AssetClass[] = [
 const PLN_ACCOUNTS: Account[] = [
   {
     id: 'maklerski',
-    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' },
+    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#11aebd' },
     name: 'Rachunek maklerski',
     number: '00-00-006858',
     amount: '2 200 000',
@@ -86,7 +86,7 @@ const PLN_ACCOUNTS: Account[] = [
   },
   {
     id: 'ike',
-    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa' },
+    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa', '4': '#e4b212' },
     name: 'IKE',
     number: '00-00-007431',
     amount: '400 000',
@@ -97,7 +97,7 @@ const PLN_ACCOUNTS: Account[] = [
   },
   {
     id: 'am',
-    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b' },
+    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b', '4': '#2fa39b' },
     name: 'AM strategia konserwatywna',
     number: '00-00-008801',
     amount: '843 728',
@@ -107,7 +107,7 @@ const PLN_ACCOUNTS: Account[] = [
   },
   {
     id: 'zony',
-    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36' },
+    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36', '4': '#3b7ddb' },
     name: 'Rachunek żony',
     number: '00-00-009120',
     amount: '142 692',
@@ -155,7 +155,7 @@ const EUR_ASSETS: AssetClass[] = [
 const EUR_ACCOUNTS: Account[] = [
   {
     id: 'maklerski-eur',
-    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' },
+    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#11aebd' },
     name: 'Rachunek maklerski EUR',
     number: '00-00-006858/EUR',
     amount: '248 400',
@@ -193,7 +193,7 @@ const USD_ASSETS: AssetClass[] = [
 const USD_ACCOUNTS: Account[] = [
   {
     id: 'maklerski-usd',
-    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5' },
+    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#11aebd' },
     name: 'Rachunek maklerski USD',
     number: '00-00-006858/USD',
     amount: '61 000',

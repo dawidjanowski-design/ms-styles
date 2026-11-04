@@ -8,7 +8,7 @@ import {
 import { Amount } from './ui';
 import { Transactions } from './Transactions';
 
-type StyleId = '1' | '2' | '3' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | 'makieta';
 
 export function AccountScreen({
   styleId,

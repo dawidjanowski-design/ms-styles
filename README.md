@@ -188,7 +188,7 @@ oferty mieszczą się na ekranie — pierwsza karta przechodzi na koniec. Pas
 można też przeciągać myszą i palcem albo przesunąć poziomym gestem na
 gładziku. Technicznie: karty w pięciu kopiach, tor przesuwany transformem,
 po każdym ruchu cichy powrót do środkowej kopii (`OffersLoop` w
-`Dashboard.tsx`, to samo w `preview.js`). Nr 2, nr 3 i makieta zostają przy
+`Dashboard.tsx`, to samo w `preview.js`). Nr 2, nr 3, nr 4 i makieta zostają przy
 zwykłym przewijanym pasie.
 
 Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
@@ -454,7 +454,7 @@ wireframe pokazuje zwykły szary przycisk.
 Wyjątek: w nr 1 przycisk jest identyczny jak aktywna pigułka „Łącznie" z
 Portfela — wysokość, padding i rozmiar tekstu z tokenów `--pill-*`, cień
 `--shadow-pill`, a tło to biel 70% zmieszana z `--pill-track-bg`, bo tutaj
-pod przyciskiem nie ma toru pigułek. Nr 2, nr 3 i makieta mają wartości z Figmy.
+pod przyciskiem nie ma toru pigułek. Nr 2, nr 3, nr 4 i makieta mają wartości z Figmy.
 
 ## Dymek „Wolna gotówka wg walut"
 
