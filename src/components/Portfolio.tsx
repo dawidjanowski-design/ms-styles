@@ -412,21 +412,35 @@ function AccountCard({
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
-          <div className="acctCard__rows">
-            {account.rows.map((r, i) => (
-              <button type="button" className="acctRow" key={r.label}>
-                {v3 && (
-                  <span
-                    className="acctRow__dot"
-                    style={{ background: parts[i]?.color ?? 'var(--divider)' }}
-                  />
-                )}
-                <span className="acctRow__label">{r.label}</span>
-                <span className="acctRow__value">{r.value}</span>
-                <span className="acctRow__chev">›</span>
-              </button>
-            ))}
-          </div>
+          {v3 ? (
+            /* Ten sam wzorzec, co po drugiej stronie przelacznika: pozycje
+               rachunku jako kafelki. Lista zostawiala pol karty pustej, gdy
+               rachunek mial dwie pozycje, a sasiad piec. */
+            <div className="metrics">
+              {account.rows.map((r, i) => (
+                <div className="metric" key={r.label}>
+                  <span className="metric__label">
+                    <span
+                      className="metric__dot"
+                      style={{ background: parts[i]?.color ?? 'var(--divider)' }}
+                    />
+                    {r.label}
+                  </span>
+                  <span className="metric__value">{r.value}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="acctCard__rows">
+              {account.rows.map((r) => (
+                <button type="button" className="acctRow" key={r.label}>
+                  <span className="acctRow__label">{r.label}</span>
+                  <span className="acctRow__value">{r.value}</span>
+                  <span className="acctRow__chev">›</span>
+                </button>
+              ))}
+            </div>
+          )}
         </>
       )}
 

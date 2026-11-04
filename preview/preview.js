@@ -215,12 +215,15 @@ function accountCard(a) {
           : ''}
       </div>` : ''}
     ${a.rows.length ? `<div class="divider"></div>
-      <div class="acctCard__rows">${a.rows.map(([l, v]) =>
-        `<button type="button" class="acctRow">${state.style === '3'
-          ? `<span class="acctRow__dot" style="background:${colorForLabel(l, '3') || 'var(--divider)'}"></span>` : ''}
-         <span class="acctRow__label">${l}</span>
-         <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
-      </div>` : ''}
+      ${state.style === '3'
+        ? `<div class="metrics">${a.rows.map(([l, v]) =>
+            `<div class="metric"><span class="metric__label"><span class="metric__dot"
+               style="background:${colorForLabel(l, '3') || 'var(--divider)'}"></span>${l}</span>
+             <span class="metric__value">${v}</span></div>`).join('')}</div>`
+        : `<div class="acctCard__rows">${a.rows.map(([l, v]) =>
+            `<button type="button" class="acctRow"><span class="acctRow__label">${l}</span>
+             <span class="acctRow__value">${v}</span><span class="acctRow__chev">›</span></button>`).join('')}
+          </div>`}` : ''}
     <div class="acctCard__foot">
       <button type="button" class="acctCard__action" ${
         state.style !== 'makieta' && a.id === 'ike' && state.currency === 'Łącznie'
