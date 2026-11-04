@@ -371,6 +371,14 @@
   --band-alt: #f5f5f4;
   --nav-active-color: #00255a;
 
+  /* Hover glownego przycisku w granacie stylistyki, nie w indygo z nr 3.
+     Tlo zostaje biale, a przycisk unosi sie cieniem — na szarym pasmie
+     czyta sie to lepiej niz zmiana tla. */
+  --btn-hover-bg: #ffffff;
+  --btn-hover-color: #00255a;
+  --btn-hover-shadow: 0 0 0 1px #d7dde7, 0 4px 10px rgba(0, 37, 90, 0.1),
+    0 1px 2px rgba(0, 37, 90, 0.06);
+
   /* Update z 986:20769: boxy schodza na 8, przelaczniki dostaja cieply tor
      #f1eeea i tez promien 8 zamiast pelnego zaokraglenia. */
   --card-radius: 8px;

@@ -909,9 +909,22 @@ select.field__control {
   background: var(--pill-active-bg, #ffffff); box-shadow: var(--shadow-pill); color: var(--ink);
 }
 
-/* przycisk „Przejdz do portfela” */
-[data-family='v3'] .btnAction { background: #ffffff; height: 40px; }
-[data-family='v3'] .btnAction:hover { background: var(--accent-soft); color: var(--accent); }
+/* Przycisk „Przejdz do portfela”. Hover idzie przez tokeny, bo nr 3 i nr 4
+   maja inne akcenty — a ta regula i tak wygralaby zrodlowo z blokiem numeru
+   w tokens.css przy tej samej specyficznosci. */
+[data-family='v3'] .btnAction {
+  background: #ffffff; height: 40px;
+  transition: background 160ms var(--ease), color 160ms var(--ease),
+    box-shadow 160ms var(--ease);
+}
+[data-family='v3'] .btnAction:hover {
+  background: var(--btn-hover-bg, var(--accent-soft));
+  color: var(--btn-hover-color, var(--accent));
+  box-shadow: var(--btn-hover-shadow, var(--shadow-action));
+}
+[data-family='v3'] .btnAction:hover .btnAction__chev {
+  color: var(--btn-hover-color, var(--accent));
+}
 
 /* karty gotowki i klas aktywow — cienki obrys, promien 16 jak w Figmie */
 [data-family='v3'] .cashCard { padding: 20px 22px; gap: 10px; }
