@@ -38,7 +38,7 @@ const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
 /** Nazwa i paleta po id — wspólne dla wszystkich walut. */
-const META: Record<string, { name: string; colors: Record<'1' | '2' | '3', Palette> }> = {
+const META: Record<string, { name: string; colors: Record<'1' | '2' | '3' | '4', Palette> }> = {
   ...Object.fromEntries(ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }])),
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
