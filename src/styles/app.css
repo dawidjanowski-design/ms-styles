@@ -476,16 +476,29 @@ select.field__control {
 
 .btnGhost--lg { height: 38px; padding: 0 16px; font-size: 13px; }
 
-/* Stylistyka nr 1: „Przejdź do portfela” wygląda jak aktywna pigułka „Łącznie”
-   z Portfela. Tam biel 70% leży na torze pigułek; tutaj toru nie ma, więc
-   ten sam kolor mieszamy z góry. */
-[data-style='1'] .btnGhost--lg {
-  height: var(--pill-h); padding: 0 var(--pill-px); border: 0;
+/* Przycisk akcji na pulpicie (Figma 963:9934) */
+.btnAction {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 38px; padding: 0 16px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-action);
+  font-size: 13px; font-weight: 500; line-height: 19px;
+  color: var(--pill-active-color);
+  transition: background 140ms var(--ease);
+}
+.btnAction:hover { background: #ffffff; }
+.btnAction__chev { font-size: 16px; line-height: 1; color: var(--crumb-sep); }
+
+/* Stylistyka nr 1: przycisk wygląda jak aktywna pigułka „Łącznie” z Portfela.
+   Tam biel 70% leży na torze pigułek; tutaj toru nie ma, więc ten sam kolor
+   mieszamy z góry. Nr 2 i makieta zostają przy wartościach z Figmy powyżej. */
+[data-style='1'] .btnAction {
+  height: var(--pill-h); padding: 0 var(--pill-px);
   background: color-mix(in srgb, #fff 70%, var(--pill-track-bg));
   box-shadow: var(--shadow-pill);
-  font-size: var(--pill-size); color: var(--pill-active-color);
+  font-size: var(--pill-size);
 }
-[data-style='1'] .btnGhost--lg:hover { background: #fff; }
+[data-style='1'] .btnAction:hover { background: #fff; }
 
 /* ---- emisje i oferty ---- */
 .offers { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }

@@ -227,9 +227,11 @@ export function DashboardScreen({
                 <span className="dashHead__label">{DASHBOARD.label}</span>
                 <Amount int={total.total} dec={total.decimals} />
               </div>
-              <button type="button" className="btnGhost btnGhost--lg" onClick={onOpenPortfolio}>
+              <button type="button" className="btnAction" onClick={onOpenPortfolio}>
                 {DASHBOARD.action}
-                <span aria-hidden="true">›</span>
+                <span className="btnAction__chev" aria-hidden="true">
+                  ›
+                </span>
               </button>
             </div>
             <div className="dashChart">

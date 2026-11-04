@@ -200,8 +200,8 @@ nie ma. Oferta bez pola `logo` renderuje nazwę emitenta tekstem.
 
 W nr 1 aktywne tło pigułek to osobny wskaźnik, który przy zmianie wyboru
 przesuwa się pod kolejny przycisk i dopasowuje szerokość (340 ms,
-`cubic-bezier(0.16, 1, 0.3, 1)`); przycisk „Przejdź do portfela" ma wygląd
-aktywnej pigułki „Łącznie".
+`cubic-bezier(0.16, 1, 0.3, 1)`); przycisk „Przejdź do portfela" ma w nr 1
+wygląd aktywnej pigułki „Łącznie" (szczegóły niżej, w sekcji o przycisku).
 
 ## Przełącznik walutowy na Portfelu
 
@@ -435,3 +435,23 @@ w gęstości 3x — 96 px rysowane na 32 px, tak samo jak logo emitentów.
 
 W makiecie awatar zostaje szarym kółkiem: wireframe nie pokazuje zdjęć,
 a kolorowa fotografia byłaby jedynym nasyconym elementem na całym ekranie.
+
+## Przycisk „Przejdź do portfela"
+
+Figma `963:9934`. Wcześniej był płaskim przyciskiem z obrysem (`.btnGhost`)
+i gubił się na szarym tle pulpitu. Teraz ma wartości odczytane z pliku:
+białe tło na 70%, promień 999, tekst 13 px Medium i pełny stos sześciu cieni
+(`--shadow-action`) — ten sam materiał, co pigułki i karty, więc guzik jest
+lekko wypukły zamiast wtapiać się w tło.
+
+Kolor tekstu idzie z `--pill-active-color`, a strzałka z `--crumb-sep`, więc
+przycisk ciepleje w nr 1 i chłodnieje w nr 2 razem z resztą stylistyki.
+Figma ma w tym miejscu `#171934`, czyli dokładnie wartość nr 2.
+
+Klasa `.btnGhost--lg` została przy „Pokaż więcej" na ekranie serii, gdzie
+wireframe pokazuje zwykły szary przycisk.
+
+Wyjątek: w nr 1 przycisk jest identyczny jak aktywna pigułka „Łącznie" z
+Portfela — wysokość, padding i rozmiar tekstu z tokenów `--pill-*`, cień
+`--shadow-pill`, a tło to biel 70% zmieszana z `--pill-track-bg`, bo tutaj
+pod przyciskiem nie ma toru pigułek. Nr 2 i makieta mają wartości z Figmy.

@@ -992,8 +992,8 @@ function dashboardScreen() {
           <span class="dashHead__label">${DASHBOARD.label}</span>
           ${amount(VIEWS['Łącznie'].total, VIEWS['Łącznie'].dec, '', 'pulpit-suma')}
         </div>
-        <button type="button" class="btnGhost btnGhost--lg" data-goto="portfel">
-          ${DASHBOARD.action}<span>›</span></button>
+        <button type="button" class="btnAction" data-goto="portfel">
+          ${DASHBOARD.action}<span class="btnAction__chev">›</span></button>
       </div>
       <div class="dashChart">${chart(VIEWS['Łącznie'].allocation)}</div>
       ${legend(VIEWS['Łącznie'].allocation)}
