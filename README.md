@@ -441,8 +441,9 @@ pod wykresem — **tylko na pulpicie**, zgodnie z ustaleniem. Wymiary z pliku:
 280 px szerokości, padding 20/22, promień 12, cień `0 6px 20px rgba(0,0,0,.12)`,
 tytuł 14 px Medium, wiersze 13 px co 11 px.
 
+Wyrównany do prawej krawędzi, czyli do kwoty w wierszu — nie do nazwy.
 Dymek nie łapie myszy (`pointer-events: none`), więc nie odbiera wierszowi
-podświetlenia — po najechaniu na gotówkę reszta wykresu nadal przygasa.
+podświetlenia: po najechaniu na gotówkę reszta wykresu nadal przygasa.
 
 Kwoty są te same, co karta „Wolna gotówka" na Portfelu, żeby obie liczby
 mówiły to samo. **Figma ma w dymku jeszcze CHF i inne wartości PLN/USD**

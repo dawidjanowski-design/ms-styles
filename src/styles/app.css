@@ -842,7 +842,8 @@ select.field__control {
    tylko na pulpicie. Nie łapie myszy, żeby nie odbierać wierszowi hovera. */
 .legend__cashInner--tip { position: relative; }
 .cashTip {
-  position: absolute; top: calc(100% + 10px); left: 0; z-index: 40;
+  /* Przy kwocie, czyli przy prawej krawedzi wiersza — nie przy nazwie. */
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 40;
   width: 280px; padding: 20px 22px; border-radius: 12px;
   background: var(--card-bg);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
