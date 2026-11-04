@@ -339,11 +339,9 @@
 }
 
 /* ====================== STYLISTYKA 4 ======================
-   To samo, co nr 3, z dwiema roznicami. Portfel nie powtarza wykresu
-   z pulpitu: zostaje kwota, przelacznik walut i karty gotowki w pasmie
-   podsumowania, a pod spodem struktura (Figma 976:18261). Druga roznica
-   to kolor — w tym samym wezle Figmy klasy sa znakowane nasyconymi
-   odcieniami z nr 2, nie pastelami, i stad bierze sie ta paleta. */
+   Uklad identyczny jak nr 3 — nr 4 sluzy wylacznie do eksperymentow
+   z kolorem. Punkt wyjscia: w Figmie 976:18261 klasy sa znakowane
+   nasyconymi odcieniami z nr 2, nie pastelami z nr 3. */
 [data-style='4'] {
   --c-corp: #046816;
   --c-skarb: #0a21c8;

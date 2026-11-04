@@ -228,18 +228,16 @@ const isEmpty = (c: CashCard) => c.amount.replace(/\s/g, '') === '0';
 function CashOverview({
   cards,
   onOpenTransit,
-  /* W nr 4 karty gotowki stoja w pasmie podsumowania, tuz pod kwota — bez
-     wlasnego tytulu i bez wlasnej sekcji, bo sekcja to u nas pasmo tla. */
-  inline = false,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
-  inline?: boolean;
 }) {
   const visible = cards.filter((c) => !isEmpty(c));
   if (visible.length === 0) return null;
 
-  const grid = (
+  return (
+    <section className="cash">
+      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
       <div className="cash__grid">
         {visible.map((card, i) => {
           const link = onOpenTransit && card.label === 'Środki w drodze';
@@ -272,16 +270,6 @@ function CashOverview({
           );
         })}
       </div>
-  );
-
-  /* Inline to <div> w pasmie podsumowania, zwykly tryb to wlasna sekcja,
-     czyli u nas osobne pasmo tla. */
-  return inline ? (
-    <div className="cash cash--inline">{grid}</div>
-  ) : (
-    <section className="cash">
-      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
-      {grid}
     </section>
   );
 }
@@ -493,7 +481,6 @@ export function PortfolioScreen({
 
   const data = VIEWS[currency];
   const title = <h1 className="pageTitle">Portfel</h1>;
-  const v4 = styleId === '4';
   /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
      lacznym — w PLN/EUR/USD jego liczby by nie pasowaly. */
   const transitHandler =
@@ -524,30 +511,23 @@ export function PortfolioScreen({
                   />
                 </div>
               </div>
-              {/* Nr 4 nie powtarza wykresu z pulpitu — na portfelu zostaje
-                  sama kwota, przelacznik walut i gotowka. */}
-              {!v4 && (
-                <AllocationChart
-                  rows={data.allocation}
-                  styleId={styleId}
-                  hot={hot}
-                  setHot={setHot}
-                />
-              )}
-            </div>
-            {!v4 && (
-              <Legend
+              <AllocationChart
                 rows={data.allocation}
                 styleId={styleId}
                 hot={hot}
                 setHot={setHot}
-                onOpenAsset={onOpenAsset}
               />
-            )}
-            {v4 && <CashOverview cards={data.cashCards} inline onOpenTransit={transitHandler} />}
+            </div>
+            <Legend
+              rows={data.allocation}
+              styleId={styleId}
+              hot={hot}
+              setHot={setHot}
+              onOpenAsset={onOpenAsset}
+            />
           </section>
 
-          {!v4 && <CashOverview cards={data.cashCards} onOpenTransit={transitHandler} />}
+          <CashOverview cards={data.cashCards} onOpenTransit={transitHandler} />
 
           <section className="assets">
             <div className="assets__head">

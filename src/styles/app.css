@@ -1003,7 +1003,3 @@ select.field__control {
 [data-family='v3'] .metric__dot {
   width: 6px; height: 6px; border-radius: 999px; flex: none; margin-top: 6px;
 }
-
-/* W nr 4 karty gotowki siedza w pasmie podsumowania, wiec nie potrzebuja
-   wlasnego tytulu ani odstepu sekcji — tylko oddechu nad soba. */
-[data-style='4'] .cash--inline { padding-top: 28px; }

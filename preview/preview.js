@@ -149,13 +149,11 @@ function legend(rows, cashTooltip) {
 /* Karta z zerowym saldem nie niesie zadnej informacji. */
 const isEmptyCash = (c) => String(c.amount).replace(/\s/g, '') === '0';
 
-function cash(cards, inline) {
+function cash(cards) {
   const visible = cards.filter((c) => !isEmptyCash(c));
   if (!visible.length) return '';
-  /* W nr 4 karty gotowki stoja w pasmie podsumowania — bez tytulu i bez
-     wlasnej sekcji, bo sekcja to u nas osobne pasmo tla. */
-  return `<${inline ? 'div class="cash cash--inline"' : 'section class="cash"'}>
-    ${inline ? '' : '<h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>'}
+  return `<section class="cash">
+    <h2 class="sectionTitle">Gotówka i środki rozliczeniowe</h2>
     <div class="cash__grid">${visible.map(
       (c, i) => {
         const link = state.style !== 'makieta' && state.currency === 'Łącznie'
@@ -171,7 +169,7 @@ function cash(cards, inline) {
           ${c.rows.map(([l, v]) => kv(l, v)).join('')}
         </div></article>`;
       }
-    ).join('')}</div></${inline ? 'div' : 'section'}>`;
+    ).join('')}</div></section>`;
 }
 
 
@@ -1030,11 +1028,11 @@ function portfolioScreen() {
               ${pills(CURRENCIES, state.currency, 'currency')}
             </div>
           </div>
-          ${state.style === '4' ? '' : chart(data.allocation)}
+          ${chart(data.allocation)}
         </div>
-        ${state.style === '4' ? cash(data.cashCards, true) : legend(data.allocation)}
+        ${legend(data.allocation)}
       </section>
-      ${state.style === '4' ? '' : cash(data.cashCards)}
+      ${cash(data.cashCards)}
       <section class="assets">
         <div class="assets__head">
           <h2 class="sectionTitle">${state.view === 'Aktywa' ? 'Struktura aktywów' : 'Struktura rachunków'}</h2>
