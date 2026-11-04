@@ -328,14 +328,19 @@
   --row-hover: #f2f6fa;
   --table-bg: #ffffff;
 
-  --c-corp: #78d2e5;
-  --c-skarb: #383a36;
-  --c-am: #fb6f90;
-  --c-fio: #9b8cfa;
-  --c-fiz: #ffdb32;
-  --c-cash: #2fa39b;
-  --c-cash-bg: #a3d2ce;
-  --cash-hatch: 47, 163, 155;
+  /* Paleta „strefaKlienta" wprost z pliku klienta: #3B1EF5, #1A2A8C,
+     #2FA39B, #3B7DDB, #E0A526, a gotowka #FF2D5F. Wypelnienia slupkow to
+     ich wlasna funkcja tint() — kazda skladowa przesunieta o 60% w strone
+     244, nie bieli. Wczesniej mielismy tu pastele odczytane ze zrzutu
+     Figmy, ktore z tym plikiem nie mialy nic wspolnego. */
+  --c-corp: #3b1ef5;
+  --c-skarb: #1a2a8c;
+  --c-am: #2fa39b;
+  --c-fio: #3b7ddb;
+  --c-fiz: #e0a526;
+  --c-cash: #ff2d5f;
+  --c-cash-bg: #f8a4b8;
+  --cash-hatch: 155, 28, 60;
 }
 
 /* ====================== STYLISTYKA 4 ======================

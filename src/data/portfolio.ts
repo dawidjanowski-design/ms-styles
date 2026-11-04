@@ -44,7 +44,7 @@ export const ASSETS: AssetClass[] = [
     amount: '1 792 922',
     amountDecimals: ',00 PLN',
     legendValue: '1 792 922 PLN',
-    colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' }, '3': { chart: '#c2e6ee', chartFoot: '#78d2e5', legend: '#78d2e5', card: '#78d2e5' }, '4': { chart: '#d9e8dc', chartFoot: '#046816', legend: '#046816', card: '#046816' } },
+    colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' }, '3': { chart: '#aa9ef4', chartFoot: '#3b1ef5', legend: '#3b1ef5', card: '#3b1ef5' }, '4': { chart: '#d9e8dc', chartFoot: '#046816', legend: '#046816', card: '#046816' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -63,7 +63,7 @@ export const ASSETS: AssetClass[] = [
     amount: '316 398',
     amountDecimals: ',00 PLN',
     legendValue: '316 398 PLN',
-    colors: { '1': { chart: '#e4b212', legend: '#e4b212', card: '#0a21c8' }, '2': { chart: '#0a0ac8', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' }, '3': { chart: '#a8aaa8', chartFoot: '#383a36', legend: '#383a36', card: '#383a36' }, '4': { chart: '#dadef7', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' } },
+    colors: { '1': { chart: '#e4b212', legend: '#e4b212', card: '#0a21c8' }, '2': { chart: '#0a0ac8', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' }, '3': { chart: '#9da3ca', chartFoot: '#1a2a8c', legend: '#1a2a8c', card: '#1a2a8c' }, '4': { chart: '#dadef7', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -82,7 +82,7 @@ export const ASSETS: AssetClass[] = [
     amount: '843 728',
     amountDecimals: ',00 PLN',
     legendValue: '843 728 PLN',
-    colors: { '1': { chart: '#11aebd', legend: '#0a21c8', card: '#0aa6c8' }, '2': { chart: '#b044ef', legend: '#b044ef', card: '#b044ef' }, '3': { chart: '#f7bfcc', chartFoot: '#fb6f90', legend: '#fb6f90', card: '#fb6f90' }, '4': { chart: '#f3e3fd', chartFoot: '#b044ef', legend: '#b044ef', card: '#b044ef' } },
+    colors: { '1': { chart: '#11aebd', legend: '#0a21c8', card: '#0aa6c8' }, '2': { chart: '#b044ef', legend: '#b044ef', card: '#b044ef' }, '3': { chart: '#a5d4d0', chartFoot: '#2fa39b', legend: '#2fa39b', card: '#2fa39b' }, '4': { chart: '#f3e3fd', chartFoot: '#b044ef', legend: '#b044ef', card: '#b044ef' } },
     rows: [
       { label: 'Strategie', value: '4' },
       { label: 'Rachunki', value: '4' },
@@ -96,7 +96,7 @@ export const ASSETS: AssetClass[] = [
     amount: '590 610',
     amountDecimals: ',00 PLN',
     legendValue: '590 610 PLN',
-    colors: { '1': { chart: '#7e2cb1', chartFoot: '#7e22b6', legend: '#0aa6c8', card: '#ef4444' }, '2': { chart: '#11aebd', legend: '#11aebd', card: '#11aebd' }, '3': { chart: '#dad3fe', chartFoot: '#9b8cfa', legend: '#9b8cfa', card: '#9b8cfa' }, '4': { chart: '#dbf3f5', chartFoot: '#11aebd', legend: '#11aebd', card: '#11aebd' } },
+    colors: { '1': { chart: '#7e2cb1', chartFoot: '#7e22b6', legend: '#0aa6c8', card: '#ef4444' }, '2': { chart: '#11aebd', legend: '#11aebd', card: '#11aebd' }, '3': { chart: '#aac4ea', chartFoot: '#3b7ddb', legend: '#3b7ddb', card: '#3b7ddb' }, '4': { chart: '#dbf3f5', chartFoot: '#11aebd', legend: '#11aebd', card: '#11aebd' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Ostatnia wycena', value: '30.10.2026' },
@@ -113,7 +113,7 @@ export const ASSETS: AssetClass[] = [
     amount: '421 864',
     amountDecimals: ',00 PLN',
     legendValue: '421 864 PLN',
-    colors: { '1': { chart: '#ef7744', legend: '#ef4444', card: '#e4b212' }, '2': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' }, '3': { chart: '#f9eaa7', chartFoot: '#ffdb32', legend: '#ffdb32', card: '#ffdb32' }, '4': { chart: '#fbf4db', chartFoot: '#e4b212', legend: '#e4b212', card: '#e4b212' } },
+    colors: { '1': { chart: '#ef7744', legend: '#ef4444', card: '#e4b212' }, '2': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' }, '3': { chart: '#ecd4a2', chartFoot: '#e0a526', legend: '#e0a526', card: '#e0a526' }, '4': { chart: '#fbf4db', chartFoot: '#e4b212', legend: '#e4b212', card: '#e4b212' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Najbliższe okno umorzenia', value: '31.12.2026' },
@@ -134,7 +134,7 @@ export const CASH = {
   colors: {
     '1': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
     '2': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
-    '3': { chart: '#a3d2ce', chartFoot: '#2fa39b', legend: '#2fa39b', card: '#2fa39b' },
+    '3': { chart: '#f8a4b8', chartFoot: '#ff2d5f', legend: '#ff2d5f', card: '#ff2d5f' },
     '4': { chart: '#f1f6de', chartFoot: '#9ec421', legend: '#9ec421', card: '#9ec421' },
   } as Record<'1' | '2' | '3' | '4', Palette>,
 };
@@ -210,7 +210,7 @@ export type Account = {
 export const ACCOUNTS: Account[] = [
   {
     id: 'maklerski',
-    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#046816' },
+    marker: { '1': '#042468', '2': '#046816', '3': '#3b1ef5', '4': '#046816' },
     name: 'Rachunek maklerski',
     number: '00-00-006858',
     amount: '2 362 438',
@@ -226,7 +226,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'zony',
-    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36', '4': '#0a21c8' },
+    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#1a2a8c', '4': '#0a21c8' },
     name: 'Rachunek żony',
     number: '00-00-009120',
     amount: '180 000',
@@ -239,7 +239,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'oki',
-    marker: { '1': '#0aa6c8', '2': '#b044ef', '3': '#fb6f90', '4': '#b044ef' },
+    marker: { '1': '#0aa6c8', '2': '#b044ef', '3': '#2fa39b', '4': '#b044ef' },
     name: 'OKI',
     number: '00-00-009120',
     amount: '843 728',
@@ -252,7 +252,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'ike',
-    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa', '4': '#11aebd' },
+    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#3b7ddb', '4': '#11aebd' },
     name: 'IKE',
     number: '00-00-007431',
     amount: '506 237',
@@ -267,7 +267,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'xz',
-    marker: { '1': '#e4b212', '2': '#e4b212', '3': '#ffdb32', '4': '#e4b212' },
+    marker: { '1': '#e4b212', '2': '#e4b212', '3': '#e0a526', '4': '#e4b212' },
     name: 'XZ',
     number: '00-00-007432',
     amount: '337 491',
@@ -281,7 +281,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'am',
-    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b', '4': '#9ec421' },
+    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#ff2d5f', '4': '#9ec421' },
     name: 'AM strategia konserwatywna',
     number: '00-00-008801',
     amount: '168 746',
