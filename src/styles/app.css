@@ -1284,10 +1284,7 @@ select.field__control {
    aktywow, a samo zdarzenie siedzi w karcie — bez niej byl goly tekst na
    bieli i kwota uciekala pol ekranu od instrumentu. */
 .timeline {
-  position: relative; display: flex; flex-direction: column; gap: 28px;
-  /* Wezsza kolumna niz pasmo: przy 1280 px kwota siadala metr od nazwy
-     instrumentu — dokladnie to, na co Michal narzekal przy aktywach. */
-  max-width: 780px;
+  position: relative; display: flex; flex-direction: column; gap: 24px;
 }
 /* Ciagla szyna przez wszystkie miesiace, nie tylko wewnatrz grupy. */
 .timeline::before {
@@ -1319,36 +1316,36 @@ select.field__control {
   background: var(--ev, var(--muted));
   box-shadow: 0 0 0 4px var(--card-bg);
 }
+/* Karta mowi jezykiem reszty wersji: te same kolumny co wiersz tabeli
+   zdarzen (data / rodzaj / instrument / kwota przy krawedzi pasma), ten sam
+   cien, ten sam promien i to samo szare podswietlenie na hover. Kolor klasy
+   aktywow zostaje wylacznie na kropce — tak jak na wykresie i w legendzie. */
 .timeline__card {
-  display: grid; grid-template-columns: 48px minmax(0, 1fr) auto;
-  align-items: center; gap: 18px;
-  padding: 12px 18px 12px 12px; min-height: 72px;
+  display: grid; grid-template-columns: 48px 232px minmax(0, 1fr) auto;
+  align-items: center; gap: 16px;
+  padding: 12px 20px 12px 12px; min-height: 72px;
   background: var(--card-bg); border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
-  /* Lewa krawedz w kolorze klasy aktywow — ten sam sygnal co kropka,
-     tylko na karcie, zeby lista nie byla sama biel. */
-  border-left: 3px solid var(--ev, var(--divider));
-  transition: box-shadow 160ms var(--ease), transform 160ms var(--ease);
+  transition: background 140ms var(--ease);
 }
-.timeline__item:hover .timeline__card {
-  box-shadow: var(--shadow-action); transform: translateY(-1px);
-}
-/* Kartka z kalendarza: dzien nad skrotem miesiaca, tlo w kolorze klasy. */
+.timeline__item:hover .timeline__card { background: var(--row-hover); }
+/* Kartka z kalendarza: dzien nad skrotem miesiaca, na tle pasma. */
 .timeline__date {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   width: 48px; height: 48px; border-radius: var(--card-radius);
-  background: color-mix(in srgb, var(--ev, var(--muted)) 14%, transparent);
+  background: var(--band-alt, var(--screen-bg));
 }
-.timeline__dd { font-size: 18px; font-weight: 500; line-height: 20px; color: var(--ink); }
+.timeline__dd { font-size: 16px; font-weight: 500; line-height: 20px; color: var(--ink); }
 .timeline__mm {
   font-size: 11px; line-height: 14px; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--muted);
 }
-/* Rodzaj nad instrumentem, nie obok — kwota trafia wtedy tuz za trescia,
-   zamiast na drugi koniec sekcji. */
-.timeline__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.timeline__what { display: contents; }
 .timeline__type { font-size: 14px; font-weight: 500; color: var(--ink); }
-.timeline__instrument { font-size: 13px; color: var(--muted); }
+.timeline__instrument {
+  font-size: 13px; color: var(--muted);
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .timeline__amount {
   font-size: 15px; font-weight: 500; color: var(--value-strong);
   text-align: right; white-space: nowrap;
