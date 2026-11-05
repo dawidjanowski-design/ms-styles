@@ -18,7 +18,9 @@
   --screen-pad-x: 28px;
   --screen-pad-bottom: 120px;
 
-  --content-w: 1064px;
+  /* Tresc ma 1280 px we wszystkich stylistykach poza makieta — nr 1 i nr 2
+     mialy 1064 i karty wychodzily wezsze niz w nr 3 i nr 4. */
+  --content-w: 1280px;
 
   --card-bg: #ffffff;
   --card-radius: 16px;
@@ -411,6 +413,8 @@
    koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,
    co jest układem, a co już decyzją wizualną. */
 [data-style='makieta'] {
+  /* Makieta zostaje przy wezszej kolumnie — to szkic, nie wersja do porownan. */
+  --content-w: 1064px;
   /* Makieta zostaje bez koloru — czerwona kropka wylamywalaby sie
      z szarosci, a ma tylko pokazywac, ze powiadomienia tu sa. */
   --notif: #9c9c9c;
