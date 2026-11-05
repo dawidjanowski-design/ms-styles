@@ -66,6 +66,9 @@
   --rule: #e2e2e2;
   --avatar-bg: #ddd8d2;
   --nav-active-bg: #f7f5f3;
+  /* Podswietlenie wiersza tabeli zdarzen — ten sam odcien, co pigulka
+     aktywnej pozycji w menu. */
+  --row-hover: #f7f5f3;
   --nav-active-color: #342717;
 
   /* Kreskowanie gotowki w wykresie — kolor jako skladowe RGB, zeby dalo sie
@@ -181,6 +184,7 @@
   --chip-border-hover: #dcdcdc;
   --avatar-bg: #d9d9d9;
   --nav-active-bg: #f0f0f2;
+  --row-hover: #f0f0f2;
   --nav-active-color: #171934;
 
   --section-title-size: 16px;
