@@ -481,7 +481,7 @@ W makiecie dymka nie ma.
 ## Stylistyka nr 5
 
 Figma `997:519` (ramka „v4.4"). Wyrasta z nr 4, ale w kilku miejscach wraca
-do rozwiązań z nr 1. W przełączniku stylistyk jest jako osobna pozycja,
+do wcześniejszych rozwiązań z nr 1. W przełączniku stylistyk jest jako osobna pozycja,
 nr 4 zostaje bez zmian.
 
 Co się zmienia względem nr 4:
@@ -497,7 +497,7 @@ Co się zmienia względem nr 4:
 | wykres | pastele na pełnej wysokości | 20% koloru i pełny pasek pod spodem, nowa paleta |
 | legenda | jedna kolumna, gotówka pod kreską | dwie kolumny: Aktywa i Gotówka |
 | karty gotówki | promień 8, obrys | promień 20, biel na 80%, miękki cień |
-| karty klas aktywów | wyróżniona metryka i siatka | budowa z nr 1: wiersze i szary pasek metryk na dole |
+| karty klas aktywów | wyróżniona metryka i siatka | dawna budowa z nr 1: wiersze i szary pasek metryk na dole (jedyna stylistyka poza makietą, która przy niej zostaje) |
 
 Wymiary sprawdzone pomiarem w przeglądarce: tytuł, kwota, wykres, nagłówki
 legendy i wysokości kart (279 / 243 / 211 px) zgadzają się z plikiem co do
@@ -533,6 +533,8 @@ Decyzje przy przenoszeniu:
 - **Karta „Środki w drodze"** nadal otwiera panel, ale bez strzałki (w pliku
   jej nie ma); zostaje kursor i lekkie uniesienie cieniem pod nim.
 
-Pozostałe ekrany (pulpit, obligacje, emitent, seria, rachunek) dziedziczą
-tokeny nr 5 i układ z nr 1. Nie były osobno projektowane w Figmie.
+Pozostałe ekrany (pulpit, obligacje, emitent, seria, rachunek) i karty
+rachunków dziedziczą tokeny nr 5 i wspólny układ wszystkich stylistyk
+(karty rachunków jako kafelki, kropka powiadomień przy dzwonku). Nie były
+osobno projektowane w Figmie.
 

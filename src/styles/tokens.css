@@ -18,7 +18,9 @@
   --screen-pad-x: 28px;
   --screen-pad-bottom: 120px;
 
-  --content-w: 1064px;
+  /* Tresc ma 1280 px we wszystkich stylistykach poza makieta — nr 1 i nr 2
+     mialy 1064 i karty wychodzily wezsze niz w nr 3 i nr 4. */
+  --content-w: 1280px;
 
   --card-bg: #ffffff;
   --card-radius: 16px;
@@ -64,6 +66,9 @@
   --rule: #e2e2e2;
   --avatar-bg: #ddd8d2;
   --nav-active-bg: #f7f5f3;
+  /* Podswietlenie wiersza tabeli zdarzen — ten sam odcien, co pigulka
+     aktywnej pozycji w menu. */
+  --row-hover: #f7f5f3;
   --nav-active-color: #342717;
 
   /* Kreskowanie gotowki w wykresie — kolor jako skladowe RGB, zeby dalo sie
@@ -71,6 +76,9 @@
   --cash-hatch: 158, 196, 33;
 
   --font: Inter;
+
+  /* Kropka nowych powiadomien. */
+  --notif: #e5484d;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -123,9 +131,12 @@
   --bar-fill-alpha: 0.1;
 
   /* karta aktywa */
-  --asset-card-pad: 20px 2px 2px 2px;
-  --asset-head-px: 18px;
-  --asset-row-px: 20px;
+  /* Padding karty byl ciety pod szary pasek metryk, ktory sam wnosil swoje
+     20 px i dociskal do krawedzi. Odkad metryki sa kafelkami, karta
+     potrzebuje normalnego paddingu. */
+  --asset-card-pad: 20px;
+  --asset-head-px: 0px;
+  --asset-row-px: 0px;
   --asset-value-size: 21px;
   --asset-value-decimals: 16px;
   --asset-marker: dot;
@@ -180,6 +191,7 @@
   --chip-border-hover: #dcdcdc;
   --avatar-bg: #d9d9d9;
   --nav-active-bg: #f0f0f2;
+  --row-hover: #f0f0f2;
   --nav-active-color: #171934;
 
   --section-title-size: 16px;
@@ -512,6 +524,8 @@
   --shadow-cash: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.06),
     0 2px 4px rgba(0, 0, 0, 0.04), inset 0 4px 4px rgba(255, 255, 255, 0.25);
   --strip-bg: #f5f5f6;
+  /* podswietlenie wiersza w tabeli zdarzen, ta sama szarosc co pasek metryk */
+  --row-hover: #f5f5f6;
 
   --value-strong: var(--legend-name);
   --chev: #9c9c9c;
@@ -541,6 +555,11 @@
    koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,
    co jest układem, a co już decyzją wizualną. */
 [data-style='makieta'] {
+  /* Makieta zostaje przy wezszej kolumnie — to szkic, nie wersja do porownan. */
+  --content-w: 1064px;
+  /* Makieta zostaje bez koloru — czerwona kropka wylamywalaby sie
+     z szarosci, a ma tylko pokazywac, ze powiadomienia tu sa. */
+  --notif: #9c9c9c;
   --page-bg: #f2f2f2;
   --screen-bg: #f6f6f6;
   --screen-border: #e8e8e8;

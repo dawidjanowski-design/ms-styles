@@ -53,6 +53,14 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   border-radius: 999px; transition: background 140ms var(--ease);
 }
 .appHeader__bell:hover { background: var(--screen-bg); }
+/* Kropka nowych powiadomien — jedyny mocny akcent w naglowku, wiec pierscien
+   w kolorze tla, zeby nie zlewala sie z ikona dzwonka. */
+.appHeader__bell--new { position: relative; }
+.appHeader__dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 999px;
+  background: var(--notif); box-shadow: 0 0 0 2px var(--header-bg);
+}
 .appHeader__user { display: flex; align-items: center; gap: 16px; }
 .appHeader__userName { font-size: 13px; font-weight: 500; color: var(--ink); }
 .appHeader__avatar {
@@ -568,16 +576,22 @@ select.field__control {
 
 /* ---- nadchodzące zdarzenia ---- */
 .events { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
+/* Karta nie ma wlasnego paddingu — caly odstep siedzi w wierszach. Inaczej
+   podswietlenie pierwszego i ostatniego wiersza zatrzymywalo sie przed
+   krawedzia karty i zostawal nad nim pasek tla. */
 .eventsCard {
   background: var(--card-bg); border-radius: var(--card-radius);
-  box-shadow: var(--shadow-card); padding: 8px 20px;
-  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-card); padding: 0;
+  display: flex; flex-direction: column; overflow: hidden;
 }
 .eventRow {
   display: grid; grid-template-columns: 100px 232px minmax(0, 1fr) auto 16px;
   align-items: center; gap: 16px;
-  padding: 14px 0; width: 100%; text-align: left;
+  /* Padding w jednej deklaracji — rozbity na padding-left i skrot kasowal
+     sie nawzajem i szewron wychodzil na krawedz karty. */
+  padding: 14px 20px; width: 100%; text-align: left;
   border-bottom: 1px solid var(--divider);
+  transition: background 140ms var(--ease);
 }
 .eventsCard .eventRow:last-child { border-bottom: 0; }
 .eventRow__date { font-size: 14px; color: var(--muted); }
@@ -946,7 +960,13 @@ select.field__control {
 [data-family='v3'] .pageTitle { line-height: 18px; }
 
 /* nawigacja: aktywna pozycja kolorem akcentu, bez pigulki */
-[data-family='v3'] .navItem--active { background: transparent; font-weight: 500; }
+/* Aktywna pozycja: kolor akcentu plus kreska pod spodem. Sam kolor tekstu
+   gubil sie obok piciu nieaktywnych pozycji w tym samym stopniu pisma. */
+[data-family='v3'] .navItem--active { background: transparent; font-weight: 500; position: relative; }
+[data-family='v3'] .navItem--active::after {
+  content: ''; position: absolute; left: 16px; right: 16px; bottom: 3px;
+  height: 2px; border-radius: 2px; background: var(--nav-active-color);
+}
 
 /* wykres: pastel na calej wysokosci slupka, pod nim nasycona kreska */
 [data-family='v3'] .chartSeg__body { border-radius: var(--bar-radius); }
@@ -988,9 +1008,10 @@ select.field__control {
 [data-family='v3'] .cashCard { padding: 20px 22px; gap: 10px; }
 [data-family='v3'] .cash__grid { gap: 16px; }
 /* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
-/* Karty w jednym rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278
-   parami, wiec siatka rozciaga je, zamiast przycinac do tresci. */
-[data-family='v3'] .assets__list {
+/* Dwie kolumny kart we wszystkich stylistykach poza makieta. Karty w jednym
+   rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278 parami, wiec
+   siatka je rozciaga, zamiast przycinac do tresci. */
+:root:not([data-style='makieta']) .assets__list {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px; align-items: stretch;
 }
@@ -1009,14 +1030,20 @@ select.field__control {
 }
 /* Stala wysokosc wiersza zamiast paddingu wokol tekstu. Przy line-height
    normal kazdy wiersz mierzyl tyle, ile jego najwyzsza komorka, wiec ostatni
-   wychodzil o piksel nizszy od pozostalych. Figma: naglowek 44, wiersz 56. */
-[data-family='v3'] .eventRow {
+   wychodzil o piksel nizszy od pozostalych. Figma: naglowek 44, wiersz 56.
+   Ta sama wysokosc we wszystkich stylistykach poza makieta. */
+:root:not([data-style='makieta']) .eventRow {
   min-height: 56px; padding: 0 20px;
-  transition: background 140ms var(--ease);
 }
-[data-family='v3'] .eventRow > span { line-height: 20px; }
-[data-family='v3'] .eventRow:not(.eventRow--head):hover { background: var(--row-hover); }
-[data-family='v3'] .eventRow--head {
+:root:not([data-style='makieta']) .eventRow > span { line-height: 20px; }
+/* Podswietlenie wiersza w kazdej stylistyce poza makieta — kazda bierze
+   swoj odcien z --row-hover. */
+:root:not([data-style='makieta']) .eventRow:not(.eventRow--head):hover {
+  background: var(--row-hover);
+}
+/* Naglowek jest nizszy od wierszy; ta sama specyficznosc co regula bazowa,
+   wiec decyduje kolejnosc w pliku — stoi nizej, wiec wygrywa. */
+:root:not([data-style='makieta']) .eventRow--head {
   min-height: 44px;
   border-bottom: 1px solid var(--divider); pointer-events: none;
 }
@@ -1029,38 +1056,43 @@ select.field__control {
 [data-family='v3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
 [data-family='v3'] .kv { padding: 8px 0; }
 
-/* Karta rachunku w nr 3 oddycha tak samo jak karta klasy aktywow: nazwa
-   i numer w jednej linii, kwota pod spodem, wiersze z tym samym paddingiem
-   i krojem co w .kv, znacznik jako kreska zamiast kropki. */
-[data-family='v3'] .acctCard__top { flex-direction: column; align-items: stretch; gap: 8px; }
+/* Karta rachunku oddycha tak samo jak karta klasy aktywow: nazwa i numer
+   w jednej linii, kwota pod spodem. Dotyczy wszystkich stylistyk poza
+   makieta — kwota po prawej stronie naglowka byla reliktem listy. */
+:root:not([data-style='makieta']) .acctCard__top {
+  flex-direction: column; align-items: stretch; gap: 8px;
+}
+/* Znacznik idzie za designem, nie za ukladem: kreska w nr 2, nr 3 i nr 4,
+   kropka w nr 1 i w makiecie — tak samo jak na kartach klas aktywow. */
+[data-style='2'] .acctCard__dot,
 [data-family='v3'] .acctCard__dot { width: 4px; height: 16px; border-radius: 4px; }
-[data-family='v3'] .acctRow { padding: 8px 0; gap: 10px; }
-[data-family='v3'] .acctRow__label,
-[data-family='v3'] .acctRow__value { font-size: 13px; }
-/* Karty rachunkow bez przyciskow — wiersze same prowadza dalej. */
-[data-family='v3'] .acctCard__foot { display: none; }
+/* Karty rachunkow bez przyciskow we wszystkich stylistykach poza makieta —
+   tam przycisk zostaje, bo makieta ma pokazywac, co na karcie jest. */
+:root:not([data-style='makieta']) .acctCard__foot { display: none; }
 /* Pasek limitu IKE. W nr 3 tlo ekranu jest biale, wiec panel w --screen-bg
    byl niewidoczny i zostawal po nim tylko wciety margines. Teraz to wyrazny
    kafelek w szarosci pasma, rowny z krawedzia tresci karty. */
 /* Limit wplat ladniej czyta sie jako podsumowanie pod pozycjami niz jako
    wtracenie miedzy kwota a metrykami — karta to flex w kolumnie, wiec
    wystarczy przestawic kolejnosc. */
-[data-family='v3'] .acctCard__limit { order: 1; }
-[data-family='v3'] .acctCard__limit {
+:root:not([data-style='makieta']) .acctCard__limit {
+  order: 1;
   margin: 0; padding: 14px 16px; border-radius: var(--card-radius);
-  background: var(--band-alt); gap: 8px;
+  background: var(--band-alt, var(--screen-bg)); gap: 8px;
 }
-[data-family='v3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
-[data-family='v3'] .acctCard__limitValue { font-size: 14px; }
-[data-family='v3'] .acctCard__limitTrack {
-  height: 6px; margin-top: 2px; background: #e2e2e8;
+:root:not([data-style='makieta']) .acctCard__limitLabel {
+  font-size: 13px; color: var(--muted);
+}
+:root:not([data-style='makieta']) .acctCard__limitValue { font-size: 14px; }
+:root:not([data-style='makieta']) .acctCard__limitTrack {
+  height: 6px; margin-top: 2px; background: var(--progress-track);
 }
 
 /* ---- nr 3: metryki klas aktywow jako kafelki ----
    Karty maja od dwoch do szesciu metryk. Lista wierszy robila z tego rwana
    kolumne wartosci; siatka sama dobiera liczbe kolumn, wiec dwie metryki
    rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
-[data-family='v3'] .metrics {
+.metrics {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px 32px; align-content: start;
   /* Etykieta rezerwuje dwie linie, wiec przy jednolinijkowej nazwie nad
@@ -1069,48 +1101,50 @@ select.field__control {
      24. Odejmujemy ja raz, na gorze bloku. */
   margin-top: -18px;
 }
-[data-family='v3'] .metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 /* Dwie linie miejsca na etykiete — „Fundusze zamkniete (FIZ)" lamie sie
    w waskiej kolumnie i bez tego kwota w tym kafelku zjezdzalaby nizej
    niz w sasiednich. Tekst siada na dole tego pola, wiec zapas trafia nad
    etykiete, gdzie czyta sie jak odstep miedzy rzedami, a nie miedzy
    etykieta a kwota. */
-[data-family='v3'] .metric__label {
+.metric__label {
   font-size: 13px; line-height: 18px; color: var(--muted); min-height: 36px;
 }
-[data-family='v3'] .metric__value {
+.metric__value {
   font-size: 16px; font-weight: 500; line-height: 22px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
 /* Wiecej powietrza wokol kreski pod kwota — karta ma oddychac. */
-[data-family='v3'] .assetCard,
-[data-family='v3'] .acctCard { gap: 24px; }
-[data-family='v3'] .assetCard__head,
-[data-family='v3'] .acctCard__top { gap: 10px; }
+/* Kafelki potrzebuja wiecej powietrza niz lista wierszy — ten sam rytm
+   we wszystkich stylistykach poza makieta, ktora zostaje przy liscie. */
+:root:not([data-style='makieta']) .assetCard,
+:root:not([data-style='makieta']) .acctCard { gap: 24px; }
+:root:not([data-style='makieta']) .assetCard__head,
+:root:not([data-style='makieta']) .acctCard__top { gap: 10px; }
 
-[data-family='v3'] .metric__label { display: flex; align-items: flex-end; }
+.metric__label { display: flex; align-items: flex-end; }
 
 /* ---- nr 3 i nr 4: hierarchia w karcie klasy aktywow ----
    Pierwszy wynik duzym stopniem, reszta w siatce, liczniki w cichej stopce.
    Rowny grid wszystkiego sprawial, ze „Emitent 1" wazyl tyle, co rentownosc. */
-[data-family='v3'] .metricLead { display: flex; flex-direction: column; gap: 4px; margin-top: -18px; }
+.metricLead { display: flex; flex-direction: column; gap: 4px; margin-top: -18px; }
 /* Mniejszy niz kwota karty (24 px) i wiekszy niz reszta metryk (16 px).
    Przy 28 px wyrozniona metryka wazyla wiecej niz wartosc calej pozycji. */
-[data-family='v3'] .metricLead__value {
+.metricLead__value {
   font-size: 20px; font-weight: 500; line-height: 26px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
-[data-family='v3'] .metricFoot {
+.metricFoot {
   display: flex; flex-wrap: wrap; gap: 4px 20px;
   padding-top: 18px; margin-top: auto;
   border-top: 1px solid var(--divider);
 }
-[data-family='v3'] .metricFoot__item {
+.metricFoot__item {
   display: inline-flex; gap: 6px; font-size: 13px; line-height: 18px; color: var(--muted);
 }
-[data-family='v3'] .metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
+.metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
 
 [data-family='v3'] .assetCard--link { cursor: pointer; }
 
@@ -1232,6 +1266,11 @@ select.field__control {
 }
 /* W pliku karta ma przezroczysty obrys 1 px, tresc stoi 3 px od krawedzi */
 [data-style='5'] .assetCard { border: 1px solid transparent; }
+/* Rytm z pliku: 12 px miedzy elementami karty i 8 px w naglowku. Regula
+   kafelkow (:root:not(makieta)) daje 24 i 10 i bije zwykly selektor nr 5
+   po specyficznosci, stad :root w selektorze. */
+:root[data-style='5'] .assetCard { gap: 12px; }
+:root[data-style='5'] .assetCard__head { gap: 8px; }
 [data-style='5'] .assetCard__rows { gap: 12px; }
 [data-style='5'] .strip { margin-top: auto; background: var(--strip-bg); min-height: 57px; }
 /* Trzy metryki rozkladaja sie na cala szerokosc. Kolumny po 140 px z pliku

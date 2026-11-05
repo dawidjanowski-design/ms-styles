@@ -26,10 +26,6 @@ const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
   s === 'makieta' ? '2' : s;
-
-/* Nr 4 to nr 3 z innym portfelem i inna paleta — uklad i typografia te same,
-   wiec wszedzie, gdzie liczy sie wyglad, pytamy o rodzine, nie o numer. */
-const isV3 = (s: StyleId) => s === '3' || s === '4';
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -337,19 +333,20 @@ function AssetCard({
   onOpen?: () => void;
 }) {
   const makieta = styleId === 'makieta';
-  /* Nr 2 i nr 3 pokazuja wszystko jako wiersze etykieta/wartosc i znacza
-     klase paskiem przed nazwa; nr 1 i makieta maja szary pasek metryk. */
-  const flat = styleId === '2' || isV3(styleId);
-  const strip = !flat;
-  /* Nr 5: data nie jest wynikiem. „Najbliższy wykup" schodzi z paska
-     metryk do wierszy, a w pasku zostaja same liczby (Figma 997:519). */
-  const dates = styleId === '5' ? asset.highlights.filter(isDate) : [];
+  /* Kafelki w kazdej stylistyce poza makieta i nr 5: etykieta stoi nad
+     wartoscia, zamiast po drugiej stronie karty. Znacznik klasy to osobna
+     sprawa: kreska przed nazwa w nr 2, nr 3 i nr 4, kropka po nazwie
+     w nr 1, nr 5 i w makiecie. */
+  const bar = styleId === '2' || styleId === '3' || styleId === '4';
+  /* Nr 5 (Figma 997:519) zostaje przy budowie z dawnego nr 1: wiersze
+     i szary pasek metryk. Data nie jest wynikiem, wiec „Najbliższy wykup"
+     schodzi z paska do wierszy, a w pasku zostaja same liczby. */
+  const v5 = styleId === '5';
+  const tiles = !makieta && !v5;
+  const strip = makieta || v5;
+  const dates = v5 ? asset.highlights.filter(isDate) : [];
   const results = asset.highlights.filter((m) => !dates.includes(m));
-  const rows = makieta
-    ? []
-    : strip
-      ? [...asset.rows, ...dates]
-      : [...asset.highlights, ...asset.rows];
+  const rows = makieta ? [] : v5 ? [...asset.rows, ...dates] : [...asset.highlights, ...asset.rows];
   /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
      dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
   const lead = asset.highlights.length >= 3 ? asset.highlights[0] : null;
@@ -364,9 +361,9 @@ function AssetCard({
     >
       <div className="assetCard__head">
         <div className="assetCard__title">
-          {flat && <span className="assetCard__bar" />}
+          {bar && <span className="assetCard__bar" />}
           <span className="assetCard__name">{asset.name}</span>
-          {!flat && <span className="assetCard__dot" />}
+          {!bar && <span className="assetCard__dot" />}
         </div>
         <Amount
           int={makieta ? `≈ ${asset.amount}` : asset.amount}
@@ -377,11 +374,12 @@ function AssetCard({
 
       {!makieta && <div className="divider" />}
 
-      {isV3(styleId) ? (
-        /* Hierarchia zamiast rownego gridu. Dane same sie dziela: highlights
-           to wyniki, rows to liczniki w rodzaju „Emitent 1". Pierwszy wynik
-           idzie na gore duzym stopniem, reszta w siatce, a liczniki schodza
-           do cichej stopki — dzieki temu karta mowi, co jest wazne. */
+      {tiles ? (
+        /* Hierarchia zamiast listy etykieta-wartosc. Dane same sie dziela:
+           highlights to wyniki, rows to liczniki w rodzaju „Emitent 1".
+           Pierwszy wynik idzie na gore duzym stopniem, reszta w siatce,
+           a liczniki schodza do cichej stopki. W liscie wartosc stala po
+           drugiej stronie karty, metr od swojej etykiety. */
         <>
           {lead && (
             <div className="metricLead">
@@ -453,7 +451,7 @@ function AccountCard({
   styleId: StyleId;
   onOpen?: () => void;
 }) {
-  const v3 = isV3(styleId);
+  const makieta = styleId === 'makieta';
 
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
@@ -497,10 +495,9 @@ function AccountCard({
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
-          {v3 ? (
+          {!makieta ? (
             /* Ten sam wzorzec, co po drugiej stronie przelacznika: pozycje
-               rachunku jako kafelki. Lista zostawiala pol karty pustej, gdy
-               rachunek mial dwie pozycje, a sasiad piec. */
+               rachunku jako kafelki. */
             <div className="metrics">
               {account.rows.map((r) => (
                 <div className="metric" key={r.label}>

@@ -237,6 +237,7 @@ const ACCOUNTS = [
 ];
 
 function accountCard(a) {
+  const makieta = state.style === 'makieta';
   return `<article class="acctCard" style="--seg:${a.marker[pal()]}">
     <div class="acctCard__head"><div class="acctCard__top">
       <div class="acctCard__title">
@@ -260,7 +261,7 @@ function accountCard(a) {
           : ''}
       </div>` : ''}
     ${a.rows.length ? `<div class="divider"></div>
-      ${isV3()
+      ${!makieta
         ? `<div class="metrics">${a.rows.map(([l, v]) =>
             `<div class="metric"><span class="metric__label">${l}</span>
              <span class="metric__value">${v}</span></div>`).join('')}</div>`
@@ -277,13 +278,17 @@ function accountCard(a) {
 
 function assetCard(a) {
   const makieta = state.style === 'makieta';
-  const flat = state.style === '2' || isV3();
-  const strip = !flat;
-  /* Nr 5: data nie jest wynikiem. „Najblizszy wykup" schodzi z paska
-     metryk do wierszy, a w pasku zostaja same liczby (Figma 997:519). */
-  const dates = state.style === '5' ? a.highlights.filter(([, v]) => /^\d{2}\.\d{2}\.\d{4}$/.test(v)) : [];
+  /* Kafelki wszedzie poza makieta i nr 5; znacznik klasy to osobna sprawa:
+     kreska przed nazwa w nr 2, nr 3 i nr 4, kropka po nazwie w nr 1 i nr 5. */
+  const bar = ['2', '3', '4'].includes(state.style);
+  /* Nr 5 (Figma 997:519) zostaje przy wierszach i szarym pasku metryk.
+     Data nie jest wynikiem: „Najblizszy wykup" schodzi z paska do wierszy. */
+  const v5 = state.style === '5';
+  const tiles = !makieta && !v5;
+  const strip = makieta || v5;
+  const dates = v5 ? a.highlights.filter(([, v]) => /^\d{2}\.\d{2}\.\d{4}$/.test(v)) : [];
   const results = a.highlights.filter((m) => !dates.includes(m));
-  const rows = makieta ? [] : strip ? [...a.rows, ...dates] : [...a.highlights, ...a.rows];
+  const rows = makieta ? [] : v5 ? [...a.rows, ...dates] : [...a.highlights, ...a.rows];
   const stripItems = makieta ? [...a.rows, ...a.highlights] : results;
   const link = DETAIL_ASSETS.has(a.id);
   const lead = a.highlights.length >= 3 ? a.highlights[0] : null;
@@ -291,14 +296,14 @@ function assetCard(a) {
   return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
-        ${flat ? '<span class="assetCard__bar"></span>' : ''}
+        ${bar ? '<span class="assetCard__bar"></span>' : ''}
         <span class="assetCard__name">${a.name}</span>
-        ${flat ? '' : '<span class="assetCard__dot"></span>'}
+        ${bar ? '' : '<span class="assetCard__dot"></span>'}
       </div>
       ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
-    ${isV3()
+    ${tiles
       ? /* Hierarchia: pierwszy wynik duzym stopniem, ale dopiero przy trzech
            i wiecej — przy dwoch stawiamy je obok siebie w siatce. */
         (lead
@@ -1255,9 +1260,10 @@ function render() {
         return `<button type="button" data-nav="${n}" class="navItem ${n === active ? 'navItem--active' : ''} ${NAV[i + 1] === active ? 'navItem--prev' : ''}">${n}</button>`;
       }).join('')}</nav>
       <div class="appHeader__right">
-        <button type="button" class="appHeader__bell" aria-label="Powiadomienia">
+        <button type="button" class="appHeader__bell appHeader__bell--new" aria-label="Powiadomienia — masz nowe">
           <span class="appHeader__bellIcon">${BELL}</span>
-          <span class="appHeader__bellIcon appHeader__bellIcon--round">${BELL_ROUND}</span></button>
+          <span class="appHeader__bellIcon appHeader__bellIcon--round">${BELL_ROUND}</span>
+          <span class="appHeader__dot" aria-hidden="true"></span></button>
         <div class="appHeader__user">
           <span class="appHeader__userName">Dawid Jankowski</span>
           <span class="appHeader__avatar"><img src="avatar.jpg" width="32" height="32" alt="">

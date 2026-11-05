@@ -174,13 +174,18 @@ export function AppHeader({
       <div className="appHeader__right">
         {/* Oba dzwonki i oba awatary sa w DOM-ie, a CSS pokazuje ten, ktory
             nalezy do stylistyki, tak samo jak szare kolko w makiecie. */}
-        <button type="button" className="appHeader__bell" aria-label="Powiadomienia">
+        <button
+          type="button"
+          className="appHeader__bell appHeader__bell--new"
+          aria-label="Powiadomienia — masz nowe"
+        >
           <span className="appHeader__bellIcon">
             <BellIcon />
           </span>
           <span className="appHeader__bellIcon appHeader__bellIcon--round">
             <BellIconRound />
           </span>
+          <span className="appHeader__dot" aria-hidden="true" />
         </button>
         <div className="appHeader__user">
           <span className="appHeader__userName">Dawid Jankowski</span>
