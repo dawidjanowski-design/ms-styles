@@ -944,9 +944,10 @@ select.field__control {
 [data-family='v3'] .cashCard { padding: 20px 22px; gap: 10px; }
 [data-family='v3'] .cash__grid { gap: 16px; }
 /* Dwie kolumny zamiast listy — tak jak na portfelu w Figmie. */
-/* Karty w jednym rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278
-   parami, wiec siatka rozciaga je, zamiast przycinac do tresci. */
-[data-family='v3'] .assets__list {
+/* Dwie kolumny kart we wszystkich stylistykach poza makieta. Karty w jednym
+   rzedzie maja te sama wysokosc — w Figmie 558x363 i 558x278 parami, wiec
+   siatka je rozciaga, zamiast przycinac do tresci. */
+:root:not([data-style='makieta']) .assets__list {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px; align-items: stretch;
 }
