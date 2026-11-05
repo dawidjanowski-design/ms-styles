@@ -1278,6 +1278,20 @@ select.field__control {
    w Figmie (24 / 198 / 372 zamiast 24 / 196 / 368). */
 [data-style='5'] .strip--dense { justify-content: space-between; gap: 24px; }
 [data-style='5'] .strip--dense .strip__item { width: auto; white-space: nowrap; }
+/* Nr 6: oferty i kalendarz w jednym pasmie, obok siebie. Os czasu na pelne
+   1280 px byla rozstrzelona — w kolumnie 440 px kwota wraca pod tresc,
+   a oferty leza w siatce 2x2 zamiast w torze do przewijania. */
+.dashSplit {
+  display: grid; grid-template-columns: minmax(0, 1fr) 468px;
+  gap: 40px; align-items: start;
+}
+.dashSplit .offers { padding-top: 0; gap: 16px; }
+.dashSplit .offers__track {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px; overflow: visible;
+}
+.dashSplit .events { padding-top: 0; display: flex; flex-direction: column; gap: 16px; }
+
 /* ======================= OS CZASU (nr 6) =======================
    Te same zdarzenia, co w tabeli, ale chronologicznie i zgrupowane
    miesiacami. Szyna biegnie przez cala sekcje, kropka bierze kolor klasy
@@ -1321,7 +1335,7 @@ select.field__control {
    cien, ten sam promien i to samo szare podswietlenie na hover. Kolor klasy
    aktywow zostaje wylacznie na kropce — tak jak na wykresie i w legendzie. */
 .timeline__card {
-  display: grid; grid-template-columns: 48px 232px minmax(0, 1fr) auto;
+  display: grid; grid-template-columns: 48px minmax(0, 1fr) auto;
   align-items: center; gap: 16px;
   padding: 12px 20px 12px 12px; min-height: 72px;
   background: var(--card-bg); border-radius: var(--card-radius);
@@ -1340,11 +1354,11 @@ select.field__control {
   font-size: 11px; line-height: 14px; letter-spacing: 0.04em;
   text-transform: uppercase; color: var(--muted);
 }
-.timeline__what { display: contents; }
+/* Rodzaj nad instrumentem — kwota trafia wtedy tuz za trescia. */
+.timeline__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .timeline__type { font-size: 14px; font-weight: 500; color: var(--ink); }
 .timeline__instrument {
-  font-size: 13px; color: var(--muted);
-  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 13px; color: var(--muted); min-width: 0;
 }
 .timeline__amount {
   font-size: 15px; font-weight: 500; color: var(--value-strong);

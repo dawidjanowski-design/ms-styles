@@ -149,7 +149,7 @@ function cardStep(track: HTMLElement) {
 }
 
 /** Stylistyki nr 2, nr 3, nr 4 i makieta: zwykły tor z przewijaniem. */
-function OffersScroll() {
+function OffersScroll({ inline = false }: { inline?: boolean }) {
   const track = useRef<HTMLDivElement>(null);
 
   const step = (dir: -1 | 1) => {
@@ -157,15 +157,18 @@ function OffersScroll() {
     if (el) el.scrollBy({ left: dir * cardStep(el), behavior: 'smooth' });
   };
 
+  /* W kolumnie obok kalendarza karty lezą w siatce 2x2 — nie ma czego
+     przewijac, wiec nie ma tez strzalek. */
+  const Tag = inline ? 'div' : 'section';
   return (
-    <section className="offers">
-      <OffersHead onStep={step} />
+    <Tag className="offers">
+      {inline ? <h2 className="sectionTitle">Emisje i oferty</h2> : <OffersHead onStep={step} />}
       <div className="offers__track" ref={track}>
         {OFFERS.map((o) => (
           <OfferCard key={o.id} offer={o} />
         ))}
       </div>
-    </section>
+    </Tag>
   );
 }
 
@@ -338,14 +341,22 @@ export function DashboardScreen({
             />
           </section>
 
+          {/* Nr 6: oferty i kalendarz stoja obok siebie w jednym pasmie —
+              os czasu rozciagnieta na 1280 px byla rozstrzelona. */}
+          {styleId === '6' ? (
+            <section className="dashSplit">
+              <OffersScroll inline />
+              <div className="events">
+                <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
+                <Timeline styleId={styleId} />
+              </div>
+            </section>
+          ) : (
+            <>
           {styleId === '1' ? <OffersLoop /> : <OffersScroll />}
 
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
-            {/* Nr 6 pokazuje te same zdarzenia jako os czasu, nie tabele. */}
-            {styleId === '6' ? (
-              <Timeline styleId={styleId} />
-            ) : (
             <div className="eventsCard">
               {/* Naglowek kolumn ma tylko nr 3 — w nr 1 i nr 2 lista zdarzen
                   zostaje lista, bez ramki tabeli. */}
@@ -370,8 +381,9 @@ export function DashboardScreen({
                 </button>
               ))}
             </div>
-            )}
           </section>
+            </>
+          )}
         </div>
       </div>
     </div>

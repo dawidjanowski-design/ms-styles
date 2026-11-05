@@ -1128,6 +1128,16 @@ function dashboardScreen() {
       ${legend(VIEWS['Łącznie'].allocation, true, VIEWS['Łącznie'])}
     </section>
 
+    ${state.style === '6' ? `<section class="dashSplit">
+      <div class="offers">
+        <h2 class="sectionTitle">Emisje i oferty</h2>
+        ${offersTrack()}
+      </div>
+      <div class="events">
+        <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
+        ${timeline()}
+      </div>
+    </section>` : `
     <section class="offers">
       <div class="offers__head">
         <h2 class="sectionTitle">Emisje i oferty</h2>
@@ -1141,7 +1151,7 @@ function dashboardScreen() {
 
     <section class="events">
       <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
-      ${state.style === '6' ? timeline() : `<div class="eventsCard">${isV3() ? `<div class="eventRow eventRow--head" aria-hidden="true">
+      <div class="eventsCard">${isV3() ? `<div class="eventRow eventRow--head" aria-hidden="true">
         <span class="eventRow__date">Data</span>
         <span class="eventRow__type">Zdarzenie / instrument</span>
         <span></span>
@@ -1151,8 +1161,8 @@ function dashboardScreen() {
         <span class="eventRow__type">${t}</span>
         <span class="eventRow__instrument">${i}</span>
         <span class="eventRow__amount">${a}</span>
-        <span class="eventRow__chev">›</span></button>`).join('')}</div>`}
-    </section>
+        <span class="eventRow__chev">›</span></button>`).join('')}</div>
+    </section>`}
   </div></div></div>`;
 }
 
