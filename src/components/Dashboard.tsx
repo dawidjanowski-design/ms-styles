@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { DASHBOARD, EVENTS, OFFERS, type Event, type Offer } from '../data/dashboard';
 import { VIEWS } from '../data/currencies';
 import { Logo } from '../icons/Logo';
@@ -15,6 +15,8 @@ const MONTHS = [
   'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
   'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień',
 ];
+/** Skroty na kartke z kalendarza — trzy litery mieszcza sie w 48 px. */
+const SHORT = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
 
 /** Zdarzenia pogrupowane miesiacami, z zachowaniem kolejnosci z danych. */
 function byMonth(events: Event[]) {
@@ -40,18 +42,27 @@ function Timeline({ styleId }: { styleId: StyleId }) {
           <h3 className="timeline__month">{g.label}</h3>
           <ol className="timeline__list">
             {g.items.map((e) => {
-              const dot = assetColor(e.asset, palette);
+              const dot = assetColor(e.asset, palette) ?? 'var(--muted)';
+              const [dd, mm] = e.date.split('.');
               return (
-                <li className="timeline__item" key={e.date + e.type + e.instrument}>
-                  <span
-                    className="timeline__dot"
-                    style={{ background: dot ?? 'var(--muted)' }}
-                    aria-hidden="true"
-                  />
-                  <span className="timeline__day">{e.date.slice(0, 5)}</span>
-                  <span className="timeline__type">{e.type}</span>
-                  <span className="timeline__instrument">{e.instrument}</span>
-                  <span className="timeline__amount">{e.amount}</span>
+                <li
+                  className="timeline__item"
+                  key={e.date + e.type + e.instrument}
+                  style={{ '--ev': dot } as CSSProperties}
+                >
+                  <span className="timeline__dot" aria-hidden="true" />
+                  <article className="timeline__card">
+                    {/* Kartka z kalendarza: dzien nad skrotem miesiaca. */}
+                    <span className="timeline__date">
+                      <span className="timeline__dd">{dd}</span>
+                      <span className="timeline__mm">{SHORT[Number(mm) - 1]}</span>
+                    </span>
+                    <span className="timeline__what">
+                      <span className="timeline__type">{e.type}</span>
+                      <span className="timeline__instrument">{e.instrument}</span>
+                    </span>
+                    {e.amount && <span className="timeline__amount">{e.amount}</span>}
+                  </article>
                 </li>
               );
             })}

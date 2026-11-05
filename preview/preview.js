@@ -74,6 +74,8 @@ const isV3 = () => ['3', '4', '6'].includes(state.style);
 
 const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
   'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+/* Skroty na kartke z kalendarza — trzy litery mieszcza sie w 48 px. */
+const SHORT = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
 
 /* Os czasu zamiast tabeli — nr 6. Kropka bierze kolor klasy aktywow. */
 function timeline() {
@@ -91,12 +93,18 @@ function timeline() {
       <ol class="timeline__list">${g.items.map(([d, t, i, a, cls]) => {
         const meta = META[cls];
         const dot = meta ? meta.colors[pal()].card : 'var(--muted)';
-        return `<li class="timeline__item">
-          <span class="timeline__dot" style="background:${dot}" aria-hidden="true"></span>
-          <span class="timeline__day">${d.slice(0, 5)}</span>
-          <span class="timeline__type">${t}</span>
-          <span class="timeline__instrument">${i}</span>
-          <span class="timeline__amount">${a}</span></li>`;
+        const [dd, mm] = d.split('.');
+        return `<li class="timeline__item" style="--ev:${dot}">
+          <span class="timeline__dot" aria-hidden="true"></span>
+          <article class="timeline__card">
+            <span class="timeline__date">
+              <span class="timeline__dd">${dd}</span>
+              <span class="timeline__mm">${SHORT[Number(mm) - 1]}</span></span>
+            <span class="timeline__what">
+              <span class="timeline__type">${t}</span>
+              <span class="timeline__instrument">${i}</span></span>
+            ${a ? `<span class="timeline__amount">${a}</span>` : ''}
+          </article></li>`;
       }).join('')}</ol>
     </section>`).join('')}</div>`;
 }

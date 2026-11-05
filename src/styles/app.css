@@ -1279,36 +1279,77 @@ select.field__control {
 [data-style='5'] .strip--dense { justify-content: space-between; gap: 24px; }
 [data-style='5'] .strip--dense .strip__item { width: auto; white-space: nowrap; }
 /* ======================= OS CZASU (nr 6) =======================
-   Te same zdarzenia, co w tabeli, ale ustawione chronologicznie i zgrupowane
-   miesiacami. Kropka bierze kolor klasy aktywow, wiec od razu widac, czego
-   zdarzenie dotyczy — a odstepy miedzy grupami pokazuja, gdzie jest luka. */
-.timeline { display: flex; flex-direction: column; gap: 28px; }
+   Te same zdarzenia, co w tabeli, ale chronologicznie i zgrupowane
+   miesiacami. Szyna biegnie przez cala sekcje, kropka bierze kolor klasy
+   aktywow, a samo zdarzenie siedzi w karcie — bez niej byl goly tekst na
+   bieli i kwota uciekala pol ekranu od instrumentu. */
+.timeline {
+  position: relative; display: flex; flex-direction: column; gap: 28px;
+  /* Wezsza kolumna niz pasmo: przy 1280 px kwota siadala metr od nazwy
+     instrumentu — dokladnie to, na co Michal narzekal przy aktywach. */
+  max-width: 780px;
+}
+/* Ciagla szyna przez wszystkie miesiace, nie tylko wewnatrz grupy. */
+.timeline::before {
+  content: ''; position: absolute; left: 7px; top: 12px; bottom: 12px;
+  width: 2px; border-radius: 2px; background: var(--divider);
+}
+.timeline__group { display: flex; flex-direction: column; gap: 12px; }
+/* Naglowek miesiaca stoi na szynie, zeby grupa czytala sie jako przystanek,
+   a nie jako podpis wiszacy obok. */
 .timeline__month {
-  margin: 0 0 12px; font-size: 13px; font-weight: 500;
-  letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+  position: relative; margin: 0; padding-left: 40px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+}
+.timeline__month::before {
+  content: ''; position: absolute; left: 2px; top: 50%; transform: translateY(-50%);
+  width: 12px; height: 12px; border-radius: 999px;
+  background: var(--card-bg);
+  box-shadow: 0 0 0 2px var(--divider) inset, 0 0 0 4px var(--card-bg);
 }
 .timeline__list {
-  position: relative; list-style: none; margin: 0; padding: 0 0 0 28px;
-  display: flex; flex-direction: column;
+  list-style: none; margin: 0; padding: 0 0 0 40px;
+  display: flex; flex-direction: column; gap: 12px;
 }
-/* Pionowa kreska konczy sie na ostatniej kropce, a nie pod nia. */
-.timeline__list::before {
-  content: ''; position: absolute; left: 4px; top: 28px; bottom: 28px;
-  width: 1px; background: var(--divider);
-}
-.timeline__item {
-  position: relative; display: grid;
-  grid-template-columns: 64px minmax(0, 220px) minmax(0, 1fr) auto;
-  align-items: center; gap: 16px; min-height: 56px;
-}
+.timeline__item { position: relative; }
 .timeline__dot {
-  position: absolute; left: -28px; top: 50%; transform: translateY(-50%);
-  width: 9px; height: 9px; border-radius: 999px;
+  position: absolute; left: -38px; top: 50%; transform: translateY(-50%);
+  width: 12px; height: 12px; border-radius: 999px;
+  background: var(--ev, var(--muted));
   box-shadow: 0 0 0 4px var(--card-bg);
 }
-.timeline__day { font-size: 14px; font-weight: 500; color: var(--ink); }
-.timeline__type { font-size: 14px; color: var(--ink); }
+.timeline__card {
+  display: grid; grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center; gap: 18px;
+  padding: 12px 18px 12px 12px; min-height: 72px;
+  background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+  /* Lewa krawedz w kolorze klasy aktywow — ten sam sygnal co kropka,
+     tylko na karcie, zeby lista nie byla sama biel. */
+  border-left: 3px solid var(--ev, var(--divider));
+  transition: box-shadow 160ms var(--ease), transform 160ms var(--ease);
+}
+.timeline__item:hover .timeline__card {
+  box-shadow: var(--shadow-action); transform: translateY(-1px);
+}
+/* Kartka z kalendarza: dzien nad skrotem miesiaca, tlo w kolorze klasy. */
+.timeline__date {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border-radius: var(--card-radius);
+  background: color-mix(in srgb, var(--ev, var(--muted)) 14%, transparent);
+}
+.timeline__dd { font-size: 18px; font-weight: 500; line-height: 20px; color: var(--ink); }
+.timeline__mm {
+  font-size: 11px; line-height: 14px; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--muted);
+}
+/* Rodzaj nad instrumentem, nie obok — kwota trafia wtedy tuz za trescia,
+   zamiast na drugi koniec sekcji. */
+.timeline__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.timeline__type { font-size: 14px; font-weight: 500; color: var(--ink); }
 .timeline__instrument { font-size: 13px; color: var(--muted); }
 .timeline__amount {
-  font-size: 14px; font-weight: 500; color: var(--value-strong); text-align: right;
+  font-size: 15px; font-weight: 500; color: var(--value-strong);
+  text-align: right; white-space: nowrap;
 }
