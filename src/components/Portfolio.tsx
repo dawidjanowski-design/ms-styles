@@ -19,13 +19,15 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | 'makieta';
-/** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | 'makieta';
+/** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
+    Nr 6 rozni sie od nr 4 wylacznie sekcja zdarzen, wiec siega po jego palete
+    i jego kolejnosc klas, zamiast duplikowac je w danych. */
 const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '1' : s;
+  s === 'makieta' ? '1' : s === '6' ? '4' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '2' : s;
+  s === 'makieta' ? '2' : s === '6' ? '4' : s;
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -35,7 +37,10 @@ const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
 /** Nazwa i paleta po id — wspólne dla wszystkich walut. */
-const META: Record<string, { name: string; colors: Record<'1' | '2' | '3' | '4' | '5', Palette> }> = {
+export const META: Record<
+  string,
+  { name: string; colors: Record<'1' | '2' | '3' | '4' | '5', Palette> }
+> = {
   ...Object.fromEntries(ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }])),
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
@@ -158,6 +163,10 @@ function CashTip({ children }: { children: ReactNode }) {
 const num = (s: string) => Number(s.replace(/\s/g, ''));
 /** ',00 PLN' -> 'PLN' */
 const unitOf = (decimals: string) => decimals.replace(/^,\d+\s*/, '');
+
+/** Kolor klasy aktywow do uzycia poza tym plikiem, np. na osi czasu. */
+export const assetColor = (id: string, palette: '1' | '2' | '3' | '4' | '5') =>
+  META[id]?.colors[palette].card;
 
 export function Legend({
   rows,
@@ -335,9 +344,9 @@ function AssetCard({
   const makieta = styleId === 'makieta';
   /* Kafelki w kazdej stylistyce poza makieta i nr 5: etykieta stoi nad
      wartoscia, zamiast po drugiej stronie karty. Znacznik klasy to osobna
-     sprawa: kreska przed nazwa w nr 2, nr 3 i nr 4, kropka po nazwie
+     sprawa: kreska przed nazwa w nr 2, nr 3, nr 4 i nr 6, kropka po nazwie
      w nr 1, nr 5 i w makiecie. */
-  const bar = styleId === '2' || styleId === '3' || styleId === '4';
+  const bar = styleId !== '1' && styleId !== '5' && styleId !== 'makieta';
   /* Nr 5 (Figma 997:519) zostaje przy budowie z dawnego nr 1: wiersze
      i szary pasek metryk. Data nie jest wynikiem, wiec „Najbliższy wykup"
      schodzi z paska do wierszy, a w pasku zostaja same liczby. */

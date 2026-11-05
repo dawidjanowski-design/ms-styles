@@ -1,12 +1,66 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
-import { DASHBOARD, EVENTS, OFFERS, type Offer } from '../data/dashboard';
+import { DASHBOARD, EVENTS, OFFERS, type Event, type Offer } from '../data/dashboard';
 import { VIEWS } from '../data/currencies';
 import { Logo } from '../icons/Logo';
-import { AllocationChart, Legend } from './Portfolio';
+import { AllocationChart, Legend, assetColor } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | 'makieta';
-const isV3 = (s: StyleId) => s === '3' || s === '4';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | 'makieta';
+const isV3 = (s: StyleId) => s === '3' || s === '4' || s === '6';
+/** Nr 6 rosnie z nr 4, wiec kropki na osi biora jego palete. */
+const paletteForTimeline = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
+  s === '1' || s === 'makieta' ? '1' : s === '6' ? '4' : s;
+
+const MONTHS = [
+  'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+  'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień',
+];
+
+/** Zdarzenia pogrupowane miesiacami, z zachowaniem kolejnosci z danych. */
+function byMonth(events: Event[]) {
+  const groups: { key: string; label: string; items: Event[] }[] = [];
+  for (const e of events) {
+    const [, m, y] = e.date.split('.');
+    const key = `${y}-${m}`;
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) last.items.push(e);
+    else groups.push({ key, label: `${MONTHS[Number(m) - 1]} ${y}`, items: [e] });
+  }
+  return groups;
+}
+
+/* Os czasu zamiast tabeli — nr 6. Kropka bierze kolor klasy aktywow, wiec
+   zdarzenie od razu wiadomo, czego dotyczy. */
+function Timeline({ styleId }: { styleId: StyleId }) {
+  const palette = paletteForTimeline(styleId);
+  return (
+    <div className="timeline">
+      {byMonth(EVENTS).map((g) => (
+        <section className="timeline__group" key={g.key}>
+          <h3 className="timeline__month">{g.label}</h3>
+          <ol className="timeline__list">
+            {g.items.map((e) => {
+              const dot = assetColor(e.asset, palette);
+              return (
+                <li className="timeline__item" key={e.date + e.type + e.instrument}>
+                  <span
+                    className="timeline__dot"
+                    style={{ background: dot ?? 'var(--muted)' }}
+                    aria-hidden="true"
+                  />
+                  <span className="timeline__day">{e.date.slice(0, 5)}</span>
+                  <span className="timeline__type">{e.type}</span>
+                  <span className="timeline__instrument">{e.instrument}</span>
+                  <span className="timeline__amount">{e.amount}</span>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
+    </div>
+  );
+}
 
 /* Strzalka 1:1 z Figmy: pole 16x16, zaokraglone konce i zlaczenia, kolor
    z currentColor, zeby kazda stylistyka trzymala swoj odcien i zeby dzialal
@@ -277,6 +331,10 @@ export function DashboardScreen({
 
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
+            {/* Nr 6 pokazuje te same zdarzenia jako os czasu, nie tabele. */}
+            {styleId === '6' ? (
+              <Timeline styleId={styleId} />
+            ) : (
             <div className="eventsCard">
               {/* Naglowek kolumn ma tylko nr 3 — w nr 1 i nr 2 lista zdarzen
                   zostaje lista, bez ramki tabeli. */}
@@ -301,6 +359,7 @@ export function DashboardScreen({
                 </button>
               ))}
             </div>
+            )}
           </section>
         </div>
       </div>

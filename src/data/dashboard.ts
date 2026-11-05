@@ -17,10 +17,14 @@ export type Offer = {
 };
 
 export type Event = {
+  /** DD.MM.RRRR */
   date: string;
   type: string;
   instrument: string;
+  /** pusta, gdy zdarzenie nie niesie kwoty — np. okno umorzenia */
   amount: string;
+  /** klasa aktywow, z ktorej bierze sie kolor kropki na osi czasu */
+  asset: string;
 };
 
 /* Kwota nie jest tutaj — pulpit bierze ją z widoku „Łącznie" w currencies.ts,
@@ -68,10 +72,17 @@ export const OFFERS: Offer[] = [
   },
 ];
 
+/* W Figmie wszystkie pięć zdarzeń miało tę samą datę 30.09.2026 — i to datę
+   przeszłą, mimo nagłówka „Nadchodzące”. Na osi czasu pięć punktów w jednym
+   dniu nie pokazuje niczego, więc daty są wyprowadzone z liczb, które już
+   żyją w prototypie: okno umorzenia FIZ i limit wpłat IKE na koniec 2026,
+   wykup VEHIS 09.06.2027 z corpViews, odsetki z wypłat 12M poszczególnych
+   emitentów. Dzięki temu tabela i oś mówią to samo, co karty na portfelu. */
 export const EVENTS: Event[] = [
-  { date: '30.09.2026', type: 'Wypłata odsetek',             instrument: 'Michael / Ström SA, Seria F',  amount: '8 388,00 PLN' },
-  { date: '30.09.2026', type: 'Wykup, zwrot kapitału',       instrument: 'Emitent DEF S.A., Seria D',    amount: '200 000,00 PLN' },
-  { date: '30.09.2026', type: 'Kupon, obligacje korporacyjne', instrument: 'Nordvik Development, Seria B', amount: '12 860,00 PLN' },
-  { date: '30.09.2026', type: 'Wypłata odsetek',             instrument: 'Nordvik Development, Seria B', amount: '24 000,00 PLN' },
-  { date: '30.09.2026', type: 'Wykup, zwrot kapitału',       instrument: 'Polmax Energia, Seria A',      amount: '2 450 000,00 PLN' },
+  { date: '14.11.2026', type: 'Wypłata odsetek', instrument: 'Michael / Ström SA, Seria F', amount: '8 388,00 PLN', asset: 'corp' },
+  { date: '28.11.2026', type: 'Kupon, obligacje korporacyjne', instrument: 'VEHIS, Seria K', amount: '12 860,00 PLN', asset: 'corp' },
+  { date: '09.12.2026', type: 'Wypłata odsetek', instrument: 'Victoria Dom, Seria B2', amount: '7 100,00 PLN', asset: 'corp' },
+  { date: '31.12.2026', type: 'Koniec limitu wpłat IKE', instrument: 'IKE · 00-00-007431', amount: '10 000,00 PLN do wpłaty', asset: 'fio' },
+  { date: '31.12.2026', type: 'Okno umorzenia', instrument: 'Fundusze zamknięte (FIZ)', amount: '', asset: 'fiz' },
+  { date: '09.06.2027', type: 'Wykup, zwrot kapitału', instrument: 'VEHIS, Seria K', amount: '450 000,00 PLN', asset: 'corp' },
 ];

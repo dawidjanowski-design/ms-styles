@@ -58,7 +58,7 @@ const CASH_CARDS = [
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['fiz', 'am', 'fio', 'skarb', 'corp'], '4': ['corp', 'skarb', 'am', 'fiz', 'fio'], '5': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const saved = localStorage.getItem('ms-style');
-const state = { style: ['2', '3', '4', '5', 'makieta'].includes(saved) ? saved : '1', hot: null,
+const state = { style: ['2', '3', '4', '5', '6', 'makieta'].includes(saved) ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
@@ -67,10 +67,39 @@ const state = { style: ['2', '3', '4', '5', 'makieta'].includes(saved) ? saved :
 const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
    Kolejnosc pozycji ma taka jak nr 2. */
-const pal = () => (state.style === 'makieta' ? '1' : state.style);
-const ord = () => (state.style === 'makieta' ? '2' : state.style);
-/* Nr 4 to nr 3 z innym portfelem i inna paleta. */
-const isV3 = () => state.style === '3' || state.style === '4';
+/* Nr 6 rosnie z nr 4, wiec bierze jego palete i jego kolejnosc klas. */
+const pal = () => (state.style === 'makieta' ? '1' : state.style === '6' ? '4' : state.style);
+const ord = () => (state.style === 'makieta' ? '2' : state.style === '6' ? '4' : state.style);
+const isV3 = () => ['3', '4', '6'].includes(state.style);
+
+const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+  'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
+
+/* Os czasu zamiast tabeli — nr 6. Kropka bierze kolor klasy aktywow. */
+function timeline() {
+  const groups = [];
+  for (const e of EVENTS) {
+    const [, m, y] = e[0].split('.');
+    const key = `${y}-${m}`;
+    const last = groups[groups.length - 1];
+    if (last && last.key === key) last.items.push(e);
+    else groups.push({ key, label: `${MONTHS[Number(m) - 1]} ${y}`, items: [e] });
+  }
+  return `<div class="timeline">${groups.map((g) => `
+    <section class="timeline__group">
+      <h3 class="timeline__month">${g.label}</h3>
+      <ol class="timeline__list">${g.items.map(([d, t, i, a, cls]) => {
+        const meta = META[cls];
+        const dot = meta ? meta.colors[pal()].card : 'var(--muted)';
+        return `<li class="timeline__item">
+          <span class="timeline__dot" style="background:${dot}" aria-hidden="true"></span>
+          <span class="timeline__day">${d.slice(0, 5)}</span>
+          <span class="timeline__type">${t}</span>
+          <span class="timeline__instrument">${i}</span>
+          <span class="timeline__amount">${a}</span></li>`;
+      }).join('')}</ol>
+    </section>`).join('')}</div>`;
+}
 const dim = (id) => (state.hot === null ? '' : state.hot === id ? 'is-hot' : 'is-dim');
 /* Licznik kwoty. Wersja preview przerysowuje cala strone, wiec poprzednia
    wartosc trzymamy w state.lastAmounts pod kluczem danego miejsca na ekranie —
@@ -279,8 +308,8 @@ function accountCard(a) {
 function assetCard(a) {
   const makieta = state.style === 'makieta';
   /* Kafelki wszedzie poza makieta i nr 5; znacznik klasy to osobna sprawa:
-     kreska przed nazwa w nr 2, nr 3 i nr 4, kropka po nazwie w nr 1 i nr 5. */
-  const bar = ['2', '3', '4'].includes(state.style);
+     kreska przed nazwa w nr 2, nr 3, nr 4 i nr 6, kropka w nr 1 i nr 5. */
+  const bar = !['1', '5', 'makieta'].includes(state.style);
   /* Nr 5 (Figma 997:519) zostaje przy wierszach i szarym pasku metryk.
      Data nie jest wynikiem: „Najblizszy wykup" schodzi z paska do wierszy. */
   const v5 = state.style === '5';
@@ -942,12 +971,15 @@ const OFFERS = [
     rate:'5,20%', note:'(Cel roczny, netto)' },
 ];
 
+/* Daty wyprowadzone z liczb, ktore juz zyja w prototypie — w Figmie wszystkie
+   pieć zdarzen mialo te sama, przeszla date 30.09.2026. */
 const EVENTS = [
-  ['30.09.2026', 'Wypłata odsetek', 'Michael / Ström SA, Seria F', '8 388,00 PLN'],
-  ['30.09.2026', 'Wykup, zwrot kapitału', 'Emitent DEF S.A., Seria D', '200 000,00 PLN'],
-  ['30.09.2026', 'Kupon, obligacje korporacyjne', 'Nordvik Development, Seria B', '12 860,00 PLN'],
-  ['30.09.2026', 'Wypłata odsetek', 'Nordvik Development, Seria B', '24 000,00 PLN'],
-  ['30.09.2026', 'Wykup, zwrot kapitału', 'Polmax Energia, Seria A', '2 450 000,00 PLN'],
+  ['14.11.2026', 'Wypłata odsetek', 'Michael / Ström SA, Seria F', '8 388,00 PLN', 'corp'],
+  ['28.11.2026', 'Kupon, obligacje korporacyjne', 'VEHIS, Seria K', '12 860,00 PLN', 'corp'],
+  ['09.12.2026', 'Wypłata odsetek', 'Victoria Dom, Seria B2', '7 100,00 PLN', 'corp'],
+  ['31.12.2026', 'Koniec limitu wpłat IKE', 'IKE · 00-00-007431', '10 000,00 PLN do wpłaty', 'fio'],
+  ['31.12.2026', 'Okno umorzenia', 'Fundusze zamknięte (FIZ)', '', 'fiz'],
+  ['09.06.2027', 'Wykup, zwrot kapitału', 'VEHIS, Seria K', '450 000,00 PLN', 'corp'],
 ];
 
 /* Logo Michael / Ström w karcie oferty — ten sam wektor co w nagłówku, 94px szerokości */
@@ -1101,7 +1133,7 @@ function dashboardScreen() {
 
     <section class="events">
       <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
-      <div class="eventsCard">${isV3() ? `<div class="eventRow eventRow--head" aria-hidden="true">
+      ${state.style === '6' ? timeline() : `<div class="eventsCard">${isV3() ? `<div class="eventRow eventRow--head" aria-hidden="true">
         <span class="eventRow__date">Data</span>
         <span class="eventRow__type">Zdarzenie / instrument</span>
         <span></span>
@@ -1111,7 +1143,7 @@ function dashboardScreen() {
         <span class="eventRow__type">${t}</span>
         <span class="eventRow__instrument">${i}</span>
         <span class="eventRow__amount">${a}</span>
-        <span class="eventRow__chev">›</span></button>`).join('')}</div>
+        <span class="eventRow__chev">›</span></button>`).join('')}</div>`}
     </section>
   </div></div></div>`;
 }
@@ -1249,7 +1281,7 @@ function render() {
      wlasna: jedna karta ekranu zamiast pasm. */
   document.documentElement.setAttribute(
     'data-family',
-    state.style === '3' || state.style === '4' ? 'v3' : state.style
+    ['3', '4', '6'].includes(state.style) ? 'v3' : state.style
   );
 
   document.getElementById('root').innerHTML = `
@@ -1282,7 +1314,7 @@ function render() {
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
-      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['makieta', 'Makieta']]
+      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['6', 'nr 6'], ['makieta', 'Makieta']]
         .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
   placeGlides(glides);

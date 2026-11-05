@@ -242,7 +242,8 @@
 
    Nr 4 dziedziczy caly ten blok — rozni sie portfelem i paleta klas. */
 [data-style='3'],
-[data-style='4'] {
+[data-style='4'],
+[data-style='6'] {
   /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
   --font: Roboto;
 
@@ -374,7 +375,8 @@
    Uklad identyczny jak nr 3 — nr 4 sluzy wylacznie do eksperymentow
    z kolorem. Punkt wyjscia: w Figmie 976:18261 klasy sa znakowane
    nasyconymi odcieniami z nr 2, nie pastelami z nr 3. */
-[data-style='4'] {
+[data-style='4'],
+[data-style='6'] {
   /* Paleta klienta z Figmy 983:19119 i 976:17671. Podkreslenie slupka bywa
      ciemniejsze niz kropka w legendzie (skarbowe, AM, gotowka) — przeniesione
      tak, jak jest w pliku. */
@@ -417,7 +419,8 @@
   --screen-outer-px: 8px;
   --screen-radius: 16px 16px 0 0;
 }
-[data-style='4'] .content > section:nth-child(odd) { border-radius: 8px; }
+[data-style='4'] .content > section:nth-child(odd),
+[data-style='6'] .content > section:nth-child(odd) { border-radius: 8px; }
 
 /* ====================== STYLISTYKA 5 ======================
    Figma 997:519 („v4.4"). Wyrasta z nr 4, ale cofa trzy jej decyzje:
