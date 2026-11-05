@@ -520,11 +520,12 @@ select.field__control {
 
 /* ---- nadchodzące zdarzenia ---- */
 .events { padding-top: 8px; display: flex; flex-direction: column; gap: 16px; }
-/* Padding przechodzi z karty na wiersze, zeby podswietlenie siegalo krawedzi
-   karty, a nie konczylo sie 20 px wczesniej. */
+/* Karta nie ma wlasnego paddingu — caly odstep siedzi w wierszach. Inaczej
+   podswietlenie pierwszego i ostatniego wiersza zatrzymywalo sie przed
+   krawedzia karty i zostawal nad nim pasek tla. */
 .eventsCard {
   background: var(--card-bg); border-radius: var(--card-radius);
-  box-shadow: var(--shadow-card); padding: 8px 0;
+  box-shadow: var(--shadow-card); padding: 0;
   display: flex; flex-direction: column; overflow: hidden;
 }
 .eventRow {
