@@ -188,7 +188,7 @@ oferty mieszczą się na ekranie — pierwsza karta przechodzi na koniec. Pas
 można też przeciągać myszą i palcem albo przesunąć poziomym gestem na
 gładziku. Technicznie: karty w pięciu kopiach, tor przesuwany transformem,
 po każdym ruchu cichy powrót do środkowej kopii (`OffersLoop` w
-`Dashboard.tsx`, to samo w `preview.js`). Nr 2, nr 3, nr 4 i makieta zostają przy
+`Dashboard.tsx`, to samo w `preview.js`). Nr 2, nr 3, nr 4, nr 5 i makieta zostają przy
 zwykłym przewijanym pasie.
 
 Logo emitentów leżą w `public/logos` (kopia dla wersji preview w
@@ -454,7 +454,7 @@ wireframe pokazuje zwykły szary przycisk.
 Wyjątek: w nr 1 przycisk jest identyczny jak aktywna pigułka „Łącznie" z
 Portfela — wysokość, padding i rozmiar tekstu z tokenów `--pill-*`, cień
 `--shadow-pill`, a tło to biel 70% zmieszana z `--pill-track-bg`, bo tutaj
-pod przyciskiem nie ma toru pigułek. Nr 2, nr 3, nr 4 i makieta mają wartości z Figmy.
+pod przyciskiem nie ma toru pigułek. Nr 2, nr 3, nr 4, nr 5 i makieta mają wartości z Figmy.
 
 ## Dymek „Wolna gotówka wg walut"
 
@@ -477,3 +477,62 @@ indziej, a przełącznik walut go nie ma, więc nie dokładaliśmy go w jednym
 miejscu. Łatwo zmienić w `CASH_BY_CURRENCY`.
 
 W makiecie dymka nie ma.
+
+## Stylistyka nr 5
+
+Figma `997:519` (ramka „v4.4"). Wyrasta z nr 4, ale w kilku miejscach wraca
+do rozwiązań z nr 1. W przełączniku stylistyk jest jako osobna pozycja,
+nr 4 zostaje bez zmian.
+
+Co się zmienia względem nr 4:
+
+| | nr 4 | nr 5 |
+|---|---|---|
+| tło | pełnoekranowe pasma, na przemian szare i białe | jedna karta ekranu z obrysem `rgba(28,27,39,.12)`, promień 8, tło od `#f3f3f5` u góry do bieli u dołu |
+| kolumna treści | 1280 px | 1080 px, sekcje co 64 px |
+| krój | Roboto | Inter |
+| nawigacja | wyśrodkowana | dosunięta do prawej, aktywna pozycja podkreślona kreską `#3300ff` przy dolnej krawędzi paska, kreska oddzielająca dzwonek |
+| awatar | zdjęcie | inicjały w białym krążku; dzwonek to nowy rysunek z pliku (`BellIconRound`) |
+| przełączniki | promień 8, ciepły tor | pełne zaokrąglenie, chłodny tor `#eeeef1` |
+| wykres | pastele na pełnej wysokości | 20% koloru i pełny pasek pod spodem, nowa paleta |
+| legenda | jedna kolumna, gotówka pod kreską | dwie kolumny: Aktywa i Gotówka |
+| karty gotówki | promień 8, obrys | promień 20, biel na 80%, miękki cień |
+| karty klas aktywów | wyróżniona metryka i siatka | budowa z nr 1: wiersze i szary pasek metryk na dole |
+
+Wymiary sprawdzone pomiarem w przeglądarce: tytuł, kwota, wykres, nagłówki
+legendy i wysokości kart (279 / 243 / 211 px) zgadzają się z plikiem co do
+piksela albo dwóch.
+
+Decyzje przy przenoszeniu:
+
+- **Kolumna „Gotówka" w legendzie** to te same trzy pozycje, co karty gotówki
+  pod spodem. Udział liczy się od całego portfela (6,0% / 1,2% / 1,1%), więc
+  trzy wiersze sumują się do segmentu gotówki na wykresie. W pliku stały tam
+  50 / 20 / 14% skopiowane z kolumny aktywów. Najazd na którykolwiek z trzech
+  wierszy podświetla ten jeden segment. Na pulpicie dymek z rozbiciem na
+  waluty wisi pod wierszem „Wolna gotówka".
+- **„Najbliższy wykup" schodzi z paska metryk do wierszy**, tak jak w pliku,
+  bo data nie jest wynikiem. W pasku zostają liczby. Etykiety mają 13 px, nie
+  12 jak w pliku, więc kolumny po 140 px się nie mieszczą; pasek rozkłada trzy
+  metryki na całą szerokość, co daje prawie te same pozycje (24 / 198 / 372
+  zamiast 24 / 196 / 368).
+- **Kolory kart FIO i FIZ** w pliku są przesunięte o jedną pozycję
+  (niebieski skarbowych na FIO, pomarańcz FIO na FIZ). Karty biorą kolor ze
+  swojego segmentu wykresu. Kropka w legendzie bywa ciemniejszym odcieniem
+  tego samego koloru i to zostało tak, jak w pliku.
+- **Dane zostają nasze**: pięć klas aktywów (w pliku nie ma obligacji
+  skarbowych), Dawid Jankowski zamiast Artura Wysockiego, „Gotówka
+  zablokowana" zamiast literówki „Zablokowona gotówka". Karta Asset Management
+  w pliku jest kopią karty obligacji; u nas ma swoje wiersze.
+- **Puste saldo jako 0,00**, nie myślnik, tak jak w pliku.
+- **Sekcja „Struktura aktywów" ma 1080 px**, jak reszta. W pliku ma 1064 px
+  i stoi 8 px w środek względem sekcji nad nią.
+- **Minimum 13 px zostaje** na pigułkach i w pasku metryk (plik: 12 px).
+  Wyjątek to inicjały w awatarze, 10 px jak w pliku. To znak, a nie tekst do
+  czytania.
+- **Karta „Środki w drodze"** nadal otwiera panel, ale bez strzałki (w pliku
+  jej nie ma); zostaje kursor i lekkie uniesienie cieniem pod nim.
+
+Pozostałe ekrany (pulpit, obligacje, emitent, seria, rachunek) dziedziczą
+tokeny nr 5 i układ z nr 1. Nie były osobno projektowane w Figmie.
+

@@ -13,7 +13,7 @@ export type AssetClass = {
   amountDecimals: string;
   /** krótka wartość w legendzie */
   legendValue: string;
-  colors: Record<'1' | '2' | '3' | '4', Palette>;
+  colors: Record<'1' | '2' | '3' | '4' | '5', Palette>;
   /** wiersze typu „ile sztuk / data” */
   rows: Metric[];
   /** metryki wynikowe — w stylistyce 1 trafiają do szarego paska */
@@ -25,7 +25,7 @@ export const TOTAL = { amount: '4 218 640', decimals: ',00 PLN' };
 export const CURRENCIES = ['Łącznie', 'PLN', 'EUR', 'USD'] as const;
 
 /** Kolejność pozycji w legendzie różni się między stylistykami — tak jak w Figmie. */
-export const LEGEND_ORDER: Record<'1' | '2' | '3' | '4', string[]> = {
+export const LEGEND_ORDER: Record<'1' | '2' | '3' | '4' | '5', string[]> = {
   '1': ['corp', 'am', 'fio', 'fiz', 'skarb'],
   '2': ['corp', 'skarb', 'am', 'fio', 'fiz'],
   /* Nr 3 ustawia klasy wedlug temperatury koloru, od najcieplejszej do
@@ -35,6 +35,8 @@ export const LEGEND_ORDER: Record<'1' | '2' | '3' | '4', string[]> = {
   '3': ['fiz', 'am', 'fio', 'skarb', 'corp'],
   /* Kolejnosc z Figmy 983:19119: FIZ przed FIO. */
   '4': ['corp', 'skarb', 'am', 'fiz', 'fio'],
+  /* Nr 5 (Figma 997:519): kolejnosc wykresu, FIO znow przed FIZ. */
+  '5': ['corp', 'skarb', 'am', 'fio', 'fiz'],
 };
 
 export const ASSETS: AssetClass[] = [
@@ -45,7 +47,7 @@ export const ASSETS: AssetClass[] = [
     amount: '1 792 922',
     amountDecimals: ',00 PLN',
     legendValue: '1 792 922 PLN',
-    colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' }, '3': { chart: '#c2e6ee', chartFoot: '#78d2e5', legend: '#78d2e5', card: '#78d2e5' }, '4': { chart: '#dbecef', chartFoot: '#11aebd', legend: '#11aebd', card: '#11aebd' } },
+    colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' }, '3': { chart: '#c2e6ee', chartFoot: '#78d2e5', legend: '#78d2e5', card: '#78d2e5' }, '4': { chart: '#dbecef', chartFoot: '#11aebd', legend: '#11aebd', card: '#11aebd' } , '5': { chart: '#401cff', legend: '#5f39be', card: '#401cff' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -64,7 +66,7 @@ export const ASSETS: AssetClass[] = [
     amount: '316 398',
     amountDecimals: ',00 PLN',
     legendValue: '316 398 PLN',
-    colors: { '1': { chart: '#e4b212', legend: '#e4b212', card: '#0a21c8' }, '2': { chart: '#0a0ac8', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' }, '3': { chart: '#a8aaa8', chartFoot: '#383a36', legend: '#383a36', card: '#383a36' }, '4': { chart: '#dfdbef', chartFoot: '#1357b7', legend: '#3b7ddb', card: '#3b7ddb' } },
+    colors: { '1': { chart: '#e4b212', legend: '#e4b212', card: '#0a21c8' }, '2': { chart: '#0a0ac8', chartFoot: '#0a21c8', legend: '#0a21c8', card: '#0a21c8' }, '3': { chart: '#a8aaa8', chartFoot: '#383a36', legend: '#383a36', card: '#383a36' }, '4': { chart: '#dfdbef', chartFoot: '#1357b7', legend: '#3b7ddb', card: '#3b7ddb' } , '5': { chart: '#065eec', legend: '#065eec', card: '#065eec' } },
     rows: [
       { label: 'Emitent', value: '1' },
       { label: 'Serie', value: '2' },
@@ -86,7 +88,7 @@ export const ASSETS: AssetClass[] = [
     amount: '843 728',
     amountDecimals: ',00 PLN',
     legendValue: '843 728 PLN',
-    colors: { '1': { chart: '#11aebd', legend: '#0a21c8', card: '#0aa6c8' }, '2': { chart: '#b044ef', legend: '#b044ef', card: '#b044ef' }, '3': { chart: '#f7bfcc', chartFoot: '#fb6f90', legend: '#fb6f90', card: '#fb6f90' }, '4': { chart: '#f7bfcc', chartFoot: '#f65279', legend: '#fb6f90', card: '#fb6f90' } },
+    colors: { '1': { chart: '#11aebd', legend: '#0a21c8', card: '#0aa6c8' }, '2': { chart: '#b044ef', legend: '#b044ef', card: '#b044ef' }, '3': { chart: '#f7bfcc', chartFoot: '#fb6f90', legend: '#fb6f90', card: '#fb6f90' }, '4': { chart: '#f7bfcc', chartFoot: '#f65279', legend: '#fb6f90', card: '#fb6f90' } , '5': { chart: 'rgba(17, 174, 189, 0.53)', chartFoot: '#00a69b', legend: '#0aa6c8', card: '#00a69b' } },
     rows: [
       { label: 'Strategie', value: '4' },
       { label: 'Rachunki', value: '4' },
@@ -100,7 +102,7 @@ export const ASSETS: AssetClass[] = [
     amount: '590 610',
     amountDecimals: ',00 PLN',
     legendValue: '590 610 PLN',
-    colors: { '1': { chart: '#7e2cb1', chartFoot: '#7e22b6', legend: '#0aa6c8', card: '#ef4444' }, '2': { chart: '#11aebd', legend: '#11aebd', card: '#11aebd' }, '3': { chart: '#dad3fe', chartFoot: '#9b8cfa', legend: '#9b8cfa', card: '#9b8cfa' }, '4': { chart: '#f2ecde', chartFoot: '#e4b212', legend: '#e4b212', card: '#e4b212' } },
+    colors: { '1': { chart: '#7e2cb1', chartFoot: '#7e22b6', legend: '#0aa6c8', card: '#ef4444' }, '2': { chart: '#11aebd', legend: '#11aebd', card: '#11aebd' }, '3': { chart: '#dad3fe', chartFoot: '#9b8cfa', legend: '#9b8cfa', card: '#9b8cfa' }, '4': { chart: '#f2ecde', chartFoot: '#e4b212', legend: '#e4b212', card: '#e4b212' } , '5': { chart: '#ef7744', legend: '#cf522e', card: '#ef7744' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Ostatnia wycena', value: '30.10.2026' },
@@ -117,7 +119,7 @@ export const ASSETS: AssetClass[] = [
     amount: '421 864',
     amountDecimals: ',00 PLN',
     legendValue: '421 864 PLN',
-    colors: { '1': { chart: '#ef7744', legend: '#ef4444', card: '#e4b212' }, '2': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' }, '3': { chart: '#f9eaa7', chartFoot: '#ffdb32', legend: '#ffdb32', card: '#ffdb32' }, '4': { chart: '#f1def2', chartFoot: '#9712e4', legend: '#9712e4', card: '#9712e4' } },
+    colors: { '1': { chart: '#ef7744', legend: '#ef4444', card: '#e4b212' }, '2': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' }, '3': { chart: '#f9eaa7', chartFoot: '#ffdb32', legend: '#ffdb32', card: '#ffdb32' }, '4': { chart: '#f1def2', chartFoot: '#9712e4', legend: '#9712e4', card: '#9712e4' } , '5': { chart: '#e4b212', legend: '#e4b212', card: '#e4b212' } },
     rows: [
       { label: 'Fundusze', value: '4' },
       { label: 'Najbliższe okno umorzenia', value: '31.12.2026' },
@@ -140,7 +142,8 @@ export const CASH = {
     '2': { chart: '#9ec421', legend: '#9ec421', card: '#9ec421' },
     '3': { chart: '#a3d2ce', chartFoot: '#2fa39b', legend: '#2fa39b', card: '#2fa39b' },
     '4': { chart: '#e9f0cf', chartFoot: '#8aaf12', legend: '#2fa39b', card: '#2fa39b' },
-  } as Record<'1' | '2' | '3' | '4', Palette>,
+    '5': { chart: '#eaf0d0', chartFoot: '#9ec421', legend: '#9ec421', card: '#9ec421' },
+  } as Record<'1' | '2' | '3' | '4' | '5', Palette>,
 };
 
 /* Rozbicie wolnej gotowki na waluty — dymek na legendzie (Figma 613:56579).
@@ -207,14 +210,14 @@ export type Account = {
   /** szary pasek w środku karty — na razie tylko limit wpłat IKE */
   strip?: { label: string; value: string; progress?: number };
   /** kolor znacznika przy nazwie, osobny dla każdej stylistyki */
-  marker: Record<'1' | '2' | '3' | '4', string>;
+  marker: Record<'1' | '2' | '3' | '4' | '5', string>;
   action: string;
 };
 
 export const ACCOUNTS: Account[] = [
   {
     id: 'maklerski',
-    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#11aebd' },
+    marker: { '1': '#042468', '2': '#046816', '3': '#78d2e5', '4': '#11aebd', '5': '#401cff' },
     name: 'Rachunek maklerski',
     number: '00-00-006858',
     amount: '2 362 438',
@@ -230,7 +233,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'zony',
-    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36', '4': '#3b7ddb' },
+    marker: { '1': '#0a21c8', '2': '#0a21c8', '3': '#383a36', '4': '#3b7ddb', '5': '#065eec' },
     name: 'Rachunek żony',
     number: '00-00-009120',
     amount: '180 000',
@@ -243,7 +246,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'oki',
-    marker: { '1': '#0aa6c8', '2': '#b044ef', '3': '#fb6f90', '4': '#fb6f90' },
+    marker: { '1': '#0aa6c8', '2': '#b044ef', '3': '#fb6f90', '4': '#fb6f90', '5': '#00a69b' },
     name: 'OKI',
     number: '00-00-009120',
     amount: '843 728',
@@ -256,7 +259,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'ike',
-    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa', '4': '#e4b212' },
+    marker: { '1': '#ef4444', '2': '#11aebd', '3': '#9b8cfa', '4': '#e4b212', '5': '#ef7744' },
     name: 'IKE',
     number: '00-00-007431',
     amount: '506 237',
@@ -271,7 +274,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'xz',
-    marker: { '1': '#e4b212', '2': '#e4b212', '3': '#ffdb32', '4': '#9712e4' },
+    marker: { '1': '#e4b212', '2': '#e4b212', '3': '#ffdb32', '4': '#9712e4', '5': '#e4b212' },
     name: 'XZ',
     number: '00-00-007432',
     amount: '337 491',
@@ -285,7 +288,7 @@ export const ACCOUNTS: Account[] = [
   },
   {
     id: 'am',
-    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b', '4': '#2fa39b' },
+    marker: { '1': '#9ec421', '2': '#9ec421', '3': '#2fa39b', '4': '#2fa39b', '5': '#9ec421' },
     name: 'AM strategia konserwatywna',
     number: '00-00-008801',
     amount: '168 746',

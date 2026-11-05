@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   ASSETS,
   CASH,
@@ -6,6 +6,7 @@ import {
   LEGEND_ORDER,
   type Account,
   type AssetClass,
+  type Metric,
   type Palette,
 } from '../data/portfolio';
 import {
@@ -18,13 +19,13 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat). */
-const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' =>
-  s === '2' ? '2' : s === '3' ? '3' : s === '4' ? '4' : '1';
+const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
+  s === 'makieta' ? '1' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
-const orderOf = (s: StyleId): '1' | '2' | '3' | '4' =>
-  s === '1' ? '1' : s === '3' ? '3' : s === '4' ? '4' : '2';
+const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
+  s === 'makieta' ? '2' : s;
 
 /* Nr 4 to nr 3 z innym portfelem i inna paleta — uklad i typografia te same,
    wiec wszedzie, gdzie liczy sie wyglad, pytamy o rodzine, nie o numer. */
@@ -38,7 +39,7 @@ const dimClass = (id: string, hot: string | null) =>
   hot === null ? '' : hot === id ? 'is-hot' : 'is-dim';
 
 /** Nazwa i paleta po id — wspólne dla wszystkich walut. */
-const META: Record<string, { name: string; colors: Record<'1' | '2' | '3' | '4', Palette> }> = {
+const META: Record<string, { name: string; colors: Record<'1' | '2' | '3' | '4' | '5', Palette> }> = {
   ...Object.fromEntries(ASSETS.map((a) => [a.id, { name: a.name, colors: a.colors }])),
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
@@ -108,6 +109,7 @@ function LegendRow({
   hot,
   setHot,
   onOpen,
+  dot = true,
 }: {
   id: string;
   color: string;
@@ -115,6 +117,8 @@ function LegendRow({
   share: string;
   value: string;
   onOpen?: () => void;
+  /** pozycje gotowki w nr 5 stoja bez kropki, kolumna sama mowi, czym sa */
+  dot?: boolean;
 } & HoverProps) {
   return (
     <button
@@ -126,13 +130,38 @@ function LegendRow({
       onFocus={() => setHot(id)}
       onBlur={() => setHot(null)}
     >
-      <span className="legendRow__dot" />
+      {dot && <span className="legendRow__dot" />}
       <span className="legendRow__name">{name}</span>
       <span className="legendRow__share">{share}</span>
       <span className="legendRow__value">{value}</span>
     </button>
   );
 }
+
+/* Kotwica obejmuje sam wiersz, bez podlinii — inaczej dymek odjezdzalby
+   od kwoty o wysokosc tekstu pod spodem. */
+function CashTip({ children }: { children: ReactNode }) {
+  return (
+    <div className="cashAnchor">
+      {children}
+      <div className="cashTip" role="tooltip">
+        <span className="cashTip__title">{CASH_BY_CURRENCY.title}</span>
+        <div className="cashTip__rows">
+          {CASH_BY_CURRENCY.rows.map((r) => (
+            <div className="cashTip__row" key={r.label}>
+              <span className="cashTip__label">{r.label}</span>
+              <span className="cashTip__value">{r.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const num = (s: string) => Number(s.replace(/\s/g, ''));
+/** ',00 PLN' -> 'PLN' */
+const unitOf = (decimals: string) => decimals.replace(/^,\d+\s*/, '');
 
 export function Legend({
   rows,
@@ -141,12 +170,17 @@ export function Legend({
   setHot,
   onOpenAsset,
   cashTooltip = false,
+  cashCards,
+  total,
 }: {
   rows: AllocationRow[];
   styleId: StyleId;
   onOpenAsset?: (id: string) => void;
   /** dymek z rozbiciem wolnej gotowki na waluty — tylko na pulpicie */
   cashTooltip?: boolean;
+  /** karty gotowki i suma widoku, z nich nr 5 sklada kolumne „Gotówka" */
+  cashCards?: CashCard[];
+  total?: string;
 } & HoverProps) {
   const all = ordered(rows, styleId);
   const cash = all.find((r) => r.id === CASH.id);
@@ -166,6 +200,49 @@ export function Legend({
     />
   );
 
+  /* Nr 5 (Figma 997:519): dwie kolumny, aktywa i gotowka. Gotowka jest
+     rozpisana na te same trzy pozycje, co karty pod spodem, a udzial liczy
+     sie od calego portfela, wiec trzy wiersze sumuja sie do segmentu gotowki na
+     wykresie. Wszystkie trzy podswietlaja ten jeden segment. */
+  if (styleId === '5' && cashCards && total) {
+    const parts = cash ? cashCards.filter((c) => !isEmpty(c)) : [];
+    return (
+      <div className="legend legend--split">
+        <div className="legend__col">
+          <h3 className="legend__head">Aktywa</h3>
+          <div className="legend__rows">{assets.map(row)}</div>
+        </div>
+        {parts.length > 0 && (
+          <div className="legend__col">
+            <h3 className="legend__head">Gotówka</h3>
+            <div className="legend__rows">
+              {parts.map((c) => {
+                const r = (
+                  <LegendRow
+                    key={c.label}
+                    id={CASH.id}
+                    color={META[CASH.id].colors['5'].legend}
+                    name={c.label}
+                    share={pct((num(c.amount) / num(total)) * 100)}
+                    value={`${c.amount} ${unitOf(c.decimals)}`}
+                    hot={hot}
+                    setHot={setHot}
+                    dot={false}
+                  />
+                );
+                return cashTooltip && c.label === CASH_BY_CURRENCY.title ? (
+                  <CashTip key={c.label}>{r}</CashTip>
+                ) : (
+                  r
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="legend">
       <div className="legend__rows">{assets.map(row)}</div>
@@ -173,24 +250,7 @@ export function Legend({
       {cash && (
         <div className="legend__cash">
           <div className="legend__cashInner">
-            {/* Kotwica obejmuje sam wiersz, bez podlinii — inaczej dymek
-                odjezdzalby od kwoty o wysokosc tekstu pod spodem. */}
-            <div className={cashTooltip ? 'cashAnchor' : undefined}>
-              {row(cash)}
-              {cashTooltip && (
-                <div className="cashTip" role="tooltip">
-                  <span className="cashTip__title">{CASH_BY_CURRENCY.title}</span>
-                  <div className="cashTip__rows">
-                    {CASH_BY_CURRENCY.rows.map((r) => (
-                      <div className="cashTip__row" key={r.label}>
-                        <span className="cashTip__label">{r.label}</span>
-                        <span className="cashTip__value">{r.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            {cashTooltip ? <CashTip>{row(cash)}</CashTip> : <div>{row(cash)}</div>}
             {cash.sub && (
               <div className={`legend__cashSub ${dimClass(CASH.id, hot)}`}>{cash.sub}</div>
             )}
@@ -210,9 +270,12 @@ const isEmpty = (c: CashCard) => c.amount.replace(/\s/g, '') === '0';
 function CashOverview({
   cards,
   onOpenTransit,
+  zeroAsNumber = false,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
+  /** nr 5 (Figma 997:519) pisze puste saldo jako 0,00, a nie myslnikiem */
+  zeroAsNumber?: boolean;
 }) {
   const visible = cards.filter((c) => !isEmpty(c));
   if (visible.length === 0) return null;
@@ -245,7 +308,11 @@ function CashOverview({
             <div className="divider" />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               {card.rows.map((r) => (
-                <KeyValue key={r.label} label={r.label} value={r.value} />
+                <KeyValue
+                  key={r.label}
+                  label={r.label}
+                  value={zeroAsNumber && r.value === '-' ? '0,00' : r.value}
+                />
               ))}
             </div>
           </article>
@@ -257,6 +324,8 @@ function CashOverview({
 }
 
 /* ----------------------------- karty aktywów ----------------------------- */
+
+const isDate = (m: Metric) => /^\d{2}\.\d{2}\.\d{4}$/.test(m.value);
 
 function AssetCard({
   asset,
@@ -272,12 +341,20 @@ function AssetCard({
      klase paskiem przed nazwa; nr 1 i makieta maja szary pasek metryk. */
   const flat = styleId === '2' || isV3(styleId);
   const strip = !flat;
-  const rows = makieta ? [] : strip ? asset.rows : [...asset.highlights, ...asset.rows];
+  /* Nr 5: data nie jest wynikiem. „Najbliższy wykup" schodzi z paska
+     metryk do wierszy, a w pasku zostaja same liczby (Figma 997:519). */
+  const dates = styleId === '5' ? asset.highlights.filter(isDate) : [];
+  const results = asset.highlights.filter((m) => !dates.includes(m));
+  const rows = makieta
+    ? []
+    : strip
+      ? [...asset.rows, ...dates]
+      : [...asset.highlights, ...asset.rows];
   /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
      dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
   const lead = asset.highlights.length >= 3 ? asset.highlights[0] : null;
   const grid = lead ? asset.highlights.slice(1) : asset.highlights;
-  const stripItems = makieta ? [...asset.rows, ...asset.highlights] : asset.highlights;
+  const stripItems = makieta ? [...asset.rows, ...asset.highlights] : results;
 
   return (
     <article
@@ -344,7 +421,7 @@ function AssetCard({
       )}
 
       {strip && stripItems.length > 0 && (
-        <div className="strip">
+        <div className={`strip ${stripItems.length > 2 ? 'strip--dense' : ''}`}>
           {stripItems.map((h) => (
             <div className="strip__item" key={h.label}>
               <span className="strip__label">{h.label}</span>
@@ -521,10 +598,16 @@ export function PortfolioScreen({
               hot={hot}
               setHot={setHot}
               onOpenAsset={onOpenAsset}
+              cashCards={data.cashCards}
+              total={data.total}
             />
           </section>
 
-          <CashOverview cards={data.cashCards} onOpenTransit={transitHandler} />
+          <CashOverview
+            cards={data.cashCards}
+            onOpenTransit={transitHandler}
+            zeroAsNumber={styleId === '5'}
+          />
 
           <section className="assets">
             <div className="assets__head">

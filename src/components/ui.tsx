@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Logo, BellIcon } from '../icons/Logo';
+import { Logo, BellIcon, BellIconRound } from '../icons/Logo';
 import { NAV } from '../data/portfolio';
 
 /* Kwota przewija sie jak licznik: znak, ktory sie zmienil, wyjezdza w gore,
@@ -172,13 +172,23 @@ export function AppHeader({
         ))}
       </nav>
       <div className="appHeader__right">
+        {/* Oba dzwonki i oba awatary sa w DOM-ie, a CSS pokazuje ten, ktory
+            nalezy do stylistyki, tak samo jak szare kolko w makiecie. */}
         <button type="button" className="appHeader__bell" aria-label="Powiadomienia">
-          <BellIcon />
+          <span className="appHeader__bellIcon">
+            <BellIcon />
+          </span>
+          <span className="appHeader__bellIcon appHeader__bellIcon--round">
+            <BellIconRound />
+          </span>
         </button>
         <div className="appHeader__user">
           <span className="appHeader__userName">Dawid Jankowski</span>
           <span className="appHeader__avatar">
             <img src="avatar.jpg" width={32} height={32} alt="" />
+            <span className="appHeader__initials" aria-hidden="true">
+              DJ
+            </span>
           </span>
         </div>
       </div>

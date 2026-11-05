@@ -407,6 +407,135 @@
 }
 [data-style='4'] .content > section:nth-child(odd) { border-radius: 8px; }
 
+/* ====================== STYLISTYKA 5 ======================
+   Figma 997:519 („v4.4"). Wyrasta z nr 4, ale cofa trzy jej decyzje:
+   1. Zamiast pelnoekranowych pasm jest znow jedna karta ekranu, tu
+      z obrysem, promieniem 8 i tlem przechodzacym od szarosci u gory do
+      bieli na dole. Sekcje stoja na nim w odstepach 64 px.
+   2. Wraca Inter i waska kolumna: tresc ma 1080 px, nie 1280.
+   3. Wykres znow ma tonowane wypelnienie (20% koloru) z pelnym paskiem
+      pod spodem, jak w nr 1, tylko w nowej palecie.
+
+   Paleta: Figma podaje trzy zestawy kolorow (wykres, legenda, kropka na
+   karcie). Wykres i legenda sie zgadzaja: kropka w legendzie bywa tylko
+   ciemniejszym odcieniem tego samego koloru i to zostaje tak, jak w pliku.
+   Karty FIO i FIZ maja kolory przesuniete o jedna pozycje (niebieski
+   skarbowych na FIO, pomarancz FIO na FIZ). To wyglada na pomylke przy
+   kopiowaniu, wiec karty biora kolor ze swojego segmentu wykresu. */
+[data-style='5'] {
+  --font: Inter;
+
+  --page-bg: #ffffff;
+  --header-h: 64px;
+
+  /* Karta ekranu: 4 px od krawedzi okna, obrys i cien z 997:548. */
+  --screen-border: rgba(28, 27, 39, 0.12);
+  --screen-radius: 8px;
+  /* 64 px w pliku liczone od zewnetrznej krawedzi, razem z obrysem */
+  --screen-pad-top: 63px;
+  --screen-pad-x: 24px;
+  --screen-pad-bottom: 72px;
+  --screen-bg: #f3f3f5;
+
+  --content-w: 1080px;
+
+  --ink: #343434;
+  --muted: #6b6b73;
+  --legend-name: #4a4a4d;
+  --legend-sub: #87878d;
+  --nav-idle: #4e453b;
+  --nav-hover: #37373a;
+  --nav-active-color: #37373a;
+  --nav-active-bg: transparent;
+  --nav-accent: #3300ff;
+
+  --title-size: 18px;
+  --title-weight: 500;
+  --title-color: var(--muted);
+  --title-tracking: -0.02em;
+  --title-in-summary: 1;
+
+  --summary-pt: 0px;
+  --summary-gap: 0px;
+  --summary-top-gap: 24px;
+  --title-amount-gap: 2px;
+  --legend-pt: 36px;
+  --legend-gap: 0px;
+  --cash-pt: 0px;
+
+  --amount-size: 30px;
+  --amount-decimals: 21.6px;
+
+  /* Tor chlodny (#eeeef1), aktywna pigulka biala na 70% z cieniem. W pliku
+     tekst ma 12 px, zostaje przyjete minimum 13. */
+  --pill-track-bg: #eeeef1;
+  --pill-track-pad: 1px;
+  --pill-h: 32px;
+  --pill-px: 13.714px;
+  --pill-gap: 2px;
+  --pill-size: 13px;
+  --pill-active-color: #342717;
+  --shadow-track: inset 0 0 0 0.171px rgba(0, 0, 0, 0.08),
+    inset 0 1.714px 1.714px rgba(255, 255, 255, 0.1);
+  --shadow-pill: 0 5.143px 2.571px rgba(31, 33, 41, 0.01), 0 0 0 0.857px rgba(0, 0, 0, 0.03),
+    0 0.857px 1.714px -0.857px rgba(0, 0, 0, 0.06), 0 1.714px 3.429px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 0.171px rgba(0, 0, 0, 0.08), inset 0 1.714px 1.714px #ffffff;
+
+  --section-title-size: 16px;
+  --section-title-color: var(--ink);
+  --section-title-tracking: -0.02em;
+
+  --bar-h: 56px;
+  --bar-gap: 4px;
+  --bar-radius: 2px;
+  --bar-foot-h: 4px;
+  --bar-fill-alpha: 0.2;
+
+  /* Karta klasy aktywow wraca do budowy z nr 1: wewnetrzny margines 2 px,
+     szary pasek metryk na dole, kropka za nazwa. */
+  --asset-card-pad: 20px 2px 2px 2px;
+  --asset-head-px: 18px;
+  --asset-row-px: 20px;
+  --asset-value-size: 21px;
+  --asset-value-decimals: 16px;
+  --asset-marker: dot;
+  --asset-marker-after: 1;
+  --highlight-strip: 1;
+
+  --card-bg: #ffffff;
+  --card-radius: 16px;
+  --card-radius-lg: 20px;
+  --divider: #f3f3f3;
+  --shadow-card: 0 6px 3px rgba(31, 33, 41, 0.01), 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+  /* Karty gotowki: biel na 80%, cien bez obrysu i jasny refleks od gory. */
+  --shadow-cash: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.04), inset 0 4px 4px rgba(255, 255, 255, 0.25);
+  --strip-bg: #f5f5f6;
+
+  --value-strong: var(--legend-name);
+  --chev: #9c9c9c;
+  --crumb-sep: #c4c4ca;
+  --sub-faint: #9a9aa2;
+  --btn-bg: #ffffff;
+  --chip-border-hover: #e3e3e8;
+  --rule: #e6e6ea;
+  --avatar-bg: transparent;
+
+  --progress-track: #e8e8ec;
+
+  --c-corp: #401cff;
+  --c-skarb: #065eec;
+  --c-am: #00a69b;
+  --c-fio: #ef7744;
+  --c-fiz: #e4b212;
+  --c-cash: #9ec421;
+  /* Szrafowanie gotowki z pliku: kreski 3 px w rgba(90,111,21,.1) na #eaf0d0. */
+  --c-cash-bg: #eaf0d0;
+  --cash-hatch: 90, 111, 21;
+  --cash-hatch-alpha: 0.1;
+}
+
 /* ====================== MAKIETA ======================
    Wireframe z Figmy 920:7575. Ta sama treść co w nr 1 i nr 2, tylko bez
    koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,

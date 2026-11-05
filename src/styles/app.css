@@ -62,6 +62,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .appHeader__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* W makiecie awatar zostaje szarym kolkiem — wireframe nie pokazuje zdjec. */
 [data-style='makieta'] .appHeader__avatar img { display: none; }
+/* Inicjaly i okragly dzwonek ma tylko nr 5, domyslnie schowane. */
+.appHeader__bellIcon { display: inline-flex; }
+.appHeader__initials,
+.appHeader__bellIcon--round { display: none; }
 
 /* ---------------- ekran ---------------- */
 .screenOuter { padding: 0 4px; background: var(--header-bg); }
@@ -153,7 +157,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   opacity: 1;
   background: repeating-linear-gradient(
       -45deg,
-      rgba(var(--cash-hatch), 0.22) 0 3px,
+      rgba(var(--cash-hatch), var(--cash-hatch-alpha, 0.22)) 0 3px,
       rgba(var(--cash-hatch), 0) 3px 7px
     ),
     var(--c-cash-bg);
@@ -1109,3 +1113,129 @@ select.field__control {
 [data-family='v3'] .metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
 
 [data-family='v3'] .assetCard--link { cursor: pointer; }
+
+/* =================== STYLISTYKA 5, Figma 997:519 ===================
+   Jedna karta ekranu, jak w nr 1 i nr 2, ale z tlem przechodzacym od
+   szarosci do bieli i w nowej palecie. Wszystkie wartosci z pliku. */
+
+/* nagłówek: nawigacja dosunieta do prawej, aktywna pozycja podkreslona
+   kreska przy dolnej krawedzi paska, nie pigulka */
+[data-style='5'] .appHeader { gap: 32px; }
+[data-style='5'] .appHeader__nav { margin-left: auto; gap: 32px; height: 100%; }
+[data-style='5'] .navItem,
+[data-style='5'] .navItem--prev {
+  height: 100%; padding: 0; border-radius: 0;
+  font-size: 13px; letter-spacing: -0.02em; line-height: 19px;
+  color: var(--nav-idle); opacity: 0.8;
+  transition: color 140ms var(--ease), opacity 140ms var(--ease);
+}
+[data-style='5'] .navItem:hover { color: var(--nav-hover); opacity: 1; }
+[data-style='5'] .navItem--active {
+  padding: 0 16px; background: none; opacity: 1;
+  color: var(--nav-active-color);
+  /* kreska 2 px w obrebie paska; box-shadow nie zmienia wysokosci pozycji */
+  box-shadow: inset 0 -2px 0 var(--nav-accent);
+}
+[data-style='5'] .appHeader__right { gap: 32px; padding-left: 0; }
+/* pionowa kreska miedzy nawigacja a dzwonkiem (12 px, #4e453b na 20%) */
+[data-style='5'] .appHeader__right::before {
+  content: ''; width: 1px; height: 12px; background: rgba(78, 69, 59, 0.2);
+}
+[data-style='5'] .appHeader__bellIcon { display: none; }
+[data-style='5'] .appHeader__bellIcon--round { display: inline-flex; }
+[data-style='5'] .appHeader__user { gap: 9px; }
+[data-style='5'] .appHeader__userName {
+  color: #37373a; opacity: 0.8; letter-spacing: -0.02em; line-height: 19px;
+}
+/* Awatar z inicjalami zamiast zdjecia: bialy krazek z tym samym cieniem,
+   co pigulki. Inicjaly 10 px jak w pliku: to znak, nie tekst do czytania. */
+[data-style='5'] .appHeader__avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 3px rgba(31, 33, 41, 0.01), 0 0 0 1px rgba(0, 0, 0, 0.03),
+    0 1px 2px -1px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 0.2px rgba(0, 0, 0, 0.08);
+}
+[data-style='5'] .appHeader__avatar img { display: none; }
+[data-style='5'] .appHeader__initials {
+  display: inline; font-size: 10px; font-weight: 500; letter-spacing: -0.02em;
+  line-height: 19px; color: #6f6763;
+}
+
+/* karta ekranu: obrys, lekki cien i tlo od #f3f3f5 u gory do bieli u dolu */
+/* Karta siega do dolu okna takze na krotkich ekranach, inaczej jej obrys
+   urywal sie w polowie wysokosci (widok EUR, USD). */
+[data-style='5'] .screenOuter {
+  padding: 0 4px 4px; min-height: calc(100vh - var(--header-h));
+  display: flex; flex-direction: column;
+}
+[data-style='5'] .screen { flex: 1; }
+[data-style='5'] .screen {
+  background: linear-gradient(0.18deg, #ffffff 17.4%, var(--screen-bg) 46.4%);
+  box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+[data-style='5'] .content { gap: 64px; }
+
+/* Kwoty skladaja sie jak w pliku: akapit bez wlasnej wysokosci linii,
+   kazda czesc z wlasna. Przy wspolnym line-height dwa rozmiary pisma
+   wyrownane do linii bazowej rozpychaly wiersz o 3 px. */
+[data-style='5'] .amount { letter-spacing: -0.02em; line-height: 0; }
+[data-style='5'] .amount__int,
+[data-style='5'] .amount__dec { line-height: normal; }
+/* kwota glowna ciasniej niz w kartach: -1,2 px przy 30 px w pliku */
+[data-style='5'] .summary .amount__int { letter-spacing: -0.04em; line-height: 37.5px; }
+[data-style='5'] .summary .amount__dec { letter-spacing: -0.025em; line-height: 27px; }
+
+/* wykres: tonowane wypelnienie na calej wysokosci, pelny pasek pod spodem */
+[data-style='5'] .chartSeg__body { border-radius: var(--bar-radius); }
+
+/* ---- legenda w dwoch kolumnach: aktywa i gotowka ---- */
+.legend--split {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px;
+  padding-top: var(--legend-pt);
+  /* ostatni wiersz ma 4 px paddingu pod tekstem, a odstep do kolejnej
+     sekcji ma liczyc sie od tekstu, jak w pliku */
+  margin-bottom: -4px;
+}
+.legend__col { display: flex; flex-direction: column; gap: 15px; min-width: 0; }
+.legend__head {
+  margin: 0; font-size: 14px; font-weight: 500; line-height: 19px; color: #37373a;
+}
+[data-style='5'] .legendRow { gap: 12px; }
+[data-style='5'] .legendRow__share { text-align: right; opacity: 0.8; }
+
+/* ---- gotowka ---- */
+[data-style='5'] .cash { gap: 20px; }
+[data-style='5'] .cash__grid { gap: 24px; }
+/* Wiersze po 24 px i pola tekstu po 16 px jak w pliku. Przy line-height
+   normal wychodzilo po 23,7 i karta byla o 3 px nizsza niz 211. */
+[data-style='5'] .kv__label,
+[data-style='5'] .kv__value,
+[data-style='5'] .cashCard__label,
+[data-style='5'] .assetCard__name { line-height: 16px; }
+[data-style='5'] .cashCard {
+  padding: 16px 24px 24px; gap: 18.5px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--card-radius-lg); box-shadow: var(--shadow-cash);
+}
+/* Karta „Srodki w drodze" otwiera panel, ale w pliku nie ma strzalki.
+   Zostaje kursor i lekkie uniesienie pod nim. */
+[data-style='5'] .cashCard__chev { display: none; }
+[data-style='5'] .cashCard--link { transition: box-shadow 160ms var(--ease); }
+[data-style='5'] .cashCard--link:hover {
+  box-shadow: var(--shadow-cash), 0 6px 16px rgba(31, 33, 41, 0.06);
+}
+
+/* ---- karty klas aktywow: dwie kolumny, pasek metryk przyklejony do dolu ---- */
+[data-style='5'] .assets__list {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px; align-items: stretch;
+}
+/* W pliku karta ma przezroczysty obrys 1 px, tresc stoi 3 px od krawedzi */
+[data-style='5'] .assetCard { border: 1px solid transparent; }
+[data-style='5'] .assetCard__rows { gap: 12px; }
+[data-style='5'] .strip { margin-top: auto; background: var(--strip-bg); min-height: 57px; }
+/* Trzy metryki rozkladaja sie na cala szerokosc. Kolumny po 140 px z pliku
+   nie mieszcza etykiet przy 13 px, a rozlozenie daje te same pozycje co
+   w Figmie (24 / 198 / 372 zamiast 24 / 196 / 368). */
+[data-style='5'] .strip--dense { justify-content: space-between; gap: 24px; }
+[data-style='5'] .strip--dense .strip__item { width: auto; white-space: nowrap; }

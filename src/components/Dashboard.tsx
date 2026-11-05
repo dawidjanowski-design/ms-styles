@@ -5,7 +5,7 @@ import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3' | '4' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | 'makieta';
 const isV3 = (s: StyleId) => s === '3' || s === '4';
 
 /* Strzalka 1:1 z Figmy: pole 16x16, zaokraglone konce i zlaczenia, kolor
@@ -268,6 +268,8 @@ export function DashboardScreen({
               setHot={setHot}
               onOpenAsset={styleId === 'makieta' ? undefined : onOpenAsset}
               cashTooltip={styleId !== 'makieta'}
+              cashCards={total.cashCards}
+              total={total.total}
             />
           </section>
 

@@ -7,12 +7,13 @@ import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
 
-type StyleId = '1' | '2' | '3' | '4' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | 'makieta';
 const STYLES: { id: StyleId; label: string }[] = [
   { id: '1', label: 'nr 1' },
   { id: '2', label: 'nr 2' },
   { id: '3', label: 'nr 3' },
   { id: '4', label: 'nr 4' },
+  { id: '5', label: 'nr 5' },
   { id: 'makieta', label: 'Makieta' },
 ];
 const IDS = STYLES.map((s) => s.id) as string[];
@@ -44,7 +45,8 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-style', styleId);
     /* Nr 3 i nr 4 dziela uklad i typografie — CSS pyta o rodzine, zeby nie
-       powielac kazdej reguly pod dwa numery. */
+       powielac kazdej reguly pod dwa numery. Nr 5 wraca do jednej karty
+       ekranu zamiast pasm, wiec jest rodzina sama dla siebie. */
     document.documentElement.setAttribute(
       'data-family',
       styleId === '3' || styleId === '4' ? 'v3' : styleId
