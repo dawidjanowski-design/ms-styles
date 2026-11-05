@@ -1016,7 +1016,7 @@ select.field__control {
    Karty maja od dwoch do szesciu metryk. Lista wierszy robila z tego rwana
    kolumne wartosci; siatka sama dobiera liczbe kolumn, wiec dwie metryki
    rozkladaja sie na szerokosc, a szesc staje w dwoch rzedach. */
-[data-family='v3'] .metrics {
+.metrics {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px 32px; align-content: start;
   /* Etykieta rezerwuje dwie linie, wiec przy jednolinijkowej nazwie nad
@@ -1025,47 +1025,49 @@ select.field__control {
      24. Odejmujemy ja raz, na gorze bloku. */
   margin-top: -18px;
 }
-[data-family='v3'] .metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.metric { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 /* Dwie linie miejsca na etykiete — „Fundusze zamkniete (FIZ)" lamie sie
    w waskiej kolumnie i bez tego kwota w tym kafelku zjezdzalaby nizej
    niz w sasiednich. Tekst siada na dole tego pola, wiec zapas trafia nad
    etykiete, gdzie czyta sie jak odstep miedzy rzedami, a nie miedzy
    etykieta a kwota. */
-[data-family='v3'] .metric__label {
+.metric__label {
   font-size: 13px; line-height: 18px; color: var(--muted); min-height: 36px;
 }
-[data-family='v3'] .metric__value {
+.metric__value {
   font-size: 16px; font-weight: 500; line-height: 22px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
 /* Wiecej powietrza wokol kreski pod kwota — karta ma oddychac. */
-[data-family='v3'] .assetCard,
-[data-family='v3'] .acctCard { gap: 24px; }
-[data-family='v3'] .assetCard__head,
-[data-family='v3'] .acctCard__top { gap: 10px; }
+/* Kafelki potrzebuja wiecej powietrza niz lista wierszy — ten sam rytm
+   we wszystkich stylistykach poza makieta, ktora zostaje przy liscie. */
+:root:not([data-style='makieta']) .assetCard,
+:root:not([data-style='makieta']) .acctCard { gap: 24px; }
+:root:not([data-style='makieta']) .assetCard__head,
+:root:not([data-style='makieta']) .acctCard__top { gap: 10px; }
 
-[data-family='v3'] .metric__label { display: flex; align-items: flex-end; }
+.metric__label { display: flex; align-items: flex-end; }
 
 /* ---- nr 3 i nr 4: hierarchia w karcie klasy aktywow ----
    Pierwszy wynik duzym stopniem, reszta w siatce, liczniki w cichej stopce.
    Rowny grid wszystkiego sprawial, ze „Emitent 1" wazyl tyle, co rentownosc. */
-[data-family='v3'] .metricLead { display: flex; flex-direction: column; gap: 4px; margin-top: -18px; }
+.metricLead { display: flex; flex-direction: column; gap: 4px; margin-top: -18px; }
 /* Mniejszy niz kwota karty (24 px) i wiekszy niz reszta metryk (16 px).
    Przy 28 px wyrozniona metryka wazyla wiecej niz wartosc calej pozycji. */
-[data-family='v3'] .metricLead__value {
+.metricLead__value {
   font-size: 20px; font-weight: 500; line-height: 26px;
   letter-spacing: -0.01em; color: var(--ink);
 }
 
-[data-family='v3'] .metricFoot {
+.metricFoot {
   display: flex; flex-wrap: wrap; gap: 4px 20px;
   padding-top: 18px; margin-top: auto;
   border-top: 1px solid var(--divider);
 }
-[data-family='v3'] .metricFoot__item {
+.metricFoot__item {
   display: inline-flex; gap: 6px; font-size: 13px; line-height: 18px; color: var(--muted);
 }
-[data-family='v3'] .metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
+.metricFoot__item strong { font-weight: 500; color: var(--legend-name); }
 
 [data-family='v3'] .assetCard--link { cursor: pointer; }

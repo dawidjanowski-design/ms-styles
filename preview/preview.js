@@ -200,6 +200,7 @@ const ACCOUNTS = [
 ];
 
 function accountCard(a) {
+  const makieta = state.style === 'makieta';
   return `<article class="acctCard" style="--seg:${a.marker[pal()]}">
     <div class="acctCard__head"><div class="acctCard__top">
       <div class="acctCard__title">
@@ -223,7 +224,7 @@ function accountCard(a) {
           : ''}
       </div>` : ''}
     ${a.rows.length ? `<div class="divider"></div>
-      ${isV3()
+      ${!makieta
         ? `<div class="metrics">${a.rows.map(([l, v]) =>
             `<div class="metric"><span class="metric__label">${l}</span>
              <span class="metric__value">${v}</span></div>`).join('')}</div>`
@@ -240,9 +241,11 @@ function accountCard(a) {
 
 function assetCard(a) {
   const makieta = state.style === 'makieta';
-  const flat = state.style === '2' || isV3();
-  const strip = !flat;
-  const rows = makieta ? [] : strip ? a.rows : [...a.highlights, ...a.rows];
+  /* Kafelki wszedzie poza makieta; znacznik klasy to osobna sprawa —
+     kreska przed nazwa w nr 2, nr 3 i nr 4, kropka po nazwie w nr 1. */
+  const bar = ['2', '3', '4'].includes(state.style);
+  const strip = makieta;
+  const rows = makieta ? [] : [...a.highlights, ...a.rows];
   const stripItems = makieta ? [...a.rows, ...a.highlights] : a.highlights;
   const link = DETAIL_ASSETS.has(a.id);
   const lead = a.highlights.length >= 3 ? a.highlights[0] : null;
@@ -250,14 +253,14 @@ function assetCard(a) {
   return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
-        ${flat ? '<span class="assetCard__bar"></span>' : ''}
+        ${bar ? '<span class="assetCard__bar"></span>' : ''}
         <span class="assetCard__name">${a.name}</span>
-        ${flat ? '' : '<span class="assetCard__dot"></span>'}
+        ${bar ? '' : '<span class="assetCard__dot"></span>'}
       </div>
       ${amount(makieta ? '≈ ' + a.amount : a.amount, a.dec, 'assetCard__amount', 'aktywo-' + a.id)}
     </div>
     ${makieta ? '' : '<div class="divider"></div>'}
-    ${isV3()
+    ${!makieta
       ? /* Hierarchia: pierwszy wynik duzym stopniem, ale dopiero przy trzech
            i wiecej — przy dwoch stawiamy je obok siebie w siatce. */
         (lead
