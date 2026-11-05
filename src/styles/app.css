@@ -972,18 +972,20 @@ select.field__control {
 }
 /* Stala wysokosc wiersza zamiast paddingu wokol tekstu. Przy line-height
    normal kazdy wiersz mierzyl tyle, ile jego najwyzsza komorka, wiec ostatni
-   wychodzil o piksel nizszy od pozostalych. Figma: naglowek 44, wiersz 56. */
-[data-family='v3'] .eventRow {
+   wychodzil o piksel nizszy od pozostalych. Figma: naglowek 44, wiersz 56.
+   Ta sama wysokosc we wszystkich stylistykach poza makieta. */
+:root:not([data-style='makieta']) .eventRow {
   min-height: 56px; padding: 0 20px;
-  transition: background 140ms var(--ease);
 }
-[data-family='v3'] .eventRow > span { line-height: 20px; }
+:root:not([data-style='makieta']) .eventRow > span { line-height: 20px; }
 /* Podswietlenie wiersza w kazdej stylistyce poza makieta — kazda bierze
    swoj odcien z --row-hover. */
 :root:not([data-style='makieta']) .eventRow:not(.eventRow--head):hover {
   background: var(--row-hover);
 }
-[data-family='v3'] .eventRow--head {
+/* Naglowek jest nizszy od wierszy; ta sama specyficznosc co regula bazowa,
+   wiec decyduje kolejnosc w pliku — stoi nizej, wiec wygrywa. */
+:root:not([data-style='makieta']) .eventRow--head {
   min-height: 44px;
   border-bottom: 1px solid var(--divider); pointer-events: none;
 }
