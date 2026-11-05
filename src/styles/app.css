@@ -986,14 +986,16 @@ select.field__control {
 [data-family='v3'] .acctCard__rows .acctRow:last-child { border-bottom: 0; }
 [data-family='v3'] .kv { padding: 8px 0; }
 
-/* Karta rachunku w nr 3 oddycha tak samo jak karta klasy aktywow: nazwa
-   i numer w jednej linii, kwota pod spodem, wiersze z tym samym paddingiem
-   i krojem co w .kv, znacznik jako kreska zamiast kropki. */
-[data-family='v3'] .acctCard__top { flex-direction: column; align-items: stretch; gap: 8px; }
+/* Karta rachunku oddycha tak samo jak karta klasy aktywow: nazwa i numer
+   w jednej linii, kwota pod spodem. Dotyczy wszystkich stylistyk poza
+   makieta — kwota po prawej stronie naglowka byla reliktem listy. */
+:root:not([data-style='makieta']) .acctCard__top {
+  flex-direction: column; align-items: stretch; gap: 8px;
+}
+/* Znacznik idzie za designem, nie za ukladem: kreska w nr 2, nr 3 i nr 4,
+   kropka w nr 1 i w makiecie — tak samo jak na kartach klas aktywow. */
+[data-style='2'] .acctCard__dot,
 [data-family='v3'] .acctCard__dot { width: 4px; height: 16px; border-radius: 4px; }
-[data-family='v3'] .acctRow { padding: 8px 0; gap: 10px; }
-[data-family='v3'] .acctRow__label,
-[data-family='v3'] .acctRow__value { font-size: 13px; }
 /* Karty rachunkow bez przyciskow we wszystkich stylistykach poza makieta —
    tam przycisk zostaje, bo makieta ma pokazywac, co na karcie jest. */
 :root:not([data-style='makieta']) .acctCard__foot { display: none; }
@@ -1003,15 +1005,17 @@ select.field__control {
 /* Limit wplat ladniej czyta sie jako podsumowanie pod pozycjami niz jako
    wtracenie miedzy kwota a metrykami — karta to flex w kolumnie, wiec
    wystarczy przestawic kolejnosc. */
-[data-family='v3'] .acctCard__limit { order: 1; }
-[data-family='v3'] .acctCard__limit {
+:root:not([data-style='makieta']) .acctCard__limit {
+  order: 1;
   margin: 0; padding: 14px 16px; border-radius: var(--card-radius);
-  background: var(--band-alt); gap: 8px;
+  background: var(--band-alt, var(--screen-bg)); gap: 8px;
 }
-[data-family='v3'] .acctCard__limitLabel { font-size: 13px; color: var(--muted); }
-[data-family='v3'] .acctCard__limitValue { font-size: 14px; }
-[data-family='v3'] .acctCard__limitTrack {
-  height: 6px; margin-top: 2px; background: #e2e2e8;
+:root:not([data-style='makieta']) .acctCard__limitLabel {
+  font-size: 13px; color: var(--muted);
+}
+:root:not([data-style='makieta']) .acctCard__limitValue { font-size: 14px; }
+:root:not([data-style='makieta']) .acctCard__limitTrack {
+  height: 6px; margin-top: 2px; background: var(--progress-track);
 }
 
 /* ---- nr 3: metryki klas aktywow jako kafelki ----
