@@ -145,8 +145,13 @@ export function AppHeader({
         ))}
       </nav>
       <div className="appHeader__right">
-        <button type="button" className="appHeader__bell" aria-label="Powiadomienia">
+        <button
+          type="button"
+          className="appHeader__bell appHeader__bell--new"
+          aria-label="Powiadomienia — masz nowe"
+        >
           <BellIcon />
+          <span className="appHeader__dot" aria-hidden="true" />
         </button>
         <div className="appHeader__user">
           <span className="appHeader__userName">Dawid Jankowski</span>

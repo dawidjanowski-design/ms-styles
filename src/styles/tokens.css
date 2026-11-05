@@ -72,6 +72,9 @@
 
   --font: Inter;
 
+  /* Kropka nowych powiadomien. */
+  --notif: #e5484d;
+
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -405,6 +408,9 @@
    koloru i bez materiału — żeby na jednym kliknięciu pokazać klientowi,
    co jest układem, a co już decyzją wizualną. */
 [data-style='makieta'] {
+  /* Makieta zostaje bez koloru — czerwona kropka wylamywalaby sie
+     z szarosci, a ma tylko pokazywac, ze powiadomienia tu sa. */
+  --notif: #9c9c9c;
   --page-bg: #f2f2f2;
   --screen-bg: #f6f6f6;
   --screen-border: #e8e8e8;

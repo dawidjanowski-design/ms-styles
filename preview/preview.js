@@ -1069,7 +1069,7 @@ function render() {
         return `<button type="button" data-nav="${n}" class="navItem ${n === active ? 'navItem--active' : ''} ${NAV[i + 1] === active ? 'navItem--prev' : ''}">${n}</button>`;
       }).join('')}</nav>
       <div class="appHeader__right">
-        <button type="button" class="appHeader__bell" aria-label="Powiadomienia">${BELL}</button>
+        <button type="button" class="appHeader__bell appHeader__bell--new" aria-label="Powiadomienia — masz nowe">${BELL}<span class="appHeader__dot" aria-hidden="true"></span></button>
         <div class="appHeader__user">
           <span class="appHeader__userName">Dawid Jankowski</span>
           <span class="appHeader__avatar"><img src="avatar.jpg" width="32" height="32" alt=""></span>

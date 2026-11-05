@@ -53,6 +53,14 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   border-radius: 999px; transition: background 140ms var(--ease);
 }
 .appHeader__bell:hover { background: var(--screen-bg); }
+/* Kropka nowych powiadomien — jedyny mocny akcent w naglowku, wiec pierscien
+   w kolorze tla, zeby nie zlewala sie z ikona dzwonka. */
+.appHeader__bell--new { position: relative; }
+.appHeader__dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 7px; height: 7px; border-radius: 999px;
+  background: var(--notif); box-shadow: 0 0 0 2px var(--header-bg);
+}
 .appHeader__user { display: flex; align-items: center; gap: 16px; }
 .appHeader__userName { font-size: 13px; font-weight: 500; color: var(--ink); }
 .appHeader__avatar {
@@ -888,7 +896,13 @@ select.field__control {
 [data-family='v3'] .pageTitle { line-height: 18px; }
 
 /* nawigacja: aktywna pozycja kolorem akcentu, bez pigulki */
-[data-family='v3'] .navItem--active { background: transparent; font-weight: 500; }
+/* Aktywna pozycja: kolor akcentu plus kreska pod spodem. Sam kolor tekstu
+   gubil sie obok piciu nieaktywnych pozycji w tym samym stopniu pisma. */
+[data-family='v3'] .navItem--active { background: transparent; font-weight: 500; position: relative; }
+[data-family='v3'] .navItem--active::after {
+  content: ''; position: absolute; left: 16px; right: 16px; bottom: 3px;
+  height: 2px; border-radius: 2px; background: var(--nav-active-color);
+}
 
 /* wykres: pastel na calej wysokosci slupka, pod nim nasycona kreska */
 [data-family='v3'] .chartSeg__body { border-radius: var(--bar-radius); }
