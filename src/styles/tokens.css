@@ -244,7 +244,8 @@
 [data-style='3'],
 [data-style='4'],
 [data-style='6'],
-[data-style='7'] {
+[data-style='7'],
+[data-style='8'] {
   /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
   --font: Roboto;
 
@@ -378,7 +379,8 @@
    nasyconymi odcieniami z nr 2, nie pastelami z nr 3. */
 [data-style='4'],
 [data-style='6'],
-[data-style='7'] {
+[data-style='7'],
+[data-style='8'] {
   /* Paleta klienta z Figmy 983:19119 i 976:17671. Podkreslenie slupka bywa
      ciemniejsze niz kropka w legendzie (skarbowe, AM, gotowka) — przeniesione
      tak, jak jest w pliku. */
@@ -423,7 +425,8 @@
 }
 [data-style='4'] .content > section:nth-child(odd),
 [data-style='6'] .content > section:nth-child(odd),
-[data-style='7'] .content > section:nth-child(odd) { border-radius: 8px; }
+[data-style='7'] .content > section:nth-child(odd),
+[data-style='8'] .content > section:nth-child(odd) { border-radius: 8px; }
 
 /* ====================== STYLISTYKA 5 ======================
    Figma 997:519 („v4.4"). Wyrasta z nr 4, ale cofa trzy jej decyzje:

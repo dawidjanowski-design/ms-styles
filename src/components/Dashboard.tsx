@@ -5,13 +5,13 @@ import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend, assetColor } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'makieta';
-const isV3 = (s: StyleId) => s === '3' || s === '4' || s === '6' || s === '7';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'makieta';
+const isV3 = (s: StyleId) => s === '3' || s === '4' || s === '6' || s === '7' || s === '8';
 /** Nr 6 i nr 7 maja ten sam uklad dwukolumnowy, inna tylko sekcja zdarzen. */
-const isSplit = (s: StyleId) => s === '6' || s === '7';
+const isSplit = (s: StyleId) => s === '6' || s === '7' || s === '8';
 /** Nr 6 rosnie z nr 4, wiec kropki na osi biora jego palete. */
 const paletteForTimeline = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === '1' || s === 'makieta' ? '1' : s === '6' || s === '7' ? '4' : s;
+  s === '1' || s === 'makieta' ? '1' : s === '6' || s === '7' || s === '8' ? '4' : s;
 
 const MONTHS = [
   'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
@@ -387,7 +387,7 @@ export function DashboardScreen({
               <OffersScroll inline />
               <div className="events">
                 <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
-                {styleId === '7' ? <EventMonths /> : <Timeline styleId={styleId} />}
+                {styleId === '7' || styleId === '8' ? <EventMonths /> : <Timeline styleId={styleId} />}
               </div>
             </section>
           ) : (

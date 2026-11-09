@@ -19,15 +19,15 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
     Nr 6 rozni sie od nr 4 wylacznie sekcja zdarzen, wiec siega po jego palete
     i jego kolejnosc klas, zamiast duplikowac je w danych. */
 const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '1' : s === '6' || s === '7' ? '4' : s;
+  s === 'makieta' ? '1' : s === '6' || s === '7' || s === '8' ? '4' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '2' : s === '6' || s === '7' ? '4' : s;
+  s === 'makieta' ? '2' : s === '6' || s === '7' || s === '8' ? '4' : s;
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -342,6 +342,8 @@ function AssetCard({
   onOpen?: () => void;
 }) {
   const makieta = styleId === 'makieta';
+  const ring = styleId === '7';
+  const cols = styleId === '8';
   /* Kafelki w kazdej stylistyce poza makieta i nr 5: etykieta stoi nad
      wartoscia, zamiast po drugiej stronie karty. Znacznik klasy to osobna
      sprawa: kreska przed nazwa w nr 2, nr 3, nr 4 i nr 6, kropka po nazwie
@@ -451,6 +453,106 @@ function AssetCard({
 
 /* ----------------------------- rachunki ----------------------------- */
 
+
+/* Pozycje rachunku nosza nazwe klasy, nie jej id — mapujemy raz, zeby
+   pierscien i slupki braly te sama palete, co wykres struktury portfela. */
+const CLASS_OF: Record<string, string> = {
+  'Obligacje korporacyjne': 'corp',
+  Obligacje: 'corp',
+  'Obligacje skarbowe': 'skarb',
+  'Fundusze zamknięte (FIZ)': 'fiz',
+  'Fundusze otwarte (FIO)': 'fio',
+  'Wolne środki': 'cash',
+};
+const SHORT_OF: Record<string, string> = {
+  'Obligacje korporacyjne': 'Korporacyjne',
+  'Obligacje skarbowe': 'Skarbowe',
+  'Fundusze zamknięte (FIZ)': 'FIZ',
+  'Fundusze otwarte (FIO)': 'FIO',
+  'Wolne środki': 'Wolne',
+};
+const toNum = (v: string) =>
+  Number(v.replace(/\s|\u00a0/g, '').replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+const fmtPct = (v: number) =>
+  (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '%';
+
+type Slice = { label: string; short: string; color: string; pct: number };
+/* Udzialy licze wzgledem sumy pozycji, nie podanej sumy rachunku — inaczej
+   paski dwoch rachunkow nie dobijalyby do 100% i wygladaly na blad renderu. */
+function slices(account: Account, styleId: StyleId): Slice[] {
+  const palette = paletteOf(styleId);
+  const vals = account.rows.map((r) => toNum(r.value));
+  const sum = vals.reduce((a, b) => a + b, 0) || 1;
+  return account.rows.map((r, i) => ({
+    label: r.label,
+    short: SHORT_OF[r.label] ?? r.label,
+    color: assetColor(CLASS_OF[r.label] ?? '', palette) ?? 'var(--muted)',
+    pct: (vals[i] / sum) * 100,
+  }));
+}
+
+/** Nr 7: pierscien jak na wykresie struktury, tylko dla jednego rachunku. */
+function AcctRing({ account, styleId }: { account: Account; styleId: StyleId }) {
+  const seg = slices(account, styleId);
+  const C = 2 * Math.PI * 26;
+  let off = 0;
+  return (
+    <div className="acctRing">
+      <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
+        <circle cx="36" cy="36" r="26" fill="none" stroke="var(--progress-track)" strokeWidth="11" />
+        {seg.map((x) => {
+          const len = (C * x.pct) / 100;
+          const el = (
+            <circle
+              key={x.label}
+              cx="36"
+              cy="36"
+              r="26"
+              fill="none"
+              stroke={x.color}
+              strokeWidth="11"
+              strokeDasharray={`${len} ${C - len}`}
+              strokeDashoffset={-off}
+              transform="rotate(-90 36 36)"
+            />
+          );
+          off += len;
+          return el;
+        })}
+      </svg>
+      <div className="acctRing__legend">
+        {seg.map((x) => (
+          <span className="acctRing__item" key={x.label}>
+            <span className="acctRing__dot" style={{ background: x.color }} />
+            <span className="acctRing__label">{x.label}</span>
+            <span className="acctRing__pct">{fmtPct(x.pct)}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Nr 8: wysokosc slupka to udzial — klasy porownuja sie miedzy soba. */
+function AcctCols({ account, styleId }: { account: Account; styleId: StyleId }) {
+  const seg = slices(account, styleId);
+  const max = Math.max(...seg.map((x) => x.pct), 1);
+  return (
+    <div className="acctCols">
+      {seg.map((x) => (
+        <span className="acctCol" key={x.label}>
+          <span className="acctCol__pct">{fmtPct(x.pct)}</span>
+          <span
+            className="acctCol__bar"
+            style={{ height: Math.max(4, (x.pct / max) * 64), background: x.color }}
+          />
+          <span className="acctCol__label">{x.short}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function AccountCard({
   account,
   styleId,
@@ -504,7 +606,11 @@ function AccountCard({
       {account.rows.length > 0 && (
         <>
           <div className="divider" />
-          {!makieta ? (
+          {ring ? (
+            <AcctRing account={account} styleId={styleId} />
+          ) : cols ? (
+            <AcctCols account={account} styleId={styleId} />
+          ) : !makieta ? (
             /* Ten sam wzorzec, co po drugiej stronie przelacznika: pozycje
                rachunku jako kafelki. */
             <div className="metrics">
