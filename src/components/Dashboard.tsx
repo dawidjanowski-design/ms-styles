@@ -46,8 +46,7 @@ function eventCount(n: number) {
 
 /** Nr 7: miesiac jest obiektem, nie etykieta — jedna karta na miesiac
     z licznikiem w naglowku, zdarzenia jako wiersze w srodku. */
-function EventMonths({ styleId }: { styleId: StyleId }) {
-  const palette = paletteForTimeline(styleId);
+function EventMonths() {
   return (
     <div className="evMonths">
       {byMonth(EVENTS).map((g) => (
@@ -58,12 +57,7 @@ function EventMonths({ styleId }: { styleId: StyleId }) {
           </header>
           {g.items.map((e) => (
             <button type="button" className="evMonths__row" key={e.date + e.type + e.instrument}>
-              <span
-                className="evMonths__day"
-                style={{ color: assetColor(e.asset, palette) ?? 'var(--muted)' }}
-              >
-                {e.date.slice(0, 2)}
-              </span>
+              <span className="evMonths__day">{e.date.slice(0, 2)}</span>
               <span className="evMonths__what">
                 <span className="evMonths__type">{e.type}</span>
                 <span className="evMonths__instrument">{e.instrument}</span>
@@ -393,7 +387,7 @@ export function DashboardScreen({
               <OffersScroll inline />
               <div className="events">
                 <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
-                {styleId === '7' ? <EventMonths styleId={styleId} /> : <Timeline styleId={styleId} />}
+                {styleId === '7' ? <EventMonths /> : <Timeline styleId={styleId} />}
               </div>
             </section>
           ) : (

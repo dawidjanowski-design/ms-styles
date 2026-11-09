@@ -1316,8 +1316,7 @@ select.field__control {
 }
 .evMonths__row:last-child { border-bottom: 0; }
 .evMonths__row:hover { background: var(--row-hover); }
-/* Dzien niesie kolor klasy aktywow — ten sam sygnal, co kropka na osi. */
-.evMonths__day { font-size: 15px; font-weight: 500; }
+.evMonths__day { font-size: 15px; font-weight: 500; color: var(--ink); }
 .evMonths__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .evMonths__type { font-size: 14px; font-weight: 500; color: var(--ink); }
 .evMonths__instrument { font-size: 13px; color: var(--muted); min-width: 0; }

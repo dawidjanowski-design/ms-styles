@@ -96,15 +96,11 @@ function eventMonths() {
       <header class="evMonths__head">
         <h3 class="evMonths__title">${g.label}</h3>
         <span class="evMonths__count">${eventCount(g.items.length)}</span></header>
-      ${g.items.map(([d, t, i, a, cls]) => {
-        const meta = META[cls];
-        const c = meta ? meta.colors[pal()].card : 'var(--muted)';
-        return `<button type="button" class="evMonths__row">
-          <span class="evMonths__day" style="color:${c}">${d.slice(0, 2)}</span>
+      ${g.items.map(([d, t, i, a]) => `<button type="button" class="evMonths__row">
+          <span class="evMonths__day">${d.slice(0, 2)}</span>
           <span class="evMonths__what"><span class="evMonths__type">${t}</span>
             <span class="evMonths__instrument">${i}</span></span>
-          ${a ? `<span class="evMonths__amount">${a}</span>` : ''}</button>`;
-      }).join('')}
+          ${a ? `<span class="evMonths__amount">${a}</span>` : ''}</button>`).join('')}
     </section>`).join('')}</div>`;
 }
 
