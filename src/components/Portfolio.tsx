@@ -342,8 +342,6 @@ function AssetCard({
   onOpen?: () => void;
 }) {
   const makieta = styleId === 'makieta';
-  const ring = styleId === '7';
-  const cols = styleId === '8';
   /* Kafelki w kazdej stylistyce poza makieta i nr 5: etykieta stoi nad
      wartoscia, zamiast po drugiej stronie karty. Znacznik klasy to osobna
      sprawa: kreska przed nazwa w nr 2, nr 3, nr 4 i nr 6, kropka po nazwie
@@ -563,6 +561,8 @@ function AccountCard({
   onOpen?: () => void;
 }) {
   const makieta = styleId === 'makieta';
+  const ring = styleId === '7';
+  const cols = styleId === '8';
 
   return (
     <article className="acctCard" style={{ ['--seg' as string]: account.marker?.[paletteOf(styleId)] }}>
