@@ -474,7 +474,7 @@ const toNum = (v: string) =>
 const fmtPct = (v: number) =>
   (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '%';
 
-type Slice = { label: string; short: string; color: string; pct: number };
+type Slice = { label: string; short: string; color: string; pct: number; value: string };
 /* Udzialy licze wzgledem sumy pozycji, nie podanej sumy rachunku — inaczej
    paski dwoch rachunkow nie dobijalyby do 100% i wygladaly na blad renderu. */
 function slices(account: Account, styleId: StyleId): Slice[] {
@@ -486,6 +486,7 @@ function slices(account: Account, styleId: StyleId): Slice[] {
     short: SHORT_OF[r.label] ?? r.label,
     color: assetColor(CLASS_OF[r.label] ?? '', palette) ?? 'var(--muted)',
     pct: (vals[i] / sum) * 100,
+    value: r.value,
   }));
 }
 
@@ -503,6 +504,7 @@ function AcctRing({ account, styleId }: { account: Account; styleId: StyleId }) 
           const el = (
             <circle
               key={x.label}
+              className="acctRing__arc"
               cx="36"
               cy="36"
               r="26"
@@ -523,7 +525,10 @@ function AcctRing({ account, styleId }: { account: Account; styleId: StyleId }) 
           <span className="acctRing__item" key={x.label}>
             <span className="acctRing__dot" style={{ background: x.color }} />
             <span className="acctRing__label">{x.label}</span>
-            <span className="acctRing__pct">{fmtPct(x.pct)}</span>
+            <span className="acctRing__val">
+              <span className="acctRing__pct">{fmtPct(x.pct)}</span>
+              <span className="acctRing__amount">{x.value}</span>
+            </span>
           </span>
         ))}
       </div>
@@ -539,7 +544,10 @@ function AcctCols({ account, styleId }: { account: Account; styleId: StyleId }) 
     <div className="acctCols">
       {seg.map((x) => (
         <span className="acctCol" key={x.label}>
-          <span className="acctCol__pct">{fmtPct(x.pct)}</span>
+          <span className="acctCol__cap">
+            <span className="acctCol__pct">{fmtPct(x.pct)}</span>
+            <span className="acctCol__amount">{x.value}</span>
+          </span>
           <span
             className="acctCol__bar"
             style={{ height: Math.max(4, (x.pct / max) * 64), background: x.color }}
