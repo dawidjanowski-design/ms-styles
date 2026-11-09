@@ -5,11 +5,13 @@ import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend, assetColor } from './Portfolio';
 import { Amount } from './ui';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | 'makieta';
-const isV3 = (s: StyleId) => s === '3' || s === '4' || s === '6';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'makieta';
+const isV3 = (s: StyleId) => s === '3' || s === '4' || s === '6' || s === '7';
+/** Nr 6 i nr 7 maja ten sam uklad dwukolumnowy, inna tylko sekcja zdarzen. */
+const isSplit = (s: StyleId) => s === '6' || s === '7';
 /** Nr 6 rosnie z nr 4, wiec kropki na osi biora jego palete. */
 const paletteForTimeline = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === '1' || s === 'makieta' ? '1' : s === '6' ? '4' : s;
+  s === '1' || s === 'makieta' ? '1' : s === '6' || s === '7' ? '4' : s;
 
 const MONTHS = [
   'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
@@ -33,6 +35,48 @@ function byMonth(events: Event[]) {
 
 /* Os czasu zamiast tabeli — nr 6. Kropka bierze kolor klasy aktywow, wiec
    zdarzenie od razu wiadomo, czego dotyczy. */
+/** 1 zdarzenie / 2-4 zdarzenia / 5+ zdarzen. */
+function eventCount(n: number) {
+  const d = n % 10;
+  const s = n % 100;
+  if (n === 1) return '1 zdarzenie';
+  if (d >= 2 && d <= 4 && (s < 12 || s > 14)) return `${n} zdarzenia`;
+  return `${n} zdarzeń`;
+}
+
+/** Nr 7: miesiac jest obiektem, nie etykieta — jedna karta na miesiac
+    z licznikiem w naglowku, zdarzenia jako wiersze w srodku. */
+function EventMonths({ styleId }: { styleId: StyleId }) {
+  const palette = paletteForTimeline(styleId);
+  return (
+    <div className="evMonths">
+      {byMonth(EVENTS).map((g) => (
+        <section className="evMonths__card" key={g.key}>
+          <header className="evMonths__head">
+            <h3 className="evMonths__title">{g.label}</h3>
+            <span className="evMonths__count">{eventCount(g.items.length)}</span>
+          </header>
+          {g.items.map((e) => (
+            <button type="button" className="evMonths__row" key={e.date + e.type + e.instrument}>
+              <span
+                className="evMonths__day"
+                style={{ color: assetColor(e.asset, palette) ?? 'var(--muted)' }}
+              >
+                {e.date.slice(0, 2)}
+              </span>
+              <span className="evMonths__what">
+                <span className="evMonths__type">{e.type}</span>
+                <span className="evMonths__instrument">{e.instrument}</span>
+              </span>
+              {e.amount && <span className="evMonths__amount">{e.amount}</span>}
+            </button>
+          ))}
+        </section>
+      ))}
+    </div>
+  );
+}
+
 function Timeline({ styleId }: { styleId: StyleId }) {
   const palette = paletteForTimeline(styleId);
   return (
@@ -341,14 +385,15 @@ export function DashboardScreen({
             />
           </section>
 
-          {/* Nr 6: oferty i kalendarz stoja obok siebie w jednym pasmie —
-              os czasu rozciagnieta na 1280 px byla rozstrzelona. */}
-          {styleId === '6' ? (
+          {/* Nr 6 i nr 7: oferty i zdarzenia stoja obok siebie w jednym pasmie —
+              os czasu rozciagnieta na 1280 px byla rozstrzelona. Rozni je tylko
+              to, jak czyta sie czas: os (nr 6) albo karta na miesiac (nr 7). */}
+          {isSplit(styleId) ? (
             <section className="dashSplit">
               <OffersScroll inline />
               <div className="events">
                 <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
-                <Timeline styleId={styleId} />
+                {styleId === '7' ? <EventMonths styleId={styleId} /> : <Timeline styleId={styleId} />}
               </div>
             </section>
           ) : (

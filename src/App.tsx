@@ -7,7 +7,7 @@ import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'makieta';
 const STYLES: { id: StyleId; label: string }[] = [
   { id: '1', label: 'nr 1' },
   { id: '2', label: 'nr 2' },
@@ -15,6 +15,7 @@ const STYLES: { id: StyleId; label: string }[] = [
   { id: '4', label: 'nr 4' },
   { id: '5', label: 'nr 5' },
   { id: '6', label: 'nr 6' },
+  { id: '7', label: 'nr 7' },
   { id: 'makieta', label: 'Makieta' },
 ];
 const IDS = STYLES.map((s) => s.id) as string[];
@@ -50,7 +51,7 @@ export default function App() {
        ekranu zamiast pasm, wiec jest rodzina sama dla siebie. */
     document.documentElement.setAttribute(
       'data-family',
-      styleId === '3' || styleId === '4' || styleId === '6' ? 'v3' : styleId
+      styleId === '3' || styleId === '4' || styleId === '6' || styleId === '7' ? 'v3' : styleId
     );
     try {
       localStorage.setItem(KEY, styleId);

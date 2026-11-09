@@ -1292,6 +1292,40 @@ select.field__control {
 }
 .dashSplit .events { padding-top: 0; display: flex; flex-direction: column; gap: 16px; }
 
+/* ===================== MIESIACE (nr 7) =====================
+   Miesiac jest obiektem, nie etykieta: jedna karta na miesiac z licznikiem
+   w naglowku, zdarzenia jako wiersze w srodku. Znosi przybywanie zdarzen
+   lepiej niz os czasu, bo rosnie karta, a nie dlugosc szyny. */
+.evMonths { display: flex; flex-direction: column; gap: 16px; }
+.evMonths__card {
+  background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card); overflow: hidden;
+}
+.evMonths__head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 14px 20px; background: var(--band-alt, var(--screen-bg));
+}
+.evMonths__title { margin: 0; font-size: 14px; font-weight: 500; color: var(--ink); }
+.evMonths__count { font-size: 13px; color: var(--muted); }
+.evMonths__row {
+  display: grid; grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: center; gap: 14px;
+  width: 100%; text-align: left; padding: 13px 20px; min-height: 60px;
+  border-bottom: 1px solid var(--divider);
+  transition: background 140ms var(--ease);
+}
+.evMonths__row:last-child { border-bottom: 0; }
+.evMonths__row:hover { background: var(--row-hover); }
+/* Dzien niesie kolor klasy aktywow — ten sam sygnal, co kropka na osi. */
+.evMonths__day { font-size: 15px; font-weight: 500; }
+.evMonths__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.evMonths__type { font-size: 14px; font-weight: 500; color: var(--ink); }
+.evMonths__instrument { font-size: 13px; color: var(--muted); min-width: 0; }
+.evMonths__amount {
+  font-size: 15px; font-weight: 500; color: var(--value-strong);
+  text-align: right; white-space: nowrap;
+}
+
 /* ======================= OS CZASU (nr 6) =======================
    Te same zdarzenia, co w tabeli, ale chronologicznie i zgrupowane
    miesiacami. Szyna biegnie przez cala sekcje, kropka bierze kolor klasy

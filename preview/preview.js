@@ -58,7 +58,7 @@ const CASH_CARDS = [
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['fiz', 'am', 'fio', 'skarb', 'corp'], '4': ['corp', 'skarb', 'am', 'fiz', 'fio'], '5': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const saved = localStorage.getItem('ms-style');
-const state = { style: ['2', '3', '4', '5', '6', 'makieta'].includes(saved) ? saved : '1', hot: null,
+const state = { style: ['2', '3', '4', '5', '6', '7', 'makieta'].includes(saved) ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
@@ -68,9 +68,11 @@ const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
    Kolejnosc pozycji ma taka jak nr 2. */
 /* Nr 6 rosnie z nr 4, wiec bierze jego palete i jego kolejnosc klas. */
-const pal = () => (state.style === 'makieta' ? '1' : state.style === '6' ? '4' : state.style);
-const ord = () => (state.style === 'makieta' ? '2' : state.style === '6' ? '4' : state.style);
-const isV3 = () => ['3', '4', '6'].includes(state.style);
+const pal = () => (state.style === 'makieta' ? '1' : ['6', '7'].includes(state.style) ? '4' : state.style);
+const ord = () => (state.style === 'makieta' ? '2' : ['6', '7'].includes(state.style) ? '4' : state.style);
+const isV3 = () => ['3', '4', '6', '7'].includes(state.style);
+/* Nr 6 i nr 7 maja ten sam uklad dwukolumnowy, inna tylko sekcja zdarzen. */
+const isSplit = () => ['6', '7'].includes(state.style);
 
 const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
   'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
@@ -78,7 +80,36 @@ const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
 const SHORT = ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'];
 
 /* Os czasu zamiast tabeli — nr 6. Kropka bierze kolor klasy aktywow. */
-function timeline() {
+/* 1 zdarzenie / 2-4 zdarzenia / 5+ zdarzen */
+function eventCount(n) {
+  const d = n % 10, r = n % 100;
+  if (n === 1) return '1 zdarzenie';
+  if (d >= 2 && d <= 4 && (r < 12 || r > 14)) return `${n} zdarzenia`;
+  return `${n} zdarzeń`;
+}
+
+/* Nr 7: miesiac jest obiektem, nie etykieta — jedna karta na miesiac
+   z licznikiem w naglowku, zdarzenia jako wiersze w srodku. */
+function eventMonths() {
+  return `<div class="evMonths">${evGroups().map((g) => `
+    <section class="evMonths__card">
+      <header class="evMonths__head">
+        <h3 class="evMonths__title">${g.label}</h3>
+        <span class="evMonths__count">${eventCount(g.items.length)}</span></header>
+      ${g.items.map(([d, t, i, a, cls]) => {
+        const meta = META[cls];
+        const c = meta ? meta.colors[pal()].card : 'var(--muted)';
+        return `<button type="button" class="evMonths__row">
+          <span class="evMonths__day" style="color:${c}">${d.slice(0, 2)}</span>
+          <span class="evMonths__what"><span class="evMonths__type">${t}</span>
+            <span class="evMonths__instrument">${i}</span></span>
+          ${a ? `<span class="evMonths__amount">${a}</span>` : ''}</button>`;
+      }).join('')}
+    </section>`).join('')}</div>`;
+}
+
+/* Zdarzenia pogrupowane po miesiacu, w kolejnosci z danych. */
+function evGroups() {
   const groups = [];
   for (const e of EVENTS) {
     const [, m, y] = e[0].split('.');
@@ -87,6 +118,11 @@ function timeline() {
     if (last && last.key === key) last.items.push(e);
     else groups.push({ key, label: `${MONTHS[Number(m) - 1]} ${y}`, items: [e] });
   }
+  return groups;
+}
+
+function timeline() {
+  const groups = evGroups();
   return `<div class="timeline">${groups.map((g) => `
     <section class="timeline__group">
       <h3 class="timeline__month">${g.label}</h3>
@@ -1128,14 +1164,14 @@ function dashboardScreen() {
       ${legend(VIEWS['Łącznie'].allocation, true, VIEWS['Łącznie'])}
     </section>
 
-    ${state.style === '6' ? `<section class="dashSplit">
+    ${isSplit() ? `<section class="dashSplit">
       <div class="offers">
         <h2 class="sectionTitle">Emisje i oferty</h2>
         ${offersTrack()}
       </div>
       <div class="events">
         <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
-        ${timeline()}
+        ${state.style === '7' ? eventMonths() : timeline()}
       </div>
     </section>` : `
     <section class="offers">
@@ -1299,7 +1335,7 @@ function render() {
      wlasna: jedna karta ekranu zamiast pasm. */
   document.documentElement.setAttribute(
     'data-family',
-    ['3', '4', '6'].includes(state.style) ? 'v3' : state.style
+    ['3', '4', '6', '7'].includes(state.style) ? 'v3' : state.style
   );
 
   document.getElementById('root').innerHTML = `
@@ -1332,7 +1368,7 @@ function render() {
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
-      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['6', 'nr 6'], ['makieta', 'Makieta']]
+      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['6', 'nr 6'], ['7', 'nr 7'], ['makieta', 'Makieta']]
         .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
   placeGlides(glides);

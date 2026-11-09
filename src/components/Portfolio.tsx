@@ -19,15 +19,15 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
     Nr 6 rozni sie od nr 4 wylacznie sekcja zdarzen, wiec siega po jego palete
     i jego kolejnosc klas, zamiast duplikowac je w danych. */
 const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '1' : s === '6' ? '4' : s;
+  s === 'makieta' ? '1' : s === '6' || s === '7' ? '4' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '2' : s === '6' ? '4' : s;
+  s === 'makieta' ? '2' : s === '6' || s === '7' ? '4' : s;
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
