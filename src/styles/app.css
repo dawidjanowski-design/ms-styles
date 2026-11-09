@@ -1348,73 +1348,76 @@ select.field__control {
 
 
 /* --- interakcja na wykresach rachunku (nr 7 i nr 8) ---
-   Kwoty zdjelismy z kart, zeby zrobic miejsce na obraz — hover je oddaje,
-   po jednej na raz. Reszta pozycji gasnie, zeby bylo widac, czego dotyczy
-   liczba. Wszystko na CSS: podglad przerysowuje cala strone przy kazdej
-   zmianie stanu, wiec hover na JS mrugalby przy kazdym ruchu myszy. */
+   W spoczynku karta pokazuje kwote, bo o nia pyta sie najczesciej; udzial
+   niesie juz sam obraz. Hover dopowiada liczbe: najechanie na luk, wiersz
+   legendy albo slupek gasi reszte i podmienia kwote na procent.
+   Wszystko na CSS: podglad przerysowuje cala strone przy kazdej zmianie
+   stanu, wiec hover na JS mrugalby przy kazdym ruchu myszy. */
 .acctRing { --dim-arc: 0.18; --dim-row: 0.35; }
 .acctRing__arc, .acctRing__item, .acctRing__pct, .acctRing__amount {
   transition: opacity 120ms var(--ease);
 }
 .acctRing__arc { cursor: pointer; }
-.acctRing__item { cursor: default; }
-/* procent i kwota dziela te sama komorke — kwota wjezdza na miejsce procentu */
+/* kwota i procent dziela te sama komorke — procent wjezdza na jej miejsce */
 .acctRing__val { position: relative; display: block; text-align: right; }
 .acctRing__amount {
-  position: absolute; right: 0; top: 0; opacity: 0; white-space: nowrap;
   font-size: 13px; font-weight: 500; line-height: 18px; color: var(--value-strong);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.acctRing__pct {
+  position: absolute; right: 0; top: 0; opacity: 0; white-space: nowrap;
+  font-size: 13px; font-weight: 500; line-height: 18px; color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .acctRing__legend:hover .acctRing__item:not(:hover) { opacity: var(--dim-row); }
-.acctRing__item:hover .acctRing__pct { opacity: 0; }
-.acctRing__item:hover .acctRing__amount { opacity: 1; }
-/* 1 */
+.acctRing__item:hover .acctRing__amount { opacity: 0; }
+.acctRing__item:hover .acctRing__pct { opacity: 1; }
 .acctRing:has(.acctRing__item:nth-child(1):hover) .acctRing__arc:not(:nth-child(2)),
 .acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__arc:not(:nth-child(2)) { opacity: var(--dim-arc); }
 .acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__item:not(:nth-child(1)) { opacity: var(--dim-row); }
-.acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__item:nth-child(1) .acctRing__pct { opacity: 0; }
-.acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__item:nth-child(1) .acctRing__amount { opacity: 1; }
-/* 2 */
+.acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__item:nth-child(1) .acctRing__amount { opacity: 0; }
+.acctRing:has(.acctRing__arc:nth-child(2):hover) .acctRing__item:nth-child(1) .acctRing__pct { opacity: 1; }
 .acctRing:has(.acctRing__item:nth-child(2):hover) .acctRing__arc:not(:nth-child(3)),
 .acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__arc:not(:nth-child(3)) { opacity: var(--dim-arc); }
 .acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__item:not(:nth-child(2)) { opacity: var(--dim-row); }
-.acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__item:nth-child(2) .acctRing__pct { opacity: 0; }
-.acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__item:nth-child(2) .acctRing__amount { opacity: 1; }
-/* 3 */
+.acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__item:nth-child(2) .acctRing__amount { opacity: 0; }
+.acctRing:has(.acctRing__arc:nth-child(3):hover) .acctRing__item:nth-child(2) .acctRing__pct { opacity: 1; }
 .acctRing:has(.acctRing__item:nth-child(3):hover) .acctRing__arc:not(:nth-child(4)),
 .acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__arc:not(:nth-child(4)) { opacity: var(--dim-arc); }
 .acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__item:not(:nth-child(3)) { opacity: var(--dim-row); }
-.acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__item:nth-child(3) .acctRing__pct { opacity: 0; }
-.acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__item:nth-child(3) .acctRing__amount { opacity: 1; }
-/* 4 */
+.acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__item:nth-child(3) .acctRing__amount { opacity: 0; }
+.acctRing:has(.acctRing__arc:nth-child(4):hover) .acctRing__item:nth-child(3) .acctRing__pct { opacity: 1; }
 .acctRing:has(.acctRing__item:nth-child(4):hover) .acctRing__arc:not(:nth-child(5)),
 .acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__arc:not(:nth-child(5)) { opacity: var(--dim-arc); }
 .acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__item:not(:nth-child(4)) { opacity: var(--dim-row); }
-.acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__item:nth-child(4) .acctRing__pct { opacity: 0; }
-.acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__item:nth-child(4) .acctRing__amount { opacity: 1; }
-/* 5 */
+.acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__item:nth-child(4) .acctRing__amount { opacity: 0; }
+.acctRing:has(.acctRing__arc:nth-child(5):hover) .acctRing__item:nth-child(4) .acctRing__pct { opacity: 1; }
 .acctRing:has(.acctRing__item:nth-child(5):hover) .acctRing__arc:not(:nth-child(6)),
 .acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__arc:not(:nth-child(6)) { opacity: var(--dim-arc); }
 .acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__item:not(:nth-child(5)) { opacity: var(--dim-row); }
-.acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__item:nth-child(5) .acctRing__pct { opacity: 0; }
-.acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__item:nth-child(5) .acctRing__amount { opacity: 1; }
+.acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__item:nth-child(5) .acctRing__amount { opacity: 0; }
+.acctRing:has(.acctRing__arc:nth-child(6):hover) .acctRing__item:nth-child(5) .acctRing__pct { opacity: 1; }
 
 .acctCol { cursor: pointer; }
-.acctCol__bar, .acctCol__pct, .acctCol__amount, .acctCol__label {
+.acctCol__bar, .acctCol__brief, .acctCol__detail, .acctCol__label {
   transition: opacity 120ms var(--ease);
 }
 .acctCols:hover .acctCol:not(:hover) { opacity: 0.35; }
-/* Kwota nie miesci sie w szerokosci slupka, wiec wychodzi poza nia — stad
-   pozycjonowanie absolutne zamiast drugiego wiersza w kolumnie. */
 .acctCol__cap { position: relative; display: block; line-height: 18px; }
-.acctCol__amount {
-  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
-  opacity: 0; white-space: nowrap; pointer-events: none;
-  font-size: 13px; font-weight: 500; line-height: 18px; color: var(--value-strong);
+.acctCol__brief {
+  font-size: 13px; font-weight: 500; color: var(--value-strong);
   font-variant-numeric: tabular-nums;
 }
-.acctCol:hover .acctCol__pct { opacity: 0; }
-.acctCol:hover .acctCol__amount { opacity: 1; }
+/* Procent z dokladna kwota nie miesci sie w szerokosci slupka, wiec wychodzi
+   poza nia — stad pozycjonowanie absolutne zamiast drugiego wiersza. */
+.acctCol__detail {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  opacity: 0; white-space: nowrap; pointer-events: none;
+  font-size: 13px; font-weight: 500; line-height: 18px; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.acctCol:hover .acctCol__brief { opacity: 0; }
+.acctCol:hover .acctCol__detail { opacity: 1; }
 
 /* ===================== MIESIACE (nr 7) =====================
    Miesiac jest obiektem, nie etykieta: jedna karta na miesiac z licznikiem

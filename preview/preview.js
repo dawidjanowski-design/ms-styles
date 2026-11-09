@@ -365,6 +365,13 @@ const SHORT_OF = {
 };
 const toNum = (v) => Number(String(v).replace(/\s|\u00a0/g, '').replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
 const fmtPct = (v) => (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '%';
+/* Nad slupkiem jest tyle miejsca, co szerokosc slupka — pelna kwota sie nie
+   miesci, wiec w spoczynku idzie skrot, a dokladna liczba czeka na hover. */
+const shortPln = (v) => {
+  if (v >= 1e6) return (v / 1e6).toFixed(2).replace('.', ',') + ' mln';
+  if (v >= 1e4) return Math.round(v / 1e3).toLocaleString('pl-PL') + ' tys.';
+  return Math.round(v).toLocaleString('pl-PL');
+};
 /* Udzialy wzgledem sumy pozycji, nie podanej sumy rachunku — inaczej paski
    dwoch rachunkow nie dobijalyby do 100% i wygladaly na blad renderu. */
 function slices(rows) {
@@ -374,7 +381,7 @@ function slices(rows) {
     const meta = META[CLASS_OF[l]];
     return { label: l, short: SHORT_OF[l] || l,
       color: meta ? meta.colors[pal()].card : 'var(--muted)', pct: (vals[i] / sum) * 100,
-      value: rows[i][1] };
+      value: rows[i][1], brief: shortPln(vals[i]) };
   });
 }
 /* Nr 7: pierscien jak na wykresie struktury, tylko dla jednego rachunku. */
@@ -396,8 +403,8 @@ function acctRing(rows) {
     <div class="acctRing__legend">${seg.map((x) => `<span class="acctRing__item">
       <span class="acctRing__dot" style="background:${x.color}"></span>
       <span class="acctRing__label">${x.label}</span>
-      <span class="acctRing__val"><span class="acctRing__pct">${fmtPct(x.pct)}</span>
-        <span class="acctRing__amount">${x.value}</span></span></span>`).join('')}</div>
+      <span class="acctRing__val"><span class="acctRing__amount">${x.value}</span>
+        <span class="acctRing__pct">${fmtPct(x.pct)}</span></span></span>`).join('')}</div>
   </div>`;
 }
 /* Nr 8: wysokosc slupka to udzial — klasy porownuja sie miedzy soba. */
@@ -405,8 +412,8 @@ function acctCols(rows) {
   const seg = slices(rows);
   const max = Math.max(...seg.map((x) => x.pct), 1);
   return `<div class="acctCols">${seg.map((x) => `<span class="acctCol">
-    <span class="acctCol__cap"><span class="acctCol__pct">${fmtPct(x.pct)}</span>
-      <span class="acctCol__amount">${x.value}</span></span>
+    <span class="acctCol__cap"><span class="acctCol__brief">${x.brief}</span>
+      <span class="acctCol__detail">${fmtPct(x.pct)} · ${x.value}</span></span>
     <span class="acctCol__bar" style="height:${Math.max(4, (x.pct / max) * 64)}px;background:${x.color}"></span>
     <span class="acctCol__label">${x.short}</span></span>`).join('')}</div>`;
 }

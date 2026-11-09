@@ -473,8 +473,15 @@ const toNum = (v: string) =>
   Number(v.replace(/\s|\u00a0/g, '').replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
 const fmtPct = (v: number) =>
   (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '%';
+/* Nad slupkiem jest tyle miejsca, co szerokosc slupka — pelna kwota sie nie
+   miesci, wiec w spoczynku idzie skrot, a dokladna liczba czeka na hover. */
+const shortPln = (v: number) => {
+  if (v >= 1e6) return (v / 1e6).toFixed(2).replace('.', ',') + ' mln';
+  if (v >= 1e4) return Math.round(v / 1e3).toLocaleString('pl-PL') + ' tys.';
+  return Math.round(v).toLocaleString('pl-PL');
+};
 
-type Slice = { label: string; short: string; color: string; pct: number; value: string };
+type Slice = { label: string; short: string; color: string; pct: number; value: string; brief: string };
 /* Udzialy licze wzgledem sumy pozycji, nie podanej sumy rachunku — inaczej
    paski dwoch rachunkow nie dobijalyby do 100% i wygladaly na blad renderu. */
 function slices(account: Account, styleId: StyleId): Slice[] {
@@ -487,6 +494,7 @@ function slices(account: Account, styleId: StyleId): Slice[] {
     color: assetColor(CLASS_OF[r.label] ?? '', palette) ?? 'var(--muted)',
     pct: (vals[i] / sum) * 100,
     value: r.value,
+    brief: shortPln(vals[i]),
   }));
 }
 
@@ -526,8 +534,8 @@ function AcctRing({ account, styleId }: { account: Account; styleId: StyleId }) 
             <span className="acctRing__dot" style={{ background: x.color }} />
             <span className="acctRing__label">{x.label}</span>
             <span className="acctRing__val">
-              <span className="acctRing__pct">{fmtPct(x.pct)}</span>
               <span className="acctRing__amount">{x.value}</span>
+              <span className="acctRing__pct">{fmtPct(x.pct)}</span>
             </span>
           </span>
         ))}
@@ -545,8 +553,10 @@ function AcctCols({ account, styleId }: { account: Account; styleId: StyleId }) 
       {seg.map((x) => (
         <span className="acctCol" key={x.label}>
           <span className="acctCol__cap">
-            <span className="acctCol__pct">{fmtPct(x.pct)}</span>
-            <span className="acctCol__amount">{x.value}</span>
+            <span className="acctCol__brief">{x.brief}</span>
+            <span className="acctCol__detail">
+              {fmtPct(x.pct)} · {x.value}
+            </span>
           </span>
           <span
             className="acctCol__bar"
