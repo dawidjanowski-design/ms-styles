@@ -378,30 +378,43 @@ function slices(rows) {
   const vals = rows.map(([, v]) => toNum(v));
   const sum = vals.reduce((a, b) => a + b, 0) || 1;
   return rows.map(([l], i) => {
-    const meta = META[CLASS_OF[l]];
-    return { label: l, short: SHORT_OF[l] || l,
-      color: meta ? meta.colors[pal()].card : 'var(--muted)', pct: (vals[i] / sum) * 100,
-      value: rows[i][1], brief: shortPln(vals[i]) };
+    const id = CLASS_OF[l];
+    const c = META[id] ? META[id].colors[pal()] : null;
+    /* Kolory z glownego wykresu struktury, nie z markera karty: pastelowe
+       wypelnienie, nasycona stopka, nasycona kropka w legendzie. */
+    return { label: l, short: SHORT_OF[l] || l, pct: (vals[i] / sum) * 100,
+      value: rows[i][1], brief: shortPln(vals[i]),
+      fill: c ? c.chart : 'var(--muted)',
+      foot: c ? (c.chartFoot || c.chart) : 'var(--muted)',
+      dot: c ? c.legend : 'var(--muted)',
+      cash: id === 'cash' };
   });
 }
 /* Nr 7: pierscien jak na wykresie struktury, tylko dla jednego rachunku. */
 function acctRing(rows) {
-  const seg = slices(rows), C = 2 * Math.PI * 26;
+  /* Luk = pastelowe cialo plus nasycony rant na zewnatrz: ten sam uklad, co
+     cialo i stopka segmentu na wykresie struktury. */
+  const seg = slices(rows), RB = 25, RR = 31.6;
+  const CB = 2 * Math.PI * RB, CR = 2 * Math.PI * RR;
   let off = 0;
   const arcs = seg.map((x) => {
-    const len = (C * x.pct) / 100;
-    const el = `<circle class="acctRing__arc" cx="36" cy="36" r="26" fill="none" stroke="${x.color}" stroke-width="11"
-      stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"
-      transform="rotate(-90 36 36)"/>`;
-    off += len;
+    const f = x.pct / 100;
+    const el = `<g class="acctRing__arc">
+      <circle cx="36" cy="36" r="${RB}" fill="none" stroke="${x.fill}" stroke-width="11"
+        stroke-dasharray="${(CB * f).toFixed(2)} ${(CB * (1 - f)).toFixed(2)}"
+        stroke-dashoffset="${(-CB * off).toFixed(2)}" transform="rotate(-90 36 36)"/>
+      <circle class="acctRing__rim" cx="36" cy="36" r="${RR}" fill="none" stroke="${x.foot}" stroke-width="2.4"
+        stroke-dasharray="${(CR * f).toFixed(2)} ${(CR * (1 - f)).toFixed(2)}"
+        stroke-dashoffset="${(-CR * off).toFixed(2)}" transform="rotate(-90 36 36)"/></g>`;
+    off += f;
     return el;
   }).join('');
   return `<div class="acctRing">
     <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
-      <circle cx="36" cy="36" r="26" fill="none" stroke="var(--progress-track)" stroke-width="11"/>
+      <circle cx="36" cy="36" r="${RB}" fill="none" stroke="var(--progress-track)" stroke-width="11"/>
       ${arcs}</svg>
     <div class="acctRing__legend">${seg.map((x) => `<span class="acctRing__item">
-      <span class="acctRing__dot" style="background:${x.color}"></span>
+      <span class="acctRing__dot" style="background:${x.dot}"></span>
       <span class="acctRing__label">${x.label}</span>
       <span class="acctRing__val"><span class="acctRing__amount">${x.value}</span>
         <span class="acctRing__pct">${fmtPct(x.pct)}</span></span></span>`).join('')}</div>
@@ -411,10 +424,10 @@ function acctRing(rows) {
 function acctCols(rows) {
   const seg = slices(rows);
   const max = Math.max(...seg.map((x) => x.pct), 1);
-  return `<div class="acctCols">${seg.map((x) => `<span class="acctCol">
+  return `<div class="acctCols">${seg.map((x) => `<span class="acctCol${x.cash ? ' acctCol--cash' : ''}">
     <span class="acctCol__cap"><span class="acctCol__brief">${x.brief}</span>
       <span class="acctCol__detail">${fmtPct(x.pct)} · ${x.value}</span></span>
-    <span class="acctCol__bar" style="height:${Math.max(4, (x.pct / max) * 64)}px;background:${x.color}"></span>
+    <span class="acctCol__bar" style="height:${Math.max(6, (x.pct / max) * 64)}px;--fill:${x.fill};--foot:${x.foot}"></span>
     <span class="acctCol__label">${x.short}</span></span>`).join('')}</div>`;
 }
 

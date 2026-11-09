@@ -481,57 +481,76 @@ const shortPln = (v: number) => {
   return Math.round(v).toLocaleString('pl-PL');
 };
 
-type Slice = { label: string; short: string; color: string; pct: number; value: string; brief: string };
+type Slice = {
+  label: string; short: string; pct: number; value: string; brief: string;
+  /** Kolory bierzemy z glownego wykresu struktury, nie z markera karty:
+      pastelowe wypelnienie, nasycona stopka, nasycona kropka w legendzie. */
+  fill: string; foot: string; dot: string; cash: boolean;
+};
 /* Udzialy licze wzgledem sumy pozycji, nie podanej sumy rachunku — inaczej
    paski dwoch rachunkow nie dobijalyby do 100% i wygladaly na blad renderu. */
 function slices(account: Account, styleId: StyleId): Slice[] {
   const palette = paletteOf(styleId);
   const vals = account.rows.map((r) => toNum(r.value));
   const sum = vals.reduce((a, b) => a + b, 0) || 1;
-  return account.rows.map((r, i) => ({
-    label: r.label,
-    short: SHORT_OF[r.label] ?? r.label,
-    color: assetColor(CLASS_OF[r.label] ?? '', palette) ?? 'var(--muted)',
-    pct: (vals[i] / sum) * 100,
-    value: r.value,
-    brief: shortPln(vals[i]),
-  }));
+  return account.rows.map((r, i) => {
+    const id = CLASS_OF[r.label] ?? '';
+    const c = META[id]?.colors[palette];
+    return {
+      label: r.label,
+      short: SHORT_OF[r.label] ?? r.label,
+      pct: (vals[i] / sum) * 100,
+      value: r.value,
+      brief: shortPln(vals[i]),
+      fill: c?.chart ?? 'var(--muted)',
+      foot: c?.chartFoot ?? c?.chart ?? 'var(--muted)',
+      dot: c?.legend ?? 'var(--muted)',
+      cash: id === CASH.id,
+    };
+  });
 }
 
 /** Nr 7: pierscien jak na wykresie struktury, tylko dla jednego rachunku. */
 function AcctRing({ account, styleId }: { account: Account; styleId: StyleId }) {
   const seg = slices(account, styleId);
-  const C = 2 * Math.PI * 26;
+  /* Luk = pastelowe cialo plus nasycony rant na zewnatrz: ten sam uklad,
+     co cialo i stopka segmentu na wykresie struktury. Sam pastel na 11 px
+     gubil sie na bieli, bo nie ma go co trzymac. */
+  const RB = 25, RR = 31.6;
+  const CB = 2 * Math.PI * RB;
+  const CR = 2 * Math.PI * RR;
   let off = 0;
   return (
     <div className="acctRing">
       <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
-        <circle cx="36" cy="36" r="26" fill="none" stroke="var(--progress-track)" strokeWidth="11" />
+        <circle cx="36" cy="36" r={RB} fill="none" stroke="var(--progress-track)" strokeWidth="11" />
         {seg.map((x) => {
-          const len = (C * x.pct) / 100;
+          const f = x.pct / 100;
           const el = (
-            <circle
-              key={x.label}
-              className="acctRing__arc"
-              cx="36"
-              cy="36"
-              r="26"
-              fill="none"
-              stroke={x.color}
-              strokeWidth="11"
-              strokeDasharray={`${len} ${C - len}`}
-              strokeDashoffset={-off}
-              transform="rotate(-90 36 36)"
-            />
+            <g className="acctRing__arc" key={x.label}>
+              <circle
+                cx="36" cy="36" r={RB} fill="none" stroke={x.fill} strokeWidth="11"
+                strokeDasharray={`${CB * f} ${CB * (1 - f)}`}
+                strokeDashoffset={-CB * off}
+                transform="rotate(-90 36 36)"
+              />
+              <circle
+                className="acctRing__rim"
+                cx="36" cy="36" r={RR} fill="none" stroke={x.foot} strokeWidth="2.4"
+                strokeDasharray={`${CR * f} ${CR * (1 - f)}`}
+                strokeDashoffset={-CR * off}
+                transform="rotate(-90 36 36)"
+              />
+            </g>
           );
-          off += len;
+          off += f;
           return el;
         })}
       </svg>
       <div className="acctRing__legend">
         {seg.map((x) => (
           <span className="acctRing__item" key={x.label}>
-            <span className="acctRing__dot" style={{ background: x.color }} />
+            <span className="acctRing__dot" style={{ background: x.dot }} />
             <span className="acctRing__label">{x.label}</span>
             <span className="acctRing__val">
               <span className="acctRing__amount">{x.value}</span>
@@ -551,7 +570,7 @@ function AcctCols({ account, styleId }: { account: Account; styleId: StyleId }) 
   return (
     <div className="acctCols">
       {seg.map((x) => (
-        <span className="acctCol" key={x.label}>
+        <span className={`acctCol ${x.cash ? 'acctCol--cash' : ''}`} key={x.label}>
           <span className="acctCol__cap">
             <span className="acctCol__brief">{x.brief}</span>
             <span className="acctCol__detail">
@@ -560,7 +579,11 @@ function AcctCols({ account, styleId }: { account: Account; styleId: StyleId }) 
           </span>
           <span
             className="acctCol__bar"
-            style={{ height: Math.max(4, (x.pct / max) * 64), background: x.color }}
+            style={{
+              height: Math.max(6, (x.pct / max) * 64),
+              ['--fill' as string]: x.fill,
+              ['--foot' as string]: x.foot,
+            }}
           />
           <span className="acctCol__label">{x.short}</span>
         </span>
