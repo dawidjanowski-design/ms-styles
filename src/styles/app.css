@@ -1312,6 +1312,25 @@ select.field__control {
   font-variant-numeric: tabular-nums;
 }
 
+/* Nr 8: limit wplat stoi na prawo od kwoty i konczy sie na tej samej linii,
+   wiec naglowek karty czyta sie jako jeden wiersz. Bez paska — slupki klas
+   nizej sa juz wykresem, drugi w tej samej karcie by sie z nimi bil. */
+[data-style='8'] .acctCard__head {
+  /* .acctCard__head jest kolumna — bez jawnego `row` limit ladowal pod kwota. */
+  display: flex; flex-direction: row;
+  align-items: flex-end; justify-content: space-between; gap: 24px;
+}
+[data-style='8'] .acctCard__top { flex: 1 1 auto; min-width: 0; }
+.acctCard__limitSide {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 4px; text-align: right; flex: none;
+}
+.acctCard__limitSide .acctCard__limitLabel { font-size: 13px; line-height: 18px; color: var(--muted); }
+.acctCard__limitSide .acctCard__limitValue {
+  font-size: 15px; font-weight: 500; line-height: 22px; color: var(--value-strong);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+
 .acctCols { display: flex; align-items: flex-end; gap: 12px; min-height: 108px; }
 .acctCol {
   flex: 1 1 0; min-width: 0;

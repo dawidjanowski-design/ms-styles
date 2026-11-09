@@ -579,9 +579,18 @@ function AccountCard({
             className="acctCard__amount"
           />
         </div>
+        {/* Nr 8: limit wplat idzie na prawo od kwoty, jako sama informacja.
+            Pasek postepu powtarzal to, co mowi tekst, a pod slupkami klas
+            robil drugi wykres w tej samej karcie. */}
+        {cols && account.strip && (
+          <div className="acctCard__limitSide">
+            <span className="acctCard__limitLabel">{account.strip.label}</span>
+            <span className="acctCard__limitValue">{account.strip.value}</span>
+          </div>
+        )}
       </div>
 
-      {account.strip && (
+      {!cols && account.strip && (
         <div className="acctCard__limit">
           <span className="acctCard__limitLabel">{account.strip.label}</span>
           <div className="acctCard__limitTop">

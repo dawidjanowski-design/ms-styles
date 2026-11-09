@@ -307,6 +307,7 @@ const ACCOUNTS = [
 
 function accountCard(a) {
   const makieta = state.style === 'makieta';
+  const cols = state.style === '8';
   return `<article class="acctCard" style="--seg:${a.marker[pal()]}">
     <div class="acctCard__head"><div class="acctCard__top">
       <div class="acctCard__title">
@@ -315,8 +316,12 @@ function accountCard(a) {
         <span class="acctCard__number">· ${a.number}</span>
       </div>
       ${amount(a.amount, a.dec, 'acctCard__amount', 'rachunek-' + a.id)}
-    </div></div>
-    ${a.strip ? `<div class="acctCard__limit">
+    </div>
+    ${cols && a.strip ? `<div class="acctCard__limitSide">
+      <span class="acctCard__limitLabel">${a.strip.label}</span>
+      <span class="acctCard__limitValue">${a.strip.value}</span></div>` : ''}
+    </div>
+    ${!cols && a.strip ? `<div class="acctCard__limit">
         <span class="acctCard__limitLabel">${a.strip.label}</span>
         <div class="acctCard__limitTop">
           <span class="acctCard__limitValue">${a.strip.value}</span>
