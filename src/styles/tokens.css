@@ -459,6 +459,14 @@
   --pill-radius: 999px;
   --pill-active-bg: transparent;
   --pill-active-shadow: none;
+  /* Rodzina v3 podmienia oba cienie na twardy obrys 1px #e8e8ec (pasowal do
+     pigulki na promieniu 8). Nr 9 wraca po miekki stos z nr 1 — wartosci
+     przepisane z :root, bo blok rodziny stoi w kaskadzie nad nim i var()
+     nie siegnie juz oryginalu. */
+  --shadow-pill: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.03), inset 0 2px 2px rgba(255, 255, 255, 1);
+  --shadow-track: inset 0 0 0 0.171px rgba(0, 0, 0, 0.08),
+    inset 0 1.714px 1.714px rgba(255, 255, 255, 0.1);
   --pill-track-shadow: var(--shadow-track);
 
   --c-am: #2fa39b;
