@@ -21,7 +21,7 @@ import { ASSETS } from '../data/portfolio';
 import { Amount, Pills } from './ui';
 import { Transactions } from './Transactions';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
 
 /* ----------------------------- lista instrumentów ----------------------------- */
 

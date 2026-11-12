@@ -58,7 +58,7 @@ const CASH_CARDS = [
 const LEGEND_ORDER = { '1': ['corp', 'am', 'fio', 'fiz', 'skarb'], '2': ['corp', 'skarb', 'am', 'fio', 'fiz'], '3': ['fiz', 'am', 'fio', 'skarb', 'corp'], '4': ['corp', 'skarb', 'am', 'fiz', 'fio'], '5': ['corp', 'skarb', 'am', 'fio', 'fiz'] };
 
 const saved = localStorage.getItem('ms-style');
-const state = { style: ['2', '3', '4', '5', '6', '7', '8', 'makieta'].includes(saved) ? saved : '1', hot: null,
+const state = { style: ['2', '3', '4', '5', '6', '7', '8', '9', 'makieta'].includes(saved) ? saved : '1', hot: null,
   currency: 'Łącznie', view: 'Aktywa',
   screen: 'pulpit', grouping: 'Emitenci', accounts: [],
   txTab: 'Wszystkie', txPeriod: '2026', txType: 'Wszystkie typy', txQuery: '',
@@ -68,11 +68,15 @@ const pct = (n) => `${n.toFixed(1).replace('.', ',')}%`;
 /* Makieta nie ma wlasnej palety — bierze nr 1, a kolor gasi CSS (--seg-flat).
    Kolejnosc pozycji ma taka jak nr 2. */
 /* Nr 6 rosnie z nr 4, wiec bierze jego palete i jego kolejnosc klas. */
-const pal = () => (state.style === 'makieta' ? '1' : ['6', '7', '8'].includes(state.style) ? '4' : state.style);
-const ord = () => (state.style === 'makieta' ? '2' : ['6', '7', '8'].includes(state.style) ? '4' : state.style);
-const isV3 = () => ['3', '4', '6', '7', '8'].includes(state.style);
+/* Nr 9: Asset Management i gotowka zamieniaja sie kolorami. Podmiana id
+   w miejscu odczytu, zeby wykres, legenda i karty mowily to samo. */
+const SWAP9 = { am: 'cash', cash: 'am' };
+const colorId = (id) => (state.style === '9' ? (SWAP9[id] || id) : id);
+const pal = () => (state.style === 'makieta' ? '1' : ['6', '7', '8', '9'].includes(state.style) ? '4' : state.style);
+const ord = () => (state.style === 'makieta' ? '2' : ['6', '7', '8', '9'].includes(state.style) ? '4' : state.style);
+const isV3 = () => ['3', '4', '6', '7', '8', '9'].includes(state.style);
 /* Nr 6 i nr 7 maja ten sam uklad dwukolumnowy, inna tylko sekcja zdarzen. */
-const isSplit = () => ['6', '7', '8'].includes(state.style);
+const isSplit = () => ['6', '7', '8', '9'].includes(state.style);
 
 const MONTHS = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
   'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
@@ -179,7 +183,7 @@ function chart(rows) {
   const total = segs.reduce((acc, a) => acc + a.share, 0);
   return `<div class="chart" data-chart>${segs
     .map((s) => {
-      const c = META[s.id].colors[pal()];
+      const c = META[colorId(s.id)].colors[pal()];
       return `<button type="button" class="chartSeg ${s.id === 'cash' ? 'chartSeg--cash' : ''} ${dim(s.id)}"
         data-hot="${s.id}" style="flex:${s.share / total} 1 0;--seg:${c.chart};--seg-foot:${c.chartFoot || c.chart}"
         aria-label="${META[s.id].name}: ${pct(s.share)}">
@@ -192,7 +196,7 @@ function legendRow(r) {
   /* Ekran klasy aktywow istnieje tylko w stylistykach nr 1 i nr 2. */
   const link = state.style !== 'makieta' && DETAIL_ASSETS.has(r.id);
   return `<button type="button" class="legendRow ${dim(r.id)}" data-hot="${r.id}"
-    ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[r.id].colors[pal()].legend};cursor:${link ? 'pointer' : 'default'}">
+    ${link ? `data-open="${r.id}"` : ''} style="--seg:${META[colorId(r.id)].colors[pal()].legend};cursor:${link ? 'pointer' : 'default'}">
     ${r.dot === false ? '' : '<span class="legendRow__dot"></span>'}
     <span class="legendRow__name">${r.name || META[r.id].name}</span>
     <span class="legendRow__share">${pct(r.share)}</span>
@@ -308,7 +312,7 @@ const ACCOUNTS = [
 function accountCard(a) {
   const makieta = state.style === 'makieta';
   /* Nr 7 i nr 8: limit na prawo od kwoty, bez paska. */
-  const side = ['7', '8'].includes(state.style);
+  const side = ['7', '8', '9'].includes(state.style);
   return `<article class="acctCard" style="--seg:${a.marker[pal()]}">
     <div class="acctCard__head"><div class="acctCard__top">
       <div class="acctCard__title">
@@ -336,7 +340,7 @@ function accountCard(a) {
           : ''}
       </div>` : ''}
     ${a.rows.length ? `<div class="divider"></div>
-      ${state.style === '7' ? acctRing(a.rows)
+      ${['7', '9'].includes(state.style) ? acctRing(a.rows)
         : state.style === '8' ? acctCols(a.rows)
         : !makieta
         ? `<div class="metrics">${a.rows.map(([l, v]) =>
@@ -379,7 +383,7 @@ function slices(rows) {
   const sum = vals.reduce((a, b) => a + b, 0) || 1;
   return rows.map(([l], i) => {
     const id = CLASS_OF[l];
-    const c = META[id] ? META[id].colors[pal()] : null;
+    const c = META[colorId(id)] ? META[colorId(id)].colors[pal()] : null;
     /* Kolory z glownego wykresu struktury, nie z markera karty: pastelowe
        wypelnienie, nasycona stopka, nasycona kropka w legendzie. */
     return { label: l, short: SHORT_OF[l] || l, pct: (vals[i] / sum) * 100,
@@ -448,7 +452,7 @@ function assetCard(a) {
   const link = DETAIL_ASSETS.has(a.id);
   const lead = a.highlights.length >= 3 ? a.highlights[0] : null;
   const grid = lead ? a.highlights.slice(1) : a.highlights;
-  return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${a.colors[pal()].card}">
+  return `<article class="assetCard ${link ? 'assetCard--link' : ''}" ${link ? `data-open="${a.id}"` : ''} style="--seg:${META[colorId(a.id)].colors[pal()].card}">
     <div class="assetCard__head">
       <div class="assetCard__title">
         ${bar ? '<span class="assetCard__bar"></span>' : ''}
@@ -1253,7 +1257,7 @@ function dashboardScreen() {
       </div>
       <div class="events">
         <h2 class="sectionTitle">Nadchodzące zdarzenia</h2>
-        ${['7', '8'].includes(state.style) ? eventMonths() : timeline()}
+        ${['7', '8', '9'].includes(state.style) ? eventMonths() : timeline()}
       </div>
     </section>` : `
     <section class="offers">
@@ -1417,7 +1421,7 @@ function render() {
      wlasna: jedna karta ekranu zamiast pasm. */
   document.documentElement.setAttribute(
     'data-family',
-    ['3', '4', '6', '7', '8'].includes(state.style) ? 'v3' : state.style
+    ['3', '4', '6', '7', '8', '9'].includes(state.style) ? 'v3' : state.style
   );
 
   document.getElementById('root').innerHTML = `
@@ -1450,7 +1454,7 @@ function render() {
 
     <div class="styleSwitch" role="group" aria-label="Wybór stylistyki">
       <span>Stylistyka</span>
-      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['6', 'nr 6'], ['7', 'nr 7'], ['8', 'nr 8'], ['makieta', 'Makieta']]
+      ${[['1', 'nr 1'], ['2', 'nr 2'], ['3', 'nr 3'], ['4', 'nr 4'], ['5', 'nr 5'], ['6', 'nr 6'], ['7', 'nr 7'], ['8', 'nr 8'], ['9', 'nr 9'], ['makieta', 'Makieta']]
         .map(([id, label]) => `<button type="button" data-style-btn="${id}" aria-pressed="${state.style === id}">${label}</button>`).join('')}
     </div>`;
   placeGlides(glides);

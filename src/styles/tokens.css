@@ -245,7 +245,8 @@
 [data-style='4'],
 [data-style='6'],
 [data-style='7'],
-[data-style='8'] {
+[data-style='8'],
+[data-style='9'] {
   /* Klient przyslal swoja wersje w Roboto — krój tez rozni te stylistyki. */
   --font: Roboto;
 
@@ -380,7 +381,8 @@
 [data-style='4'],
 [data-style='6'],
 [data-style='7'],
-[data-style='8'] {
+[data-style='8'],
+[data-style='9'] {
   /* Paleta klienta z Figmy 983:19119 i 976:17671. Podkreslenie slupka bywa
      ciemniejsze niz kropka w legendzie (skarbowe, AM, gotowka) — przeniesione
      tak, jak jest w pliku. */
@@ -426,7 +428,8 @@
 [data-style='4'] .content > section:nth-child(odd),
 [data-style='6'] .content > section:nth-child(odd),
 [data-style='7'] .content > section:nth-child(odd),
-[data-style='8'] .content > section:nth-child(odd) { border-radius: 8px; }
+[data-style='8'] .content > section:nth-child(odd),
+[data-style='9'] .content > section:nth-child(odd) { border-radius: 8px; }
 
 /* ====================== STYLISTYKA 5 ======================
    Figma 997:519 („v4.4"). Wyrasta z nr 4, ale cofa trzy jej decyzje:
@@ -443,6 +446,19 @@
    Karty FIO i FIZ maja kolory przesuniete o jedna pozycje (niebieski
    skarbowych na FIO, pomarancz FIO na FIZ). To wyglada na pomylke przy
    kopiowaniu, wiec karty biora kolor ze swojego segmentu wykresu. */
+/* ======================= STYLISTYKA NR 9 =======================
+   Kopia nr 7 z jedna zmiana: Asset Management i gotowka zamieniaja sie
+   kolorami. Same odcienie klas podmienia colorId() w Portfolio — tu zostaje
+   kreska gotowki, bo jej tlo i raster nie ida z palety klas, tylko z tych
+   dwoch tokenow. Kreska zostaje na gotowce (to znacznik rodzaju, nie koloru),
+   ale przyjmuje roz Asset Management. */
+[data-style='9'] {
+  --c-am: #2fa39b;
+  --c-cash: #fb6f90;
+  --c-cash-bg: #f7bfcc;
+  --cash-hatch: 251, 111, 144;
+}
+
 [data-style='5'] {
   --font: Inter;
 

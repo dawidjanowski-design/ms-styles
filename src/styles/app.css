@@ -1316,13 +1316,15 @@ select.field__control {
    linii, wiec naglowek karty czyta sie jako jeden wiersz. Bez paska —
    pierscien i slupki nizej sa juz wykresem, drugi by sie z nimi bil. */
 [data-style='7'] .acctCard__head,
-[data-style='8'] .acctCard__head {
+[data-style='8'] .acctCard__head,
+[data-style='9'] .acctCard__head {
   /* .acctCard__head jest kolumna — bez jawnego `row` limit ladowal pod kwota. */
   display: flex; flex-direction: row;
   align-items: flex-end; justify-content: space-between; gap: 24px;
 }
 [data-style='7'] .acctCard__top,
-[data-style='8'] .acctCard__top { flex: 1 1 auto; min-width: 0; }
+[data-style='8'] .acctCard__top,
+[data-style='9'] .acctCard__top { flex: 1 1 auto; min-width: 0; }
 .acctCard__limitSide {
   display: flex; flex-direction: column; align-items: flex-end;
   gap: 4px; text-align: right; flex: none;

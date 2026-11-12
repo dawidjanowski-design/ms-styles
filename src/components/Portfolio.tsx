@@ -19,15 +19,23 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
     Nr 6 rozni sie od nr 4 wylacznie sekcja zdarzen, wiec siega po jego palete
     i jego kolejnosc klas, zamiast duplikowac je w danych. */
+/* Nr 9 bada jedno: co sie stanie, gdy Asset Management i gotowka zamienia sie
+   kolorami. Podmieniamy id w miejscu odczytu koloru, zamiast dublowac cala
+   palete — paleta '4' zostaje nietknieta, a wykres, legenda i karty mowia to
+   samo. Kreska na gotowce nie wedruje: to znacznik rodzaju, nie koloru, wiec
+   jej odcien przestawiamy tokenami w tokens.css. */
+const SWAP = { am: CASH.id, [CASH.id]: 'am' } as Record<string, string>;
+const colorId = (id: string, s: StyleId) => (s === '9' ? SWAP[id] ?? id : id);
+
 const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '1' : s === '6' || s === '7' || s === '8' ? '4' : s;
+  s === 'makieta' ? '1' : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '2' : s === '6' || s === '7' || s === '8' ? '4' : s;
+  s === 'makieta' ? '2' : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -74,7 +82,7 @@ export function AllocationChart({
   return (
     <div className="chart">
       {segments.map((s) => {
-        const c = META[s.id].colors[paletteOf(styleId)];
+        const c = META[colorId(s.id, styleId)].colors[paletteOf(styleId)];
         return (
           <button
             key={s.id}
@@ -195,7 +203,7 @@ export function Legend({
     <LegendRow
       key={r.id}
       id={r.id}
-      color={META[r.id].colors[paletteOf(styleId)].legend}
+      color={META[colorId(r.id, styleId)].colors[paletteOf(styleId)].legend}
       name={META[r.id].name}
       share={pct(r.share)}
       value={r.value}
@@ -365,7 +373,7 @@ function AssetCard({
   return (
     <article
       className={`assetCard ${onOpen ? 'assetCard--link' : ''}`}
-      style={{ ['--seg' as string]: asset.colors[paletteOf(styleId)].card }}
+      style={{ ['--seg' as string]: META[colorId(asset.id, styleId)].colors[paletteOf(styleId)].card }}
       onClick={onOpen}
     >
       <div className="assetCard__head">
@@ -495,7 +503,7 @@ function slices(account: Account, styleId: StyleId): Slice[] {
   const sum = vals.reduce((a, b) => a + b, 0) || 1;
   return account.rows.map((r, i) => {
     const id = CLASS_OF[r.label] ?? '';
-    const c = META[id]?.colors[palette];
+    const c = META[colorId(id, styleId)]?.colors[palette];
     return {
       label: r.label,
       short: SHORT_OF[r.label] ?? r.label,
@@ -602,7 +610,7 @@ function AccountCard({
   onOpen?: () => void;
 }) {
   const makieta = styleId === 'makieta';
-  const ring = styleId === '7';
+  const ring = styleId === '7' || styleId === '9';
   const cols = styleId === '8';
 
   return (
