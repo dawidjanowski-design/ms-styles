@@ -123,20 +123,24 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   box-shadow: var(--shadow-pill);
 }
 
-/* Stylistyka nr 1: tło aktywnej pigułki to osobny wskaźnik pod przyciskami,
-   który przy zmianie wyboru przesuwa się i zmienia szerokość (jak glide
-   w menu). W nr 2 zostaje statyczne tło na samym przycisku. */
+/* Stylistyka nr 1 i nr 9: tło aktywnej pigułki to osobny wskaźnik pod
+   przyciskami, który przy zmianie wyboru przesuwa się i zmienia szerokość
+   (jak glide w menu). W nr 2 zostaje statyczne tło na samym przycisku.
+   Sam wskaźnik jest w HTML zawsze — tu decydujemy, kto go pokazuje. */
 .pills__glide { display: none; }
-[data-style='1'] .pills__glide {
+[data-style='1'] .pills__glide,
+[data-style='9'] .pills__glide {
   display: block; position: absolute; top: var(--pill-track-pad); left: 0;
   height: var(--pill-h); border-radius: 999px; pointer-events: none;
   background: rgba(255, 255, 255, 0.7); box-shadow: var(--shadow-pill);
   transition: transform 340ms cubic-bezier(0.16, 1, 0.3, 1), width 340ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-[data-style='1'] .pills button { position: relative; }
+[data-style='1'] .pills button,
+[data-style='9'] .pills button { position: relative; }
 [data-style='1'] .pills button[aria-pressed='true'] { background: none; box-shadow: none; }
 @media (prefers-reduced-motion: reduce) {
-  [data-style='1'] .pills__glide { transition: none; }
+  [data-style='1'] .pills__glide,
+  [data-style='9'] .pills__glide { transition: none; }
 }
 
 /* ---------------- podsumowanie ---------------- */
@@ -982,9 +986,17 @@ select.field__control {
 /* Przelacznik walut i Aktywa/Rachunki: biala pigulka na szarym torze.
    Kolory ida przez tokeny, bo nr 3 i nr 4 maja tu inne odcienie, a ta
    regula i tak wygrywalaby zrodlowo z blokiem numeru w tokens.css. */
-[data-family='v3'] .pills { background: var(--pill-track-bg); box-shadow: none; }
+[data-family='v3'] .pills {
+  background: var(--pill-track-bg);
+  /* tor rodziny v3 jest plaski; nr 9 wraca po obrys z nr 1 przez token */
+  box-shadow: var(--pill-track-shadow, none);
+}
 [data-family='v3'] .pills button[aria-pressed='true'] {
-  background: var(--pill-active-bg, #ffffff); box-shadow: var(--shadow-pill); color: var(--ink);
+  background: var(--pill-active-bg, #ffffff);
+  /* osobny token, bo nr 9 chowa tlo przycisku pod wskaznik, a --shadow-pill
+     jest wtedy nadal potrzebny samemu wskaznikowi */
+  box-shadow: var(--pill-active-shadow, var(--shadow-pill));
+  color: var(--ink);
 }
 
 /* Przycisk „Przejdz do portfela”. Hover idzie przez tokeny, bo nr 3 i nr 4

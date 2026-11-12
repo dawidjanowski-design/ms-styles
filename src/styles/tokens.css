@@ -453,6 +453,14 @@
    dwoch tokenow. Kreska zostaje na gotowce (to znacznik rodzaju, nie koloru),
    ale przyjmuje roz Asset Management. */
 [data-style='9'] {
+  /* Przelaczniki jak w nr 1: pelne zaokraglenie i jezdzacy wskaznik zamiast
+     statycznego tla na przycisku. Tlo i cien przycisku gasna, zeby nie
+     dublowac wskaznika, ktory sam bierze --shadow-pill. */
+  --pill-radius: 999px;
+  --pill-active-bg: transparent;
+  --pill-active-shadow: none;
+  --pill-track-shadow: var(--shadow-track);
+
   --c-am: #2fa39b;
   --c-cash: #fb6f90;
   --c-cash-bg: #f7bfcc;
