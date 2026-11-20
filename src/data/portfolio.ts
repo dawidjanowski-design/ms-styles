@@ -368,7 +368,7 @@ export const RESULT_RANGES: ResultRange[] = [
  *  pozycje, nie wynik. */
 export const V10_ASSETS: Record<
   string,
-  { currencies?: string; highlights: Metric[]; rows: Metric[] }
+  { currencies?: string; approx?: boolean; highlights: Metric[]; rows: Metric[] }
 > = {
   corp: {
     currencies: 'PLN · EUR',
@@ -401,6 +401,9 @@ export const V10_ASSETS: Record<
   },
   am: {
     currencies: 'PLN · EUR',
+    /* Czesc strategii jest prowadzona w EUR, wiec zlotowa suma jest
+       przeliczeniem po kursie dnia — stad tylda przed kwota. */
+    approx: true,
     highlights: [
       { label: 'Wynik 12M', value: '+58 520,00 PLN' },
       { label: 'Stopa zwrotu 12M', value: '6,10%' },
@@ -447,4 +450,27 @@ export const V10_CASH_ACTIONS = [
   { label: 'Wpłać', primary: true },
   { label: 'Wypłać', primary: false },
   { label: 'Przenieś między rachunkami', primary: false },
+];
+
+/* Nazwy klas w wireframe'ach sa pelne — „Fundusze Inwestycyjne Zamkniete”,
+   nie skrot w nawiasie — a wiersz gotowki mowi wprost o wolnej gotowce,
+   bo tylko ona wchodzi do sumy portfela. */
+export const V10_NAMES: Record<string, string> = {
+  fiz: 'Fundusze Inwestycyjne Zamknięte',
+  fio: 'Fundusze Inwestycyjne Otwarte',
+  [CASH.id]: 'Wolna gotówka',
+};
+
+/** Kolejnosc z wireframe'u: obligacje, fundusze, Asset Management. */
+export const V10_LEGEND_ORDER = ['corp', 'skarb', 'fiz', 'fio', 'am'];
+
+/* Udzialy licza sie z kwot i sumy portfela (4 218 640 PLN) — w wireframie
+   kazdy wiersz sie zgadza, lacznie ze 100% po dodaniu wolnej gotowki. */
+export const V10_ALLOCATION = [
+  { id: 'corp', share: 42.5, value: '1 792 922 PLN' },
+  { id: 'skarb', share: 7.5, value: '316 398 PLN' },
+  { id: 'fiz', share: 10.0, value: '421 864 PLN' },
+  { id: 'fio', share: 14.0, value: '590 610 PLN' },
+  { id: 'am', share: 20.0, value: '843 728 PLN' },
+  { id: CASH.id, share: 6.0, value: '253 118 PLN' },
 ];

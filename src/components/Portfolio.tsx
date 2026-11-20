@@ -5,9 +5,12 @@ import {
   CASH_BY_CURRENCY,
   LEGEND_ORDER,
   RESULT_RANGES,
+  V10_ALLOCATION,
   V10_ASSETS,
   V10_ASSETS_NOTE,
   V10_CASH_ACTIONS,
+  V10_LEGEND_ORDER,
+  V10_NAMES,
   type Account,
   type AssetClass,
   type Metric,
@@ -60,11 +63,16 @@ export const META: Record<
   [CASH.id]: { name: CASH.name, colors: CASH.colors },
 };
 
+/** Nazwa klasy; nr 10 uzywa pelnych nazw z wireframe'ow. */
+const nameOf = (id: string, styleId: StyleId) =>
+  (styleId === '10' && V10_NAMES[id]) || META[id].name;
+
 /** Kolejność pozycji różni się między stylistykami; gotówka zawsze na końcu. */
 function ordered(rows: AllocationRow[], styleId: StyleId): AllocationRow[] {
   const byId = new Map(rows.map((r) => [r.id, r]));
   const out: AllocationRow[] = [];
-  for (const id of LEGEND_ORDER[orderOf(styleId)]) {
+  const kolejnosc = styleId === '10' ? V10_LEGEND_ORDER : LEGEND_ORDER[orderOf(styleId)];
+  for (const id of kolejnosc) {
     const row = byId.get(id);
     if (row) out.push(row);
   }
@@ -211,7 +219,7 @@ export function Legend({
       key={r.id}
       id={r.id}
       color={META[colorId(r.id, styleId)].colors[paletteOf(styleId)].legend}
-      name={META[r.id].name}
+      name={nameOf(r.id, styleId)}
       share={pct(r.share)}
       value={r.value}
       hot={hot}
@@ -460,12 +468,12 @@ function AssetCard({
       <div className="assetCard__head">
         <div className="assetCard__title">
           {bar && <span className="assetCard__bar" />}
-          <span className="assetCard__name">{asset.name}</span>
+          <span className="assetCard__name">{nameOf(asset.id, styleId)}</span>
           {!bar && <span className="assetCard__dot" />}
           {v10?.currencies && <span className="assetCard__cur">{v10.currencies}</span>}
         </div>
         <Amount
-          int={makieta ? `≈ ${asset.amount}` : asset.amount}
+          int={makieta || v10?.approx ? `≈ ${asset.amount}` : asset.amount}
           dec={asset.amountDecimals}
           className="assetCard__amount"
         />
@@ -806,6 +814,11 @@ export function PortfolioScreen({
   const [transit, setTransit] = useState(false);
 
   const data = VIEWS[currency];
+  /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
+     w widoku lacznym, bo tylko ten wireframe opisuje. W PLN/EUR/USD zostaja
+     dane wspolne dla wszystkich stylistyk. */
+  const allocation =
+    styleId === '10' && currency === 'Łącznie' ? V10_ALLOCATION : data.allocation;
   const title = <h1 className="pageTitle">Portfel</h1>;
   /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
      lacznym — w PLN/EUR/USD jego liczby by nie pasowaly. */
@@ -838,14 +851,14 @@ export function PortfolioScreen({
                 </div>
               </div>
               <AllocationChart
-                rows={data.allocation}
+                rows={allocation}
                 styleId={styleId}
                 hot={hot}
                 setHot={setHot}
               />
             </div>
             <Legend
-              rows={data.allocation}
+              rows={allocation}
               styleId={styleId}
               hot={hot}
               setHot={setHot}
