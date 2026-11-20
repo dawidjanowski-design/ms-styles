@@ -3,26 +3,8 @@
    z portfelem: tam klasa jest jednym wierszem, tu rozpisuje sie na
    emitentow, serie, przeplywy i operacje. */
 
-/** Ikona kafelka — nazwa, nie komponent, zeby dane nie importowaly Reacta. */
-export type MetricIcon =
-  | 'rentownosc'
-  | 'odsetki'
-  | 'stopa'
-  | 'wynik'
-  | 'nominal'
-  | 'oprocentowanie'
-  | 'miesiecznie'
-  | 'wyplata'
-  | 'wykup';
-
 /** `positive` — kwota wyniku na plusie, rysowana zielenia klasy. */
-export type Metric = {
-  label: string;
-  value: string;
-  sub?: string;
-  positive?: boolean;
-  icon?: MetricIcon;
-};
+export type Metric = { label: string; value: string; sub?: string; positive?: boolean };
 
 export const CORP_HEAD = {
   title: 'Obligacje korporacyjne',

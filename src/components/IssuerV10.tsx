@@ -14,7 +14,6 @@ import {
   type Serie,
 } from '../data/corpV10';
 import { emitent, kwota, odmiana, procent } from '../data/corpMath';
-import { MetricTile } from './MetricTile';
 import { Amount } from './ui';
 import { ChevronDown, ChevronRight, ChevronUp, Download } from '../icons/Feather';
 
@@ -143,24 +142,32 @@ export function IssuerV10({
 
   /* Ten sam uklad 4 + 4 co podsumowanie obligacji korporacyjnych. */
   const wynikowe: Metric[] = [
-    { label: 'Śr. rentowność (ważona)', icon: 'rentownosc', value: procent(e.rate), sub: 'do wykupu, w skali roku' },
-    { label: 'Wypłacone odsetki 12M', icon: 'odsetki', value: kwota(e.odsetki, 'PLN'), sub: 'ostatnie 12 miesięcy' },
-    { label: 'Stopa zwrotu 12M', icon: 'stopa', value: procent(e.stopa), sub: 'IRR, w skali roku' },
+    { label: 'Śr. rentowność (ważona)', value: procent(e.rate), sub: 'do wykupu, w skali roku' },
+    { label: 'Wypłacone odsetki 12M', value: kwota(e.odsetki, 'PLN'), sub: 'ostatnie 12 miesięcy' },
+    { label: 'Stopa zwrotu 12M', value: procent(e.stopa), sub: 'IRR, w skali roku' },
     {
       label: 'Wynik 12M',
-      icon: 'wynik',
       value: `+${kwota(e.wynik, 'PLN')}`,
       sub: 'nominalnie, po prowizjach',
       positive: e.wynik > 0,
     },
   ];
   const warunki: Metric[] = [
-    { label: 'Wartość nominalna', icon: 'nominal', value: kwota(e.nominal, 'PLN') },
-    { label: 'Śr. oprocentowanie (ważone)', icon: 'oprocentowanie', value: procent(e.coupon) },
-    { label: 'Najbliższa wypłata odsetek', icon: 'wyplata', value: e.najblizszeOdsetki },
-    { label: 'Najbliższy wykup', icon: 'wykup', value: e.najblizszyWykup },
+    { label: 'Wartość nominalna', value: kwota(e.nominal, 'PLN') },
+    { label: 'Śr. oprocentowanie (ważone)', value: procent(e.coupon) },
+    { label: 'Najbliższa wypłata odsetek', value: e.najblizszeOdsetki },
+    { label: 'Najbliższy wykup', value: e.najblizszyWykup },
   ];
 
+  const kafelek = (m: Metric) => (
+    <div className="resultStat" key={m.label}>
+      <span className="resultStat__label">{m.label}</span>
+      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
+        {m.value}
+      </span>
+      {m.sub && <span className="resultStat__sub">{m.sub}</span>}
+    </div>
+  );
 
   return (
     <div className="screenOuter">
@@ -217,8 +224,8 @@ export function IssuerV10({
             </div>
 
             <div className="divider" />
-            <div className="resultCard__stats">{wynikowe.map((m) => <MetricTile m={m} key={m.label} />)}</div>
-            <div className="resultCard__stats">{warunki.map((m) => <MetricTile m={m} key={m.label} />)}</div>
+            <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
+            <div className="resultCard__stats">{warunki.map(kafelek)}</div>
 
             <div className="divider" />
             <div className="corpCounters">
