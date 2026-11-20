@@ -1989,3 +1989,80 @@ select.field__control {
 .corpMenu__item.is-on { font-weight: 500; }
 .corpShare__fill { background: var(--c-corp); }
 .corpEmpty { margin: 0; padding: 24px 0; font-size: 13px; color: var(--muted); }
+
+/* ======================= nr 10 — pulpit ======================= */
+
+/* Suma aktywow dostaje etykiete nad kwota, bo na pulpicie nie ma tytulu
+   „Portfel”, ktory by ja tlumaczyl. */
+.pulpitTotal__label { font-size: 13px; line-height: 20px; color: var(--muted); }
+
+.pulpitLegend { display: flex; flex-direction: column; gap: 16px; }
+.pulpitRow {
+  display: flex; flex-direction: column; gap: 10px;
+  padding-top: 16px; border-top: 1px solid var(--rule);
+}
+.pulpitRow__head { display: flex; align-items: center; gap: 10px; }
+.pulpitRow__dot { width: 6px; height: 6px; border-radius: 999px; flex: none; }
+.pulpitRow__name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.pulpitRow__share { font-size: 13px; color: var(--muted); }
+.pulpitRow__value {
+  margin-left: auto; font-size: 18px; font-weight: 500; line-height: 26px;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+/* Rozbicie walutowe stoi pod rzedem, w kolumnie: trzy pozycje jedna pod
+   druga daja sie porownac wzrokiem, ciag w jednej linii nie. */
+.pulpitParts { margin: 0; display: flex; flex-direction: column; gap: 6px; padding-left: 16px; }
+.pulpitPart { display: flex; align-items: baseline; gap: 12px; }
+.pulpitPart__cur { width: 40px; flex: none; font-size: 13px; color: var(--muted); }
+.pulpitPart__value {
+  margin: 0; display: flex; align-items: baseline; gap: 10px;
+  font-size: 13px; line-height: 20px; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.pulpitPart__pln { color: var(--muted); }
+.pulpitFoot {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-top: 16px; border-top: 1px solid var(--rule);
+}
+
+/* ---- emisje i oferta ---- */
+/* Cztery kafelki w rzedzie koncza sie rowno: stopa i stopka siedza na
+   dole karty, nawet gdy nazwa emisji zajmuje dwie linie. */
+.offerGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: stretch; }
+.offerBox {
+  display: flex; flex-direction: column; gap: 10px; padding: 20px;
+  background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+}
+.offerBox__kind { font-size: 13px; line-height: 20px; color: var(--muted); }
+.offerBox__name {
+  display: flex; flex-direction: column; gap: 2px;
+  font-size: 13px; font-weight: 500; line-height: 20px; color: var(--ink);
+}
+.offerBox__sub { font-weight: 400; color: var(--muted); }
+.offerBox__rateBlock { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
+.offerBox__rate { font-size: 24px; font-weight: 500; line-height: 32px; color: var(--ink); }
+.offerBox__rateSub { font-size: 13px; line-height: 20px; color: var(--muted); }
+.offerBox__foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 13px; color: var(--muted);
+}
+
+/* ---- zlecenia i zdarzenia ---- */
+.ordersRow {
+  display: grid; grid-template-columns: 1.4fr 2.2fr 0.9fr 1.1fr 1fr;
+  align-items: center; gap: 16px; padding: 12px 0;
+  border-bottom: 1px solid var(--divider); font-size: 13px; color: var(--ink);
+}
+.eventsRow {
+  display: grid; grid-template-columns: 1fr 2.6fr 1.2fr 1fr;
+  align-items: center; gap: 16px; padding: 12px 0;
+  border-bottom: 1px solid var(--divider); font-size: 13px; color: var(--ink);
+}
+.ordersRow:last-child, .eventsRow:last-child { border-bottom: 0; }
+.ordersRow--head, .eventsRow--head { font-size: 13px; color: var(--muted); padding-top: 4px; }
+.ordersRow__name { display: flex; flex-direction: column; gap: 2px; }
+.ordersRow__sub { font-size: 13px; color: var(--muted); }
+.eventsRow__account { color: var(--muted); }
+.ordersRow .is-num, .eventsRow .is-num { text-align: right; font-variant-numeric: tabular-nums; }
+.eventsRow .is-positive { color: var(--c-corp); }
