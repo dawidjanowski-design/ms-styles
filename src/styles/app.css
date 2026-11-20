@@ -1617,6 +1617,10 @@ select.field__control {
 
 /* ---- struktura aktywow w dwoch kolumnach ---- */
 .assets__list--grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+/* Widok rachunkow sam dzieli sie na grupy, wiec zewnetrzna siatka dwoch
+   kolumn musi ustapic — inaczej cala sekcja laduje w jednej komorce i
+   konczy sie w polowie szerokosci. */
+:root .assets__list--plain { display: block; }
 /* Karta ma polowe szerokosci, wiec auto-fit lapal trzy kolumny i cztery
    metryki lamaly sie 3 + 1. Dwie stale kolumny ustawiaja je w rowny blok
    2 x 2, a uklad czyta sie tak samo jak w nr 2: wyrozniony Wynik 12M nad

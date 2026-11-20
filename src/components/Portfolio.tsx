@@ -1017,7 +1017,11 @@ export function PortfolioScreen({
             </div>
             <div
               className={`assets__list ${
-                styleId === '10' && view === 'Aktywa' ? 'assets__list--grid' : ''
+                styleId === '10'
+                  ? view === 'Aktywa'
+                    ? 'assets__list--grid'
+                    : 'assets__list--plain'
+                  : ''
               }`}
             >
               {view === 'Rachunki' && styleId === '10' ? (
