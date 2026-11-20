@@ -57,14 +57,6 @@ export const CORP_SERIES: Serie[] = [
    sumy wyplaconych odsetek — stad osobna pozycja. */
 export const CORP_CLOSED_INTEREST = 12480;
 
-export const CORP_COLS = [
-  { key: 'name', label: 'Emitent', labelSeries: 'Seria', sort: true, menu: false },
-  { key: 'count', label: 'Serie', labelSeries: 'Sztuk', sort: true, menu: false },
-  { key: 'rate', label: 'Śr. rentowność', labelSeries: 'Rentowność', sort: true, menu: false },
-  { key: 'maturity', label: 'Najbliższy wykup', labelSeries: 'Wykup', sort: true, menu: false },
-  { key: 'value', label: 'Wartość bieżąca', sort: false, menu: true },
-  { key: 'share', label: 'Udział', sort: true, menu: false },
-];
 
 export const CORP_STRUCTURE_SUB = 'Przełącznik dotyczy wyłącznie tej sekcji';
 
