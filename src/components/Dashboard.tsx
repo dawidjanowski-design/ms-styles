@@ -77,8 +77,9 @@ function EventMonths() {
 /* Nr 10: wykres glowny pulpitu dzieli portfel na kapital pracujacy i wolna
    gotowke. Caly rysunek jest z nr 2 — ten sam slupek (cialo + stopka), ta
    sama legenda, ta sama paleta; rozni sie tylko to, na co dzielimy.
-   Inwestycje biora kolor obligacji korporacyjnych, bo to kolor wiodacy
-   nr 10, gotowka zostaje przy swoim ze wzorem — tak jak w Portfelu. */
+   Inwestycje biora granat z palety nr 2, gotowka zostaje przy swoim
+   kolorze i wzorze, tak jak w Portfelu — dwa zielone obok siebie niczego
+   by nie rozroznialy. */
 function SplitChartV10() {
   const suma = V10_PULPIT_SPLIT.reduce((s, u) => s + u.share, 0);
 
@@ -418,10 +419,7 @@ export function DashboardScreen({
       <div className="screen">
         <div className="content">
           {/* jak na Portfelu: reset dopiero po wyjsciu z calego bloku */}
-          <section
-            className={`summary ${styleId === '10' ? 'summary--card' : ''}`}
-            onMouseLeave={() => setHot(null)}
-          >
+          <section className="summary" onMouseLeave={() => setHot(null)}>
             <div className="dashHead">
               <div className="summary__titleBlock">
                 {/* Nr 10 nazywa to wprost suma, bo pod spodem dzieli ja na dwie

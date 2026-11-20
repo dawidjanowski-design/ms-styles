@@ -1991,16 +1991,8 @@ select.field__control {
 .corpEmpty { margin: 0; padding: 24px 0; font-size: 13px; color: var(--muted); }
 
 /* ============ nr 10: podzial „Inwestycje / Wolna gotowka" na pulpicie ============
-   Caly rysunek to elementy nr 2 — slupek, wiersz legendy, podlinia gotowki.
-   Dochodzi tylko karta pod calym blokiem i rozbicie walutowe pod wierszem. */
-.summary--card {
-  background: var(--card-bg); border-radius: var(--card-radius);
-  padding: 24px; box-shadow: var(--shadow-card);
-}
-/* W karcie slupek nie potrzebuje tyle powietrza co na golym tle. */
-.summary--card .dashChart { padding-top: 20px; }
-.summary--card .legend { padding-top: 12px; }
-
+   Caly rysunek to elementy nr 2 — slupek na tle ekranu, wiersz legendy,
+   podlinia gotowki. Dochodzi tylko rozbicie walutowe pod wierszem. */
 .splitRow { display: flex; flex-direction: column; }
 /* Kreska rozdziela to, co pracuje, od tego, co lezy — dwa wiersze bez niej
    zlewaly sie w jedna liste. */

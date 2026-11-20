@@ -651,7 +651,7 @@ export const V10_PULPIT_SPLIT: {
 }[] = [
   {
     id: 'inwestycje',
-    color: 'corp',
+    color: 'skarb',
     name: 'Inwestycje',
     share: 94.0,
     value: '3 965 522,00 PLN',
