@@ -1765,54 +1765,16 @@ select.field__control {
 .selectBtn:hover { background: var(--row-hover); }
 
 /* ---- podsumowanie ----
-   Osobne boxy zamiast jednej karty w pasy: kazda metryka ma wlasna ramke,
-   wiec daje sie czytac pojedynczo i porownywac z sasiadem. Wartosc calej
-   klasy stoi nad nimi, we wlasnym boxie, zeby nie konkurowala z metrykami.
-   Liczniki skladu (emitenci, serie, sztuki) i daty zdarzen zeszly do
-   sekcji, ktore ich dotycza — nie sa metrykami wyniku. */
-.heroBox {
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column; gap: 6px;
-  background: var(--card-bg); border-radius: var(--card-radius);
-  padding: 22px 24px 22px 28px; box-shadow: var(--shadow-card);
-}
-.heroBox::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  background: var(--c-corp);
-}
-.heroBox__label { font-size: 13px; color: var(--muted); }
-.heroBox__row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.heroBox__amount .amount__int { font-size: var(--amount-size); }
-.heroBox__amount .amount__dec { font-size: var(--amount-decimals); }
-.heroBox__delta {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 12px; border-radius: 42px; background: var(--c-corp-bg); color: var(--c-corp);
-  font-size: 13px; font-weight: 500;
-}
-.heroBox__share { font-size: 13px; color: var(--muted); }
-
-.kpiBoxes { display: grid; gap: 12px; }
-.kpiBoxes--4 { grid-template-columns: repeat(4, 1fr); }
-.kpiBoxes--3 { grid-template-columns: repeat(3, 1fr); }
-.kpi {
-  display: flex; flex-direction: column; gap: 6px; text-align: left;
-  padding: 18px 20px; min-width: 0;
-  background: var(--card-bg); border-radius: var(--card-radius);
-  box-shadow: var(--shadow-card);
-}
-/* Box z wynikiem dostaje przygaszone zielone tlo — kolor niesie tylko to,
-   co jest wynikiem, wiec dwa boksy na siedem. */
-.kpi--accent { background: var(--c-corp-bg); box-shadow: none; }
-.kpi__label { font-size: 13px; color: var(--muted); }
-.kpi--accent .kpi__label { color: var(--c-corp); }
-.kpi__value {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 24px; font-weight: 500; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink);
-}
-.kpi__value.is-accent { color: var(--c-corp); }
-.kpiBoxes--3 .kpi__value { font-size: 18px; }
-.kpi__sub { font-size: 13px; color: var(--muted); }
-.kpi--accent .kpi__sub { color: var(--c-corp); opacity: 0.72; }
+   Uklad wziety z karty „Wynik portfela" na portfelu: liczba wiodaca
+   z pigulka i odnosnikiem, pod kreska rowne kafelki, na koncu przypis.
+   Kafelki sa identyczne — ta sama ramka, stopien i budowa; rozni je
+   wylacznie tresc, wiec daje sie je porownywac wzrokiem. */
+.resultCard__stats--3 { grid-template-columns: repeat(3, 1fr); }
+/* Kafelki w jednym rzedzie maja rowna wysokosc nawet przy etykiecie
+   lamiacej sie na dwie linie. */
+.resultCard__stats { align-items: stretch; }
+.resultStat { justify-content: flex-start; }
+.resultStat__label { min-height: 2em; display: flex; align-items: flex-start; }
 
 /* ---- sekcje ---- */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }

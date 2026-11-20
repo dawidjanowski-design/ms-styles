@@ -40,7 +40,6 @@ import {
   Maximize2,
   MoreHorizontal,
   SortNone,
-  TrendingUp,
 } from '../icons/Feather';
 
 /* Kolor klasy z palety nr 2 — ten sam, co na wykresie portfela. Odsetki
@@ -65,74 +64,62 @@ function Select({ label }: { label: string }) {
   );
 }
 
-/* Box KPI: etykieta, liczba, podpis mowiacy czym ta liczba jest. Kolor
-   tylko tam, gdzie liczba jest wynikiem — reszta czarno-biala, zeby
-   zielen cos znaczyla. */
-function Kpi({ m }: { m: Metric & { accent?: boolean; trend?: boolean } }) {
-  return (
-    <div className={`kpi ${m.accent ? 'kpi--accent' : ''}`}>
-      <span className="kpi__label">{m.label}</span>
-      <span className={`kpi__value ${m.accent ? 'is-accent' : ''}`}>
-        {m.trend && <TrendingUp size={18} />}
-        {m.value}
-      </span>
-      {m.sub && <span className="kpi__sub">{m.sub}</span>}
-    </div>
-  );
-}
-
 /* ------------------------------ podsumowanie ------------------------------ */
 
+/* Ten sam uklad, co karta „Wynik portfela" na portfelu: liczba wiodaca
+   z pigulka i odnosnikiem u gory, pod kreska rowne kafelki metryk, na
+   koncu przypis. Jeden wzorzec na oba ekrany. */
 function Summary({ currency }: { currency: Currency }) {
   const p = podsumowanie(currency);
   const j = jednostka(currency);
-
-  const main = [
-    { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
-    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
-    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku', accent: true, trend: true },
-    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach', accent: true },
-  ];
-  const extra = [
-    { label: 'Wartość nominalna', value: kwota(p.nominal, currency), sub: 'suma nominałów serii' },
-    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon), sub: 'bieżący kupon' },
-    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency), sub: 'z ostatnich 12 miesięcy' },
-  ];
-
   const [calosc, dec] = kwota(p.value, currency).split(',');
 
+  /* Wszystkie kafelki sa jednakowe — ta sama ramka, ten sam stopien,
+     ta sama budowa etykieta/wartosc. Rozni je wylacznie tresc. */
+  const stats: Metric[] = [
+    { label: 'Śr. rentowność (ważona)', value: procent(p.rate) },
+    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency) },
+    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}` },
+    { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
+    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
+    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
+  ];
+
   return (
-    <>
-      {/* Jedna liczba, ktora opisuje caly ekran — osobny box, zeby nie
-          konkurowala z metrykami. */}
-      <section className="heroBox">
-        <span className="heroBox__label">Wartość bieżąca</span>
-        <div className="heroBox__row">
-          <Amount int={calosc} dec={`,${dec}`} className="heroBox__amount" />
-          <span className="heroBox__delta">
-            <TrendingUp size={14} />
-            +8,0%
-          </span>
-          <span className="heroBox__share">
-            {currency === 'Łącznie'
-              ? '42,5% wartości całego portfela'
-              : `wszystkie pozycje w ${j} · ${p.serie} ${p.serie === 1 ? 'seria' : 'serie'}`}
-          </span>
+    <section className="resultCard">
+      <div className="resultCard__top">
+        <div className="resultCard__lead">
+          <span className="resultCard__caption">Wartość bieżąca</span>
+          <div className="resultCard__amountRow">
+            <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
+            <span className="resultCard__rate">
+              Stopa zwrotu 12M: <strong>{procent(p.stopa)}</strong>
+            </span>
+          </div>
         </div>
-      </section>
+        <span className="resultCard__link">
+          Pogłębiona analiza wyniku
+          <ChevronRight size={14} />
+        </span>
+      </div>
 
-      <div className="kpiBoxes kpiBoxes--4">
-        {main.map((m) => (
-          <Kpi key={m.label} m={m} />
+      <div className="divider" />
+
+      <div className="resultCard__stats resultCard__stats--3">
+        {stats.map((m) => (
+          <div className="resultStat" key={m.label}>
+            <span className="resultStat__label">{m.label}</span>
+            <span className="resultStat__value">{m.value}</span>
+          </div>
         ))}
       </div>
 
-      <div className="kpiBoxes kpiBoxes--3">
-        {extra.map((m) => (
-          <Kpi key={m.label} m={m} />
-        ))}
-      </div>
-    </>
+      <span className="resultCard__note">
+        {currency === 'Łącznie'
+          ? '42,5% wartości całego portfela · wycena z 30.10.2026'
+          : `wszystkie pozycje w ${j} · wycena z 30.10.2026`}
+      </span>
+    </section>
   );
 }
 
