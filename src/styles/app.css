@@ -1732,3 +1732,32 @@ select.field__control {
 .v10Add__sub { font-size: 13px; line-height: 20px; color: var(--muted); max-width: 44ch; }
 
 
+
+/* ---- nr 10: przyklejony pasek zakresu (Figma 1145:319) ----
+   Naglowek zostaje na gorze, pasek siada pod nim. Pasek jest `fixed`, a nie
+   `sticky`, zeby nie zajmowal miejsca w ukladzie, zanim sie pokaze. */
+[data-style='10'] .appHeader { position: sticky; top: 0; z-index: 40; }
+.scopeBar {
+  position: fixed; top: var(--header-h); left: 0; right: 0; z-index: 35;
+  background: var(--header-bg); border-bottom: 1px solid var(--divider);
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+.scopeBar.is-stuck { opacity: 1; transform: none; pointer-events: auto; }
+.scopeBar__inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 8px var(--header-px);
+}
+.scopeBar__value { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.scopeBar__label { display: flex; align-items: baseline; gap: 8px; font-size: 11px; color: var(--muted); }
+.scopeBar__note { font-size: 11px; color: var(--sub-faint); }
+.scopeBar__amountRow { display: flex; align-items: center; gap: 10px; }
+.scopeBar__amount .amount__int { font-size: 18px; }
+.scopeBar__amount .amount__dec { font-size: 14px; }
+.scopeBar__delta {
+  padding: 2px 8px; border-radius: 42px; background: #e0eae1; color: var(--c-corp);
+  font-size: 11px; font-weight: 500;
+}
+.scopeBar__controls { display: flex; align-items: center; gap: 16px; flex: none; }
+.scopeBar__sep { width: 1px; height: 24px; background: var(--divider); }
+.scopeBar__anchor { height: 0; }

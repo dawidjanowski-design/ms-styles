@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ASSETS,
   CASH,
@@ -939,6 +939,24 @@ export function PortfolioScreen({
   const [hot, setHot] = useState<string | null>(null);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
+  /* Przyklejony pasek zakresu (nr 10, Figma 1145:319): pojawia sie dopiero,
+     gdy podsumowanie wyjedzie za naglowek — wczesniej dublowalby to, co i
+     tak widac. Obserwujemy znacznik tuz pod podsumowaniem, zamiast liczyc
+     scrollTop przy kazdym ruchu kolka. */
+  const [stuck, setStuck] = useState(false);
+  const znacznik = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = znacznik.current;
+    if (!el || styleId !== '10') {
+      setStuck(false);
+      return;
+    }
+    const io = new IntersectionObserver(([wpis]) => setStuck(!wpis.isIntersecting), {
+      rootMargin: '-68px 0px 0px 0px',
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [styleId]);
 
   const data = VIEWS[currency];
   /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
@@ -954,6 +972,33 @@ export function PortfolioScreen({
 
   return (
     <div className="screenOuter">
+      {styleId === '10' && (
+        <div className={`scopeBar ${stuck ? 'is-stuck' : ''}`} aria-hidden={!stuck}>
+          <div className="scopeBar__inner">
+            <div className="scopeBar__value">
+              <span className="scopeBar__label">
+                Wartość portfela
+                <span className="scopeBar__note">
+                  wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026
+                </span>
+              </span>
+              <div className="scopeBar__amountRow">
+                <Amount int={data.total} dec={data.decimals} className="scopeBar__amount" />
+                <span className="scopeBar__delta">+8,0%</span>
+              </div>
+            </div>
+            <div className="scopeBar__controls">
+              <Pills
+                items={CURRENCIES}
+                value={currency}
+                onChange={(v) => onCurrencyChange(v as Currency)}
+              />
+              <span className="scopeBar__sep" aria-hidden="true" />
+              <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={setView} />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="screen">
         <div className="content">
           {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
@@ -994,6 +1039,10 @@ export function PortfolioScreen({
               total={data.total}
             />
           </section>
+
+          {/* Znacznik dla przyklejonego paska — zero wysokosci, zero wplywu
+              na uklad. */}
+          <div ref={znacznik} className="scopeBar__anchor" />
 
           <CashOverview
             cards={data.cashCards}
