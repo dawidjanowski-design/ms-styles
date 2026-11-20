@@ -4,7 +4,6 @@ import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
 import { CorpBondsV10 } from './components/CorpBondsV10';
 import { DashboardScreen } from './components/Dashboard';
-import { DashboardV10 } from './components/DashboardV10';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
@@ -82,10 +81,7 @@ export default function App() {
         }}
       />
 
-      {/* Nr 10 ma wlasny pulpit: wykres glowny dzieli portfel na kapital
-          pracujacy i gotowke, a nie na klasy aktywow. */}
-      {screen.name === 'pulpit' && styleId === '10' && <DashboardV10 />}
-      {screen.name === 'pulpit' && styleId !== '10' && (
+      {screen.name === 'pulpit' && (
         <DashboardScreen
           styleId={styleId}
           onOpenPortfolio={() => setScreen({ name: 'portfel' })}
