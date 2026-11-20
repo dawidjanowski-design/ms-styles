@@ -112,8 +112,8 @@ function SplitChartV10() {
           wisi pod nim jak podlinia gotowki, zeby nie robic drugiego rytmu. */}
       <div className="legend">
         <div className="legend__rows">
-          {V10_PULPIT_SPLIT.map((u, i) => (
-            <div className={`splitRow ${i > 0 ? 'splitRow--sep' : ''}`} key={u.id}>
+          {V10_PULPIT_SPLIT.map((u) => (
+            <div className="splitRow" key={u.id}>
               <div
                 className="legendRow"
                 style={{ ['--seg' as string]: META[u.color].colors['2'].legend }}

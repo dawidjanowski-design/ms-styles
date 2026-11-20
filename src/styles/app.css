@@ -1994,9 +1994,8 @@ select.field__control {
    Caly rysunek to elementy nr 2 — slupek na tle ekranu, wiersz legendy,
    podlinia gotowki. Dochodzi tylko rozbicie walutowe pod wierszem. */
 .splitRow { display: flex; flex-direction: column; }
-/* Kreska rozdziela to, co pracuje, od tego, co lezy — dwa wiersze bez niej
-   zlewaly sie w jedna liste. */
-.splitRow--sep { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+/* Odstep zamiast kreski — kolor i rozbicie same oddzielaja oba wiersze. */
+.splitRow + .splitRow { margin-top: 14px; }
 .splitRow__parts { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0; }
 /* Kropka miedzy walutami zamiast kolejnego odstepu: trzy pozycje czytaja sie
    jako jedna linia rozbicia, a nie trzy osobne etykiety. */
