@@ -3,7 +3,8 @@
    z portfelem: tam klasa jest jednym wierszem, tu rozpisuje sie na
    emitentow, serie, przeplywy i operacje. */
 
-export type Metric = { label: string; value: string; sub?: string };
+/** `positive` — kwota wyniku na plusie, rysowana zielenia klasy. */
+export type Metric = { label: string; value: string; sub?: string; positive?: boolean };
 
 export const CORP_HEAD = {
   title: 'Obligacje korporacyjne',

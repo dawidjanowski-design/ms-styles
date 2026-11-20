@@ -2087,3 +2087,9 @@ select.field__control {
   /* Tlo wychodzi 8 px poza tekst po obu stronach, bez ruszania kolumn. */
   box-shadow: -8px 0 0 var(--row-hover), 8px 0 0 var(--row-hover);
 }
+
+/* Kolor na karcie emitenta tylko tam, gdzie niesie znaczenie: wynik na
+   plusie w zieleni klasy i udzial w klasie jako pasek tej samej zieleni. */
+.resultStat__value--pos { color: var(--c-corp); }
+.issShare { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.issShare__bar { width: 160px; flex: none; }

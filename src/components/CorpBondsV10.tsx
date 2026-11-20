@@ -79,7 +79,12 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
     { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
     { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
-    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach' },
+    {
+      label: 'Wynik 12M',
+      value: `+${kwota(p.wynik, currency)}`,
+      sub: 'nominalnie, po prowizjach',
+      positive: p.wynik > 0,
+    },
   ];
   /* Cztery kafelki w obu rzedach — siatka ma byc parzysta. Najblizsza
      wyplata odsetek wchodzi tu jako czwarta: to kwota w kalendarzu, wiec
@@ -99,7 +104,9 @@ function Summary({ currency }: { currency: Currency }) {
   const kafelek = (m: Metric) => (
     <div className="resultStat" key={m.label}>
       <span className="resultStat__label">{m.label}</span>
-      <span className="resultStat__value">{m.value}</span>
+      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
+        {m.value}
+      </span>
       {m.sub && <span className="resultStat__sub">{m.sub}</span>}
     </div>
   );

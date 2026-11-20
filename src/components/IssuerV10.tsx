@@ -145,7 +145,12 @@ export function IssuerV10({
     { label: 'Śr. rentowność (ważona)', value: procent(e.rate), sub: 'do wykupu, w skali roku' },
     { label: 'Wypłacone odsetki 12M', value: kwota(e.odsetki, 'PLN'), sub: 'ostatnie 12 miesięcy' },
     { label: 'Stopa zwrotu 12M', value: procent(e.stopa), sub: 'IRR, w skali roku' },
-    { label: 'Wynik 12M', value: `+${kwota(e.wynik, 'PLN')}`, sub: 'nominalnie, po prowizjach' },
+    {
+      label: 'Wynik 12M',
+      value: `+${kwota(e.wynik, 'PLN')}`,
+      sub: 'nominalnie, po prowizjach',
+      positive: e.wynik > 0,
+    },
   ];
   const warunki: Metric[] = [
     { label: 'Wartość nominalna', value: kwota(e.nominal, 'PLN') },
@@ -157,7 +162,9 @@ export function IssuerV10({
   const kafelek = (m: Metric) => (
     <div className="resultStat" key={m.label}>
       <span className="resultStat__label">{m.label}</span>
-      <span className="resultStat__value">{m.value}</span>
+      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
+        {m.value}
+      </span>
       {m.sub && <span className="resultStat__sub">{m.sub}</span>}
     </div>
   );
@@ -200,10 +207,20 @@ export function IssuerV10({
               <span className="resultCard__caption">Wartość bieżąca</span>
               <div className="resultCard__amountRow">
                 <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
+                {e.wynik > 0 && (
+                  <span className="resultCard__rate">
+                    <strong>+{kwota(e.wynik, 'PLN')}</strong> w 12M
+                  </span>
+                )}
               </div>
-              <span className="resultCard__note resultCard__note--left">
-                {e.udzial.toFixed(1).replace('.', ',')}% obligacji korporacyjnych
-              </span>
+              <div className="issShare">
+                <span className="corpShare issShare__bar">
+                  <span className="corpShare__fill" style={{ width: `${e.udzial}%` }} />
+                </span>
+                <span className="resultCard__note resultCard__note--left">
+                  {e.udzial.toFixed(1).replace('.', ',')}% obligacji korporacyjnych
+                </span>
+              </div>
             </div>
 
             <div className="divider" />
