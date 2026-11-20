@@ -2,8 +2,9 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } fr
 import { DASHBOARD, EVENTS, OFFERS, type Event, type Offer } from '../data/dashboard';
 import { VIEWS } from '../data/currencies';
 import { Logo } from '../icons/Logo';
-import { AllocationChart, Legend, assetColor } from './Portfolio';
+import { AllocationChart, Legend, META, assetColor } from './Portfolio';
 import { Amount } from './ui';
+import { V10_PULPIT_NOTE, V10_PULPIT_SPLIT } from '../data/portfolio';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 const isV3 = (s: StyleId) =>
@@ -70,6 +71,75 @@ function EventMonths() {
         </section>
       ))}
     </div>
+  );
+}
+
+/* Nr 10: wykres glowny pulpitu dzieli portfel na kapital pracujacy i wolna
+   gotowke. Caly rysunek jest z nr 2 — ten sam slupek (cialo + stopka), ta
+   sama legenda, ta sama paleta; rozni sie tylko to, na co dzielimy.
+   Inwestycje biora kolor obligacji korporacyjnych, bo to kolor wiodacy
+   nr 10, gotowka zostaje przy swoim ze wzorem — tak jak w Portfelu. */
+function SplitChartV10() {
+  const suma = V10_PULPIT_SPLIT.reduce((s, u) => s + u.share, 0);
+
+  return (
+    <>
+      <div className="dashChart">
+        <div className="chart">
+          {V10_PULPIT_SPLIT.map((u) => {
+            const c = META[u.color].colors['2'];
+            return (
+              <div
+                key={u.id}
+                className={`chartSeg ${u.color === 'cash' ? 'chartSeg--cash' : ''}`}
+                style={{
+                  flex: `${u.share / suma} 1 0`,
+                  ['--seg' as string]: c.chart,
+                  ['--seg-foot' as string]: c.chartFoot ?? c.chart,
+                }}
+                aria-label={`${u.name}: ${u.share}%`}
+              >
+                <span className="chartSeg__body" />
+                <span className="chartSeg__foot" />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Wiersz legendy jest co do piksela wierszem z nr 2; rozbicie walutowe
+          wisi pod nim jak podlinia gotowki, zeby nie robic drugiego rytmu. */}
+      <div className="legend">
+        <div className="legend__rows">
+          {V10_PULPIT_SPLIT.map((u, i) => (
+            <div className={`splitRow ${i > 0 ? 'splitRow--sep' : ''}`} key={u.id}>
+              <div
+                className="legendRow"
+                style={{ ['--seg' as string]: META[u.color].colors['2'].legend }}
+              >
+                <span className="legendRow__dot" />
+                <span className="legendRow__name">{u.name}</span>
+                <span className="legendRow__share">
+                  {u.share.toFixed(1).replace('.', ',')}%
+                </span>
+                <span className="legendRow__value">{u.value}</span>
+              </div>
+              <p className="legend__cashSub splitRow__parts">
+                {u.parts.map((p) => (
+                  <span className="splitRow__part" key={p.cur}>
+                    {p.cur} {p.amount}
+                    {p.pln && <span className="splitRow__pln"> ({p.pln})</span>}
+                  </span>
+                ))}
+              </p>
+              {u.color === 'cash' && (
+                <p className="legend__cashSub splitRow__note">{V10_PULPIT_NOTE}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -348,10 +418,17 @@ export function DashboardScreen({
       <div className="screen">
         <div className="content">
           {/* jak na Portfelu: reset dopiero po wyjsciu z calego bloku */}
-          <section className="summary" onMouseLeave={() => setHot(null)}>
+          <section
+            className={`summary ${styleId === '10' ? 'summary--card' : ''}`}
+            onMouseLeave={() => setHot(null)}
+          >
             <div className="dashHead">
               <div className="summary__titleBlock">
-                <span className="dashHead__label">{DASHBOARD.label}</span>
+                {/* Nr 10 nazywa to wprost suma, bo pod spodem dzieli ja na dwie
+                    czesci — „na wszystkich rachunkach" nie mowi tu nic wiecej. */}
+                <span className="dashHead__label">
+                  {styleId === '10' ? 'Aktywa łącznie' : DASHBOARD.label}
+                </span>
                 <Amount int={total.total} dec={total.decimals} />
               </div>
               <button type="button" className="btnAction" onClick={onOpenPortfolio}>
@@ -361,24 +438,30 @@ export function DashboardScreen({
                 </span>
               </button>
             </div>
-            <div className="dashChart">
-              <AllocationChart
-                rows={total.allocation}
-                styleId={styleId}
-                hot={hot}
-                setHot={setHot}
-              />
-            </div>
-            <Legend
-              rows={total.allocation}
-              styleId={styleId}
-              hot={hot}
-              setHot={setHot}
-              onOpenAsset={styleId === 'makieta' ? undefined : onOpenAsset}
-              cashTooltip={styleId !== 'makieta'}
-              cashCards={total.cashCards}
-              total={total.total}
-            />
+            {styleId === '10' ? (
+              <SplitChartV10 />
+            ) : (
+              <>
+                <div className="dashChart">
+                  <AllocationChart
+                    rows={total.allocation}
+                    styleId={styleId}
+                    hot={hot}
+                    setHot={setHot}
+                  />
+                </div>
+                <Legend
+                  rows={total.allocation}
+                  styleId={styleId}
+                  hot={hot}
+                  setHot={setHot}
+                  onOpenAsset={styleId === 'makieta' ? undefined : onOpenAsset}
+                  cashTooltip={styleId !== 'makieta'}
+                  cashCards={total.cashCards}
+                  total={total.total}
+                />
+              </>
+            )}
           </section>
 
           {/* Nr 6 i nr 7: oferty i zdarzenia stoja obok siebie w jednym pasmie —

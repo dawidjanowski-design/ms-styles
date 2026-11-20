@@ -1989,3 +1989,25 @@ select.field__control {
 .corpMenu__item.is-on { font-weight: 500; }
 .corpShare__fill { background: var(--c-corp); }
 .corpEmpty { margin: 0; padding: 24px 0; font-size: 13px; color: var(--muted); }
+
+/* ============ nr 10: podzial „Inwestycje / Wolna gotowka" na pulpicie ============
+   Caly rysunek to elementy nr 2 — slupek, wiersz legendy, podlinia gotowki.
+   Dochodzi tylko karta pod calym blokiem i rozbicie walutowe pod wierszem. */
+.summary--card {
+  background: var(--card-bg); border-radius: var(--card-radius);
+  padding: 24px; box-shadow: var(--shadow-card);
+}
+/* W karcie slupek nie potrzebuje tyle powietrza co na golym tle. */
+.summary--card .dashChart { padding-top: 20px; }
+.summary--card .legend { padding-top: 12px; }
+
+.splitRow { display: flex; flex-direction: column; }
+/* Kreska rozdziela to, co pracuje, od tego, co lezy — dwa wiersze bez niej
+   zlewaly sie w jedna liste. */
+.splitRow--sep { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.splitRow__parts { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0; }
+/* Kropka miedzy walutami zamiast kolejnego odstepu: trzy pozycje czytaja sie
+   jako jedna linia rozbicia, a nie trzy osobne etykiety. */
+.splitRow__part + .splitRow__part::before { content: '·'; margin-right: 10px; color: var(--muted); }
+.splitRow__pln { color: var(--muted); }
+.splitRow__note { margin: 0; }

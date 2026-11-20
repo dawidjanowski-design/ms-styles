@@ -632,3 +632,50 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
   },
 ];
 
+
+/* ---------------- nr 10: podzial na pulpicie (wireframe PU03) ----------------
+   Pulpit dzieli portfel inaczej niz Portfel: nie na klasy aktywow, tylko na
+   to, co pracuje, i to, co lezy. Portfel odpowiada „z czego to sie sklada",
+   pulpit — „ile z tego pracuje". Stad dwa segmenty zamiast szesciu. */
+
+export type PulpitWaluta = { cur: string; amount: string; pln?: string };
+
+export const V10_PULPIT_SPLIT: {
+  id: string;
+  /** klasa aktywow, z ktorej segment bierze kolor palety nr 2 */
+  color: string;
+  name: string;
+  share: number;
+  value: string;
+  parts: PulpitWaluta[];
+}[] = [
+  {
+    id: 'inwestycje',
+    color: 'corp',
+    name: 'Inwestycje',
+    share: 94.0,
+    value: '3 965 522,00 PLN',
+    parts: [
+      { cur: 'PLN', amount: '3 484 020,00' },
+      { cur: 'EUR', amount: '73 330,00', pln: '≈ 311 652,00 PLN' },
+      { cur: 'USD', amount: '43 000,00', pln: '≈ 169 850,00 PLN' },
+    ],
+  },
+  {
+    id: CASH.id,
+    color: CASH.id,
+    name: 'Wolna gotówka',
+    share: 6.0,
+    value: '253 118,00 PLN',
+    parts: [
+      { cur: 'PLN', amount: '190 268,00' },
+      { cur: 'EUR', amount: '12 000,00', pln: '≈ 51 000,00 PLN' },
+      { cur: 'USD', amount: '3 000,00', pln: '≈ 11 850,00 PLN' },
+    ],
+  },
+];
+
+/* Zablokowane i w drodze nie wchodza do sumy aktywow, wiec sa notka pod
+   gotowka, a nie kolejnym segmentem wykresu. */
+export const V10_PULPIT_NOTE =
+  'Poza sumą: zablokowane 50 118,00 PLN i w drodze 45 118,00 PLN.';
