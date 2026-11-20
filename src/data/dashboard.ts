@@ -97,7 +97,10 @@ export type Zlecenie = {
   status: string;
   tone: ZlecenieTon;
   name: string;
-  sub: string;
+  /** Rachunek i jego numer — te same co na karcie rachunku w Portfelu nr 10. */
+  account: string;
+  accountNo: string;
+  detail: string;
   type: string;
   amount: string;
   date: string;
@@ -110,7 +113,9 @@ export const V10_ORDERS: Zlecenie[] = [
     status: 'Aktywne',
     tone: 'active',
     name: 'Dekpol S.A., seria D',
-    sub: 'Rachunek maklerski · zlecenie z limitem 100,20%',
+    account: 'Rachunek maklerski',
+    accountNo: '00-00-006858',
+    detail: 'zlecenie z limitem 100,20%',
     type: 'Kupno',
     amount: '50 000,00 PLN',
     date: '17.11.2026',
@@ -119,7 +124,9 @@ export const V10_ORDERS: Zlecenie[] = [
     status: 'Częściowo zrealizowane',
     tone: 'partial',
     name: 'Victoria Dom, seria B2',
-    sub: 'Rachunek maklerski · zrealizowano 12 z 20 szt.',
+    account: 'Rachunek maklerski',
+    accountNo: '00-00-006858',
+    detail: 'zrealizowano 12 z 20 szt.',
     type: 'Sprzedaż',
     amount: '21 340,00 PLN',
     date: '16.11.2026',
@@ -128,7 +135,9 @@ export const V10_ORDERS: Zlecenie[] = [
     status: 'Aktywne',
     tone: 'active',
     name: 'Nordvik Development S.A., seria C',
-    sub: 'Rachunek na emisje · zapis na emisję',
+    account: 'Rachunek na emisje',
+    accountNo: '00-00-007432',
+    detail: 'zapis na emisję',
     type: 'Zapis',
     amount: '8 000,00 PLN',
     date: '13.11.2026',

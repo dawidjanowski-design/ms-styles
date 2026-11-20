@@ -175,12 +175,12 @@ function OrdersV10() {
         {V10_ORDERS.map((z) => (
           <button type="button" className="eventRow eventRow--orders" key={z.name}>
             <span className="eventRow__what">
-              <span className="eventRow__type">{z.name}</span>
               <span className="eventRow__meta">
+                <span className="eventRow__type">{z.name}</span>
                 <span className={`badge badge--${z.tone}`}>{z.status}</span>
-                <span className="eventRow__instrument">
-                  {z.type} · {z.sub}
-                </span>
+              </span>
+              <span className="eventRow__instrument">
+                {z.type} · {z.account} {z.accountNo} · {z.detail}
               </span>
             </span>
             <span className="eventRow__right">

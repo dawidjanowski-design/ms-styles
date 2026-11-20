@@ -2007,9 +2007,6 @@ select.field__control {
    bo w kolumnie polowy szerokosci szesc kolumn by sie pozawijalo. */
 .events__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .events__count { font-size: 13px; font-weight: 400; color: var(--muted); }
-/* Wiersz na dwie linie potrzebuje wiecej powietrza niz jednolinijkowe
-   zdarzenie: pigulka stanu sama ma 24 px wysokosci, wiec przy padding 14
-   tekst dotykal kresek. */
 /* Odstepy z wiersza zdarzen nr 2: 18 px nad i pod tekstem (56 px wiersza
    przy linii 20 px), 20 px po bokach, 16 px miedzy kolumnami. Ta sama waga
    co :root:not([data-style='makieta']) .eventRow (0,3,0), ktora zeruje
@@ -2019,18 +2016,24 @@ select.field__control {
   gap: 16px; padding: 18px 20px; min-height: 0;
 }
 .eventRow__what { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-/* Stan stoi przy opisie, nie w osobnej kolumnie — „Czesciowo zrealizowane"
+/* Stan stoi przy nazwie, nie w osobnej kolumnie — „Czesciowo zrealizowane"
    zabieralo tam wiecej miejsca niz sama nazwa zlecenia. */
 .eventRow__meta { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.eventRow__meta .eventRow__instrument {
+.eventRow__meta .eventRow__type {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.eventRow__meta .badge { flex: none; }
+.eventRow__what > .eventRow__instrument {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .eventRow__right {
   display: flex; flex-direction: column; align-items: flex-end;
   justify-content: space-between; align-self: stretch;
 }
-/* Wysokosc pigulki stanu — data stoi na srodku drugiej linii, nie pod nia. */
-.eventRow__when { font-size: 13px; color: var(--muted); line-height: 24px; }
+/* Pigulka stanu ma 24 px i stoi w pierwszej linii — kwota bierze jej
+   wysokosc, zeby siedziala na srodku nazwy i pigulki. */
+.eventRow--orders .eventRow__amount { line-height: 24px; }
+.eventRow__when { font-size: 13px; color: var(--muted); }
 
 /* Nr 10: zlecenia (szeroka tabela) obok kalendarza zdarzen z nr 8.
    Tabela zostaje elastyczna, kalendarz ma stala szerokosc — inaczej
