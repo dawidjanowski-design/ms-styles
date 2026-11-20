@@ -674,8 +674,3 @@ export const V10_PULPIT_SPLIT: {
     ],
   },
 ];
-
-/* Zablokowane i w drodze nie wchodza do sumy aktywow, wiec sa notka pod
-   gotowka, a nie kolejnym segmentem wykresu. */
-export const V10_PULPIT_NOTE =
-  'Poza sumą: zablokowane 50 118,00 PLN i w drodze 45 118,00 PLN.';

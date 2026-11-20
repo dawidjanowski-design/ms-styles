@@ -2001,4 +2001,3 @@ select.field__control {
    jako jedna linia rozbicia, a nie trzy osobne etykiety. */
 .splitRow__part + .splitRow__part::before { content: '·'; margin-right: 10px; color: var(--muted); }
 .splitRow__pln { color: var(--muted); }
-.splitRow__note { margin: 0; }

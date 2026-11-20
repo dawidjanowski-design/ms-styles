@@ -4,7 +4,7 @@ import { VIEWS } from '../data/currencies';
 import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend, META, assetColor } from './Portfolio';
 import { Amount } from './ui';
-import { V10_PULPIT_NOTE, V10_PULPIT_SPLIT } from '../data/portfolio';
+import { V10_PULPIT_SPLIT } from '../data/portfolio';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 const isV3 = (s: StyleId) =>
@@ -133,9 +133,6 @@ function SplitChartV10() {
                   </span>
                 ))}
               </p>
-              {u.color === 'cash' && (
-                <p className="legend__cashSub splitRow__note">{V10_PULPIT_NOTE}</p>
-              )}
             </div>
           ))}
         </div>
