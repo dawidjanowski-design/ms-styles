@@ -1744,10 +1744,13 @@ select.field__control {
    i wykresy, wiec odstepy sa ciasniejsze niz na portfelu. */
 
 .corpHead { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+/* Naglowek ekranu ma typografie kwoty glownej z pulpitu (--amount-size,
+   500, -0.01em) — nie --title-size, ktory w nr 10 jest szara etykieta
+   18/400 i wygladal jak tekst bez stylow. */
 .corpHead__title {
   display: flex; align-items: center; gap: 8px; margin: 0;
-  font-size: var(--title-size); font-weight: var(--title-weight);
-  letter-spacing: var(--title-tracking); color: var(--ink);
+  font-size: var(--amount-size); font-weight: 500; line-height: 1.2;
+  letter-spacing: -0.01em; color: var(--ink);
 }
 .corpHead__chev { font-size: 14px; color: var(--muted); }
 .corpHead__sub { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
