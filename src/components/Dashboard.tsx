@@ -180,7 +180,7 @@ function OrdersV10() {
                 <span className={`badge badge--${z.tone}`}>{z.status}</span>
               </span>
               <span className="eventRow__instrument">
-                {z.type} · {z.account} {z.accountNo} · {z.detail}
+                {z.type} · {z.account} {z.accountNo}
               </span>
             </span>
             <span className="eventRow__right">
