@@ -39,12 +39,14 @@ function Select({ label }: { label: string }) {
   );
 }
 
-function MetricTile({ metric }: { metric: Metric }) {
+/* Kafelek na przygaszonym tle — ten sam, co „Wynik portfela" na portfelu.
+   Zastepuje kreski: blok sam sie odcina, wiec nie trzeba go podkreslac. */
+function MetricTile({ metric, small }: { metric: Metric; small?: boolean }) {
   return (
-    <div className="corpMetric">
-      <span className="corpMetric__label">{metric.label}</span>
-      <span className="corpMetric__value">{metric.value}</span>
-      {metric.sub && <span className="corpMetric__sub">{metric.sub}</span>}
+    <div className={`corpTile ${small ? 'corpTile--small' : ''}`}>
+      <span className="corpTile__label">{metric.label}</span>
+      <span className="corpTile__value">{metric.value}</span>
+      {metric.sub && <span className="corpTile__sub">{metric.sub}</span>}
     </div>
   );
 }
@@ -55,36 +57,36 @@ function Summary() {
   const s = CORP_SUMMARY;
   return (
     <section className="corpCard">
-      <div className="corpCard__lead">
-        <span className="corpCard__label">{s.label}</span>
-        <div className="corpCard__amountRow">
-          <Amount int={s.amount} dec={s.decimals} className="corpCard__amount" />
-          <span className="corpCard__delta">{s.delta}</span>
+      <div className="corpCard__top">
+        <div className="corpCard__lead">
+          <span className="corpCard__label">{s.label}</span>
+          <div className="corpCard__amountRow">
+            <Amount int={s.amount} dec={s.decimals} className="corpCard__amount" />
+            <span className="corpCard__delta">{s.delta}</span>
+          </div>
+          <span className="corpCard__share">{s.share}</span>
         </div>
-        <span className="corpCard__share">{s.share}</span>
+        {/* Liczniki opisuja sklad, nie wynik — stoja z boku kwoty, a nie
+            w jednym rzedzie z metrykami. */}
+        <dl className="corpFacts">
+          {s.counters.map((c) => (
+            <div className="corpFact" key={c.label}>
+              <dt>{c.label}</dt>
+              <dd>{c.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
-      <div className="divider" />
-      <div className="corpMetrics corpMetrics--main">
+      <div className="corpTiles corpTiles--main">
         {s.main.map((m) => (
           <MetricTile key={m.label} metric={m} />
         ))}
       </div>
 
-      <div className="divider" />
-      <div className="corpMetrics corpMetrics--extra">
+      <div className="corpTiles corpTiles--extra">
         {s.extra.map((m) => (
-          <MetricTile key={m.label} metric={m} />
-        ))}
-      </div>
-
-      <div className="divider" />
-      <div className="corpCounters">
-        {s.counters.map((c) => (
-          <span className="corpCounter" key={c.label}>
-            {c.label}
-            <strong>{c.value}</strong>
-          </span>
+          <MetricTile key={m.label} metric={m} small />
         ))}
       </div>
     </section>
