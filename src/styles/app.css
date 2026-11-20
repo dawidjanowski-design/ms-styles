@@ -1891,10 +1891,14 @@ select.field__control {
 .corpLegend { display: flex; gap: 20px; }
 .corpLegend__item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
 .corpLegend__dot { width: 8px; height: 8px; border-radius: 2px; }
-/* Wykres z osia: siatka lezy pod slupkami, podpisy osi po prawej. */
-.corpChart { position: relative; padding-right: 56px; }
+/* Wykres z osia: siatka lezy pod slupkami, podpisy osi po prawej.
+   Dwa panele dziela te sama os miesiecy — wykupy u gory, odsetki pod
+   spodem we wlasnej skali. */
+.corpChart { position: relative; padding-right: 56px; display: flex; flex-direction: column; gap: 10px; }
+.corpChart__panel { position: relative; }
+.corpChart__panel--sub { padding-top: 2px; }
 .corpChart__grid {
-  position: absolute; inset: 0 56px 26px 0;
+  position: absolute; inset: 0;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .corpChart__line { position: relative; border-top: 1px solid var(--divider); }
@@ -1902,22 +1906,22 @@ select.field__control {
   position: absolute; right: -56px; top: -7px; width: 48px;
   font-size: 10px; color: var(--sub-faint); text-align: left;
 }
-.corpFlows { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 240px; }
+.corpFlows { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 100%; }
 .corpFlow {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;
-  padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px;
+  flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%;
+  padding: 0; border: 0; background: none; cursor: pointer; border-radius: 4px;
   transition: background 120ms ease;
 }
 .corpFlow:hover, .corpFlow.is-hot { background: var(--screen-bg); }
-.corpFlow__stack {
-  flex: 1; width: 100%; display: flex; flex-direction: column-reverse; justify-content: flex-start;
-}
-.corpFlow__bar { display: block; width: 100%; }
-/* Zaokraglenie tylko na szczycie stosu — dol siedzi na osi. */
-.corpFlow__bar--strong { background: var(--c-corp); border-radius: 4px 4px 0 0; }
-.corpFlow__bar--soft { background: #cfe2d3; border-radius: 4px 4px 0 0; }
-.corpFlow__stack:has(.corpFlow__bar--strong) .corpFlow__bar--soft { border-radius: 0; }
-.corpFlow__label { font-size: 10px; color: var(--sub-faint); }
+.corpFlow__stack { width: 100%; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.corpFlow__bar { display: block; width: 100%; border-radius: 4px 4px 0 0; }
+.corpFlow__bar--strong { background: var(--c-corp); }
+.corpFlow__bar--soft { background: #cfe2d3; }
+/* Podpisy miesiecy stoja raz, pod oboma panelami. */
+.corpChart__labels { display: flex; gap: 8px; }
+.corpFlow__label { flex: 1; text-align: center; font-size: 10px; color: var(--sub-faint); }
+.corpFlow__label.is-hot { color: var(--ink); }
+.corpLegend__note { color: var(--sub-faint); }
 
 /* ---- zamkniete pozycje i operacje ---- */
 .closedTable, .opsTable { display: flex; flex-direction: column; }

@@ -43,11 +43,15 @@ import {
 const SEG = '#046816';
 const SEG_SOFT = '#cfe2d3';
 
-/* Os konczy sie na okraglej liczbie powyzej najwiekszego miesiaca —
-   slupki maja sie do czego odniesc, a podpisy sa do zapamietania. */
+/* Wykupy ida w setki tysiecy, odsetki w tysiace — w jednym stosie odsetki
+   zniknely. Stad dwa panele na wspolnej osi miesiecy, kazdy z wlasna skala
+   i wlasnymi podpisami: ten sam uklad, co cena i wolumen na wykresach
+   gieldowych. */
 const OS_MAX = 900000;
-const OS_TICKS = [900000, 600000, 300000, 0];
-const tys = (v: number) => (v === 0 ? '0' : `${v / 1000} tys.`);
+const OS_TICKS = [900000, 450000, 0];
+const OS_ODS_MAX = 20000;
+const OS_ODS_TICKS = [20000, 0];
+const tys = (v: number) => (v === 0 ? '0' : `${Math.round(v / 1000)} tys.`);
 
 function Select({ label }: { label: string }) {
   return (
@@ -260,60 +264,82 @@ const zl = (v: number) =>
 function FlowsChart() {
   const [hot, setHot] = useState<number | null>(null);
 
+  const kolumna = (i: number, m: (typeof CORP_FLOWS)[number], wysokosc: string, mocny: boolean) => (
+    <button
+      type="button"
+      className={`corpFlow ${hot === i ? 'is-hot' : ''}`}
+      key={m.label}
+      onMouseEnter={() => setHot(i)}
+      onFocus={() => setHot(i)}
+      onBlur={() => setHot(null)}
+      aria-label={`${m.full}: nominał ${zl(m.nominal)}, odsetki ${zl(m.interest)}`}
+    >
+      <span className="corpFlow__stack">
+        <span
+          className={`corpFlow__bar ${mocny ? 'corpFlow__bar--strong' : 'corpFlow__bar--soft'}`}
+          style={{ height: wysokosc }}
+        />
+      </span>
+    </button>
+  );
+
   return (
-    <div className="corpChart">
-      {/* Siatka z podpisami — bez niej wysokosc slupka nie znaczy nic. */}
-      <div className="corpChart__grid" aria-hidden="true">
-        {OS_TICKS.map((t) => (
-          <div className="corpChart__line" key={t}>
-            <span className="corpChart__tick">{tys(t)}</span>
-          </div>
-        ))}
+    <div className="corpChart" onMouseLeave={() => setHot(null)}>
+      <div className="corpChart__panel" style={{ height: 200 }}>
+        <div className="corpChart__grid" aria-hidden="true">
+          {OS_TICKS.map((t) => (
+            <div className="corpChart__line" key={t}>
+              <span className="corpChart__tick">{tys(t)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="corpFlows">
+          {hot !== null && (
+            <Tooltip at={((hot + 0.5) / CORP_FLOWS.length) * 100}>
+              <span className="chartTip__title">{CORP_FLOWS[hot].full}</span>
+              {CORP_FLOWS[hot].nominal > 0 && (
+                <span className="chartTip__row">
+                  <span className="chartTip__dot" style={{ background: SEG }} />
+                  Wartość nominalna<strong>{zl(CORP_FLOWS[hot].nominal)}</strong>
+                </span>
+              )}
+              <span className="chartTip__row">
+                <span className="chartTip__dot" style={{ background: SEG_SOFT }} />
+                Odsetki<strong>{zl(CORP_FLOWS[hot].interest)}</strong>
+              </span>
+              {CORP_FLOWS[hot].note && (
+                <span className="chartTip__note">{CORP_FLOWS[hot].note}</span>
+              )}
+            </Tooltip>
+          )}
+          {CORP_FLOWS.map((m, i) =>
+            kolumna(i, m, m.nominal > 0 ? `${(m.nominal / OS_MAX) * 100}%` : '0%', true)
+          )}
+        </div>
       </div>
 
-      <div className="corpFlows" onMouseLeave={() => setHot(null)}>
-        {hot !== null && (
-          <Tooltip at={((hot + 0.5) / CORP_FLOWS.length) * 100}>
-            <span className="chartTip__title">{CORP_FLOWS[hot].full}</span>
-            {CORP_FLOWS[hot].nominal > 0 && (
-              <span className="chartTip__row">
-                <span className="chartTip__dot" style={{ background: SEG }} />
-                Wartość nominalna<strong>{zl(CORP_FLOWS[hot].nominal)}</strong>
-              </span>
-            )}
-            <span className="chartTip__row">
-              <span className="chartTip__dot" style={{ background: SEG_SOFT }} />
-              Odsetki<strong>{zl(CORP_FLOWS[hot].interest)}</strong>
-            </span>
-            {CORP_FLOWS[hot].note && (
-              <span className="chartTip__note">{CORP_FLOWS[hot].note}</span>
-            )}
-          </Tooltip>
-        )}
+      {/* Odsetki maja wlasna skale — inaczej 4 tys. obok 720 tys. jest
+          kreska na jeden piksel. */}
+      <div className="corpChart__panel corpChart__panel--sub" style={{ height: 76 }}>
+        <div className="corpChart__grid" aria-hidden="true">
+          {OS_ODS_TICKS.map((t) => (
+            <div className="corpChart__line" key={t}>
+              <span className="corpChart__tick">{tys(t)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="corpFlows">
+          {CORP_FLOWS.map((m, i) =>
+            kolumna(i, m, `${Math.max(3, (m.interest / OS_ODS_MAX) * 100)}%`, false)
+          )}
+        </div>
+      </div>
+
+      <div className="corpChart__labels">
         {CORP_FLOWS.map((m, i) => (
-          <button
-            type="button"
-            className={`corpFlow ${hot === i ? 'is-hot' : ''}`}
-            key={m.label}
-            onMouseEnter={() => setHot(i)}
-            onFocus={() => setHot(i)}
-            onBlur={() => setHot(null)}
-            aria-label={`${m.full}: nominał ${zl(m.nominal)}, odsetki ${zl(m.interest)}`}
-          >
-            <span className="corpFlow__stack">
-              <span
-                className="corpFlow__bar corpFlow__bar--soft"
-                style={{ height: `${Math.max(1.5, (m.interest / OS_MAX) * 100)}%` }}
-              />
-              {m.nominal > 0 && (
-                <span
-                  className="corpFlow__bar corpFlow__bar--strong"
-                  style={{ height: `${(m.nominal / OS_MAX) * 100}%` }}
-                />
-              )}
-            </span>
-            <span className="corpFlow__label">{m.label}</span>
-          </button>
+          <span className={`corpFlow__label ${hot === i ? 'is-hot' : ''}`} key={m.label}>
+            {m.label}
+          </span>
         ))}
       </div>
     </div>
@@ -388,7 +414,7 @@ function Flows() {
         </span>
         <span className="corpLegend__item">
           <span className="corpLegend__dot" style={{ background: SEG_SOFT }} />
-          Odsetki
+          Odsetki <span className="corpLegend__note">· własna skala</span>
         </span>
       </div>
 
