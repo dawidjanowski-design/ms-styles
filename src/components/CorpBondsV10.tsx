@@ -298,7 +298,7 @@ function Structure({
   };
 
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Struktura portfela</h2>
@@ -312,50 +312,52 @@ function Structure({
           </button>
         </div>
       </div>
+      <div className="corpCard">
 
-      {p.pusto ? (
-        <p className="corpEmpty">
-          Nie masz obligacji korporacyjnych rozliczanych w {jednostka(currency)}.
-        </p>
-      ) : (
-        <>
-          <div className="corpTable">
-            <div className="corpRow corpRow--head">
-              {naglowek('name', grouping === 'Serie' ? 'Seria' : 'Emitent', { sort: true })}
-              {naglowek('count', grouping === 'Serie' ? 'Sztuk' : 'Serie', { sort: true })}
-              {naglowek('rate', grouping === 'Serie' ? 'Rentowność' : 'Śr. rentowność', {
-                num: true,
-                sort: true,
-              })}
-              {naglowek('maturity', grouping === 'Serie' ? 'Wykup' : 'Najbliższy wykup', {
-                num: true,
-                sort: true,
-              })}
-              {naglowek('value', etykietaWartosci, { num: true, menu: true })}
-              {naglowek('share', 'Udział', { num: true, sort: true })}
+        {p.pusto ? (
+          <p className="corpEmpty">
+            Nie masz obligacji korporacyjnych rozliczanych w {jednostka(currency)}.
+          </p>
+        ) : (
+          <>
+            <div className="corpTable">
+              <div className="corpRow corpRow--head">
+                {naglowek('name', grouping === 'Serie' ? 'Seria' : 'Emitent', { sort: true })}
+                {naglowek('count', grouping === 'Serie' ? 'Sztuk' : 'Serie', { sort: true })}
+                {naglowek('rate', grouping === 'Serie' ? 'Rentowność' : 'Śr. rentowność', {
+                  num: true,
+                  sort: true,
+                })}
+                {naglowek('maturity', grouping === 'Serie' ? 'Wykup' : 'Najbliższy wykup', {
+                  num: true,
+                  sort: true,
+                })}
+                {naglowek('value', etykietaWartosci, { num: true, menu: true })}
+                {naglowek('share', 'Udział', { num: true, sort: true })}
+              </div>
+
+              {widoczne.map((r) => komorki(r))}
+
+              {komorki(
+                {
+                  id: 'razem',
+                  title: `Razem · ${p.emitenci} ${p.emitenci === 1 ? 'emitent' : 'emitentów'}`,
+                  sub: grouping === 'Serie' ? `${p.serie} serii` : undefined,
+                  count: grouping === 'Serie' ? String(p.sztuk) : `${p.serie} serii`,
+                  countNum: p.serie,
+                  rate: p.rate,
+                  maturity: p.najblizszyWykup,
+                  value: p.value,
+                  nominal: p.nominal,
+                },
+                true
+              )}
             </div>
 
-            {widoczne.map((r) => komorki(r))}
-
-            {komorki(
-              {
-                id: 'razem',
-                title: `Razem · ${p.emitenci} ${p.emitenci === 1 ? 'emitent' : 'emitentów'}`,
-                sub: grouping === 'Serie' ? `${p.serie} serii` : undefined,
-                count: grouping === 'Serie' ? String(p.sztuk) : `${p.serie} serii`,
-                countNum: p.serie,
-                rate: p.rate,
-                maturity: p.najblizszyWykup,
-                value: p.value,
-                nominal: p.nominal,
-              },
-              true
-            )}
-          </div>
-
-          <p className="corpNote">{CORP_STRUCTURE_NOTE}</p>
-        </>
-      )}
+            <p className="corpNote">{CORP_STRUCTURE_NOTE}</p>
+          </>
+        )}
+      </div>
     </section>
   );
 }
@@ -524,7 +526,7 @@ function Widgets() {
 
 function Flows() {
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zapadalność i odsetki</h2>
@@ -536,22 +538,24 @@ function Flows() {
           ))}
         </div>
       </div>
+      <div className="corpCard">
 
-      <div className="corpLegend">
-        <span className="corpLegend__item">
-          <span className="corpLegend__dot" style={{ background: SEG }} />
-          Wartość nominalna
-        </span>
-        <span className="corpLegend__item">
-          <span className="corpLegend__dot" style={{ background: SEG_SOFT }} />
-          Odsetki
-        </span>
+        <div className="corpLegend">
+          <span className="corpLegend__item">
+            <span className="corpLegend__dot" style={{ background: SEG }} />
+            Wartość nominalna
+          </span>
+          <span className="corpLegend__item">
+            <span className="corpLegend__dot" style={{ background: SEG_SOFT }} />
+            Odsetki
+          </span>
+        </div>
+
+        <FlowsChart />
+
+        <div className="divider" />
+        <p className="corpNote">{CORP_FLOWS_NOTE}</p>
       </div>
-
-      <FlowsChart />
-
-      <div className="divider" />
-      <p className="corpNote">{CORP_FLOWS_NOTE}</p>
     </section>
   );
 }
@@ -560,7 +564,7 @@ function Flows() {
 
 function Closed() {
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zamknięte pozycje</h2>
@@ -571,49 +575,51 @@ function Closed() {
         </div>
         <Select label="Od początku" />
       </div>
+      <div className="corpCard">
 
-      <div className="closedTable">
-        <div className="closedRow closedRow--head">
-          <span>Emitent i seria</span>
-          <span>Okres inwestycji</span>
-          <span>Oprocentowanie</span>
-          <span className="is-num">Zainwestowano</span>
-          <span className="is-num">Otrzymano</span>
-          <span className="is-num">Wynik</span>
-          <span className="is-num">Stopa zwrotu</span>
-        </div>
-        {CORP_CLOSED.map((r) => (
-          <div className="closedRow" key={r.id}>
-            <span className="closedRow__name">
-              {r.name}
-              <span className="closedRow__sub">{r.sub}</span>
-            </span>
-            <span className="closedRow__name">
-              {r.period}
-              <span className="closedRow__sub">{r.periodSub}</span>
-            </span>
-            <span className="closedRow__rate">{r.rate}</span>
-            <span className="is-num">{r.invested}</span>
-            <span className="is-num">{r.received}</span>
-            <span className="is-num is-positive">{r.result}</span>
-            <span className="is-num">{r.irr}</span>
+        <div className="closedTable">
+          <div className="closedRow closedRow--head">
+            <span>Emitent i seria</span>
+            <span>Okres inwestycji</span>
+            <span>Oprocentowanie</span>
+            <span className="is-num">Zainwestowano</span>
+            <span className="is-num">Otrzymano</span>
+            <span className="is-num">Wynik</span>
+            <span className="is-num">Stopa zwrotu</span>
           </div>
-        ))}
-        <div className="closedRow closedRow--total">
-          <span className="closedRow__name">
-            {CORP_CLOSED_TOTAL.name}
-            <span className="closedRow__sub">{CORP_CLOSED_TOTAL.sub}</span>
-          </span>
-          <span />
-          <span />
-          <span className="is-num">{CORP_CLOSED_TOTAL.invested}</span>
-          <span className="is-num">{CORP_CLOSED_TOTAL.received}</span>
-          <span className="is-num is-positive">{CORP_CLOSED_TOTAL.result}</span>
-          <span className="is-num">{CORP_CLOSED_TOTAL.irr}</span>
+          {CORP_CLOSED.map((r) => (
+            <div className="closedRow" key={r.id}>
+              <span className="closedRow__name">
+                {r.name}
+                <span className="closedRow__sub">{r.sub}</span>
+              </span>
+              <span className="closedRow__name">
+                {r.period}
+                <span className="closedRow__sub">{r.periodSub}</span>
+              </span>
+              <span className="closedRow__rate">{r.rate}</span>
+              <span className="is-num">{r.invested}</span>
+              <span className="is-num">{r.received}</span>
+              <span className="is-num is-positive">{r.result}</span>
+              <span className="is-num">{r.irr}</span>
+            </div>
+          ))}
+          <div className="closedRow closedRow--total">
+            <span className="closedRow__name">
+              {CORP_CLOSED_TOTAL.name}
+              <span className="closedRow__sub">{CORP_CLOSED_TOTAL.sub}</span>
+            </span>
+            <span />
+            <span />
+            <span className="is-num">{CORP_CLOSED_TOTAL.invested}</span>
+            <span className="is-num">{CORP_CLOSED_TOTAL.received}</span>
+            <span className="is-num is-positive">{CORP_CLOSED_TOTAL.result}</span>
+            <span className="is-num">{CORP_CLOSED_TOTAL.irr}</span>
+          </div>
         </div>
-      </div>
 
-      <p className="corpNote">{CORP_CLOSED_NOTE}</p>
+        <p className="corpNote">{CORP_CLOSED_NOTE}</p>
+      </div>
     </section>
   );
 }
@@ -622,7 +628,7 @@ function Closed() {
 
 function Ops() {
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Operacje</h2>
@@ -640,35 +646,37 @@ function Ops() {
           </button>
         </div>
       </div>
+      <div className="corpCard">
 
-      <div className="opsTable">
-        <div className="opsRow opsRow--head">
-          <span>Data</span>
-          <span>Typ operacji</span>
-          <span>Instrument</span>
-          <span className="is-num">Kwota</span>
-          <span className="is-num">Status</span>
-        </div>
-        {CORP_OPS.slice(0, 5).map((o) => (
-          <div className="opsRow" key={o.id}>
-            <span>{o.date}</span>
-            <span>{o.type}</span>
-            <span className="opsRow__name">
-              {o.instrument}
-              <span className="opsRow__sub">{o.account}</span>
-            </span>
-            <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
-            <span className="is-num opsRow__status">{o.status}</span>
+        <div className="opsTable">
+          <div className="opsRow opsRow--head">
+            <span>Data</span>
+            <span>Typ operacji</span>
+            <span>Instrument</span>
+            <span className="is-num">Kwota</span>
+            <span className="is-num">Status</span>
           </div>
-        ))}
-      </div>
+          {CORP_OPS.slice(0, 5).map((o) => (
+            <div className="opsRow" key={o.id}>
+              <span>{o.date}</span>
+              <span>{o.type}</span>
+              <span className="opsRow__name">
+                {o.instrument}
+                <span className="opsRow__sub">{o.account}</span>
+              </span>
+              <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
+              <span className="is-num opsRow__status">{o.status}</span>
+            </div>
+          ))}
+        </div>
 
-      <div className="corpSection__foot">
-        <span className="corpNote">{CORP_OPS_FOOT}</span>
-        <span className="corpLink">
-          Zobacz wszystkie w Operacjach
-          <ChevronRight size={14} />
-        </span>
+        <div className="corpSection__foot">
+          <span className="corpNote">{CORP_OPS_FOOT}</span>
+          <span className="corpLink">
+            Zobacz wszystkie w Operacjach
+            <ChevronRight size={14} />
+          </span>
+        </div>
       </div>
     </section>
   );

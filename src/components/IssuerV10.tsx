@@ -43,76 +43,78 @@ function SeriesTable({ serie }: { serie: Serie[] }) {
   const wiersze = [...serie].sort((a, b) => poDacie(a.maturity).localeCompare(poDacie(b.maturity)));
 
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Serie w portfelu</h2>
         </div>
         <Select label="Wykup rosnąco" />
       </div>
+      <div className="corpCard">
 
-      <div className="issTable">
-        <div className="issRow issRow--head">
-          <span>Seria</span>
-          <span className="is-num">Sztuk</span>
-          <span className="is-num">Oprocentowanie</span>
-          <span className="is-num">Wykup</span>
-          <span className="is-num">Wartość pozycji</span>
-          <span className="is-num">Rachunki</span>
-        </div>
+        <div className="issTable">
+          <div className="issRow issRow--head">
+            <span>Seria</span>
+            <span className="is-num">Sztuk</span>
+            <span className="is-num">Oprocentowanie</span>
+            <span className="is-num">Wykup</span>
+            <span className="is-num">Wartość pozycji</span>
+            <span className="is-num">Rachunki</span>
+          </div>
 
-        {wiersze.map((s) => {
-          const konta = s.accounts ?? [];
-          const wiele = konta.length > 1;
-          const rozwiniete = wiele && open[s.id];
-          return (
-            <div className="issGroup" key={s.id}>
-              <div className="issRow">
-                <span className="issRow__name">
-                  {s.ticker} · {s.name}
-                  {s.base && <span className="issRow__sub">{s.base}</span>}
-                </span>
-                <span className="is-num">{s.count}</span>
-                <span className="is-num">{procent(s.coupon)}</span>
-                <span className="is-num">{s.maturity}</span>
-                <span className="is-num">{kwota(s.value, 'PLN')}</span>
-                {wiele ? (
-                  <button
-                    type="button"
-                    className="issRow__toggle"
-                    aria-expanded={rozwiniete}
-                    onClick={() => setOpen((o) => ({ ...o, [s.id]: !o[s.id] }))}
-                  >
-                    {odmiana(konta.length, RACHUNKI)}
-                    {rozwiniete ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </button>
-                ) : (
-                  <span className="is-num issRow__muted">{konta[0]?.account ?? '—'}</span>
-                )}
+          {wiersze.map((s) => {
+            const konta = s.accounts ?? [];
+            const wiele = konta.length > 1;
+            const rozwiniete = wiele && open[s.id];
+            return (
+              <div className="issGroup" key={s.id}>
+                <div className="issRow">
+                  <span className="issRow__name">
+                    {s.ticker} · {s.name}
+                    {s.base && <span className="issRow__sub">{s.base}</span>}
+                  </span>
+                  <span className="is-num">{s.count}</span>
+                  <span className="is-num">{procent(s.coupon)}</span>
+                  <span className="is-num">{s.maturity}</span>
+                  <span className="is-num">{kwota(s.value, 'PLN')}</span>
+                  {wiele ? (
+                    <button
+                      type="button"
+                      className="issRow__toggle"
+                      aria-expanded={rozwiniete}
+                      onClick={() => setOpen((o) => ({ ...o, [s.id]: !o[s.id] }))}
+                    >
+                      {odmiana(konta.length, RACHUNKI)}
+                      {rozwiniete ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </button>
+                  ) : (
+                    <span className="is-num issRow__muted">{konta[0]?.account ?? '—'}</span>
+                  )}
+                </div>
+
+                {rozwiniete &&
+                  konta.map((k) => (
+                    <div className="issRow issRow--account" key={k.account}>
+                      <span className="issRow__muted">{k.account}</span>
+                      <span className="is-num">{k.count}</span>
+                      <span />
+                      <span />
+                      <span className="is-num">{kwota(k.value, 'PLN')}</span>
+                      <span />
+                    </div>
+                  ))}
               </div>
+            );
+          })}
 
-              {rozwiniete &&
-                konta.map((k) => (
-                  <div className="issRow issRow--account" key={k.account}>
-                    <span className="issRow__muted">{k.account}</span>
-                    <span className="is-num">{k.count}</span>
-                    <span />
-                    <span />
-                    <span className="is-num">{kwota(k.value, 'PLN')}</span>
-                    <span />
-                  </div>
-                ))}
-            </div>
-          );
-        })}
-
-        <div className="issRow issRow--total">
-          <span>Razem · {odmiana(serie.length, SERIE)}</span>
-          <span className="is-num">{e.sztuk}</span>
-          <span className="is-num">{procent(e.coupon)}</span>
-          <span className="is-num">{e.najblizszyWykup}</span>
-          <span className="is-num">{kwota(e.value, 'PLN')}</span>
-          <span className="is-num">{odmiana(e.rachunki, RACHUNKI)}</span>
+          <div className="issRow issRow--total">
+            <span>Razem · {odmiana(serie.length, SERIE)}</span>
+            <span className="is-num">{e.sztuk}</span>
+            <span className="is-num">{procent(e.coupon)}</span>
+            <span className="is-num">{e.najblizszyWykup}</span>
+            <span className="is-num">{kwota(e.value, 'PLN')}</span>
+            <span className="is-num">{odmiana(e.rachunki, RACHUNKI)}</span>
+          </div>
         </div>
       </div>
     </section>
@@ -256,44 +258,46 @@ export function IssuerV10({
           <SeriesTable serie={e.serie} />
 
           {zamkniete.length > 0 && (
-            <section className="corpSection corpSection--card" ref={zamknieteRef}>
+            <section className="corpSection" ref={zamknieteRef}>
               <div className="corpSection__head">
                 <div className="corpSection__text">
                   <h2 className="sectionTitle">Zamknięte pozycje u tego emitenta</h2>
                 </div>
                 <Select label="Od początku" />
               </div>
+              <div className="corpCard">
 
-              <div className="closedTable">
-                <div className="closedRow closedRow--issuer closedRow--head">
-                  <span>Seria</span>
-                  <span className="is-num">Okres inwestycji</span>
-                  <span className="is-num">Zainwestowano</span>
-                  <span className="is-num">Otrzymano</span>
-                  <span className="is-num">Wynik</span>
-                  <span className="is-num">Stopa zwrotu</span>
-                </div>
-                {zamkniete.map((r) => (
-                  <div className="closedRow closedRow--issuer" key={r.id}>
-                    <span className="closedRow__name">
-                      {r.short}
-                      <span className="closedRow__sub">{r.tx}</span>
-                    </span>
-                    <span className="closedRow__name is-num">
-                      {r.period}
-                      <span className="closedRow__sub">{r.periodSub}</span>
-                    </span>
-                    <span className="is-num">{r.invested}</span>
-                    <span className="is-num">{r.received}</span>
-                    <span className="is-num is-positive">{r.result}</span>
-                    <span className="is-num">{r.irr}</span>
+                <div className="closedTable">
+                  <div className="closedRow closedRow--issuer closedRow--head">
+                    <span>Seria</span>
+                    <span className="is-num">Okres inwestycji</span>
+                    <span className="is-num">Zainwestowano</span>
+                    <span className="is-num">Otrzymano</span>
+                    <span className="is-num">Wynik</span>
+                    <span className="is-num">Stopa zwrotu</span>
                   </div>
-                ))}
+                  {zamkniete.map((r) => (
+                    <div className="closedRow closedRow--issuer" key={r.id}>
+                      <span className="closedRow__name">
+                        {r.short}
+                        <span className="closedRow__sub">{r.tx}</span>
+                      </span>
+                      <span className="closedRow__name is-num">
+                        {r.period}
+                        <span className="closedRow__sub">{r.periodSub}</span>
+                      </span>
+                      <span className="is-num">{r.invested}</span>
+                      <span className="is-num">{r.received}</span>
+                      <span className="is-num is-positive">{r.result}</span>
+                      <span className="is-num">{r.irr}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
           )}
 
-          <section className="corpSection corpSection--card">
+          <section className="corpSection">
             <div className="corpSection__head">
               <div className="corpSection__text">
                 <h2 className="sectionTitle">Operacje</h2>
@@ -307,30 +311,32 @@ export function IssuerV10({
                 </button>
               </div>
             </div>
+            <div className="corpCard">
 
-            <div className="opsTable">
-              <div className="opsRow opsRow--head">
-                <span>Data</span>
-                <span>Typ operacji</span>
-                <span>Instrument</span>
-                <span className="is-num">Kwota</span>
-                <span className="is-num">Status</span>
+              <div className="opsTable">
+                <div className="opsRow opsRow--head">
+                  <span>Data</span>
+                  <span>Typ operacji</span>
+                  <span>Instrument</span>
+                  <span className="is-num">Kwota</span>
+                  <span className="is-num">Status</span>
+                </div>
+                {operacje.map((o) => {
+                  const s = CORP_SERIES.find((x) => x.id === o.seriesId);
+                  return (
+                    <div className="opsRow" key={o.id}>
+                      <span>{o.date}</span>
+                      <span>{o.type}</span>
+                      <span className="opsRow__name">
+                        {s ? `${s.ticker} · ${s.name}` : o.instrument}
+                        <span className="opsRow__sub">{o.account}</span>
+                      </span>
+                      <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
+                      <span className="is-num opsRow__status">{o.status}</span>
+                    </div>
+                  );
+                })}
               </div>
-              {operacje.map((o) => {
-                const s = CORP_SERIES.find((x) => x.id === o.seriesId);
-                return (
-                  <div className="opsRow" key={o.id}>
-                    <span>{o.date}</span>
-                    <span>{o.type}</span>
-                    <span className="opsRow__name">
-                      {s ? `${s.ticker} · ${s.name}` : o.instrument}
-                      <span className="opsRow__sub">{o.account}</span>
-                    </span>
-                    <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
-                    <span className="is-num opsRow__status">{o.status}</span>
-                  </div>
-                );
-              })}
             </div>
           </section>
         </div>

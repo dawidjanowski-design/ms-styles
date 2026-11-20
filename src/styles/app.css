@@ -1785,15 +1785,17 @@ select.field__control {
 .corpCounter strong { font-weight: 500; color: var(--ink); }
 
 /* ---- sekcje ---- */
+/* Sekcja jak na portfelu: tytul i kontrolki nad karta, w karcie sama
+   tresc. Odstep naglowek–karta i padding karty z „Wyniku portfela". */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }
-.corpSection--card {
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 24px;
+.corpCard {
+  display: flex; flex-direction: column; gap: 16px;
+  background: var(--card-bg); border-radius: var(--card-radius); padding: 20px;
   box-shadow: var(--shadow-card);
 }
-/* Wszystkie sekcje maja ten sam rytm wewnetrzny — naglowek, tresc, notka. */
-.corpSection--card { gap: 16px; }
 .corpSection__head {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: var(--control-h, 42px);
 }
 .corpSection__text { display: flex; flex-direction: column; }
 .corpSection__sub { margin: 2px 0 0; font-size: 13px; color: var(--muted); max-width: 86ch; }
