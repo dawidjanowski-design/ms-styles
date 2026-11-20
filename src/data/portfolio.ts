@@ -508,9 +508,9 @@ export type V10AccountGroup = {
   title: string;
   sub: string;
   accounts: V10Account[];
-  /** dzialanie grupy, przy tytule po prawej: dodanie kolejnego rachunku
-      albo otwarcie brakujacego typu. Nazwa rozni sie celowo. */
-  action?: string;
+  /** kafelek dzialania — kolejna komorka siatki, przerywanym obrysem,
+      bo to miejsce na rachunek, ktorego jeszcze nie ma */
+  add?: { title: string; sub: string };
 };
 
 export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
@@ -549,7 +549,10 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         ],
       },
     ],
-    action: 'Dodaj rachunek',
+    add: {
+      title: 'Dodaj kolejny rachunek maklerski',
+      sub: 'Przyda się, gdy chcesz oddzielić środki na emisje od reszty portfela.',
+    },
   },
   {
     id: 'am',
@@ -571,7 +574,10 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         foot: { label: 'Ryzyko', value: '2 / 7' },
       },
     ],
-    action: 'Załóż strategię',
+    add: {
+      title: 'Załóż nową strategię',
+      sub: 'Dobierzemy skład do Twojego profilu. Minimalna wpłata zależy od strategii.',
+    },
   },
   {
     id: 'oki',
@@ -619,7 +625,10 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         ],
       },
     ],
-    action: 'Otwórz IKZE',
+    add: {
+      title: 'Otwórz rachunek IKZE',
+      sub: 'Nie masz jeszcze IKZE. Wpłaty odliczysz od podstawy opodatkowania w rocznym PIT.',
+    },
   },
 ];
 

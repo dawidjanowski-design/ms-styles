@@ -1720,4 +1720,15 @@ select.field__control {
    pasek limitu ma czytac sie jako „idzie dobrze", a nie jako ostrzezenie. */
 .v10Limit__fill { display: block; height: 100%; border-radius: 3px; background: var(--c-corp); }
 
+/* Kafelek dzialania: przerywany obrys i szare tlo, bo to jeszcze nie jest
+   rachunek. Rozciaga sie na cala wysokosc rzedu, zeby siatka byla rowna. */
+.v10Add {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; padding: 32px 28px; text-align: center;
+  border: 1px dashed #dcdcdc; border-radius: var(--card-radius); background: var(--screen-bg);
+}
+.v10Add__plus { font-size: 16px; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+.v10Add__title { font-size: 14px; font-weight: 500; color: var(--ink); }
+.v10Add__sub { font-size: 13px; line-height: 20px; color: var(--muted); max-width: 44ch; }
+
 
