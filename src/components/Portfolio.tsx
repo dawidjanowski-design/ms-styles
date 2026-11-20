@@ -10,7 +10,6 @@ import {
   V10_ASSETS_NOTE,
   V10_CASH_ACTIONS,
   V10_ACCOUNT_GROUPS,
-  V10_ACCOUNT_NOTES,
   V10_LEGEND_ORDER,
   V10_NAMES,
   type V10Account,
@@ -485,11 +484,6 @@ function AccountsV10({ styleId }: { styleId: StyleId }) {
           </div>
         </section>
       ))}
-      <div className="v10Notes">
-        {V10_ACCOUNT_NOTES.map((n) => (
-          <p key={n.slice(0, 24)}>{n}</p>
-        ))}
-      </div>
     </div>
   );
 }

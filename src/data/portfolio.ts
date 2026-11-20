@@ -623,15 +623,3 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
   },
 ];
 
-export const V10_ACCOUNT_NOTES = [
-  'Rozróżniamy dwa działania: otwarcie brakującego typu rachunku („Otwórz IKZE” — masz go albo ' +
-    'nie) i dodanie kolejnego rachunku lub strategii („Dodaj rachunek”, „Załóż strategię” — ' +
-    'możesz mieć ich kilka). Dlatego nazwy przycisków są inne. Przy OKI przycisku nie ma: ' +
-    'to konto jest jedno.',
-  'Kolejność klas aktywów jest ta sama na każdym rachunku, a wolna gotówka zawsze zamyka listę. ' +
-    'Klas, których na rachunku nie ma, nie wypisujemy — zamiast pustych etykiet jest cienki ' +
-    'pasek struktury nad listą.',
-  'Rachunek żony zniknął z tej listy — to rachunek innej osoby, prowadzony z pełnomocnictwa, ' +
-    'więc należy do przełącznika kontekstu, nie do portfela klienta. Bez niego suma rachunków ' +
-    'zgadza się z wartością portfela co do złotówki.',
-];

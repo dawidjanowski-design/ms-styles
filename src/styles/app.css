@@ -1721,5 +1721,3 @@ select.field__control {
 .v10Limit__fill { display: block; height: 100%; border-radius: 3px; background: var(--c-corp); }
 
 
-.v10Notes { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
-.v10Notes p { margin: 0; font-size: 12px; line-height: 18px; color: var(--muted); }
