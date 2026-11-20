@@ -28,6 +28,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
+import { AlertTriangle, ChevronRight, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -407,9 +408,7 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
         {account.badge && <span className="v10Acct__badge">{account.badge}</span>}
         <span className="v10Acct__no">· {account.number}</span>
         <Amount int={account.amount} dec={account.decimals} className="v10Acct__amount" />
-        <span className="v10Acct__chev" aria-hidden="true">
-          ›
-        </span>
+        <ChevronRight size={16} className="v10Acct__chev" />
       </div>
 
       {account.limit && (
@@ -439,18 +438,19 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
             />
             <span className="v10Pos__label">{p.label}</span>
             <span className="v10Pos__value">{p.value}</span>
-            <span className="v10Pos__chev" aria-hidden="true">
-              ›
-            </span>
+            <ChevronRight size={14} className="v10Pos__chev" />
           </div>
         ))}
       </div>
 
       <div className="v10Acct__foot">
-        <span className="btn btn--small">Zobacz szczegóły ›</span>
+        <span className="btn btn--small">
+          Zobacz szczegóły
+          <ChevronRight size={14} />
+        </span>
         {account.foot && (
           <span className={`v10Acct__meta ${account.foot.warn ? 'is-warn' : ''}`}>
-            {account.foot.warn && <span aria-hidden="true">⚠ </span>}
+            {account.foot.warn && <AlertTriangle size={14} />}
             {account.foot.label} <strong>{account.foot.value}</strong>
           </span>
         )}
@@ -466,8 +466,8 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
 function V10AddTile({ title, sub }: { title: string; sub: string }) {
   return (
     <article className="v10Add">
-      <span className="v10Add__plus" aria-hidden="true">
-        +
+      <span className="v10Add__plus">
+        <Plus size={18} />
       </span>
       <span className="v10Add__title">{title}</span>
       <span className="v10Add__sub">{sub}</span>

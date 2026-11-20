@@ -26,6 +26,14 @@ import {
 } from '../data/corpV10';
 import { CURRENCIES, type Currency } from '../data/currencies';
 import { Amount, Pills } from './ui';
+import {
+  ChevronDown,
+  ChevronRight,
+  Download,
+  Maximize2,
+  MoreHorizontal,
+  SortNone,
+} from '../icons/Feather';
 
 /* Kolor klasy bierzemy z palety nr 2 — ten sam, co na wykresie portfela. */
 const SEG = '#046816';
@@ -34,7 +42,7 @@ function Select({ label }: { label: string }) {
   return (
     <button type="button" className="selectBtn">
       {label}
-      <span aria-hidden="true">⌄</span>
+      <ChevronDown size={14} className="icon--muted" />
     </button>
   );
 }
@@ -101,8 +109,9 @@ function StructureRow({ row, total }: { row: CorpRow; total?: boolean }) {
       <span className="corpRow__issuer">
         {row.issuer}
         {!total && (
-          <span className="corpRow__expand" aria-hidden="true">
-            rozwiń serie ⌄
+          <span className="corpRow__expand">
+            rozwiń serie
+            <ChevronDown size={12} />
           </span>
         )}
       </span>
@@ -136,7 +145,8 @@ function Structure() {
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
           <button type="button" className="btn btn--small">
-            ⤢ Pełna tabela
+            <Maximize2 size={14} />
+            Pełna tabela
           </button>
         </div>
       </div>
@@ -159,16 +169,13 @@ function Structure() {
               }`}
             >
               {c.label}
-              {c.sort && (
-                <span className="corpRow__sort" aria-hidden="true">
-                  {c.active ? '▾' : '⇅'}
-                </span>
-              )}
-              {c.menu && (
-                <span className="corpRow__menu" aria-hidden="true">
-                  ⋯
-                </span>
-              )}
+              {c.sort &&
+                (c.active ? (
+                  <ChevronDown size={14} className="corpRow__sort is-on" />
+                ) : (
+                  <SortNone size={14} className="corpRow__sort" />
+                ))}
+              {c.menu && <MoreHorizontal size={16} className="corpRow__menu" />}
             </span>
           ))}
         </div>
@@ -382,6 +389,7 @@ function Ops() {
             <Select key={f} label={f} />
           ))}
           <button type="button" className="btn btn--small">
+            <Download size={14} />
             Eksport XLS
           </button>
         </div>
@@ -412,7 +420,8 @@ function Ops() {
       <div className="corpSection__foot">
         <span className="corpNote">{CORP_OPS_FOOT}</span>
         <span className="corpLink">
-          Zobacz wszystkie w Operacjach<span aria-hidden="true">›</span>
+          Zobacz wszystkie w Operacjach
+          <ChevronRight size={14} />
         </span>
       </div>
     </section>
@@ -438,15 +447,11 @@ export function CorpBondsV10({
             <button type="button" className="crumbs__link" onClick={onBack}>
               Portfel
             </button>
-            <span className="crumbs__sep" aria-hidden="true">
-              ›
-            </span>
+            <ChevronRight size={13} className="crumbs__sep" />
             <button type="button" className="crumbs__link" onClick={onBack}>
               Aktywa
             </button>
-            <span className="crumbs__sep" aria-hidden="true">
-              ›
-            </span>
+            <ChevronRight size={13} className="crumbs__sep" />
             <span className="crumbs__current">{CORP_HEAD.title}</span>
           </nav>
 
@@ -456,9 +461,7 @@ export function CorpBondsV10({
                   ten sam wzorzec co przelacznik rachunku. */}
               <h1 className="corpHead__title">
                 {CORP_HEAD.title}
-                <span className="corpHead__chev" aria-hidden="true">
-                  ⌄
-                </span>
+                <ChevronDown size={18} className="corpHead__chev" />
               </h1>
               <p className="corpHead__sub">{CORP_HEAD.sub}</p>
             </div>

@@ -1905,3 +1905,19 @@ select.field__control {
 .closedRow .is-num, .opsRow .is-num { text-align: right; }
 .closedRow .is-positive, .opsRow .is-positive { color: var(--c-corp); }
 .opsRow__status { color: var(--muted); font-size: 12px; }
+
+/* ---- ikony Feather ----
+   Ikona idzie w linii z tekstem i bierze jego kolor; `flex: none` pilnuje,
+   zeby nigdy nie sciskala sie przy waskiej kolumnie. */
+.icon { flex: none; display: block; }
+.icon--muted { color: var(--muted); }
+.btn .icon, .corpLink .icon, .selectBtn .icon { margin-right: -2px; }
+.btn, .selectBtn, .corpLink { display: inline-flex; align-items: center; gap: 8px; }
+.corpRow__expand { display: inline-flex; align-items: center; gap: 4px; }
+.corpRow__sort, .corpRow__menu { margin-left: 6px; color: var(--sub-faint); }
+.corpRow__sort.is-on { color: var(--ink); }
+.corpRow--head .corpRow__cell, .corpRow--head .corpRow__issuer { display: inline-flex; align-items: center; }
+.corpRow--head .corpRow__cell--num { justify-content: flex-end; }
+.crumbs__sep { color: var(--crumb-sep); }
+.v10Acct__meta { display: inline-flex; align-items: center; gap: 6px; }
+.v10Add__plus { display: inline-flex; color: var(--ink); }
