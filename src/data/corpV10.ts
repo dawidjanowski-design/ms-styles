@@ -81,9 +81,12 @@ export const CORP_COLS = [
   { key: 'share', label: 'Udział', sort: true, menu: false, active: true },
 ];
 
+export const CORP_STRUCTURE_SUB = 'Przełącznik dotyczy wyłącznie tej sekcji';
+
 export const CORP_STRUCTURE_NOTE =
   'Sortujesz klikając w nagłówek kolumny — kolejne kliknięcie odwraca kierunek. ' +
-  'Przy kolumnie wartości zamiast sortowania są trzy kropki z dodatkowymi akcjami.';
+  'Przy kolumnie wartości zamiast sortowania są trzy kropki z dodatkowymi akcjami ' +
+  '(m.in. wartość nominalna).';
 
 /* ------------------------------ analiza portfela ------------------------------ */
 
@@ -93,8 +96,8 @@ export type Widget = {
   filters: string[];
   value: string;
   sub: string;
-  /** slupki: wysokosc 0-1, podpis pierwszego i ostatniego */
-  bars?: { heights: number[]; from: string; to: string };
+  /** slupki miesieczne z kwotami — tooltip czyta je wprost */
+  bars?: { label: string; value: number; text: string }[];
   /** rozbicie wyniku na skladniki */
   parts?: { label: string; value: string; negative?: boolean }[];
 };
@@ -106,11 +109,20 @@ export const CORP_WIDGETS: Widget[] = [
     filters: ['12 miesięcy', 'Wszystkie pozycje'],
     value: '48 220,00 PLN',
     sub: 'w tym 12 480,00 PLN z pozycji zamkniętych',
-    bars: {
-      heights: [0.42, 0.55, 0.38, 0.62, 0.5, 0.72, 0.45, 0.58, 0.8, 0.52, 0.66, 1],
-      from: 'XI 2025',
-      to: 'X 2026',
-    },
+    bars: [
+      { label: 'XI 2025', value: 2980, text: '2 980,00 PLN' },
+      { label: 'XII 2025', value: 3420, text: '3 420,00 PLN' },
+      { label: 'I 2026', value: 2640, text: '2 640,00 PLN' },
+      { label: 'II 2026', value: 3880, text: '3 880,00 PLN' },
+      { label: 'III 2026', value: 3240, text: '3 240,00 PLN' },
+      { label: 'IV 2026', value: 4460, text: '4 460,00 PLN' },
+      { label: 'V 2026', value: 2860, text: '2 860,00 PLN' },
+      { label: 'VI 2026', value: 3640, text: '3 640,00 PLN' },
+      { label: 'VII 2026', value: 5120, text: '5 120,00 PLN' },
+      { label: 'VIII 2026', value: 3320, text: '3 320,00 PLN' },
+      { label: 'IX 2026', value: 4180, text: '4 180,00 PLN' },
+      { label: 'X 2026', value: 8480, text: '8 480,00 PLN' },
+    ],
   },
   {
     id: 'irr',
@@ -135,24 +147,32 @@ export const CORP_WIDGETS: Widget[] = [
 
 /* ---------------------------- zapadalnosc i odsetki ---------------------------- */
 
-export type FlowMonth = { label: string; nominal: number; interest: number };
+export type FlowMonth = {
+  label: string;
+  /** pelny podpis w dymku */
+  full: string;
+  nominal: number;
+  interest: number;
+  /** co sie dzieje w tym miesiacu — druga linia dymka */
+  note?: string;
+};
 
-/* Skala jest wspolna dla wszystkich slupkow — inaczej miesiac z jednym
-   wykupem wygladalby jak miesiac z trzema. */
+/* Kwoty, nie ulamki: wysokosc slupka liczy komponent wzgledem najwiekszego
+   miesiaca, a dymek pokazuje te same liczby, ktore rysuja wykres. */
 export const CORP_FLOWS: FlowMonth[] = [
-  { label: 'XI', nominal: 0, interest: 0.06 },
-  { label: 'XII', nominal: 0.52, interest: 0.08 },
-  { label: 'I', nominal: 0, interest: 0.05 },
-  { label: 'II', nominal: 0, interest: 0.07 },
-  { label: 'III', nominal: 0, interest: 0.06 },
-  { label: 'IV', nominal: 0, interest: 0.08 },
-  { label: 'V', nominal: 0, interest: 0.05 },
-  { label: 'VI', nominal: 0.4, interest: 0.07 },
-  { label: 'VII', nominal: 0, interest: 0.04 },
-  { label: 'VIII', nominal: 0, interest: 0.07 },
-  { label: 'IX', nominal: 0, interest: 0.06 },
-  { label: 'X', nominal: 0, interest: 0.08 },
-  { label: 'Później', nominal: 0.82, interest: 0.18 },
+  { label: 'XI', full: 'listopad 2026', nominal: 0, interest: 4120 },
+  { label: 'XII', full: 'grudzień 2026', nominal: 200000, interest: 5240, note: 'Cavatina Holding, seria D — wykup 18.12' },
+  { label: 'I', full: 'styczeń 2027', nominal: 0, interest: 3980 },
+  { label: 'II', full: 'luty 2027', nominal: 0, interest: 4310 },
+  { label: 'III', full: 'marzec 2027', nominal: 0, interest: 4120 },
+  { label: 'IV', full: 'kwiecień 2027', nominal: 0, interest: 4480 },
+  { label: 'V', full: 'maj 2027', nominal: 0, interest: 3960 },
+  { label: 'VI', full: 'czerwiec 2027', nominal: 720000, interest: 5680, note: 'VEHIS, serie K i M — wykup 09.06' },
+  { label: 'VII', full: 'lipiec 2027', nominal: 0, interest: 3840 },
+  { label: 'VIII', full: 'sierpień 2027', nominal: 0, interest: 4260 },
+  { label: 'IX', full: 'wrzesień 2027', nominal: 0, interest: 4010 },
+  { label: 'X', full: 'październik 2027', nominal: 0, interest: 4390 },
+  { label: 'Później', full: 'po październiku 2027', nominal: 872922, interest: 18640, note: 'Wszystkie przepływy po wybranym horyzoncie' },
 ];
 
 export const CORP_FLOWS_FILTERS = ['Nominał i odsetki', '12 miesięcy · po miesiącach', 'Kalendarz'];

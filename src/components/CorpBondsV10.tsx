@@ -3,7 +3,7 @@
    uklad sekcji i wlasne dane, wiec mieszanie go z poprzednia wersja
    zrobiloby z obu nieczytelna plataninke. */
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   CORP_CLOSED,
   CORP_CLOSED_NOTE,
@@ -18,11 +18,13 @@ import {
   CORP_OPS_FOOT,
   CORP_ROWS,
   CORP_STRUCTURE_NOTE,
+  CORP_STRUCTURE_SUB,
   CORP_SUMMARY,
   CORP_TOTAL,
   CORP_WIDGETS,
   type CorpRow,
   type Metric,
+  type Widget,
 } from '../data/corpV10';
 import { CURRENCIES, type Currency } from '../data/currencies';
 import { Amount, Pills } from './ui';
@@ -136,12 +138,14 @@ function StructureRow({ row, total }: { row: CorpRow; total?: boolean }) {
 
 function Structure() {
   const [grouping, setGrouping] = useState('Emitenci');
-  const [mode, setMode] = useState('Wartość bieżąca i rentowność');
 
   return (
-    <section className="corpSection">
+    <section className="corpSection corpSection--card">
       <div className="corpSection__head">
-        <h2 className="sectionTitle">Struktura portfela</h2>
+        <div className="corpSection__text">
+          <h2 className="sectionTitle">Struktura portfela</h2>
+          <p className="corpSection__sub">{CORP_STRUCTURE_SUB}</p>
+        </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
           <button type="button" className="btn btn--small">
@@ -150,12 +154,6 @@ function Structure() {
           </button>
         </div>
       </div>
-
-      <Pills
-        items={['Wartość bieżąca i rentowność', 'Wartość nominalna i oprocentowanie']}
-        value={mode}
-        onChange={setMode}
-      />
 
       <div className="corpTable">
         <div className="corpRow corpRow--head">
@@ -190,6 +188,122 @@ function Structure() {
   );
 }
 
+/* ----------------------------- wykresy ----------------------------- */
+
+/* Dymek siedzi w kontenerze wykresu i jezdzi za aktywnym slupkiem, zamiast
+   podazac za kursorem: przy waskich slupkach trzesie sie duzo mniej, a
+   czytelnik i tak patrzy na slupek, nie na kursor. */
+function Tooltip({ at, children }: { at: number; children: ReactNode }) {
+  return (
+    <div
+      className="chartTip"
+      style={{ left: `${at}%` }}
+      role="status"
+    >
+      {children}
+    </div>
+  );
+}
+
+function InterestChart({ bars }: { bars: NonNullable<Widget['bars']> }) {
+  const [hot, setHot] = useState<number | null>(null);
+  const max = Math.max(...bars.map((b) => b.value));
+
+  return (
+    <div className="corpSpark" onMouseLeave={() => setHot(null)}>
+      {hot !== null && (
+        <Tooltip at={((hot + 0.5) / bars.length) * 100}>
+          <span className="chartTip__title">{bars[hot].label}</span>
+          <span className="chartTip__row">
+            Wypłacone odsetki<strong>{bars[hot].text}</strong>
+          </span>
+        </Tooltip>
+      )}
+      <div className="corpSpark__bars">
+        {bars.map((b, i) => (
+          <button
+            type="button"
+            key={b.label}
+            className={`corpSpark__slot ${hot === i ? 'is-hot' : ''}`}
+            onMouseEnter={() => setHot(i)}
+            onFocus={() => setHot(i)}
+            onBlur={() => setHot(null)}
+            aria-label={`${b.label}: ${b.text}`}
+          >
+            <span
+              className="corpSpark__bar"
+              style={{ height: `${Math.max(8, (b.value / max) * 100)}%` }}
+            />
+          </button>
+        ))}
+      </div>
+      <div className="corpSpark__axis">
+        <span>{bars[0].label}</span>
+        <span>{bars[bars.length - 1].label}</span>
+      </div>
+    </div>
+  );
+}
+
+const zl = (v: number) =>
+  `${v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')},00 PLN`;
+
+function FlowsChart() {
+  const [hot, setHot] = useState<number | null>(null);
+  const max = Math.max(...CORP_FLOWS.map((m) => m.nominal + m.interest));
+
+  return (
+    <div className="corpFlows" onMouseLeave={() => setHot(null)}>
+      {hot !== null && (
+        <Tooltip at={((hot + 0.5) / CORP_FLOWS.length) * 100}>
+          <span className="chartTip__title">{CORP_FLOWS[hot].full}</span>
+          {CORP_FLOWS[hot].nominal > 0 && (
+            <span className="chartTip__row">
+              <span className="chartTip__dot" style={{ background: SEG }} />
+              Wartość nominalna<strong>{zl(CORP_FLOWS[hot].nominal)}</strong>
+            </span>
+          )}
+          <span className="chartTip__row">
+            <span className="chartTip__dot" style={{ background: 'var(--progress-track)' }} />
+            Odsetki<strong>{zl(CORP_FLOWS[hot].interest)}</strong>
+          </span>
+          {CORP_FLOWS[hot].note && (
+            <span className="chartTip__note">{CORP_FLOWS[hot].note}</span>
+          )}
+        </Tooltip>
+      )}
+      {CORP_FLOWS.map((m, i) => (
+        <button
+          type="button"
+          className={`corpFlow ${hot === i ? 'is-hot' : ''}`}
+          key={m.label}
+          onMouseEnter={() => setHot(i)}
+          onFocus={() => setHot(i)}
+          onBlur={() => setHot(null)}
+          aria-label={`${m.full}: nominał ${zl(m.nominal)}, odsetki ${zl(m.interest)}`}
+        >
+          <span className="corpFlow__stack">
+            {m.nominal > 0 && (
+              <span
+                className="corpFlow__bar"
+                style={{ height: `${(m.nominal / max) * 100}%`, background: SEG }}
+              />
+            )}
+            <span
+              className="corpFlow__bar"
+              style={{
+                height: `${Math.max(2, (m.interest / max) * 100)}%`,
+                background: 'var(--progress-track)',
+              }}
+            />
+          </span>
+          <span className="corpFlow__label">{m.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /* ----------------------------- analiza portfela ----------------------------- */
 
 function Widgets() {
@@ -210,26 +324,7 @@ function Widgets() {
             <div className="corpWidget__value">{w.value}</div>
             <span className="corpWidget__sub">{w.sub}</span>
 
-            {w.bars && (
-              <div className="corpSpark">
-                <div className="corpSpark__bars">
-                  {w.bars.heights.map((h, i) => (
-                    <span
-                      key={i}
-                      className="corpSpark__bar"
-                      style={{
-                        height: `${Math.round(h * 100)}%`,
-                        background: i === w.bars!.heights.length - 1 ? SEG : 'var(--progress-track)',
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="corpSpark__axis">
-                  <span>{w.bars.from}</span>
-                  <span>{w.bars.to}</span>
-                </div>
-              </div>
-            )}
+            {w.bars && <InterestChart bars={w.bars} />}
 
             {w.parts && (
               <>
@@ -281,28 +376,7 @@ function Flows() {
         </span>
       </div>
 
-      <div className="corpFlows">
-        {CORP_FLOWS.map((m) => (
-          <div className="corpFlow" key={m.label}>
-            <div className="corpFlow__stack">
-              {m.nominal > 0 && (
-                <span
-                  className="corpFlow__bar"
-                  style={{ height: `${Math.round(m.nominal * 100)}%`, background: SEG }}
-                />
-              )}
-              <span
-                className="corpFlow__bar"
-                style={{
-                  height: `${Math.round(m.interest * 100)}%`,
-                  background: 'var(--progress-track)',
-                }}
-              />
-            </div>
-            <span className="corpFlow__label">{m.label}</span>
-          </div>
-        ))}
-      </div>
+      <FlowsChart />
 
       <div className="divider" />
       <p className="corpNote">{CORP_FLOWS_NOTE}</p>

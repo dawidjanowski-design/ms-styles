@@ -1803,9 +1803,11 @@ select.field__control {
 /* ---- sekcje ---- */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }
 .corpSection--card {
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 20px;
+  background: var(--card-bg); border-radius: var(--card-radius); padding: 24px;
   box-shadow: var(--shadow-card);
 }
+/* Wszystkie sekcje maja ten sam rytm wewnetrzny — naglowek, tresc, notka. */
+.corpSection--card { gap: 16px; }
 .corpSection__head {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
 }
@@ -1820,10 +1822,7 @@ select.field__control {
 }
 
 /* ---- tabela struktury ---- */
-.corpTable {
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 4px 20px 8px;
-  box-shadow: var(--shadow-card);
-}
+.corpTable { display: flex; flex-direction: column; }
 .corpRow {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr 1.4fr 1.2fr;
   align-items: center; gap: 16px; padding: 12px 0;
@@ -1867,17 +1866,33 @@ select.field__control {
 .corpPart__value { font-size: 12px; font-weight: 500; color: var(--ink); }
 .corpPart__value.is-negative { color: #c0392b; }
 
-.corpSpark { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-.corpSpark__bars { display: flex; align-items: flex-end; gap: 4px; height: 52px; }
-.corpSpark__bar { flex: 1; border-radius: 2px; min-height: 4px; }
+.corpSpark { position: relative; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.corpSpark__bars { display: flex; align-items: flex-end; gap: 4px; height: 56px; }
+/* Slot jest celem kursora na cala wysokosc wykresu — trafienie w 6-pikselowy
+   slupek byloby loteria. */
+.corpSpark__slot {
+  flex: 1; height: 100%; padding: 0; border: 0; background: none; cursor: pointer;
+  display: flex; align-items: flex-end;
+}
+.corpSpark__bar {
+  width: 100%; border-radius: 2px; min-height: 4px; background: var(--progress-track);
+  transition: background 120ms ease;
+}
+.corpSpark__slot:hover .corpSpark__bar,
+.corpSpark__slot.is-hot .corpSpark__bar { background: var(--c-corp); }
 .corpSpark__axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--sub-faint); }
 
 /* ---- zapadalnosc ---- */
 .corpLegend { display: flex; gap: 20px; }
 .corpLegend__item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
 .corpLegend__dot { width: 8px; height: 8px; border-radius: 2px; }
-.corpFlows { display: flex; align-items: flex-end; gap: 8px; height: 200px; }
-.corpFlow { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; }
+.corpFlows { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 220px; }
+.corpFlow {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;
+  padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px;
+  transition: background 120ms ease;
+}
+.corpFlow:hover, .corpFlow.is-hot { background: var(--screen-bg); }
 .corpFlow__stack {
   flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
 }
@@ -1921,3 +1936,23 @@ select.field__control {
 .crumbs__sep { color: var(--crumb-sep); }
 .v10Acct__meta { display: inline-flex; align-items: center; gap: 6px; }
 .v10Add__plus { display: inline-flex; color: var(--ink); }
+
+/* ---- dymki wykresow ----
+   Dymek jezdzi za aktywnym slupkiem, nie za kursorem: przy waskich slupkach
+   trzesie sie duzo mniej, a i tak patrzy sie na slupek. */
+.chartTip {
+  position: absolute; bottom: calc(100% + 8px); transform: translateX(-50%);
+  z-index: 5; min-width: 170px; pointer-events: none;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--value-strong); color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.chartTip__title { font-size: 11px; color: rgba(255, 255, 255, 0.62); }
+.chartTip__row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.chartTip__row strong { margin-left: auto; font-weight: 500; }
+.chartTip__dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.chartTip__note {
+  margin-top: 2px; padding-top: 6px; font-size: 11px; line-height: 16px;
+  color: rgba(255, 255, 255, 0.62); border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
