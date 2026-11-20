@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppHeader } from './components/ui';
 import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
+import { CorpBondsV10 } from './components/CorpBondsV10';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
@@ -96,7 +97,16 @@ export default function App() {
           onOpenAccount={(id) => setScreen({ name: 'account', id })}
         />
       )}
-      {screen.name === 'asset' && (
+      {/* Nr 10 ma wlasny ekran obligacji korporacyjnych — uklad sekcji jest
+          inny niz w pozostalych stylistykach. */}
+      {screen.name === 'asset' && styleId === '10' && (
+        <CorpBondsV10
+          currency={currency}
+          onCurrencyChange={setCurrency}
+          onBack={() => setScreen({ name: 'portfel' })}
+        />
+      )}
+      {screen.name === 'asset' && styleId !== '10' && (
         <AssetDetailScreen
           styleId={styleId}
           currency={currency}
