@@ -684,6 +684,12 @@
      na pierwszych dwoch miejscach kazdej karty.
    Kazda wartosc kolorystyczna, typograficzna i odstepowa zostaje z nr 2. */
 [data-style='10'] {
+  /* Rozcienczona zielen klasy — slupki odsetek i tla pigulek wynikowych.
+     Jeden token zamiast wpisanego hexa w kilku miejscach. */
+  --c-corp-soft: #cfe2d3;
+  /* Tlo zielonej pigulki ze stopa zwrotu. */
+  --c-corp-bg: #e0eae1;
+
   --title-size: 18px;
   --title-weight: 400;
   --title-color: var(--muted);

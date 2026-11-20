@@ -40,8 +40,8 @@ import {
 /* Kolor klasy z palety nr 2 — ten sam, co na wykresie portfela. Odsetki
    to jego rozcienczona wersja, a nie szarosc: oba slupki mowia o tej samej
    klasie, roznia sie rodzajem przeplywu. */
-const SEG = '#046816';
-const SEG_SOFT = '#cfe2d3';
+const SEG = 'var(--c-corp)';
+const SEG_SOFT = 'var(--c-corp-soft)';
 
 /* Jeden wykres, slupki jeden na drugim: odsetki u dolu, wykup nad nimi.
    Odsetki sa o dwa rzedy wielkosci mniejsze od wykupow, wiec dostaja
