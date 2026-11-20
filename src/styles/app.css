@@ -2003,24 +2003,25 @@ select.field__control {
 .splitRow__pln { color: var(--muted); }
 
 /* ---- nr 10: biezace zlecenia ----
-   Ta sama karta i ten sam wiersz co nadchodzace zdarzenia; inny jest tylko
-   podzial kolumn i to, ze nazwa ma pod soba rachunek. */
+   Ta sama karta i ten sam wiersz co zdarzenia; zlecenie ma dwie linie,
+   bo w kolumnie polowy szerokosci szesc kolumn by sie pozawijalo. */
 .events__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .events__count { font-size: 13px; font-weight: 400; color: var(--muted); }
-.eventRow--orders {
-  grid-template-columns: 180px minmax(0, 1fr) 100px 140px 110px 16px;
-  align-items: center;
+.eventRow--orders { grid-template-columns: minmax(0, 1fr) auto 16px; min-height: 76px; }
+.eventRow__what { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* Stan stoi przy opisie, nie w osobnej kolumnie — „Czesciowo zrealizowane"
+   zabieralo tam wiecej miejsca niz sama nazwa zlecenia. */
+.eventRow__meta { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.eventRow__meta .eventRow__instrument {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-/* Nazwa nad rachunkiem — dwie linie w jednej komorce, zeby wiersz zostal
-   wierszem, a nie rozpadl sie na dwa rzedy siatki. */
-.eventRow__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.eventRow__when { color: var(--muted); font-weight: 400; }
-.eventRow--orders.eventRow--head .eventRow__amount { font-weight: 400; color: var(--muted); }
+.eventRow__right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.eventRow__when { font-size: 13px; color: var(--muted); }
 
 /* Nr 10: zlecenia (szeroka tabela) obok kalendarza zdarzen z nr 8.
    Tabela zostaje elastyczna, kalendarz ma stala szerokosc — inaczej
    karty miesiecy rozciagalyby sie na polowe ekranu. */
-.dashSplit--orders { grid-template-columns: minmax(0, 1fr) 420px; gap: 24px; }
+.dashSplit--orders { grid-template-columns: minmax(0, 1fr) 468px; gap: 24px; align-items: start; }
 .dashSplit--orders .events { padding-top: 0; }
 /* W waskiej kolumnie kwota i rachunek ida jedno pod drugim. */
 .dashSplit--orders .evMonths__amount { display: flex; flex-direction: column; align-items: flex-end; }

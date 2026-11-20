@@ -168,27 +168,25 @@ function OrdersV10() {
         </span>
       </div>
 
+      {/* W kolumnie nie ma miejsca na szesc kolumn, wiec zlecenie czyta sie
+          dwiema liniami: nazwa i kwota, pod spodem stan, typ i rachunek,
+          a z prawej data zlozenia. Nic sie nie zawija. */}
       <div className="eventsCard">
-        <div className="eventRow eventRow--orders eventRow--head" aria-hidden="true">
-          <span className="eventRow__date">Status</span>
-          <span className="eventRow__date">Instrument / produkt</span>
-          <span className="eventRow__date">Typ</span>
-          <span className="eventRow__date eventRow__amount">Kwota</span>
-          <span className="eventRow__date eventRow__amount">Złożono</span>
-          <span />
-        </div>
         {V10_ORDERS.map((z) => (
           <button type="button" className="eventRow eventRow--orders" key={z.name}>
-            <span>
-              <span className="badge">{z.status}</span>
-            </span>
             <span className="eventRow__what">
               <span className="eventRow__type">{z.name}</span>
-              <span className="eventRow__instrument">{z.sub}</span>
+              <span className="eventRow__meta">
+                <span className="badge">{z.status}</span>
+                <span className="eventRow__instrument">
+                  {z.type} · {z.sub}
+                </span>
+              </span>
             </span>
-            <span className="eventRow__instrument">{z.type}</span>
-            <span className="eventRow__amount">{z.amount}</span>
-            <span className="eventRow__amount eventRow__when">{z.date}</span>
+            <span className="eventRow__right">
+              <span className="eventRow__amount">{z.amount}</span>
+              <span className="eventRow__when">{z.date}</span>
+            </span>
             <span className="eventRow__chev" aria-hidden="true">
               ›
             </span>
