@@ -195,6 +195,8 @@ export const CASH_CARDS = [
 ];
 
 export const NAV = ['Pulpit', 'Portfel', 'Operacje', 'Dokumenty', 'Oferty'];
+/** Nr 10: cztery pozycje — dokumenty wypadaja z glownej nawigacji. */
+export const V10_NAV = ['Pulpit', 'Portfel', 'Operacje', 'Oferta'];
 
 /* ------------------------- widok „Rachunki" ------------------------- */
 

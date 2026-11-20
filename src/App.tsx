@@ -75,6 +75,7 @@ export default function App() {
     <>
       <AppHeader
         active={screen.name === 'pulpit' ? 'Pulpit' : 'Portfel'}
+        styleId={styleId}
         onNavigate={(item) => {
           if (item === 'Pulpit') setScreen({ name: 'pulpit' });
           if (item === 'Portfel') setScreen({ name: 'portfel' });

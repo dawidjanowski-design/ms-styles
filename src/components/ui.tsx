@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Logo, BellIcon, BellIconRound } from '../icons/Logo';
-import { NAV } from '../data/portfolio';
+import { NAV, V10_NAV } from '../data/portfolio';
 
 /* Kwota przewija sie jak licznik: znak, ktory sie zmienil, wyjezdza w gore,
    a nowy wjezdza z dolu. Znaki bez zmiany stoja w miejscu, wiec przy zmianie
@@ -148,22 +148,25 @@ export function KeyValue({
 export function AppHeader({
   active = 'Portfel',
   onNavigate,
+  styleId,
 }: {
   active?: string;
   onNavigate?: (item: string) => void;
+  styleId?: string;
 } = {}) {
+  const items = styleId === '10' ? V10_NAV : NAV;
   return (
     <header className="appHeader">
       <div className="appHeader__logo">
         <Logo />
       </div>
       <nav className="appHeader__nav">
-        {NAV.map((item, i) => (
+        {items.map((item, i) => (
           <button
             key={item}
             type="button"
             className={`navItem ${item === active ? 'navItem--active' : ''} ${
-              NAV[i + 1] === active ? 'navItem--prev' : ''
+              items[i + 1] === active ? 'navItem--prev' : ''
             }`}
             onClick={() => onNavigate?.(item)}
           >
