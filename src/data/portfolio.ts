@@ -474,3 +474,171 @@ export const V10_ALLOCATION = [
   { id: 'am', share: 20.0, value: '843 728 PLN' },
   { id: CASH.id, share: 6.0, value: '253 118 PLN' },
 ];
+
+/* ---------------- nr 10: przelacznik „Rachunki" (wireframe P02) ----------------
+   Rachunki sa pogrupowane typem, bo kazdy typ rzadzi sie innymi zasadami:
+   maklerskich mozna miec kilka i same nadajesz im nazwy, OKI jest jedno
+   i nazwy nie zmienisz, emerytalne maja ustawowe limity. Plaska lista tego
+   nie pokazywala. */
+
+export type V10Position = {
+  /** id klasy aktywow — stad bierze sie kolor kropki i segmentu paska */
+  asset: string;
+  label: string;
+  value: string;
+};
+
+export type V10Account = {
+  id: string;
+  name: string;
+  /** maly znacznik przy nazwie: typ rachunku albo „nazwa stala" */
+  badge?: string;
+  number: string;
+  amount: string;
+  decimals: string;
+  /** limit wplat — na razie tylko rachunki emerytalne */
+  limit?: { label: string; value: string; left: string; progress: number };
+  positions: V10Position[];
+  /** para etykieta-wartosc w stopce, obok „Zobacz szczegoly" */
+  foot?: { label: string; value: string; warn?: boolean };
+};
+
+export type V10AccountGroup = {
+  id: string;
+  title: string;
+  sub: string;
+  accounts: V10Account[];
+  /** kafelek z dzialaniem: dodanie kolejnego albo otwarcie brakujacego */
+  add?: { title: string; sub: string };
+};
+
+export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
+  {
+    id: 'maklerskie',
+    title: 'Rachunki maklerskie',
+    sub: 'Rachunki zwykłe. Własne nazwy ustawisz w ustawieniach rachunku.',
+    accounts: [
+      {
+        id: 'glowny',
+        name: 'Główny',
+        badge: 'maklerski',
+        number: '00-00-006858',
+        amount: '2 362 438',
+        decimals: ',00 PLN',
+        positions: [
+          { asset: 'corp', label: 'Obligacje korporacyjne', value: '1 063 200,00 PLN' },
+          { asset: 'skarb', label: 'Obligacje skarbowe', value: '316 398,00 PLN' },
+          { asset: 'fiz', label: 'Fundusze Inwestycyjne Zamknięte', value: '421 864,00 PLN' },
+          { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '420 610,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '140 366,00 PLN' },
+        ],
+        foot: { label: 'Rachunek do wypłat', value: 'tak' },
+      },
+      {
+        id: 'emisje',
+        name: 'Na emisje',
+        badge: 'maklerski',
+        number: '00-00-007432',
+        amount: '337 491',
+        decimals: ',00 PLN',
+        positions: [
+          { asset: 'corp', label: 'Obligacje korporacyjne', value: '240 000,00 PLN' },
+          { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '50 000,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '47 491,00 PLN' },
+        ],
+      },
+    ],
+    add: {
+      title: 'Dodaj kolejny rachunek maklerski',
+      sub: 'Przyda się, gdy chcesz oddzielić środki na emisje od reszty portfela.',
+    },
+  },
+  {
+    id: 'am',
+    title: 'Asset Management',
+    sub: 'Strategie zarządzane przez zespół. Każda ma własny rachunek i własny skład.',
+    accounts: [
+      {
+        id: 'am-konserwatywna',
+        name: 'Strategia konserwatywna',
+        badge: 'AM',
+        number: '00-00-008801',
+        amount: '168 746',
+        decimals: ',00 PLN',
+        positions: [
+          { asset: 'corp', label: 'Obligacje korporacyjne', value: '96 400,00 PLN' },
+          { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '58 200,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '14 146,00 PLN' },
+        ],
+        foot: { label: 'Ryzyko', value: '2 / 7' },
+      },
+    ],
+    add: {
+      title: 'Załóż nową strategię',
+      sub: 'Dobierzemy skład do Twojego profilu. Minimalna wpłata zależy od strategii.',
+    },
+  },
+  {
+    id: 'oki',
+    title: 'OKI',
+    sub:
+      'Osobiste konto inwestycyjne — bez podatku od zysków kapitałowych. ' +
+      'Nadwyżkę gotówki możesz automatycznie przenosić na rachunek maklerski.',
+    accounts: [
+      {
+        id: 'oki',
+        name: 'OKI',
+        badge: 'nazwa stała',
+        number: '00-00-009120',
+        amount: '843 728',
+        decimals: ',00 PLN',
+        positions: [
+          { asset: 'corp', label: 'Obligacje korporacyjne', value: '729 120,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '114 608,00 PLN' },
+        ],
+        foot: { label: 'Automatyczny transfer nadwyżki', value: 'włączony', warn: true },
+      },
+    ],
+  },
+  {
+    id: 'emerytalne',
+    title: 'Rachunki emerytalne',
+    sub: 'IKE i IKZE. Limity wpłat wynikają z ustawy, nazw tych rachunków nie można zmienić.',
+    accounts: [
+      {
+        id: 'ike',
+        name: 'IKE',
+        number: '00-00-007431',
+        amount: '506 237',
+        decimals: ',00 PLN',
+        limit: {
+          label: 'Limit wpłat 2026',
+          value: '30 000,00 PLN z 40 000,00 PLN',
+          left: 'pozostało 10 000,00 PLN',
+          progress: 0.75,
+        },
+        positions: [
+          { asset: 'corp', label: 'Obligacje korporacyjne', value: '340 000,00 PLN' },
+          { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '120 000,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '46 237,00 PLN' },
+        ],
+      },
+    ],
+    add: {
+      title: 'Otwórz rachunek IKZE',
+      sub: 'Nie masz jeszcze IKZE. Wpłaty odliczysz od podstawy opodatkowania w rocznym PIT.',
+    },
+  },
+];
+
+export const V10_ACCOUNT_NOTES = [
+  'Rozróżniamy dwa działania: otwarcie brakującego typu rachunku (IKZE — masz go albo nie) ' +
+    'i dodanie kolejnego rachunku lub strategii (maklerskie i AM — możesz mieć ich kilka). ' +
+    'Dlatego nazwy przycisków są inne.',
+  'Kolejność klas aktywów jest ta sama na każdym rachunku, a wolna gotówka zawsze zamyka listę. ' +
+    'Klas, których na rachunku nie ma, nie wypisujemy — zamiast pustych etykiet jest cienki ' +
+    'pasek struktury nad listą.',
+  'Rachunek żony zniknął z tej listy — to rachunek innej osoby, prowadzony z pełnomocnictwa, ' +
+    'więc należy do przełącznika kontekstu, nie do portfela klienta. Bez niego suma rachunków ' +
+    'zgadza się z wartością portfela co do złotówki.',
+];

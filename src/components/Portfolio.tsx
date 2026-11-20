@@ -9,8 +9,12 @@ import {
   V10_ASSETS,
   V10_ASSETS_NOTE,
   V10_CASH_ACTIONS,
+  V10_ACCOUNT_GROUPS,
+  V10_ACCOUNT_NOTES,
   V10_LEGEND_ORDER,
   V10_NAMES,
+  type V10Account,
+  type V10Position,
   type Account,
   type AssetClass,
   type Metric,
@@ -368,6 +372,130 @@ function CashOverview({
         })}
       </div>
     </section>
+  );
+}
+
+/* ------------------------ nr 10: rachunki (wireframe P02) ------------------------ */
+
+/* Udzialy w pasku licze z kwot pozycji, nie z osobnego pola — jedna liczba
+   mniej do rozjechania sie z lista pod spodem. */
+const kwotaPLN = (v: string) => Number(v.replace(/[^\d]/g, '')) / 100;
+
+function AcctBar({ positions, styleId }: { positions: V10Position[]; styleId: StyleId }) {
+  const suma = positions.reduce((s, p) => s + kwotaPLN(p.value), 0);
+  if (!suma) return null;
+  return (
+    <div className="v10Bar">
+      {positions.map((p) => (
+        <span
+          key={p.asset}
+          className="v10Bar__seg"
+          style={{
+            flexGrow: kwotaPLN(p.value) / suma,
+            background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].chart,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function V10AccountCard({ account, styleId }: { account: V10Account; styleId: StyleId }) {
+  return (
+    <article className="v10Acct">
+      <div className="v10Acct__head">
+        <span className="v10Acct__name">{account.name}</span>
+        {account.badge && <span className="v10Acct__badge">{account.badge}</span>}
+        <span className="v10Acct__no">· {account.number}</span>
+        <Amount int={account.amount} dec={account.decimals} className="v10Acct__amount" />
+        <span className="v10Acct__chev" aria-hidden="true">
+          ›
+        </span>
+      </div>
+
+      {account.limit && (
+        <div className="v10Limit">
+          <div className="v10Limit__top">
+            <span className="v10Limit__label">{account.limit.label}</span>
+            <span className="v10Limit__left">{account.limit.left}</span>
+          </div>
+          <span className="v10Limit__value">{account.limit.value}</span>
+          <div className="v10Limit__track">
+            <span
+              className="v10Limit__fill"
+              style={{ width: `${Math.round(account.limit.progress * 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <AcctBar positions={account.positions} styleId={styleId} />
+      <span className="v10Acct__cap">POZYCJE</span>
+      <div className="v10Acct__rows">
+        {account.positions.map((p) => (
+          <div className="v10Pos" key={p.asset}>
+            <span
+              className="v10Pos__dot"
+              style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].card }}
+            />
+            <span className="v10Pos__label">{p.label}</span>
+            <span className="v10Pos__value">{p.value}</span>
+            <span className="v10Pos__chev" aria-hidden="true">
+              ›
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="v10Acct__foot">
+        <span className="btn btn--small">Zobacz szczegóły ›</span>
+        {account.foot && (
+          <span className={`v10Acct__meta ${account.foot.warn ? 'is-warn' : ''}`}>
+            {account.foot.warn && <span aria-hidden="true">⚠ </span>}
+            {account.foot.label} <strong>{account.foot.value}</strong>
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}
+
+/* Kafelek dzialania. „Dodaj" i „Otworz" to dwie rozne rzeczy — kolejny
+   rachunek maklerski mozna miec, IKZE albo sie ma, albo nie — i stad
+   roznica w nazwach, nie w wygladzie. */
+function V10AddTile({ title, sub }: { title: string; sub: string }) {
+  return (
+    <article className="v10Add">
+      <span className="v10Add__plus" aria-hidden="true">
+        +
+      </span>
+      <span className="v10Add__title">{title}</span>
+      <span className="v10Add__sub">{sub}</span>
+    </article>
+  );
+}
+
+function AccountsV10({ styleId }: { styleId: StyleId }) {
+  return (
+    <div className="v10Groups">
+      {V10_ACCOUNT_GROUPS.map((g) => (
+        <section className="v10Group" key={g.id}>
+          <h3 className="v10Group__title">{g.title}</h3>
+          <p className="v10Group__sub">{g.sub}</p>
+          <div className="v10Group__grid">
+            {g.accounts.map((a) => (
+              <V10AccountCard key={a.id} account={a} styleId={styleId} />
+            ))}
+            {g.add && <V10AddTile title={g.add.title} sub={g.add.sub} />}
+          </div>
+        </section>
+      ))}
+      <div className="v10Notes">
+        {V10_ACCOUNT_NOTES.map((n) => (
+          <p key={n.slice(0, 24)}>{n}</p>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -892,9 +1020,18 @@ export function PortfolioScreen({
                 locked={styleId === 'makieta'}
               />
             </div>
-            <div className={`assets__list ${styleId === '10' ? 'assets__list--grid' : ''}`}>
-              {view === 'Aktywa'
-                ? data.assets.map((a) => (
+            <div
+              className={`assets__list ${
+                styleId === '10' && view === 'Aktywa' ? 'assets__list--grid' : ''
+              }`}
+            >
+              {view === 'Rachunki' && styleId === '10' ? (
+                /* Nr 10 grupuje rachunki typem, zgodnie z wireframem P02:
+                   plaska lista nie pokazywala, ze kazdy typ rzadzi sie
+                   innymi zasadami. */
+                <AccountsV10 styleId={styleId} />
+              ) : view === 'Aktywa' ? (
+                data.assets.map((a) => (
                     <AssetCard
                       key={a.id}
                       asset={a}
@@ -902,20 +1039,22 @@ export function PortfolioScreen({
                       onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
                     />
                   ))
-                : data.accounts.map((a) => (
-                    <AccountCard
-                      key={a.id}
-                      account={a}
-                      styleId={styleId}
-                      /* Ekran rachunku istnieje na razie tylko dla IKE i tylko
-                         w widoku lacznym, gdzie liczby sie zgadzaja. */
-                      onOpen={
-                        styleId !== 'makieta' && a.id === 'ike' && currency === 'Łącznie'
-                          ? () => onOpenAccount(a.id)
-                          : undefined
-                      }
-                    />
-                  ))}
+              ) : (
+                data.accounts.map((a) => (
+                  <AccountCard
+                    key={a.id}
+                    account={a}
+                    styleId={styleId}
+                    /* Ekran rachunku istnieje na razie tylko dla IKE i tylko
+                       w widoku lacznym, gdzie liczby sie zgadzaja. */
+                    onOpen={
+                      styleId !== 'makieta' && a.id === 'ike' && currency === 'Łącznie'
+                        ? () => onOpenAccount(a.id)
+                        : undefined
+                    }
+                  />
+                ))
+              )}
             </div>
             {styleId === '10' && view === 'Aktywa' && (
               <p className="assets__note">{V10_ASSETS_NOTE}</p>
