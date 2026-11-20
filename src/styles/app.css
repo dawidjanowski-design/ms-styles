@@ -1969,3 +1969,32 @@ select.field__control {
   margin-top: 2px; padding-top: 6px; font-size: 13px; line-height: 20px;
   color: rgba(255, 255, 255, 0.62); border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
+
+/* ---- nr 10: sterowanie tabela ----
+   Naglowek sortowalny jest przyciskiem, nie tekstem z ikona — ma byc
+   klikalny calym polem i dostepny z klawiatury. */
+.corpSortBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: inherit;
+}
+.corpSortBtn:hover { color: var(--ink); }
+.corpMenu { position: relative; display: inline-flex; margin-left: 6px; }
+.corpMenu__btn {
+  display: inline-flex; padding: 0; border: 0; background: none; cursor: pointer; color: inherit;
+}
+.corpMenu__panel {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 10; width: 236px;
+  display: flex; flex-direction: column;
+  padding: 6px; border-radius: 10px; background: var(--card-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), var(--shadow-card);
+}
+.corpMenu__item {
+  display: flex; align-items: center; gap: 8px; justify-content: space-between;
+  padding: 8px 10px; border: 0; border-radius: 8px; background: none; cursor: pointer;
+  font-size: 13px; color: var(--ink); text-align: left;
+}
+.corpMenu__item:hover { background: var(--row-hover); }
+.corpMenu__item.is-on { font-weight: 500; }
+.corpShare__fill { background: var(--c-corp); }
+.corpEmpty { margin: 0; padding: 24px 0; font-size: 13px; color: var(--muted); }

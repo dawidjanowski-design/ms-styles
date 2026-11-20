@@ -11,74 +11,59 @@ export const CORP_HEAD = {
   scope: 'Wszystkie rachunki',
 };
 
-export const CORP_SUMMARY = {
-  label: 'Wartość bieżąca',
-  amount: '1 792 922',
-  decimals: ',00 PLN',
-  delta: '+8,0%',
-  share: '42,5% wartości całego portfela',
-  /* Cztery metryki, ktore odpowiadaja na pytanie „ile to zarabia" */
-  main: [
-    { label: 'Śr. rentowność (ważona)', value: '7,48%', sub: 'do wykupu, w skali roku' },
-    { label: 'Wypłacone odsetki 12M', value: '48 220,00 PLN', sub: 'ostatnie 12 miesięcy' },
-    { label: 'Stopa zwrotu 12M', value: '7,10%', sub: 'IRR, w skali roku' },
-    { label: 'Wynik 12M', value: '+62 540,00 PLN', sub: 'nominalnie, po prowizjach' },
-  ] as Metric[],
-  /* Trzy metryki opisujace sam portfel, nie jego wynik */
-  extra: [
-    { label: 'Wartość nominalna', value: '1 779 400,00 PLN' },
-    { label: 'Śr. oprocentowanie (ważone)', value: '7,52%' },
-    { label: 'Śr. odsetki miesięczne', value: '11 620,00 PLN' },
-  ] as Metric[],
-  counters: [
-    { label: 'Emitenci', value: '7' },
-    { label: 'Serie', value: '9' },
-    { label: 'Najbliższy wykup', value: '18.12.2026' },
-    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
-  ] as Metric[],
-};
+/* ------------------------------ serie i emitenci ------------------------------
+   Jedno zrodlo liczb dla calej sekcji: wiersze serii. Emitenci, sumy,
+   srednie wazone i udzialy licza sie z nich w komponencie, wiec przelacznik
+   walut, grupowania i metryki nie moga sie rozjechac z tabela. */
 
-export type CorpRow = {
+export type Serie = {
   id: string;
+  ticker: string;
+  name: string;
   issuer: string;
-  series: string;
-  rate: string;
+  /** waluta rozliczenia serii */
+  cur: 'PLN' | 'EUR';
+  count: number;
+  /** rentownosc do wykupu, % */
+  rate: number;
+  /** biezace oprocentowanie (kupon), % */
+  coupon: number;
   maturity: string;
-  value: string;
-  /** druga linia w kolumnie wartosci — kwota w walucie instrumentu */
-  valueSub?: string;
-  share: number;
+  /** wartosci w PLN — po przeliczeniu, jesli seria jest w EUR */
+  value: number;
+  nominal: number;
+  interest12m: number;
+  result12m: number;
+  /** wartosci w walucie serii, gdy ta nie jest zlotowka */
+  curValue?: number;
+  curNominal?: number;
+  curInterest12m?: number;
+  curResult12m?: number;
 };
 
-export const CORP_ROWS: CorpRow[] = [
-  { id: 'vehis', issuer: 'VEHIS', series: '2 serie', rate: '7,92%', maturity: '09.06.2027', value: '720 000,00 PLN', share: 40.2 },
-  { id: 'nordvik', issuer: 'Nordvik Development', series: '1 seria', rate: '7,30%', maturity: '22.05.2028', value: '280 000,00 PLN', share: 15.6 },
-  { id: 'cavatina', issuer: 'Cavatina Holding', series: '1 seria', rate: '6,80%', maturity: '18.12.2026', value: '≈ 200 000,00 PLN', valueSub: '43 330,00 EUR', share: 11.2 },
-  { id: 'victoria', issuer: 'Victoria Dom', series: '1 seria', rate: '7,10%', maturity: '30.09.2028', value: '194 922,00 PLN', share: 10.9 },
-  { id: 'dekpol', issuer: 'Dekpol', series: '2 serie', rate: '7,45%', maturity: '28.02.2028', value: '180 000,00 PLN', share: 10.0 },
-  { id: 'pragmago', issuer: 'PragmaGO', series: '1 seria', rate: '7,70%', maturity: '14.05.2027', value: '165 000,00 PLN', share: 9.2 },
-  { id: 'polmax', issuer: 'Polmax Energia', series: '1 seria', rate: '6,90%', maturity: '17.01.2029', value: '53 000,00 PLN', share: 2.9 },
+export const CORP_SERIES: Serie[] = [
+  { id: 'vhi1128', ticker: 'VHI1128', name: 'seria M', issuer: 'VEHIS', cur: 'PLN', count: 400, rate: 7.85, coupon: 7.9, maturity: '14.11.2028', value: 400000, nominal: 396000, interest12m: 8400, result12m: 14200 },
+  { id: 'vhi0627', ticker: 'VHI0627', name: 'seria K', issuer: 'VEHIS', cur: 'PLN', count: 320, rate: 7.95, coupon: 8.0, maturity: '09.06.2027', value: 320000, nominal: 318000, interest12m: 6900, result12m: 11800 },
+  { id: 'nrd0528', ticker: 'NRD0528', name: 'seria B', issuer: 'Nordvik Development', cur: 'PLN', count: 280, rate: 7.3, coupon: 7.35, maturity: '22.05.2028', value: 280000, nominal: 280000, interest12m: 5900, result12m: 9600 },
+  { id: 'cvh1226', ticker: 'CVH1226', name: 'seria P2026B', issuer: 'Cavatina Holding', cur: 'EUR', count: 44, rate: 6.8, coupon: 6.7, maturity: '18.12.2026', value: 200000, nominal: 198400, interest12m: 2600, result12m: 5200, curValue: 43330, curNominal: 43000, curInterest12m: 563, curResult12m: 1126 },
+  { id: 'vid0928', ticker: 'VID0928', name: 'seria B2', issuer: 'Victoria Dom', cur: 'PLN', count: 195, rate: 7.1, coupon: 7.15, maturity: '30.09.2028', value: 194922, nominal: 192000, interest12m: 4200, result12m: 7400 },
+  { id: 'prg0527', ticker: 'PRG0527', name: 'seria E2', issuer: 'PragmaGO', cur: 'PLN', count: 165, rate: 7.7, coupon: 7.75, maturity: '14.05.2027', value: 165000, nominal: 168000, interest12m: 3200, result12m: 5100 },
+  { id: 'dek0228', ticker: 'DEK0228', name: 'seria C', issuer: 'Dekpol', cur: 'PLN', count: 100, rate: 7.4, coupon: 7.45, maturity: '28.02.2028', value: 100000, nominal: 100000, interest12m: 1800, result12m: 3400 },
+  { id: 'dek0929', ticker: 'DEK0929', name: 'seria D', issuer: 'Dekpol', cur: 'PLN', count: 80, rate: 7.5, coupon: 7.55, maturity: '14.09.2029', value: 80000, nominal: 79000, interest12m: 1540, result12m: 3040 },
+  { id: 'plm0129', ticker: 'PLM0129', name: 'seria A', issuer: 'Polmax Energia', cur: 'PLN', count: 53, rate: 6.9, coupon: 6.95, maturity: '17.01.2029', value: 53000, nominal: 48000, interest12m: 1200, result12m: 2800 },
 ];
 
-export const CORP_TOTAL: CorpRow = {
-  id: 'razem',
-  issuer: 'Razem · 7 emitentów',
-  series: '9 serii',
-  rate: '7,48%',
-  maturity: '18.12.2026',
-  value: '1 792 922,00 PLN',
-  share: 100,
-};
+/* Odsetki z pozycji juz zamknietych nie siedza w zadnej serii, a wchodza do
+   sumy wyplaconych odsetek — stad osobna pozycja. */
+export const CORP_CLOSED_INTEREST = 12480;
 
-/* Kolumna wartosci ma wlasne menu zamiast ikony sortowania: pod trzema
-   kropkami siedzi zmiana metryki na wartosc nominalna. */
 export const CORP_COLS = [
-  { key: 'issuer', label: 'Emitent', sort: false, menu: false },
-  { key: 'series', label: 'Serie', sort: false, menu: false },
-  { key: 'rate', label: 'Śr. rentowność', sort: true, menu: false },
-  { key: 'maturity', label: 'Najbliższy wykup', sort: true, menu: false },
+  { key: 'name', label: 'Emitent', labelSeries: 'Seria', sort: true, menu: false },
+  { key: 'count', label: 'Serie', labelSeries: 'Sztuk', sort: true, menu: false },
+  { key: 'rate', label: 'Śr. rentowność', labelSeries: 'Rentowność', sort: true, menu: false },
+  { key: 'maturity', label: 'Najbliższy wykup', labelSeries: 'Wykup', sort: true, menu: false },
   { key: 'value', label: 'Wartość bieżąca', sort: false, menu: true },
-  { key: 'share', label: 'Udział', sort: true, menu: false, active: true },
+  { key: 'share', label: 'Udział', sort: true, menu: false },
 ];
 
 export const CORP_STRUCTURE_SUB = 'Przełącznik dotyczy wyłącznie tej sekcji';

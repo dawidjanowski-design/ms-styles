@@ -58,6 +58,12 @@ export const ChevronUp = (p: Props) => (
   </Svg>
 );
 
+export const Check = (p: Props) => (
+  <Svg {...p}>
+    <polyline points="20 6 9 17 4 12" />
+  </Svg>
+);
+
 export const Plus = (p: Props) => (
   <Svg {...p}>
     <line x1="12" y1="5" x2="12" y2="19" />

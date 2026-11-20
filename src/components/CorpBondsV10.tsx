@@ -16,21 +16,27 @@ import {
   CORP_OPS,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
-  CORP_ROWS,
   CORP_STRUCTURE_NOTE,
   CORP_STRUCTURE_SUB,
-  CORP_SUMMARY,
-  CORP_TOTAL,
   CORP_WIDGETS,
-  type CorpRow,
   type Metric,
   type Widget,
 } from '../data/corpV10';
+import {
+  jednostka,
+  kwota,
+  podsumowanie,
+  procent,
+  wiersze,
+  type Wiersz,
+} from '../data/corpMath';
 import { CURRENCIES, type Currency } from '../data/currencies';
 import { Amount, Pills } from './ui';
 import {
+  Check,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
   Download,
   Maximize2,
   MoreHorizontal,
@@ -73,23 +79,47 @@ function MetricTile({ metric, small }: { metric: Metric; small?: boolean }) {
 
 /* ------------------------------ podsumowanie ------------------------------ */
 
-function Summary() {
-  const s = CORP_SUMMARY;
+function Summary({ currency }: { currency: Currency }) {
+  const p = podsumowanie(currency);
+  const j = jednostka(currency);
+
+  const main: Metric[] = [
+    { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
+    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
+    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
+    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach' },
+  ];
+  const extra: Metric[] = [
+    { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
+    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
+    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
+  ];
+  const counters: Metric[] = [
+    { label: 'Emitenci', value: String(p.emitenci) },
+    { label: 'Serie', value: String(p.serie) },
+    { label: 'Najbliższy wykup', value: p.najblizszyWykup },
+    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
+  ];
+
+  const [calosc, dec] = kwota(p.value, currency).split(',');
+
   return (
     <section className="corpCard">
       <div className="corpCard__top">
         <div className="corpCard__lead">
-          <span className="corpCard__label">{s.label}</span>
+          <span className="corpCard__label">Wartość bieżąca</span>
           <div className="corpCard__amountRow">
-            <Amount int={s.amount} dec={s.decimals} className="corpCard__amount" />
-            <span className="corpCard__delta">{s.delta}</span>
+            <Amount int={calosc} dec={`,${dec}`} className="corpCard__amount" />
+            <span className="corpCard__delta">+8,0%</span>
           </div>
-          <span className="corpCard__share">{s.share}</span>
+          <span className="corpCard__share">
+            {currency === 'Łącznie'
+              ? '42,5% wartości całego portfela'
+              : `wszystkie pozycje w ${j} · ${p.serie} ${p.serie === 1 ? 'seria' : 'serie'}`}
+          </span>
         </div>
-        {/* Liczniki opisuja sklad, nie wynik — stoja z boku kwoty, a nie
-            w jednym rzedzie z metrykami. */}
         <dl className="corpFacts">
-          {s.counters.map((c) => (
+          {counters.map((c) => (
             <div className="corpFact" key={c.label}>
               <dt>{c.label}</dt>
               <dd>{c.value}</dd>
@@ -99,13 +129,13 @@ function Summary() {
       </div>
 
       <div className="corpTiles corpTiles--main">
-        {s.main.map((m) => (
+        {main.map((m) => (
           <MetricTile key={m.label} metric={m} />
         ))}
       </div>
 
       <div className="corpTiles corpTiles--extra">
-        {s.extra.map((m) => (
+        {extra.map((m) => (
           <MetricTile key={m.label} metric={m} small />
         ))}
       </div>
@@ -115,39 +145,139 @@ function Summary() {
 
 /* --------------------------- struktura portfela --------------------------- */
 
-function StructureRow({ row, total }: { row: CorpRow; total?: boolean }) {
-  return (
-    <div className={`corpRow ${total ? 'corpRow--total' : ''}`}>
+type Sort = { col: string; dir: 1 | -1 };
+
+function Structure({ currency }: { currency: Currency }) {
+  const [grouping, setGrouping] = useState('Emitenci');
+  /* Udzial malejaco to domyslny porzadek: najpierw to, co wazy najwiecej. */
+  const [sort, setSort] = useState<Sort>({ col: 'share', dir: -1 });
+  /* Kolumna wartosci ma dwie metryki — biezaca i nominalna. */
+  const [metric, setMetric] = useState<'value' | 'nominal'>('value');
+  const [menu, setMenu] = useState(false);
+
+  const p = podsumowanie(currency);
+  const rows = wiersze(currency, grouping);
+  const suma = rows.reduce((a, r) => a + r[metric], 0);
+
+  /* Klikniecie w ta sama kolumne odwraca kierunek, w inna — ustawia ja
+     malejaco, bo przy liczbach to prawie zawsze oczekiwany pierwszy rzut. */
+  const sortuj = (col: string) =>
+    setSort((s) => (s.col === col ? { col, dir: s.dir === 1 ? -1 : 1 } : { col, dir: -1 }));
+
+  const klucz = (r: Wiersz): string | number => {
+    if (sort.col === 'name') return r.title.toLowerCase();
+    if (sort.col === 'count') return r.countNum;
+    if (sort.col === 'rate') return r.rate;
+    if (sort.col === 'maturity') return r.maturity.split('.').reverse().join('');
+    return r[metric];
+  };
+  const widoczne = [...rows].sort((a, b) => {
+    const x = klucz(a);
+    const y = klucz(b);
+    if (x === y) return 0;
+    return (x > y ? 1 : -1) * sort.dir;
+  });
+
+  const etykietaWartosci = metric === 'value' ? 'Wartość bieżąca' : 'Wartość nominalna';
+
+  const komorki = (r: Wiersz, total?: boolean) => (
+    <div className={`corpRow ${total ? 'corpRow--total' : ''}`} key={r.id}>
       <span className="corpRow__issuer">
-        {row.issuer}
-        {!total && (
+        {r.title}
+        {r.sub && <span className="corpRow__expand">{r.sub}</span>}
+        {!total && !r.sub && (
           <span className="corpRow__expand">
             rozwiń serie
             <ChevronDown size={12} />
           </span>
         )}
       </span>
-      <span className="corpRow__cell">{row.series}</span>
-      <span className="corpRow__cell corpRow__cell--num">{row.rate}</span>
-      <span className="corpRow__cell corpRow__cell--num">{row.maturity}</span>
+      <span className="corpRow__cell">{r.count}</span>
+      <span className="corpRow__cell corpRow__cell--num">{procent(r.rate)}</span>
+      <span className="corpRow__cell corpRow__cell--num">{r.maturity}</span>
       <span className="corpRow__cell corpRow__cell--num">
-        {row.value}
-        {row.valueSub && <span className="corpRow__sub">{row.valueSub}</span>}
+        {r.curValue ? `≈ ${kwota(r[metric], currency)}` : kwota(r[metric], currency)}
+        {r.curValue && <span className="corpRow__sub">{r.curValue}</span>}
       </span>
       <span className="corpRow__share">
-        <span className="corpRow__shareValue">{String(row.share).replace('.', ',')}%</span>
+        <span className="corpRow__shareValue">
+          {suma ? procent((r[metric] / suma) * 100) : '—'}
+        </span>
         {!total && (
           <span className="corpShare">
-            <span className="corpShare__fill" style={{ width: `${row.share}%`, background: SEG }} />
+            <span
+              className="corpShare__fill"
+              style={{ width: `${suma ? (r[metric] / suma) * 100 : 0}%` }}
+            />
           </span>
         )}
       </span>
     </div>
   );
-}
 
-function Structure() {
-  const [grouping, setGrouping] = useState('Emitenci');
+  const naglowek = (
+    key: string,
+    label: string,
+    opts: { num?: boolean; sort?: boolean; menu?: boolean } = {}
+  ) => {
+    const aktywna = sort.col === key;
+    return (
+      <span
+        key={key}
+        className={`corpRow__cell ${key === 'name' ? 'corpRow__issuer' : ''} ${
+          opts.num ? 'corpRow__cell--num' : ''
+        } ${aktywna && opts.sort ? 'is-active' : ''}`}
+      >
+        {opts.sort ? (
+          <button type="button" className="corpSortBtn" onClick={() => sortuj(key)}>
+            {label}
+            {aktywna ? (
+              sort.dir === -1 ? (
+                <ChevronDown size={14} className="corpRow__sort is-on" />
+              ) : (
+                <ChevronUp size={14} className="corpRow__sort is-on" />
+              )
+            ) : (
+              <SortNone size={14} className="corpRow__sort" />
+            )}
+          </button>
+        ) : (
+          label
+        )}
+        {opts.menu && (
+          <span className="corpMenu">
+            <button
+              type="button"
+              className="corpMenu__btn"
+              aria-label="Dodatkowe akcje kolumny"
+              aria-expanded={menu}
+              onClick={() => setMenu((m) => !m)}
+            >
+              <MoreHorizontal size={16} className="corpRow__menu" />
+            </button>
+            {menu && (
+              <div className="corpMenu__panel">
+                {(['value', 'nominal'] as const).map((m) => (
+                  <button
+                    type="button"
+                    key={m}
+                    className={`corpMenu__item ${metric === m ? 'is-on' : ''}`}
+                    onClick={() => {
+                      setMetric(m);
+                      setMenu(false);
+                    }}
+                  >
+                    {m === 'value' ? 'Pokaż wartość bieżącą' : 'Pokaż wartość nominalną'}
+                    {metric === m && <Check size={14} />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </span>
+        )}
+      </span>
+    );
+  };
 
   return (
     <section className="corpSection corpSection--card">
@@ -165,35 +295,49 @@ function Structure() {
         </div>
       </div>
 
-      <div className="corpTable">
-        <div className="corpRow corpRow--head">
-          {CORP_COLS.map((c) => (
-            <span
-              key={c.key}
-              className={`corpRow__cell ${
-                c.key === 'issuer' ? 'corpRow__issuer' : ''
-              } ${c.key === 'share' || c.key === 'rate' || c.key === 'maturity' || c.key === 'value' ? 'corpRow__cell--num' : ''} ${
-                c.active ? 'is-active' : ''
-              }`}
-            >
-              {c.label}
-              {c.sort &&
-                (c.active ? (
-                  <ChevronDown size={14} className="corpRow__sort is-on" />
-                ) : (
-                  <SortNone size={14} className="corpRow__sort" />
-                ))}
-              {c.menu && <MoreHorizontal size={16} className="corpRow__menu" />}
-            </span>
-          ))}
-        </div>
-        {CORP_ROWS.map((r) => (
-          <StructureRow key={r.id} row={r} />
-        ))}
-        <StructureRow row={CORP_TOTAL} total />
-      </div>
+      {p.pusto ? (
+        <p className="corpEmpty">
+          Nie masz obligacji korporacyjnych rozliczanych w {jednostka(currency)}.
+        </p>
+      ) : (
+        <>
+          <div className="corpTable">
+            <div className="corpRow corpRow--head">
+              {naglowek('name', grouping === 'Serie' ? 'Seria' : 'Emitent', { sort: true })}
+              {naglowek('count', grouping === 'Serie' ? 'Sztuk' : 'Serie', { sort: true })}
+              {naglowek('rate', grouping === 'Serie' ? 'Rentowność' : 'Śr. rentowność', {
+                num: true,
+                sort: true,
+              })}
+              {naglowek('maturity', grouping === 'Serie' ? 'Wykup' : 'Najbliższy wykup', {
+                num: true,
+                sort: true,
+              })}
+              {naglowek('value', etykietaWartosci, { num: true, menu: true })}
+              {naglowek('share', 'Udział', { num: true, sort: true })}
+            </div>
 
-      <p className="corpNote">{CORP_STRUCTURE_NOTE}</p>
+            {widoczne.map((r) => komorki(r))}
+
+            {komorki(
+              {
+                id: 'razem',
+                title: `Razem · ${p.emitenci} ${p.emitenci === 1 ? 'emitent' : 'emitentów'}`,
+                sub: grouping === 'Serie' ? `${p.serie} serii` : undefined,
+                count: grouping === 'Serie' ? String(p.sztuk) : `${p.serie} serii`,
+                countNum: p.serie,
+                rate: p.rate,
+                maturity: p.najblizszyWykup,
+                value: p.value,
+                nominal: p.nominal,
+              },
+              true
+            )}
+          </div>
+
+          <p className="corpNote">{CORP_STRUCTURE_NOTE}</p>
+        </>
+      )}
     </section>
   );
 }
@@ -556,8 +700,8 @@ export function CorpBondsV10({
             </div>
           </div>
 
-          <Summary />
-          <Structure />
+          <Summary currency={currency} />
+          <Structure currency={currency} />
           <Widgets />
           <Flows />
           <Closed />
