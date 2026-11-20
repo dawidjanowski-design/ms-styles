@@ -1765,16 +1765,25 @@ select.field__control {
 .selectBtn:hover { background: var(--row-hover); }
 
 /* ---- podsumowanie ----
-   Uklad wziety z karty „Wynik portfela" na portfelu: liczba wiodaca
-   z pigulka i odnosnikiem, pod kreska rowne kafelki, na koncu przypis.
-   Kafelki sa identyczne — ta sama ramka, stopien i budowa; rozni je
-   wylacznie tresc, wiec daje sie je porownywac wzrokiem. */
+   Uklad z karty „Wynik portfela" na portfelu, tresc z makiety 1264:4724.
+   Kafelki sa identyczne: ta sama ramka, tlo, padding i budowa etykieta /
+   wartosc / podpis. W rzedzie wyrownuja sie do najwyzszego, wiec wartosci
+   stoja w jednej linii nawet gdy nazwa sie lamie. */
+.resultCard__stats { grid-template-columns: repeat(4, 1fr); align-items: stretch; }
 .resultCard__stats--3 { grid-template-columns: repeat(3, 1fr); }
-/* Kafelki w jednym rzedzie maja rowna wysokosc nawet przy etykiecie
-   lamiacej sie na dwie linie. */
-.resultCard__stats { align-items: stretch; }
-.resultStat { justify-content: flex-start; }
-.resultStat__label { min-height: 2em; display: flex; align-items: flex-start; }
+.resultStat { justify-content: flex-start; gap: 2px; padding: 14px 16px; }
+.resultStat__label { font-size: 13px; line-height: 20px; color: var(--muted); min-height: 40px; }
+.resultStat__value { font-size: 18px; font-weight: 500; line-height: 26px; color: var(--ink); }
+.resultStat__sub { font-size: 13px; line-height: 20px; color: var(--muted); }
+/* Przypis pod kwota wiodaca stoi po lewej, przy niej — nie po drugiej
+   stronie karty. */
+.resultCard__note--left { text-align: left; }
+
+/* Liczniki skladu i najblizsze zdarzenia: pary etykieta-wartosc w jednym
+   rzedzie, pod kreska. Opisuja pozycje, nie jej wynik. */
+.corpCounters { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.corpCounter { display: inline-flex; gap: 8px; font-size: 13px; color: var(--muted); }
+.corpCounter strong { font-weight: 500; color: var(--ink); }
 
 /* ---- sekcje ---- */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }

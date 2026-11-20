@@ -2,7 +2,7 @@
    wszystko wyliczamy z wierszy serii, zeby przelacznik walut, grupowania
    i metryki nigdy nie rozjechaly sie z tabela pod spodem. */
 
-import { CORP_CLOSED_INTEREST, CORP_SERIES, type Serie } from './corpV10';
+import { CORP_CLOSED_INTEREST, CORP_IRR, CORP_SERIES, type Serie } from './corpV10';
 import type { Currency } from './currencies';
 
 /** Pole liczbowe serii — w walucie widoku, nie zawsze w zlotych. */
@@ -133,8 +133,7 @@ export function podsumowanie(waluta: Currency) {
     odsetkiZamkniete: waluta === 'Łącznie' ? CORP_CLOSED_INTEREST : 0,
     odsetkiMiesiecznie: odsetki / 12,
     wynik,
-    /* Stopa zwrotu z wyniku do wartosci poczatkowej okresu. */
-    stopa: value - wynik > 0 ? (wynik / (value - wynik)) * 100 : 0,
+    stopa: CORP_IRR[waluta] ?? 0,
     najblizszyWykup: najblizszy(lista),
   };
 }

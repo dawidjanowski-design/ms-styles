@@ -66,59 +66,69 @@ function Select({ label }: { label: string }) {
 
 /* ------------------------------ podsumowanie ------------------------------ */
 
-/* Ten sam uklad, co karta „Wynik portfela" na portfelu: liczba wiodaca
-   z pigulka i odnosnikiem u gory, pod kreska rowne kafelki metryk, na
-   koncu przypis. Jeden wzorzec na oba ekrany. */
+/* Tresc z makiety 1264:4724: wartosc wiodaca z pigulka zmiany, cztery
+   metryki wyniku z podpisami, trzy metryki portfela bez podpisow, a pod
+   kreska liczniki skladu i najblizsze zdarzenia. */
 function Summary({ currency }: { currency: Currency }) {
   const p = podsumowanie(currency);
   const j = jednostka(currency);
   const [calosc, dec] = kwota(p.value, currency).split(',');
 
-  /* Wszystkie kafelki sa jednakowe — ta sama ramka, ten sam stopien,
-     ta sama budowa etykieta/wartosc. Rozni je wylacznie tresc. */
-  const stats: Metric[] = [
-    { label: 'Śr. rentowność (ważona)', value: procent(p.rate) },
-    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency) },
-    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}` },
+  const wynikowe: Metric[] = [
+    { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
+    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
+    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
+    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach' },
+  ];
+  const portfelowe: Metric[] = [
     { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
     { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
     { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
   ];
+  const liczniki: Metric[] = [
+    { label: 'Emitenci', value: String(p.emitenci) },
+    { label: 'Serie', value: String(p.serie) },
+    { label: 'Najbliższy wykup', value: p.najblizszyWykup },
+    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
+  ];
+
+  const kafelek = (m: Metric) => (
+    <div className="resultStat" key={m.label}>
+      <span className="resultStat__label">{m.label}</span>
+      <span className="resultStat__value">{m.value}</span>
+      {m.sub && <span className="resultStat__sub">{m.sub}</span>}
+    </div>
+  );
 
   return (
     <section className="resultCard">
-      <div className="resultCard__top">
-        <div className="resultCard__lead">
-          <span className="resultCard__caption">Wartość bieżąca</span>
-          <div className="resultCard__amountRow">
-            <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
-            <span className="resultCard__rate">
-              Stopa zwrotu 12M: <strong>{procent(p.stopa)}</strong>
-            </span>
-          </div>
+      <div className="resultCard__lead">
+        <span className="resultCard__caption">Wartość bieżąca</span>
+        <div className="resultCard__amountRow">
+          <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
+          <span className="resultCard__rate">+8%</span>
         </div>
-        <span className="resultCard__link">
-          Pogłębiona analiza wyniku
-          <ChevronRight size={14} />
+        <span className="resultCard__note resultCard__note--left">
+          {currency === 'Łącznie'
+            ? '42,5% wartości całego portfela'
+            : `wszystkie pozycje w ${j}`}
         </span>
       </div>
 
       <div className="divider" />
+      <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
 
-      <div className="resultCard__stats resultCard__stats--3">
-        {stats.map((m) => (
-          <div className="resultStat" key={m.label}>
-            <span className="resultStat__label">{m.label}</span>
-            <span className="resultStat__value">{m.value}</span>
-          </div>
+      <div className="resultCard__stats resultCard__stats--3">{portfelowe.map(kafelek)}</div>
+
+      <div className="divider" />
+      <div className="corpCounters">
+        {liczniki.map((c) => (
+          <span className="corpCounter" key={c.label}>
+            {c.label}
+            <strong>{c.value}</strong>
+          </span>
         ))}
       </div>
-
-      <span className="resultCard__note">
-        {currency === 'Łącznie'
-          ? '42,5% wartości całego portfela · wycena z 30.10.2026'
-          : `wszystkie pozycje w ${j} · wycena z 30.10.2026`}
-      </span>
     </section>
   );
 }
@@ -264,11 +274,7 @@ function Structure({ currency }: { currency: Currency }) {
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Struktura portfela</h2>
-          <p className="corpSection__sub">
-            {p.emitenci} {p.emitenci === 1 ? 'emitent' : 'emitentów'} · {p.serie}{' '}
-            {p.serie === 1 ? 'seria' : 'serii'} · {p.sztuk.toLocaleString('pl')} szt. ·{' '}
-            {CORP_STRUCTURE_SUB.toLowerCase()}
-          </p>
+          <p className="corpSection__sub">{CORP_STRUCTURE_SUB}</p>
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
@@ -485,17 +491,13 @@ function Widgets() {
 
 /* --------------------------- zapadalnosc i odsetki --------------------------- */
 
-function Flows({ currency }: { currency: Currency }) {
+function Flows() {
   return (
     <section className="corpSection corpSection--card">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zapadalność i odsetki</h2>
-          <p className="corpSection__sub">
-            Planowane przepływy z portfela obligacji · najbliższy wykup{' '}
-            <strong>{podsumowanie(currency).najblizszyWykup}</strong> · najbliższa wypłata odsetek{' '}
-            <strong>31.12.2026</strong>
-          </p>
+          <p className="corpSection__sub">Planowane przepływy z portfela obligacji</p>
         </div>
         <div className="corpSection__actions">
           {CORP_FLOWS_FILTERS.map((f) => (
@@ -691,7 +693,7 @@ export function CorpBondsV10({
           <Summary currency={currency} />
           <Structure currency={currency} />
           <Widgets />
-          <Flows currency={currency} />
+          <Flows />
           <Closed />
           <Ops />
         </div>

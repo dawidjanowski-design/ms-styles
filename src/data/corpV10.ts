@@ -57,6 +57,16 @@ export const CORP_SERIES: Serie[] = [
    sumy wyplaconych odsetek — stad osobna pozycja. */
 export const CORP_CLOSED_INTEREST = 12480;
 
+/* IRR liczy sie z przeplywow w czasie, ktorych prototyp nie trzyma —
+   zamiast udawac wzor, bierzemy liczbe z makiety. Jedna wartosc na widok
+   walutowy, bo kazdy ma inny zestaw serii. */
+export const CORP_IRR: Record<string, number> = {
+  'Łącznie': 7.1,
+  PLN: 7.02,
+  EUR: 6.8,
+  USD: 0,
+};
+
 
 export const CORP_STRUCTURE_SUB = 'Przełącznik dotyczy wyłącznie tej sekcji';
 
