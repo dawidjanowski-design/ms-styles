@@ -455,7 +455,10 @@ function Widgets() {
       </div>
       <div className="corpWidgets">
         {CORP_WIDGETS.map((w) => (
-          <article className="corpWidget" key={w.id}>
+          <article
+            className={`corpWidget ${!w.bars && !w.parts ? 'corpWidget--plain' : ''}`}
+            key={w.id}
+          >
             <h3 className="corpWidget__title">{w.title}</h3>
             <div className="corpWidget__filters">
               {w.filters.map((f) => (

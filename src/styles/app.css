@@ -1850,6 +1850,10 @@ select.field__control {
 .corpWidget__filters { display: flex; flex-wrap: wrap; gap: 8px; }
 .corpWidget__filters .selectBtn { height: 32px; padding: 0 12px; }
 .corpWidget__value { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+/* Widzet bez wykresu i bez rozbicia ma liczbe przy dolnej krawedzi, tak
+   jak sasiedzi maja tam wykres i rozbicie — trzy karty koncza sie tym
+   samym elementem. */
+.corpWidget--plain .corpWidget__value { margin-top: auto; }
 .corpWidget__sub { font-size: 13px; color: var(--muted); }
 .corpWidget__parts { display: flex; flex-direction: column; gap: 6px; }
 .corpWidget .divider { margin-top: auto; }
