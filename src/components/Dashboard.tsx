@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { DASHBOARD, EVENTS, OFFERS, type Event, type Offer } from '../data/dashboard';
+import {
+  DASHBOARD,
+  EVENTS,
+  OFFERS,
+  V10_ORDERS,
+  V10_ORDERS_HEAD,
+  type Event,
+  type Offer,
+} from '../data/dashboard';
 import { VIEWS } from '../data/currencies';
 import { Logo } from '../icons/Logo';
 import { AllocationChart, Legend, META, assetColor } from './Portfolio';
@@ -138,6 +146,56 @@ function SplitChartV10() {
         </div>
       </div>
     </>
+  );
+}
+
+/* Nr 10: biezace zlecenia w tej samej karcie co nadchodzace zdarzenia —
+   oba bloki to lista zdarzen w czasie, wiec czytaja sie tym samym rytmem.
+   Rozni je tylko podzial kolumn: zlecenie zaczyna sie od stanu, bo to
+   pierwsze, o co klient pyta. */
+function OrdersV10() {
+  return (
+    <section className="events">
+      <div className="events__head">
+        <h2 className="sectionTitle">
+          Bieżące zlecenia <span className="events__count">{V10_ORDERS_HEAD.count}</span>
+        </h2>
+        <span className="corpLink">
+          {V10_ORDERS_HEAD.link}
+          <span className="eventRow__chev" aria-hidden="true">
+            ›
+          </span>
+        </span>
+      </div>
+
+      <div className="eventsCard">
+        <div className="eventRow eventRow--orders eventRow--head" aria-hidden="true">
+          <span className="eventRow__date">Status</span>
+          <span className="eventRow__date">Instrument / produkt</span>
+          <span className="eventRow__date">Typ</span>
+          <span className="eventRow__date eventRow__amount">Kwota</span>
+          <span className="eventRow__date eventRow__amount">Złożono</span>
+          <span />
+        </div>
+        {V10_ORDERS.map((z) => (
+          <button type="button" className="eventRow eventRow--orders" key={z.name}>
+            <span>
+              <span className="badge">{z.status}</span>
+            </span>
+            <span className="eventRow__what">
+              <span className="eventRow__type">{z.name}</span>
+              <span className="eventRow__instrument">{z.sub}</span>
+            </span>
+            <span className="eventRow__instrument">{z.type}</span>
+            <span className="eventRow__amount">{z.amount}</span>
+            <span className="eventRow__amount eventRow__when">{z.date}</span>
+            <span className="eventRow__chev" aria-hidden="true">
+              ›
+            </span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -477,6 +535,8 @@ export function DashboardScreen({
           ) : (
             <>
           {styleId === '1' ? <OffersLoop /> : <OffersScroll />}
+
+          {styleId === '10' && <OrdersV10 />}
 
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>

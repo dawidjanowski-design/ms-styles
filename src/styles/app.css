@@ -2001,3 +2001,18 @@ select.field__control {
    jako jedna linia rozbicia, a nie trzy osobne etykiety. */
 .splitRow__part + .splitRow__part::before { content: '·'; margin-right: 10px; color: var(--muted); }
 .splitRow__pln { color: var(--muted); }
+
+/* ---- nr 10: biezace zlecenia ----
+   Ta sama karta i ten sam wiersz co nadchodzace zdarzenia; inny jest tylko
+   podzial kolumn i to, ze nazwa ma pod soba rachunek. */
+.events__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.events__count { font-size: 13px; font-weight: 400; color: var(--muted); }
+.eventRow--orders {
+  grid-template-columns: 180px minmax(0, 1fr) 100px 140px 110px 16px;
+  align-items: center;
+}
+/* Nazwa nad rachunkiem — dwie linie w jednej komorce, zeby wiersz zostal
+   wierszem, a nie rozpadl sie na dwa rzedy siatki. */
+.eventRow__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.eventRow__when { color: var(--muted); font-weight: 400; }
+.eventRow--orders.eventRow--head .eventRow__amount { font-weight: 400; color: var(--muted); }

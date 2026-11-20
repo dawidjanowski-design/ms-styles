@@ -86,3 +86,44 @@ export const EVENTS: Event[] = [
   { date: '31.12.2026', type: 'Okno umorzenia', instrument: 'Fundusze zamknięte (FIZ)', amount: '', asset: 'fiz' },
   { date: '09.06.2027', type: 'Wykup, zwrot kapitału', instrument: 'VEHIS, Seria K', amount: '450 000,00 PLN', asset: 'corp' },
 ];
+
+/* ---------------- nr 10: biezace zlecenia (wireframe PU03, 1168:476) ----------------
+   Zlecenie zyje krocej niz pozycja: klient chce wiedziec, czy poszlo, za ile
+   i kiedy je zlozyl. Stad status na przodzie, a nie w ostatniej kolumnie. */
+export type Zlecenie = {
+  status: string;
+  name: string;
+  sub: string;
+  type: string;
+  amount: string;
+  date: string;
+};
+
+export const V10_ORDERS_HEAD = { count: '3 aktywne', link: 'Historia zleceń' };
+
+export const V10_ORDERS: Zlecenie[] = [
+  {
+    status: 'Aktywne',
+    name: 'Dekpol S.A., seria D',
+    sub: 'Rachunek maklerski · zlecenie z limitem 100,20%',
+    type: 'Kupno',
+    amount: '50 000,00 PLN',
+    date: '17.11.2026',
+  },
+  {
+    status: 'Częściowo zrealizowane',
+    name: 'Victoria Dom, seria B2',
+    sub: 'Rachunek maklerski · zrealizowano 12 z 20 szt.',
+    type: 'Sprzedaż',
+    amount: '21 340,00 PLN',
+    date: '16.11.2026',
+  },
+  {
+    status: 'Aktywne',
+    name: 'Nordvik Development S.A., seria C',
+    sub: 'Rachunek na emisje · zapis na emisję',
+    type: 'Zapis',
+    amount: '8 000,00 PLN',
+    date: '13.11.2026',
+  },
+];
