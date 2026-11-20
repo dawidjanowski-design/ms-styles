@@ -689,6 +689,10 @@
   --c-corp-soft: #cfe2d3;
   /* Tlo zielonej pigulki ze stopa zwrotu. */
   --c-corp-bg: #e0eae1;
+  /* Pigulka zlecenia w toku — ciemny bursztyn na jasnym, z tej samej rodziny
+     co --c-fiz, ale czytelny jako tekst 13 px. */
+  --c-partial: #8a6400;
+  --c-partial-bg: #f6eccc;
 
   --title-size: 18px;
   --title-weight: 400;

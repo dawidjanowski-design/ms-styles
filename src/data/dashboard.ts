@@ -90,8 +90,12 @@ export const EVENTS: Event[] = [
 /* ---------------- nr 10: biezace zlecenia (wireframe PU03, 1168:476) ----------------
    Zlecenie zyje krocej niz pozycja: klient chce wiedziec, czy poszlo, za ile
    i kiedy je zlozyl. Stad status na przodzie, a nie w ostatniej kolumnie. */
+/** Ton pigulki stanu: aktywne zielenia obligacji, czesciowo zrealizowane bursztynem. */
+export type ZlecenieTon = 'active' | 'partial';
+
 export type Zlecenie = {
   status: string;
+  tone: ZlecenieTon;
   name: string;
   sub: string;
   type: string;
@@ -104,6 +108,7 @@ export const V10_ORDERS_HEAD = { count: '3 aktywne', link: 'Historia zleceń' };
 export const V10_ORDERS: Zlecenie[] = [
   {
     status: 'Aktywne',
+    tone: 'active',
     name: 'Dekpol S.A., seria D',
     sub: 'Rachunek maklerski · zlecenie z limitem 100,20%',
     type: 'Kupno',
@@ -112,6 +117,7 @@ export const V10_ORDERS: Zlecenie[] = [
   },
   {
     status: 'Częściowo zrealizowane',
+    tone: 'partial',
     name: 'Victoria Dom, seria B2',
     sub: 'Rachunek maklerski · zrealizowano 12 z 20 szt.',
     type: 'Sprzedaż',
@@ -120,6 +126,7 @@ export const V10_ORDERS: Zlecenie[] = [
   },
   {
     status: 'Aktywne',
+    tone: 'active',
     name: 'Nordvik Development S.A., seria C',
     sub: 'Rachunek na emisje · zapis na emisję',
     type: 'Zapis',

@@ -2039,3 +2039,8 @@ select.field__control {
 .dashSplit--orders .events { padding-top: 0; }
 /* W waskiej kolumnie kwota i rachunek ida jedno pod drugim. */
 .dashSplit--orders .evMonths__amount { display: flex; flex-direction: column; align-items: flex-end; }
+
+/* Nr 10: stan zlecenia w kolorze. Aktywne to ta sama zielona pigulka co
+   stopa zwrotu w obligacjach, czesciowo zrealizowane — bursztyn. */
+[data-style='10'] .badge--active { background: var(--c-corp-bg); color: var(--c-corp); }
+[data-style='10'] .badge--partial { background: var(--c-partial-bg); color: var(--c-partial); }

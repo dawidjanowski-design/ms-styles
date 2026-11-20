@@ -177,7 +177,7 @@ function OrdersV10() {
             <span className="eventRow__what">
               <span className="eventRow__type">{z.name}</span>
               <span className="eventRow__meta">
-                <span className="badge">{z.status}</span>
+                <span className={`badge badge--${z.tone}`}>{z.status}</span>
                 <span className="eventRow__instrument">
                   {z.type} · {z.sub}
                 </span>
