@@ -1757,7 +1757,9 @@ select.field__control {
   display: inline-flex; align-items: center; gap: 8px;
   height: var(--control-h, 42px); padding: 0 16px; border: 0; border-radius: 999px;
   background: var(--card-bg); color: var(--ink);
-  font: 400 12px/1 Inter, system-ui, sans-serif;
+  /* Ten sam krój, stopien i grubosc co przyciski i pigulki — select jest
+     kontrolka, nie tekstem. */
+  font: 500 13px/1 Inter, system-ui, sans-serif; letter-spacing: -0.01em;
   box-shadow: var(--shadow-pill); cursor: pointer;
 }
 .selectBtn:hover { background: var(--row-hover); }
