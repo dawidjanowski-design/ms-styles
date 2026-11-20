@@ -536,8 +536,19 @@ export function DashboardScreen({
             <>
           {styleId === '1' ? <OffersLoop /> : <OffersScroll />}
 
-          {styleId === '10' && <OrdersV10 />}
-
+          {/* Nr 10: zlecenia i zdarzenia obok siebie. Po lewej to, co klient
+              sam zlecil, po prawej to, co przyjdzie samo — kalendarz z nr 8,
+              bo w waskiej kolumnie pelna data w kazdym wierszu powtarzalaby
+              ten sam miesiac. */}
+          {styleId === '10' ? (
+            <section className="dashSplit dashSplit--orders">
+              <OrdersV10 />
+              <div className="events">
+                <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
+                <EventMonths />
+              </div>
+            </section>
+          ) : (
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
             <div className="eventsCard">
@@ -565,6 +576,7 @@ export function DashboardScreen({
               ))}
             </div>
           </section>
+          )}
             </>
           )}
         </div>

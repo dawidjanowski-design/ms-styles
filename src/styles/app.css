@@ -2016,3 +2016,11 @@ select.field__control {
 .eventRow__what { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .eventRow__when { color: var(--muted); font-weight: 400; }
 .eventRow--orders.eventRow--head .eventRow__amount { font-weight: 400; color: var(--muted); }
+
+/* Nr 10: zlecenia (szeroka tabela) obok kalendarza zdarzen z nr 8.
+   Tabela zostaje elastyczna, kalendarz ma stala szerokosc — inaczej
+   karty miesiecy rozciagalyby sie na polowe ekranu. */
+.dashSplit--orders { grid-template-columns: minmax(0, 1fr) 420px; gap: 24px; }
+.dashSplit--orders .events { padding-top: 0; }
+/* W waskiej kolumnie kwota i rachunek ida jedno pod drugim. */
+.dashSplit--orders .evMonths__amount { display: flex; flex-direction: column; align-items: flex-end; }
