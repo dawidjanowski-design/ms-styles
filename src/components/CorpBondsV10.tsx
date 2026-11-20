@@ -80,16 +80,19 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
     { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach' },
   ];
+  /* Cztery kafelki w obu rzedach — siatka ma byc parzysta. Najblizsza
+     wyplata odsetek wchodzi tu jako czwarta: to kwota w kalendarzu, wiec
+     czyta sie jak metryka, a nie jak licznik skladu. */
   const portfelowe: Metric[] = [
     { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
     { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
     { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
+    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
   ];
   const liczniki: Metric[] = [
     { label: 'Emitenci', value: String(p.emitenci) },
     { label: 'Serie', value: String(p.serie) },
     { label: 'Najbliższy wykup', value: p.najblizszyWykup },
-    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
   ];
 
   const kafelek = (m: Metric) => (
@@ -118,7 +121,7 @@ function Summary({ currency }: { currency: Currency }) {
       <div className="divider" />
       <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
 
-      <div className="resultCard__stats resultCard__stats--3">{portfelowe.map(kafelek)}</div>
+      <div className="resultCard__stats">{portfelowe.map(kafelek)}</div>
 
       <div className="divider" />
       <div className="corpCounters">

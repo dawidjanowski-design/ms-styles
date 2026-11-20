@@ -1770,7 +1770,6 @@ select.field__control {
    wartosc / podpis. W rzedzie wyrownuja sie do najwyzszego, wiec wartosci
    stoja w jednej linii nawet gdy nazwa sie lamie. */
 .resultCard__stats { grid-template-columns: repeat(4, 1fr); align-items: stretch; }
-.resultCard__stats--3 { grid-template-columns: repeat(3, 1fr); }
 .resultStat { justify-content: flex-start; gap: 2px; padding: 14px 16px; }
 .resultStat__label { font-size: 13px; line-height: 20px; color: var(--muted); min-height: 40px; }
 .resultStat__value { font-size: 18px; font-weight: 500; line-height: 26px; color: var(--ink); }
