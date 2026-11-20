@@ -7,7 +7,7 @@ import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 const STYLES: { id: StyleId; label: string }[] = [
   { id: '1', label: 'nr 1' },
   { id: '2', label: 'nr 2' },
@@ -18,6 +18,7 @@ const STYLES: { id: StyleId; label: string }[] = [
   { id: '7', label: 'nr 7' },
   { id: '8', label: 'nr 8' },
   { id: '9', label: 'nr 9' },
+  { id: '10', label: 'nr 10' },
   { id: 'makieta', label: 'Makieta' },
 ];
 const IDS = STYLES.map((s) => s.id) as string[];

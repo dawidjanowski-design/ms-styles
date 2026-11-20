@@ -21,7 +21,7 @@ import { ASSETS } from '../data/portfolio';
 import { Amount, Pills } from './ui';
 import { Transactions } from './Transactions';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 
 /* ----------------------------- lista instrumentów ----------------------------- */
 
@@ -93,7 +93,8 @@ export function AssetDetailScreen({
     );
 
   /* Makieta nie ma palety — kolor i tak gasi CSS, wiec siegamy po nr 1. */
-  const palette = styleId === '2' ? '2' : '1';
+  /* Nr 10 to nr 2 z inna trescia — paleta ta sama. */
+  const palette = styleId === '2' || styleId === '10' ? '2' : '1';
   const color = ASSETS.find((a) => a.id === 'corp')?.colors[palette].card ?? 'var(--ink)';
   const locked = styleId === 'makieta';
 

@@ -297,3 +297,154 @@ export const ACCOUNTS: Account[] = [
     action: 'Zobacz szczegóły',
   },
 ];
+
+/* ====================== STYLISTYKA 10 — UI PORTFELA ======================
+   Tresc przeniesiona z wireframe'ow (Figma, strona „↳ ・Portfel v2”, ekran
+   P01). Zadna z tych wartosci nie zastepuje danych pozostalych stylistyk —
+   nr 10 czyta je zamiast ASSETS.highlights/rows i dokłada sekcje wyniku. */
+
+export type ResultRange = {
+  id: string;
+  /** naglowek nad kwota, np. „Wynik za ostatnie 12 miesiecy” */
+  caption: string;
+  amount: string;
+  decimals: string;
+  /** stopa zwrotu w zielonej pigulce */
+  rate: string;
+  /** cztery kafelki pod kreska */
+  stats: Metric[];
+  /** metoda i okres, drobnym drukiem w stopce karty */
+  note: string;
+};
+
+export const RESULT_RANGES: ResultRange[] = [
+  {
+    id: '12M',
+    caption: 'Wynik za ostatnie 12 miesięcy',
+    amount: '+185 300',
+    decimals: ',00 PLN',
+    rate: '5,05%',
+    stats: [
+      { label: 'Wartość początkowa', value: '3 884 180,00 PLN' },
+      { label: 'Wpłaty', value: '+420 000,00 PLN' },
+      { label: 'Wypłaty', value: '−270 840,00 PLN' },
+      { label: 'Wartość końcowa', value: '4 218 640,00 PLN' },
+    ],
+    note: 'XIRR, w skali roku · okres XI 2025 – X 2026',
+  },
+  {
+    id: '24M',
+    caption: 'Wynik za ostatnie 24 miesiące',
+    amount: '+341 920',
+    decimals: ',00 PLN',
+    rate: '4,78%',
+    stats: [
+      { label: 'Wartość początkowa', value: '3 410 500,00 PLN' },
+      { label: 'Wpłaty', value: '+760 000,00 PLN' },
+      { label: 'Wypłaty', value: '−293 780,00 PLN' },
+      { label: 'Wartość końcowa', value: '4 218 640,00 PLN' },
+    ],
+    note: 'XIRR, w skali roku · okres XI 2024 – X 2026',
+  },
+  {
+    id: 'Od początku',
+    caption: 'Wynik od początku inwestowania',
+    amount: '+862 140',
+    decimals: ',00 PLN',
+    rate: '5,41%',
+    stats: [
+      { label: 'Wartość początkowa', value: '0,00 PLN' },
+      { label: 'Wpłaty', value: '+4 120 000,00 PLN' },
+      { label: 'Wypłaty', value: '−763 500,00 PLN' },
+      { label: 'Wartość końcowa', value: '4 218 640,00 PLN' },
+    ],
+    note: 'XIRR, w skali roku · okres VI 2019 – X 2026',
+  },
+];
+
+/** Dwie pierwsze metryki sa na kazdej karcie te same — dopiero po nich ida
+ *  metryki wlasciwe dla klasy. Dzieki temu klasy daja sie porownac wzrokiem,
+ *  bez czytania etykiet. Liczniki (`rows`) schodza pod kreske: opisuja
+ *  pozycje, nie wynik. */
+export const V10_ASSETS: Record<
+  string,
+  { currencies?: string; highlights: Metric[]; rows: Metric[] }
+> = {
+  corp: {
+    currencies: 'PLN · EUR',
+    highlights: [
+      { label: 'Wynik 12M', value: '+62 540,00 PLN' },
+      { label: 'Stopa zwrotu 12M', value: '7,10%' },
+      { label: 'Wypłacone odsetki 12M', value: '42 980,00 PLN' },
+      { label: 'Śr. rentowność (ważona)', value: '7,62%' },
+      { label: 'Śr. oprocentowanie', value: '7,49%' },
+    ],
+    rows: [
+      { label: 'Emitenci', value: '7' },
+      { label: 'Serie', value: '9' },
+      { label: 'Najbliższy wykup', value: '18.12.2026' },
+    ],
+  },
+  skarb: {
+    highlights: [
+      { label: 'Wynik 12M', value: '+11 420,00 PLN' },
+      { label: 'Stopa zwrotu 12M', value: '4,72%' },
+      { label: 'Wypłacone odsetki 12M', value: '5 240,00 PLN' },
+      { label: 'Śr. rentowność (ważona)', value: '5,24%' },
+      { label: 'Śr. oprocentowanie', value: '5,10%' },
+    ],
+    rows: [
+      { label: 'Emitenci', value: '1' },
+      { label: 'Serie', value: '2' },
+      { label: 'Najbliższy wykup', value: '25.03.2027' },
+    ],
+  },
+  am: {
+    currencies: 'PLN · EUR',
+    highlights: [
+      { label: 'Wynik 12M', value: '+58 520,00 PLN' },
+      { label: 'Stopa zwrotu 12M', value: '6,10%' },
+    ],
+    rows: [
+      { label: 'Strategie', value: '4' },
+      { label: 'Rachunki', value: '4' },
+      { label: 'Ostatnia wycena', value: '28.10.2026' },
+    ],
+  },
+  fio: {
+    highlights: [
+      { label: 'Wynik 12M', value: '+24 180,00 PLN' },
+      { label: 'Stopa zwrotu 12M', value: '4,28%' },
+    ],
+    rows: [
+      { label: 'Fundusze', value: '4' },
+      { label: 'Ostatnia wycena', value: '30.10.2026' },
+    ],
+  },
+  fiz: {
+    highlights: [
+      { label: 'Wynik 12M', value: '+28 640,00 PLN' },
+      { label: 'Stopa zwrotu 12M', value: '7,02%' },
+    ],
+    rows: [
+      { label: 'Fundusze', value: '4' },
+      { label: 'Certyfikaty', value: '120' },
+      { label: 'Najbliższe okno umorzenia', value: '20.12.2026' },
+    ],
+  },
+};
+
+/** Notka pod siatka kart — tlumaczy, dlaczego kazda karta zaczyna sie tak
+ *  samo. Bez niej uklad wyglada na przypadkowy. */
+export const V10_ASSETS_NOTE =
+  'Wynik 12M i stopa zwrotu 12M stoją na każdej karcie w tych samych dwóch pierwszych miejscach, ' +
+  'żeby klasy dało się porównać. Liczba emitentów, serii i najbliższe zdarzenia zeszły do dolnej ' +
+  'belki — opisują pozycję, nie wynik.';
+
+/** Akcje gotowkowe z wireframe'u. Pelny guzik jest jeden — reszta biala,
+ *  zgodnie z uwaga, ze pojedynczy mocny akcent na ekranie ma wygrywac. */
+export const V10_CASH_ACTIONS = [
+  { label: 'Wpłać', primary: true },
+  { label: 'Wypłać', primary: false },
+  { label: 'Przenieś między rachunkami', primary: false },
+];

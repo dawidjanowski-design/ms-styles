@@ -4,6 +4,10 @@ import {
   CASH,
   CASH_BY_CURRENCY,
   LEGEND_ORDER,
+  RESULT_RANGES,
+  V10_ASSETS,
+  V10_ASSETS_NOTE,
+  V10_CASH_ACTIONS,
   type Account,
   type AssetClass,
   type Metric,
@@ -19,7 +23,7 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 
-type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
+type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
     Nr 6 rozni sie od nr 4 wylacznie sekcja zdarzen, wiec siega po jego palete
     i jego kolejnosc klas, zamiast duplikowac je w danych. */
@@ -31,11 +35,14 @@ type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'makieta';
 const SWAP = { am: CASH.id, [CASH.id]: 'am' } as Record<string, string>;
 const colorId = (id: string, s: StyleId) => (s === '9' ? SWAP[id] ?? id : id);
 
+/* Nr 10 nie wnosi wlasnej palety ani kolejnosci — to nr 2 z inna trescia. */
 const paletteOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '1' : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
+  s === 'makieta' ? '1' : s === '10' ? '2'
+    : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
 /** Kolejnosc pozycji w makiecie jest taka jak w nr 2. */
 const orderOf = (s: StyleId): '1' | '2' | '3' | '4' | '5' =>
-  s === 'makieta' ? '2' : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
+  s === 'makieta' || s === '10' ? '2'
+    : s === '6' || s === '7' || s === '8' || s === '9' ? '4' : s;
 type HoverProps = { hot: string | null; setHot: (id: string | null) => void };
 
 /** Klasy aktywów, które mają już własny ekran szczegółów. */
@@ -284,18 +291,38 @@ function CashOverview({
   cards,
   onOpenTransit,
   zeroAsNumber = false,
+  actions = false,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
   /** nr 5 (Figma 997:519) pisze puste saldo jako 0,00, a nie myslnikiem */
   zeroAsNumber?: boolean;
+  /** nr 10: wplata, wyplata i transfer stoja przy gotowce, a nie w menu */
+  actions?: boolean;
 }) {
   const visible = cards.filter((c) => !isEmpty(c));
   if (visible.length === 0) return null;
 
   return (
     <section className="cash">
-      <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+      {actions ? (
+        <div className="cash__head">
+          <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+          <div className="cash__actions">
+            {V10_CASH_ACTIONS.map((a) => (
+              <button
+                key={a.label}
+                type="button"
+                className={`btn ${a.primary ? 'btn--primary' : ''}`}
+              >
+                {a.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <h2 className="sectionTitle">Gotówka i środki rozliczeniowe</h2>
+      )}
       <div className="cash__grid">
         {visible.map((card, i) => {
           const link = onOpenTransit && card.label === 'Środki w drodze';
@@ -336,6 +363,51 @@ function CashOverview({
   );
 }
 
+/* ----------------------------- wynik portfela ----------------------------- */
+
+/* Sekcja z wireframe'u P01. Zakres zmienia wszystko w karcie naraz — kwote,
+   stope zwrotu, cztery kafelki i okres w stopce — wiec trzymam go w jednym
+   stanie, a nie w czterech. */
+function ResultSection() {
+  const [range, setRange] = useState(RESULT_RANGES[0].id);
+  const data = RESULT_RANGES.find((r) => r.id === range) ?? RESULT_RANGES[0];
+
+  return (
+    <section className="result">
+      <div className="result__head">
+        <h2 className="sectionTitle">Wynik portfela</h2>
+        <Pills items={RESULT_RANGES.map((r) => r.id)} value={range} onChange={setRange} />
+      </div>
+      <article className="resultCard">
+        <div className="resultCard__top">
+          <div className="resultCard__lead">
+            <span className="resultCard__caption">{data.caption}</span>
+            <div className="resultCard__amountRow">
+              <Amount int={data.amount} dec={data.decimals} className="resultCard__amount" />
+              <span className="resultCard__rate">
+                Stopa zwrotu: <strong>{data.rate}</strong>
+              </span>
+            </div>
+          </div>
+          <span className="resultCard__link">
+            Pogłębiona analiza wyniku<span aria-hidden="true">›</span>
+          </span>
+        </div>
+        <div className="divider" />
+        <div className="resultCard__stats">
+          {data.stats.map((s) => (
+            <div className="resultStat" key={s.label}>
+              <span className="resultStat__label">{s.label}</span>
+              <span className="resultStat__value">{s.value}</span>
+            </div>
+          ))}
+        </div>
+        <span className="resultCard__note">{data.note}</span>
+      </article>
+    </section>
+  );
+}
+
 /* ----------------------------- karty aktywów ----------------------------- */
 
 const isDate = (m: Metric) => /^\d{2}\.\d{2}\.\d{4}$/.test(m.value);
@@ -361,13 +433,20 @@ function AssetCard({
   const v5 = styleId === '5';
   const tiles = !makieta && !v5;
   const strip = makieta || v5;
+  /* Nr 10 czyta metryki z wireframe'u: Wynik 12M i stopa zwrotu 12M z przodu,
+     liczniki pod kreska. Pozostale stylistyki zostaja przy swoich danych. */
+  const v10 = styleId === '10' ? V10_ASSETS[asset.id] : undefined;
+  const highlights = v10 ? v10.highlights : asset.highlights;
+  const footRows = v10 ? v10.rows : asset.rows;
   const dates = v5 ? asset.highlights.filter(isDate) : [];
   const results = asset.highlights.filter((m) => !dates.includes(m));
-  const rows = makieta ? [] : v5 ? [...asset.rows, ...dates] : [...asset.highlights, ...asset.rows];
+  const rows = makieta ? [] : v5 ? [...asset.rows, ...dates] : [...highlights, ...footRows];
   /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
-     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
-  const lead = asset.highlights.length >= 3 ? asset.highlights[0] : null;
-  const grid = lead ? asset.highlights.slice(1) : asset.highlights;
+     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie.
+     W nr 10 nie wyrozniamy zadnej: obie pierwsze metryki maja wazyc tyle
+     samo, bo o to chodzi w porownywaniu klas. */
+  const lead = !v10 && highlights.length >= 3 ? highlights[0] : null;
+  const grid = lead ? highlights.slice(1) : highlights;
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : results;
 
   return (
@@ -381,6 +460,7 @@ function AssetCard({
           {bar && <span className="assetCard__bar" />}
           <span className="assetCard__name">{asset.name}</span>
           {!bar && <span className="assetCard__dot" />}
+          {v10?.currencies && <span className="assetCard__cur">{v10.currencies}</span>}
         </div>
         <Amount
           int={makieta ? `≈ ${asset.amount}` : asset.amount}
@@ -414,9 +494,9 @@ function AssetCard({
               ))}
             </div>
           )}
-          {asset.rows.length > 0 && (
+          {footRows.length > 0 && (
             <div className="metricFoot">
-              {asset.rows.map((r) => (
+              {footRows.map((r) => (
                 <span className="metricFoot__item" key={r.label}>
                   {r.label}
                   <strong>{r.value}</strong>
@@ -777,7 +857,13 @@ export function PortfolioScreen({
             cards={data.cashCards}
             onOpenTransit={transitHandler}
             zeroAsNumber={styleId === '5'}
+            actions={styleId === '10'}
           />
+
+          {/* Wireframe stawia wynik miedzy gotowka a struktura: najpierw
+              „ile mam pod reka”, potem „ile na tym zarobilem”, na koncu
+              „z czego to sie sklada”. */}
+          {styleId === '10' && <ResultSection />}
 
           <section className="assets">
             <div className="assets__head">
@@ -791,7 +877,7 @@ export function PortfolioScreen({
                 locked={styleId === 'makieta'}
               />
             </div>
-            <div className="assets__list">
+            <div className={`assets__list ${styleId === '10' ? 'assets__list--grid' : ''}`}>
               {view === 'Aktywa'
                 ? data.assets.map((a) => (
                     <AssetCard
@@ -816,6 +902,9 @@ export function PortfolioScreen({
                     />
                   ))}
             </div>
+            {styleId === '10' && view === 'Aktywa' && (
+              <p className="assets__note">{V10_ASSETS_NOTE}</p>
+            )}
           </section>
         </div>
       </div>

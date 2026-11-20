@@ -672,3 +672,83 @@
   --shadow-track: 0 0 0 1px #e6e6e6;
   --c-cash-bg: #ededed;
 }
+
+/* ====================== STYLISTYKA 10 — UI PORTFELA ======================
+   Tokeny sa kopia nr 2: ta stylistyka nie zmienia jezyka wizualnego, tylko
+   wdraza tresc i uklad z wireframe'ow (Figma, strona „↳ ・Portfel v2”).
+   Rozni sie od nr 2 wylacznie tym, co jest na ekranie:
+   - kolejnosc sekcji: podsumowanie → gotowka → wynik portfela → struktura,
+   - akcje Wplac / Wyplac / Przenies w naglowku sekcji gotowki,
+   - osobna sekcja „Wynik portfela” z zakresem 12M / 24M / Od poczatku,
+   - struktura aktywow w dwoch kolumnach, z Wynikiem 12M i stopa zwrotu 12M
+     na pierwszych dwoch miejscach kazdej karty.
+   Kazda wartosc kolorystyczna, typograficzna i odstepowa zostaje z nr 2. */
+[data-style='10'] {
+  --title-size: 18px;
+  --title-weight: 400;
+  --title-color: var(--muted);
+  --title-tracking: -0.02em;
+  --title-in-summary: 1;
+
+  /* Odstepy bloku podsumowania takie same jak w nr 1 — tytul, kwota, wykres
+     i legenda maja stac w tym samym rytmie w obu stylistykach. */
+  --summary-pt: 0px;
+  --summary-gap: 0px;
+  --summary-top-gap: 16px;
+  --title-amount-gap: 2px;
+  --legend-pt: 16px;
+  --legend-gap: 8px;
+  --cash-pt: 0px;
+
+  --amount-size: 30px;
+  --amount-decimals: 21.6px;
+
+  --pill-track-bg: #ececec;
+  --pill-track-pad: 2px;
+  --pill-h: 38px;
+  --pill-px: 16px;
+  --pill-gap: 4px;
+  --pill-size: 13px;
+  --pill-active-color: #171934;
+
+  /* Tlo ekranu chlodniejsze niz w nr 1 (#f8f7f7). */
+  --screen-bg: #f7f7f7;
+
+  --value-strong: #171934;
+  --crumb-sep: #c9c9c9;
+  --sub-faint: #aeaeae;
+  --chip-border-hover: #dcdcdc;
+  --avatar-bg: #d9d9d9;
+  --nav-active-bg: #f0f0f2;
+  --row-hover: #f0f0f2;
+  --nav-active-color: #171934;
+
+  --section-title-size: 16px;
+  --section-title-color: #4c4c4c;
+  --section-title-tracking: 0;
+
+  --bar-h: 56px;
+  --bar-gap: 4px;
+  --bar-radius: 2px;
+  --bar-foot-h: 4px;
+  --bar-fill-alpha: 0.1;
+
+  --asset-card-pad: 20px;
+  --asset-head-px: 0px;
+  --asset-row-px: 0px;
+  --asset-value-size: 24px;
+  --asset-value-decimals: 18px;
+  --asset-marker: bar;
+  --asset-marker-after: 0;
+  --highlight-strip: 0;
+
+  --progress-track: #e7e7e7;
+
+  --c-corp: #046816;
+  --c-skarb: #0a21c8;
+  --c-am: #b044ef;
+  --c-fio: #11aebd;
+  --c-fiz: #e4b212;
+  --c-cash: #9ec421;
+  --c-cash-bg: #f2f5e3;
+}
