@@ -444,12 +444,12 @@ export const V10_ASSETS_NOTE =
   'żeby klasy dało się porównać. Liczba emitentów, serii i najbliższe zdarzenia zeszły do dolnej ' +
   'belki — opisują pozycję, nie wynik.';
 
-/** Akcje gotowkowe z wireframe'u. Pelny guzik jest jeden — reszta biala,
- *  zgodnie z uwaga, ze pojedynczy mocny akcent na ekranie ma wygrywac. */
-export const V10_CASH_ACTIONS = [
-  { label: 'Wpłać', primary: true },
-  { label: 'Wypłać', primary: false },
-  { label: 'Przenieś między rachunkami', primary: false },
+/** Akcje gotowkowe z wireframe'u. Wplata i wyplata to zwykle przyciski,
+ *  przeniesienie miedzy wlasnymi rachunkami schodzi do ghosta. */
+export const V10_CASH_ACTIONS: { label: string; ghost: boolean }[] = [
+  { label: 'Wpłać', ghost: false },
+  { label: 'Wypłać', ghost: false },
+  { label: 'Przenieś między rachunkami', ghost: true },
 ];
 
 /* Nazwy klas w wireframe'ach sa pelne — „Fundusze Inwestycyjne Zamkniete”,

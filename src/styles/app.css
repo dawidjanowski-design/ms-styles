@@ -1568,8 +1568,7 @@ select.field__control {
 /* ---- akcje przy gotowce ---- */
 .cash__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .cash__actions { display: flex; align-items: center; gap: 8px; }
-/* Jeden pelny guzik na ekran: mocny akcent przestaje dzialac, gdy jest ich
-   kilka obok siebie. Pozostale akcje sa biale z cienkim obrysem. */
+/* Bez pelnego czarnego guzika — hierarchie robi zwykly przycisk i ghost. */
 /* Wysokosc sterowania rowna torowi pigulek (38 px przycisku + 2 px
    wyscielki z kazdej strony) — przyciski i selecty stoja w jednej linii
    z przelacznikami, a nie pol kroku nizej. */
@@ -1581,8 +1580,9 @@ select.field__control {
   transition: background 120ms ease, color 120ms ease;
 }
 .btn:hover { background: var(--row-hover); }
-.btn--primary { background: var(--value-strong); color: #ffffff; box-shadow: none; }
-.btn--primary:hover { background: #000000; }
+/* Ghost: ta sama wysokosc, font i promien, bez tla i cienia. */
+.btn--ghost { background: transparent; box-shadow: none; }
+.btn--ghost:hover { background: var(--row-hover); }
 
 /* ---- wynik portfela ---- */
 .result { display: flex; flex-direction: column; gap: 12px; }
