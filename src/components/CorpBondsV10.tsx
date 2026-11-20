@@ -40,6 +40,7 @@ import {
   Maximize2,
   MoreHorizontal,
   SortNone,
+  TrendingUp,
 } from '../icons/Feather';
 
 /* Kolor klasy z palety nr 2 — ten sam, co na wykresie portfela. Odsetki
@@ -64,14 +65,18 @@ function Select({ label }: { label: string }) {
   );
 }
 
-/* Kafelek na przygaszonym tle — ten sam, co „Wynik portfela" na portfelu.
-   Zastepuje kreski: blok sam sie odcina, wiec nie trzeba go podkreslac. */
-function MetricTile({ metric, small }: { metric: Metric; small?: boolean }) {
+/* Pas metryk zamiast kafelkow: etykieta nad wartoscia, pozycje rozdzielone
+   cienka kreska. Kolor niesie tylko to, co jest wynikiem — reszta zostaje
+   czarno-biala, zeby zielen cos znaczyla. */
+function Metryka({ m }: { m: Metric & { accent?: boolean; trend?: boolean } }) {
   return (
-    <div className={`corpTile ${small ? 'corpTile--small' : ''}`}>
-      <span className="corpTile__label">{metric.label}</span>
-      <span className="corpTile__value">{metric.value}</span>
-      {metric.sub && <span className="corpTile__sub">{metric.sub}</span>}
+    <div className="corpStat">
+      <span className="corpStat__label">{m.label}</span>
+      <span className={`corpStat__value ${m.accent ? 'is-accent' : ''}`}>
+        {m.trend && <TrendingUp size={16} />}
+        {m.value}
+      </span>
+      {m.sub && <span className="corpStat__sub">{m.sub}</span>}
     </div>
   );
 }
@@ -82,18 +87,18 @@ function Summary({ currency }: { currency: Currency }) {
   const p = podsumowanie(currency);
   const j = jednostka(currency);
 
-  const main: Metric[] = [
+  const main = [
     { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
     { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
-    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
-    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach' },
+    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku', accent: true, trend: true },
+    { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach', accent: true },
   ];
-  const extra: Metric[] = [
+  const extra = [
     { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
     { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
     { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
   ];
-  const counters: Metric[] = [
+  const facts = [
     { label: 'Emitenci', value: String(p.emitenci) },
     { label: 'Serie', value: String(p.serie) },
     { label: 'Najbliższy wykup', value: p.najblizszyWykup },
@@ -104,12 +109,17 @@ function Summary({ currency }: { currency: Currency }) {
 
   return (
     <section className="corpCard">
-      <div className="corpCard__top">
+      {/* Pasek w kolorze klasy — ten sam, ktorym klasa jest oznaczona na
+          wykresie portfela, wiec ekran od razu mowi, gdzie jestes. */}
+      <div className="corpCard__hero">
         <div className="corpCard__lead">
           <span className="corpCard__label">Wartość bieżąca</span>
           <div className="corpCard__amountRow">
             <Amount int={calosc} dec={`,${dec}`} className="corpCard__amount" />
-            <span className="corpCard__delta">+8,0%</span>
+            <span className="corpCard__delta">
+              <TrendingUp size={14} />
+              +8,0%
+            </span>
           </div>
           <span className="corpCard__share">
             {currency === 'Łącznie'
@@ -118,24 +128,24 @@ function Summary({ currency }: { currency: Currency }) {
           </span>
         </div>
         <dl className="corpFacts">
-          {counters.map((c) => (
-            <div className="corpFact" key={c.label}>
-              <dt>{c.label}</dt>
-              <dd>{c.value}</dd>
+          {facts.map((f) => (
+            <div className="corpFact" key={f.label}>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
             </div>
           ))}
         </dl>
       </div>
 
-      <div className="corpTiles corpTiles--main">
+      <div className="corpStats corpStats--main">
         {main.map((m) => (
-          <MetricTile key={m.label} metric={m} />
+          <Metryka key={m.label} m={m} />
         ))}
       </div>
 
-      <div className="corpTiles corpTiles--extra">
+      <div className="corpStats corpStats--extra">
         {extra.map((m) => (
-          <MetricTile key={m.label} metric={m} small />
+          <Metryka key={m.label} m={m} />
         ))}
       </div>
     </section>

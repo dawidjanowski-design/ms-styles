@@ -1763,47 +1763,58 @@ select.field__control {
 .selectBtn:hover { background: var(--row-hover); }
 
 /* ---- podsumowanie ----
-   Bez kresek w poprzek karty: metryki siedza w kafelkach na przygaszonym
-   tle, wiec grupy odcinaja sie same. Ten sam kafelek, co „Wynik portfela"
-   na portfelu — jeden wzorzec na caly produkt. */
+   Zamiast siatki szarych kafelkow: pas metryk rozdzielonych cienka kreska,
+   jak w Quicken. Kolor niesie wylacznie wynik — stopa zwrotu i wynik 12M
+   sa zielone, reszta zostaje czarno-biala, zeby zielen cos znaczyla.
+   Na lewej krawedzi karty pasek w kolorze klasy, ten sam, ktorym klasa
+   jest oznaczona na wykresie portfela. */
 .corpCard {
-  display: flex; flex-direction: column; gap: 20px;
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 24px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 22px;
+  background: var(--card-bg); border-radius: var(--card-radius); padding: 24px 24px 24px 28px;
   box-shadow: var(--shadow-card);
 }
-.corpCard__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+.corpCard::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--c-corp);
+}
+.corpCard__hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
 .corpCard__lead { display: flex; flex-direction: column; gap: 4px; }
 .corpCard__label { font-size: 13px; color: var(--muted); }
 .corpCard__amountRow { display: flex; align-items: center; gap: 12px; }
 .corpCard__amount .amount__int { font-size: var(--amount-size); }
 .corpCard__amount .amount__dec { font-size: var(--amount-decimals); }
 .corpCard__delta {
-  padding: 3px 10px; border-radius: 42px; background: var(--c-corp-bg); color: var(--c-corp);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 42px; background: var(--c-corp-bg); color: var(--c-corp);
   font-size: 13px; font-weight: 500;
 }
 .corpCard__share { font-size: 13px; color: var(--muted); }
 
-/* Liczniki jako pary etykieta-wartosc w dwoch kolumnach — czytaja sie jak
-   metryczka pozycji, nie jak kolejne wyniki. */
 .corpFacts {
-  display: grid; grid-template-columns: repeat(2, auto); gap: 8px 32px;
+  display: grid; grid-template-columns: repeat(2, auto); gap: 10px 32px;
   margin: 2px 0 0; flex: none;
 }
 .corpFact { display: flex; flex-direction: column; gap: 2px; }
 .corpFact dt { font-size: 13px; color: var(--muted); }
 .corpFact dd { margin: 0; font-size: 13px; font-weight: 500; color: var(--ink); }
 
-.corpTiles { display: grid; gap: 12px; }
-.corpTiles--main { grid-template-columns: repeat(4, 1fr); }
-.corpTiles--extra { grid-template-columns: repeat(3, 1fr); }
-.corpTile {
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 14px 16px; border-radius: 10px; background: var(--screen-bg);
+/* Pas metryk: kreska miedzy pozycjami zamiast kafelka pod kazda. */
+.corpStats { display: grid; gap: 0; }
+.corpStats--main { grid-template-columns: repeat(4, 1fr); }
+.corpStats--extra { grid-template-columns: repeat(3, 1fr); }
+.corpStats--extra { padding-top: 20px; border-top: 1px solid var(--divider); }
+.corpStat { display: flex; flex-direction: column; gap: 4px; padding: 0 20px; min-width: 0; }
+.corpStat:first-child { padding-left: 0; }
+.corpStats > .corpStat + .corpStat { border-left: 1px solid var(--divider); }
+.corpStat__label { font-size: 13px; color: var(--muted); }
+.corpStat__value {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 22px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
 }
-.corpTile__label { font-size: 13px; color: var(--muted); }
-.corpTile__value { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
-.corpTile--small .corpTile__value { font-size: 16px; }
-.corpTile__sub { font-size: 13px; color: var(--muted); }
+.corpStat__value.is-accent { color: var(--c-corp); }
+.corpStats--extra .corpStat__value { font-size: 16px; }
+.corpStat__sub { font-size: 13px; color: var(--muted); }
 
 /* ---- sekcje ---- */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }

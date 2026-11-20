@@ -96,6 +96,13 @@ export const Maximize2 = (p: Props) => (
   </Svg>
 );
 
+export const TrendingUp = (p: Props) => (
+  <Svg {...p}>
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <polyline points="17 6 23 6 23 12" />
+  </Svg>
+);
+
 export const Info = (p: Props) => (
   <Svg {...p}>
     <circle cx="12" cy="12" r="10" />
