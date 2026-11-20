@@ -1900,15 +1900,15 @@ select.field__control {
   transition: background 120ms ease;
 }
 .corpFlow:hover, .corpFlow.is-hot { background: var(--screen-bg); }
+/* Segmenty nie sklejaja sie w jeden slupek: dzieli je szczelina, a kazdy
+   ma wlasne zaokraglenie ze wszystkich stron. Dzieki temu wykup i odsetki
+   czytaja sie jako dwie rzeczy, a nie jedna w dwoch kolorach. */
 .corpFlow__stack {
-  flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;
+  flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px;
 }
-.corpFlow__bar { display: block; width: 100%; }
-.corpFlow__bar--strong { background: var(--c-corp); border-radius: 4px 4px 0 0; }
-/* Odsetki zamykaja stos od dolu: zaokraglone tylko wtedy, gdy nic nad nimi
-   nie stoi. */
-.corpFlow__bar--soft { background: #cfe2d3; border-radius: 4px 4px 0 0; }
-.corpFlow__bar--strong + .corpFlow__bar--soft { border-radius: 0; }
+.corpFlow__bar { display: block; width: 100%; border-radius: 4px; }
+.corpFlow__bar--strong { background: var(--c-corp); }
+.corpFlow__bar--soft { background: #cfe2d3; }
 .corpFlow__label { font-size: 10px; color: var(--sub-faint); }
 .corpFlow.is-hot .corpFlow__label { color: var(--ink); }
 
