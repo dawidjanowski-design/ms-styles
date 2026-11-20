@@ -1992,9 +1992,18 @@ select.field__control {
 
 /* ======================= nr 10 — pulpit ======================= */
 
-/* Suma aktywow dostaje etykiete nad kwota, bo na pulpicie nie ma tytulu
-   „Portfel”, ktory by ja tlumaczyl. */
-.pulpitTotal__label { font-size: 13px; line-height: 20px; color: var(--muted); }
+/* Powitanie jest naglowkiem ekranu, wiec idzie atramentem i w rozmiarze
+   wartosci z nr 2 — `pageTitle` to w nr 2 szara etykieta nad kwota, a ta
+   rola na pulpicie przypada „Aktywom lacznie”. */
+.pulpitGreeting {
+  margin: 0; font-size: 24px; font-weight: 500; line-height: 32px;
+  letter-spacing: -0.01em; color: var(--ink);
+}
+
+/* Dwa bloki wykresu: klasy aktywow i gotowka, rozdzielone wiekszym
+   odstepem niz slupki w srodku bloku. */
+.pulpitChart { display: flex; align-items: flex-end; gap: 12px; }
+.pulpitChart .chart { flex: 1 1 0; }
 
 .pulpitLegend { display: flex; flex-direction: column; gap: 16px; }
 .pulpitRow {
@@ -2002,7 +2011,8 @@ select.field__control {
   padding-top: 16px; border-top: 1px solid var(--rule);
 }
 .pulpitRow__head { display: flex; align-items: center; gap: 10px; }
-.pulpitRow__dot { width: 6px; height: 6px; border-radius: 999px; flex: none; }
+.pulpitRow__key { display: inline-flex; gap: 2px; flex: none; }
+.pulpitRow__key span { width: 6px; height: 6px; border-radius: 999px; }
 .pulpitRow__name { font-size: 13px; font-weight: 500; color: var(--ink); }
 .pulpitRow__share { font-size: 13px; color: var(--muted); }
 .pulpitRow__value {
@@ -2048,21 +2058,32 @@ select.field__control {
   font-size: 13px; color: var(--muted);
 }
 
-/* ---- zlecenia i zdarzenia ---- */
-.ordersRow {
-  display: grid; grid-template-columns: 1.4fr 2.2fr 0.9fr 1.1fr 1fr;
-  align-items: center; gap: 16px; padding: 12px 0;
-  border-bottom: 1px solid var(--divider); font-size: 13px; color: var(--ink);
+/* ---- zlecenia i zdarzenia: dwie kolumny ---- */
+.pulpitSplit {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px; align-items: start;
 }
-.eventsRow {
-  display: grid; grid-template-columns: 1fr 2.6fr 1.2fr 1fr;
-  align-items: center; gap: 16px; padding: 12px 0;
-  border-bottom: 1px solid var(--divider); font-size: 13px; color: var(--ink);
+
+/* Zlecenie jako blok, nie wiersz tabeli: nazwa i kwota w jednej linii,
+   pod spodem rachunek i szczegol, a na koncu stan, typ i data. */
+.ordTable { display: flex; flex-direction: column; }
+.ordRow {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 16px 0; border-bottom: 1px solid var(--divider);
 }
-.ordersRow:last-child, .eventsRow:last-child { border-bottom: 0; }
-.ordersRow--head, .eventsRow--head { font-size: 13px; color: var(--muted); padding-top: 4px; }
-.ordersRow__name { display: flex; flex-direction: column; gap: 2px; }
-.ordersRow__sub { font-size: 13px; color: var(--muted); }
-.eventsRow__account { color: var(--muted); }
-.ordersRow .is-num, .eventsRow .is-num { text-align: right; font-variant-numeric: tabular-nums; }
-.eventsRow .is-positive { color: var(--c-corp); }
+.ordRow:first-child { padding-top: 4px; }
+.ordRow:last-child { border-bottom: 0; padding-bottom: 0; }
+.ordRow__top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.ordRow__name { font-size: 13px; font-weight: 500; line-height: 20px; color: var(--ink); }
+.ordRow__amount {
+  font-size: 13px; font-weight: 500; color: var(--ink);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.ordRow__sub { margin: 0; font-size: 13px; line-height: 20px; color: var(--muted); }
+.ordRow__meta { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.ordRow__type { color: var(--ink); }
+.ordRow__date { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+/* Rachunek pod kwota zdarzenia — w karcie miesiaca nie ma na niego kolumny. */
+.evMonths__amount { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.evMonths__account { font-size: 13px; font-weight: 400; color: var(--muted); }

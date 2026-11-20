@@ -16,15 +16,18 @@ import {
   type Udzial,
 } from '../data/dashboardV10';
 import { Amount } from './ui';
+import { META } from './Portfolio';
 import { ChevronRight } from '../icons/Feather';
+import { CASH, V10_ALLOCATION } from '../data/portfolio';
 
-/* Inwestycje biora kolor wartosci, nie kolor klasy aktywow — pulpit mowi
-   „to pracuje”, a nie „to sa obligacje”. Gotowka zostaje przy swoim
-   kolorze i kreskowaniu z Portfela, zeby czytalo sie jako to samo. */
-const SEG: Record<string, string> = {
-  inwestycje: 'var(--value-strong)',
-  cash: 'var(--c-cash)',
-};
+/* Kolory sa te same co w nr 2 — pulpit nie ma wlasnej palety. Rozni sie
+   tylko podzialem: klasy aktywow stoja zbite w jeden blok „Inwestycje”,
+   a gotowka odsuwa sie od nich na bok. Portfel pokazuje z czego sklada
+   sie portfel, pulpit — ile pracuje, a ile lezy. */
+const barwa = (id: string) => META[id].colors['2'];
+
+const KLASY = V10_ALLOCATION.filter((r) => r.id !== CASH.id);
+const GOTOWKA = V10_ALLOCATION.find((r) => r.id === CASH.id)!;
 
 function Link({ label }: { label: string }) {
   return (
@@ -37,11 +40,17 @@ function Link({ label }: { label: string }) {
 
 /* ------------------------------ podsumowanie ------------------------------ */
 
-function Rzad({ u }: { u: Udzial }) {
+function Rzad({ u, klucz }: { u: Udzial; klucz: string[] }) {
   return (
     <div className="pulpitRow">
       <div className="pulpitRow__head">
-        <span className="pulpitRow__dot" style={{ background: SEG[u.id] }} />
+        {/* Znacznik rzedu niesie kolory tej czesci wykresu, ktorej dotyczy —
+            przy inwestycjach jest ich kilka, bo to kilka klas aktywow. */}
+        <span className="pulpitRow__key">
+          {klucz.map((c) => (
+            <span key={c} style={{ background: c }} />
+          ))}
+        </span>
         <span className="pulpitRow__name">{u.name}</span>
         <span className="pulpitRow__share">{u.share}%</span>
         <span className="pulpitRow__value">{u.amount}</span>
@@ -64,35 +73,56 @@ function Rzad({ u }: { u: Udzial }) {
   );
 }
 
+function Segment({ id, share }: { id: string; share: number }) {
+  const c = barwa(id);
+  return (
+    <div
+      className={`chartSeg ${id === CASH.id ? 'chartSeg--cash' : ''}`}
+      style={{
+        flex: `${share} 1 0`,
+        ['--seg' as string]: c.chart,
+        ['--seg-foot' as string]: c.chartFoot ?? c.chart,
+      }}
+      aria-label={`${META[id].name}: ${share}%`}
+    >
+      <span className="chartSeg__body" />
+      <span className="chartSeg__foot" />
+    </div>
+  );
+}
+
 function Suma() {
-  const total = PULPIT_SPLIT.reduce((s, u) => s + u.share, 0);
+  const klucze: Record<string, string[]> = {
+    inwestycje: KLASY.map((r) => barwa(r.id).legend),
+    cash: [barwa(CASH.id).legend],
+  };
 
   return (
     <section className="summary">
       <div className="summary__top">
         <div className="summary__titleBlock">
-          <span className="pulpitTotal__label">{PULPIT_TOTAL.label}</span>
+          <h1 className="pageTitle">{PULPIT_TOTAL.label}</h1>
           <Amount int={PULPIT_TOTAL.amount} dec={PULPIT_TOTAL.decimals} />
         </div>
 
-        <div className="chart">
-          {PULPIT_SPLIT.map((u) => (
-            <div
-              key={u.id}
-              className={`chartSeg ${u.id === 'cash' ? 'chartSeg--cash' : ''}`}
-              style={{ flex: `${u.share / total} 1 0`, ['--seg' as string]: SEG[u.id] }}
-              aria-label={`${u.name}: ${u.share}%`}
-            >
-              <span className="chartSeg__body" />
-              <span className="chartSeg__foot" />
-            </div>
-          ))}
+        {/* Dwa bloki zamiast jednego ciagu: klasy aktywow zbite razem,
+            gotowka odsunieta. Przerwa miedzy nimi jest tym, co odroznia
+            pulpit od Portfela — kolory zostaja te same. */}
+        <div className="pulpitChart">
+          <div className="chart" style={{ flexGrow: PULPIT_SPLIT[0].share }}>
+            {KLASY.map((r) => (
+              <Segment id={r.id} share={r.share} key={r.id} />
+            ))}
+          </div>
+          <div className="chart" style={{ flexGrow: PULPIT_SPLIT[1].share }}>
+            <Segment id={GOTOWKA.id} share={GOTOWKA.share} />
+          </div>
         </div>
       </div>
 
       <div className="pulpitLegend">
         {PULPIT_SPLIT.map((u) => (
-          <Rzad u={u} key={u.id} />
+          <Rzad u={u} klucz={klucze[u.id]} key={u.id} />
         ))}
       </div>
 
@@ -146,34 +176,26 @@ function Zlecenia() {
   return (
     <section className="corpSection corpSection--card">
       <div className="corpSection__head">
-        <div className="corpSection__text">
-          <h2 className="sectionTitle">Bieżące zlecenia</h2>
-          <p className="corpSection__sub">3 aktywne zlecenia i zapisy</p>
-        </div>
+        <h2 className="sectionTitle">Bieżące zlecenia</h2>
         <Link label="Historia zleceń" />
       </div>
 
-      <div className="opsTable">
-        <div className="ordersRow ordersRow--head">
-          <span>Status</span>
-          <span>Instrument / produkt</span>
-          <span>Typ</span>
-          <span className="is-num">Kwota</span>
-          <span className="is-num">Złożono</span>
-        </div>
+      {/* W waskiej kolumnie tabela na piec kolumn by sie poslepiala, wiec
+          zlecenie czyta sie wierszami: co i za ile, potem stan i kiedy. */}
+      <div className="ordTable">
         {PULPIT_ORDERS.map((z) => (
-          <div className="ordersRow" key={z.id}>
-            <span>
+          <article className="ordRow" key={z.id}>
+            <div className="ordRow__top">
+              <span className="ordRow__name">{z.name}</span>
+              <span className="ordRow__amount">{z.amount}</span>
+            </div>
+            <p className="ordRow__sub">{z.sub}</p>
+            <div className="ordRow__meta">
               <span className="badge">{z.status}</span>
-            </span>
-            <span className="ordersRow__name">
-              {z.name}
-              <span className="ordersRow__sub">{z.sub}</span>
-            </span>
-            <span>{z.type}</span>
-            <span className="is-num">{z.amount}</span>
-            <span className="is-num">{z.date}</span>
-          </div>
+              <span className="ordRow__type">{z.type}</span>
+              <span className="ordRow__date">{z.date}</span>
+            </div>
+          </article>
         ))}
       </div>
     </section>
@@ -182,34 +204,64 @@ function Zlecenia() {
 
 /* ------------------------------- zdarzenia ------------------------------- */
 
+const MIESIACE = [
+  'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+  'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień',
+];
+
+/** 1 zdarzenie / 2-4 zdarzenia / 5+ zdarzen. */
+function licznik(n: number) {
+  const d = n % 10;
+  const s = n % 100;
+  if (n === 1) return '1 zdarzenie';
+  if (d >= 2 && d <= 4 && (s < 12 || s > 14)) return `${n} zdarzenia`;
+  return `${n} zdarzeń`;
+}
+
+function wgMiesiecy() {
+  const grupy: { key: string; label: string; items: typeof PULPIT_EVENTS }[] = [];
+  for (const e of PULPIT_EVENTS) {
+    const [, m, y] = e.date.split('.');
+    const key = `${y}-${m}`;
+    const last = grupy[grupy.length - 1];
+    if (last && last.key === key) last.items.push(e);
+    else grupy.push({ key, label: `${MIESIACE[Number(m) - 1]} ${y}`, items: [e] });
+  }
+  return grupy;
+}
+
+/* Zdarzenia w ukladzie z nr 8: jedna karta na miesiac, licznik w naglowku,
+   dzien zamiast pelnej daty — w kolumnie obok zlecen pelne daty byly
+   powtarzaniem tego samego miesiaca w kazdym wierszu. */
 function Zdarzenia() {
   return (
-    <section className="corpSection corpSection--card">
+    <section className="corpSection">
       <div className="corpSection__head">
-        <div className="corpSection__text">
-          <h2 className="sectionTitle">Najbliższe zdarzenia</h2>
-          <p className="corpSection__sub">Najbliższy miesiąc</p>
-        </div>
+        <h2 className="sectionTitle">Najbliższe zdarzenia</h2>
         <Link label="Wszystkie operacje" />
       </div>
 
-      <div className="opsTable">
-        <div className="eventsRow eventsRow--head">
-          <span>Data</span>
-          <span>Zdarzenie / instrument</span>
-          <span className="is-num">Kwota</span>
-          <span>Rachunek</span>
-        </div>
-        {PULPIT_EVENTS.map((e) => (
-          <div className="eventsRow" key={e.id}>
-            <span>{e.date}</span>
-            <span className="ordersRow__name">
-              {e.name}
-              <span className="ordersRow__sub">{e.sub}</span>
-            </span>
-            <span className="is-num is-positive">{e.amount}</span>
-            <span className="eventsRow__account">{e.account}</span>
-          </div>
+      <div className="evMonths">
+        {wgMiesiecy().map((g) => (
+          <section className="evMonths__card" key={g.key}>
+            <header className="evMonths__head">
+              <h3 className="evMonths__title">{g.label}</h3>
+              <span className="evMonths__count">{licznik(g.items.length)}</span>
+            </header>
+            {g.items.map((e) => (
+              <div className="evMonths__row" key={e.id}>
+                <span className="evMonths__day">{e.date.slice(0, 2)}</span>
+                <span className="evMonths__what">
+                  <span className="evMonths__type">{e.name}</span>
+                  <span className="evMonths__instrument">{e.sub}</span>
+                </span>
+                <span className="evMonths__amount">
+                  {e.amount}
+                  <span className="evMonths__account">{e.account}</span>
+                </span>
+              </div>
+            ))}
+          </section>
         ))}
       </div>
     </section>
@@ -225,7 +277,7 @@ export function DashboardV10() {
         <div className="content">
           <div className="corpHead">
             <div className="corpHead__text">
-              <h1 className="pageTitle">{PULPIT_HEAD.greeting}</h1>
+              <h1 className="pulpitGreeting">{PULPIT_HEAD.greeting}</h1>
               <p className="corpHead__sub">{PULPIT_HEAD.asOf}</p>
             </div>
             <div className="corpHead__scope">
@@ -243,8 +295,13 @@ export function DashboardV10() {
 
           <Suma />
           <Oferta />
-          <Zlecenia />
-          <Zdarzenia />
+          {/* Zlecenia i zdarzenia odpowiadaja na to samo pytanie — co sie
+              dzieje z moimi pieniedzmi — wiec stoja obok siebie: po lewej
+              to, co sam zlecilem, po prawej to, co przyjdzie samo. */}
+          <section className="pulpitSplit">
+            <Zlecenia />
+            <Zdarzenia />
+          </section>
         </div>
       </div>
     </div>
