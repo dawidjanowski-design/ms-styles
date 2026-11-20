@@ -2093,3 +2093,13 @@ select.field__control {
 .resultStat__value--pos { color: var(--c-corp); }
 .issShare { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
 .issShare__bar { width: 160px; flex: none; }
+
+/* Ikona metryki: okragle pole w kolorze karty na szarym kafelku — subtelne,
+   bo kafelek juz ma tlo. Wynik na plusie bierze zielone tlo pigulki. */
+.resultStat__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.resultStat__icon {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 999px;
+  background: var(--card-bg); color: var(--ink);
+}
+.resultStat__icon--pos { background: var(--c-corp-bg); color: var(--c-corp); }

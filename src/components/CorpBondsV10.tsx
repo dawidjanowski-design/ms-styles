@@ -31,6 +31,7 @@ import {
   type Wiersz,
 } from '../data/corpMath';
 import { CURRENCIES, type Currency } from '../data/currencies';
+import { MetricTile } from './MetricTile';
 import { Amount, Pills } from './ui';
 import {
   Check,
@@ -76,11 +77,12 @@ function Summary({ currency }: { currency: Currency }) {
   const [calosc, dec] = kwota(p.value, currency).split(',');
 
   const wynikowe: Metric[] = [
-    { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
-    { label: 'Wypłacone odsetki 12M', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
-    { label: 'Stopa zwrotu 12M', value: procent(p.stopa), sub: 'IRR, w skali roku' },
+    { label: 'Śr. rentowność (ważona)', icon: 'rentownosc', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
+    { label: 'Wypłacone odsetki 12M', icon: 'odsetki', value: kwota(p.odsetki, currency), sub: 'ostatnie 12 miesięcy' },
+    { label: 'Stopa zwrotu 12M', icon: 'stopa', value: procent(p.stopa), sub: 'IRR, w skali roku' },
     {
       label: 'Wynik 12M',
+      icon: 'wynik',
       value: `+${kwota(p.wynik, currency)}`,
       sub: 'nominalnie, po prowizjach',
       positive: p.wynik > 0,
@@ -90,26 +92,17 @@ function Summary({ currency }: { currency: Currency }) {
      wyplata odsetek wchodzi tu jako czwarta: to kwota w kalendarzu, wiec
      czyta sie jak metryka, a nie jak licznik skladu. */
   const portfelowe: Metric[] = [
-    { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
-    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
-    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
-    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
+    { label: 'Wartość nominalna', icon: 'nominal', value: kwota(p.nominal, currency) },
+    { label: 'Śr. oprocentowanie (ważone)', icon: 'oprocentowanie', value: procent(p.coupon) },
+    { label: 'Śr. odsetki miesięczne', icon: 'miesiecznie', value: kwota(p.odsetkiMiesiecznie, currency) },
+    { label: 'Najbliższa wypłata odsetek', icon: 'wyplata', value: '31.12.2026' },
   ];
   const liczniki: Metric[] = [
     { label: 'Emitenci', value: String(p.emitenci) },
     { label: 'Serie', value: String(p.serie) },
-    { label: 'Najbliższy wykup', value: p.najblizszyWykup },
+    { label: 'Najbliższy wykup', icon: 'wykup', value: p.najblizszyWykup },
   ];
 
-  const kafelek = (m: Metric) => (
-    <div className="resultStat" key={m.label}>
-      <span className="resultStat__label">{m.label}</span>
-      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
-        {m.value}
-      </span>
-      {m.sub && <span className="resultStat__sub">{m.sub}</span>}
-    </div>
-  );
 
   return (
     <section className="resultCard">
@@ -127,9 +120,9 @@ function Summary({ currency }: { currency: Currency }) {
       </div>
 
       <div className="divider" />
-      <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
+      <div className="resultCard__stats">{wynikowe.map((m) => <MetricTile m={m} key={m.label} />)}</div>
 
-      <div className="resultCard__stats">{portfelowe.map(kafelek)}</div>
+      <div className="resultCard__stats">{portfelowe.map((m) => <MetricTile m={m} key={m.label} />)}</div>
 
       <div className="divider" />
       <div className="corpCounters">
