@@ -443,9 +443,11 @@ function AssetCard({
   const rows = makieta ? [] : v5 ? [...asset.rows, ...dates] : [...highlights, ...footRows];
   /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
      dwoch rozpychala karte w pionie, zamiast postawic je obok siebie.
-     W nr 10 nie wyrozniamy zadnej: obie pierwsze metryki maja wazyc tyle
-     samo, bo o to chodzi w porownywaniu klas. */
-  const lead = !v10 && highlights.length >= 3 ? highlights[0] : null;
+     Nr 10 wyroznia ja zawsze, tez przy dwoch: Wynik 12M ma stac tak samo
+     wysoko na kazdej karcie, inaczej klasy przestaja sie porownywac. */
+  const lead = (v10 ? highlights.length >= 2 : highlights.length >= 3)
+    ? highlights[0]
+    : null;
   const grid = lead ? highlights.slice(1) : highlights;
   const stripItems = makieta ? [...asset.rows, ...asset.highlights] : results;
 

@@ -1617,6 +1617,11 @@ select.field__control {
 
 /* ---- struktura aktywow w dwoch kolumnach ---- */
 .assets__list--grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+/* Karta ma polowe szerokosci, wiec auto-fit lapal trzy kolumny i cztery
+   metryki lamaly sie 3 + 1. Dwie stale kolumny ustawiaja je w rowny blok
+   2 x 2, a uklad czyta sie tak samo jak w nr 2: wyrozniony Wynik 12M nad
+   siatka reszty i liczniki pod kreska. */
+.assets__list--grid .metrics { grid-template-columns: repeat(2, 1fr); gap: 10px 24px; }
 .assets__note { margin: 4px 0 0; font-size: 12px; line-height: 18px; color: var(--muted); }
 /* Waluty rozliczeniowe klasy stoja przy nazwie, po prawej stronie naglowka. */
 .assetCard__cur { margin-left: auto; font-size: 12px; color: var(--muted); }
