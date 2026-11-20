@@ -2,7 +2,7 @@
    wszystko wyliczamy z wierszy serii, zeby przelacznik walut, grupowania
    i metryki nigdy nie rozjechaly sie z tabela pod spodem. */
 
-import { CORP_CLOSED_INTEREST, CORP_IRR, CORP_SERIES, type Serie } from './corpV10';
+import { CORP_CLOSED_INTEREST, CORP_IRR, CORP_ISSUERS, CORP_SERIES, type Serie } from './corpV10';
 import type { Currency } from './currencies';
 
 /** Pole liczbowe serii — w walucie widoku, nie zawsze w zlotych. */
@@ -137,3 +137,43 @@ export function podsumowanie(waluta: Currency) {
     najblizszyWykup: najblizszy(lista),
   };
 }
+
+/* ------------------------------ karta emitenta ------------------------------
+   Te same sumy i srednie wazone co na ekranie klasy, tylko zawezone do serii
+   jednego emitenta. Udzial liczymy wzgledem calych obligacji korporacyjnych
+   w widoku lacznym. */
+
+const najblizszaData = (daty: string[]) =>
+  [...daty].sort((a, b) => {
+    const d = (x: string) => x.split('.').reverse().join('');
+    return d(a).localeCompare(d(b));
+  })[0] ?? '—';
+
+export function emitent(issuer: string) {
+  const lista = CORP_SERIES.filter((s) => s.issuer === issuer);
+  const value = suma(lista, 'value', 'Łącznie');
+  const rachunki = new Set(lista.flatMap((s) => (s.accounts ?? []).map((a) => a.account)));
+  return {
+    serie: lista,
+    value,
+    nominal: suma(lista, 'nominal', 'Łącznie'),
+    udzial: (value / suma(CORP_SERIES, 'value', 'Łącznie')) * 100,
+    sztuk: lista.reduce((a, s) => a + s.count, 0),
+    rachunki: rachunki.size,
+    rate: wazona(lista, 'rate', 'Łącznie'),
+    coupon: wazona(lista, 'coupon', 'Łącznie'),
+    odsetki: suma(lista, 'interest12m', 'Łącznie'),
+    wynik: suma(lista, 'result12m', 'Łącznie'),
+    stopa: CORP_ISSUERS[issuer]?.irr ?? 0,
+    najblizszyWykup: najblizszy(lista),
+    najblizszeOdsetki: najblizszaData(lista.flatMap((s) => (s.nextCoupon ? [s.nextCoupon] : []))),
+  };
+}
+
+/** 1 rachunek, 2–4 rachunki, 5+ rachunkow — z wyjatkiem 12–14. */
+export const odmiana = (n: number, [jeden, kilka, wiele]: [string, string, string]) => {
+  if (n === 1) return `${n} ${jeden}`;
+  const r10 = n % 10;
+  const r100 = n % 100;
+  return `${n} ${r10 >= 2 && r10 <= 4 && (r100 < 12 || r100 > 14) ? kilka : wiele}`;
+};

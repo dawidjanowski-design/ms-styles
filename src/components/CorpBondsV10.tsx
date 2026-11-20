@@ -12,6 +12,7 @@ import {
   CORP_FLOWS_FILTERS,
   CORP_FLOWS_NOTE,
   CORP_HEAD,
+  CORP_ISSUERS,
   CORP_OPS,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
@@ -140,7 +141,13 @@ function Summary({ currency }: { currency: Currency }) {
 
 type Sort = { col: string; dir: 1 | -1 };
 
-function Structure({ currency }: { currency: Currency }) {
+function Structure({
+  currency,
+  onOpenIssuer,
+}: {
+  currency: Currency;
+  onOpenIssuer: (issuer: string) => void;
+}) {
   const [grouping, setGrouping] = useState('Emitenci');
   /* Udzial malejaco to domyslny porzadek: najpierw to, co wazy najwiecej. */
   const [sort, setSort] = useState<Sort>({ col: 'share', dir: -1 });
@@ -173,8 +180,18 @@ function Structure({ currency }: { currency: Currency }) {
 
   const etykietaWartosci = metric === 'value' ? 'Wartość bieżąca' : 'Wartość nominalna';
 
-  const komorki = (r: Wiersz, total?: boolean) => (
-    <div className={`corpRow ${total ? 'corpRow--total' : ''}`} key={r.id}>
+  const komorki = (r: Wiersz, total?: boolean) => {
+    /* Wiersz emitenta z wlasna karta prowadzi do niej. */
+    const link = !total && grouping === 'Emitenci' && Boolean(CORP_ISSUERS[r.id]);
+    return (
+    <div
+      className={`corpRow ${total ? 'corpRow--total' : ''} ${link ? 'corpRow--link' : ''}`}
+      key={r.id}
+      role={link ? 'link' : undefined}
+      tabIndex={link ? 0 : undefined}
+      onClick={link ? () => onOpenIssuer(r.id) : undefined}
+      onKeyDown={link ? (ev) => ev.key === 'Enter' && onOpenIssuer(r.id) : undefined}
+    >
       <span className="corpRow__issuer">
         {r.title}
         {r.sub && <span className="corpRow__expand">{r.sub}</span>}
@@ -206,7 +223,8 @@ function Structure({ currency }: { currency: Currency }) {
         )}
       </span>
     </div>
-  );
+    );
+  };
 
   const naglowek = (
     key: string,
@@ -624,7 +642,7 @@ function Ops() {
           <span className="is-num">Kwota</span>
           <span className="is-num">Status</span>
         </div>
-        {CORP_OPS.map((o) => (
+        {CORP_OPS.slice(0, 5).map((o) => (
           <div className="opsRow" key={o.id}>
             <span>{o.date}</span>
             <span>{o.type}</span>
@@ -655,10 +673,12 @@ export function CorpBondsV10({
   currency,
   onCurrencyChange,
   onBack,
+  onOpenIssuer,
 }: {
   currency: Currency;
   onCurrencyChange: (c: Currency) => void;
   onBack: () => void;
+  onOpenIssuer: (issuer: string) => void;
 }) {
   return (
     <div className="screenOuter">
@@ -697,7 +717,7 @@ export function CorpBondsV10({
           </div>
 
           <Summary currency={currency} />
-          <Structure currency={currency} />
+          <Structure currency={currency} onOpenIssuer={onOpenIssuer} />
           <Widgets />
           <Flows />
           <Closed />

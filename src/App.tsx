@@ -3,6 +3,7 @@ import { AppHeader } from './components/ui';
 import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
 import { CorpBondsV10 } from './components/CorpBondsV10';
+import { IssuerV10 } from './components/IssuerV10';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
@@ -105,6 +106,7 @@ export default function App() {
           currency={currency}
           onCurrencyChange={setCurrency}
           onBack={() => setScreen({ name: 'portfel' })}
+          onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
         />
       )}
       {screen.name === 'asset' && styleId !== '10' && (
@@ -120,7 +122,15 @@ export default function App() {
       {screen.name === 'account' && (
         <AccountScreen styleId={styleId} onBack={() => setScreen({ name: 'portfel' })} />
       )}
-      {screen.name === 'issuer' && (
+      {/* Nr 10: karta emitenta z wireframe'u 1121:4248. */}
+      {screen.name === 'issuer' && styleId === '10' && (
+        <IssuerV10
+          issuer={screen.id}
+          onBack={() => setScreen({ name: 'portfel' })}
+          onOpenAsset={() => setScreen({ name: 'asset', id: 'corp' })}
+        />
+      )}
+      {screen.name === 'issuer' && styleId !== '10' && (
         <IssuerScreen
           styleId={styleId}
           onBack={() => setScreen({ name: 'portfel' })}

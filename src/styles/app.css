@@ -2047,3 +2047,43 @@ select.field__control {
    stopa zwrotu w obligacjach, czesciowo zrealizowane — bursztyn. */
 [data-style='10'] .badge--active { background: var(--c-corp-bg); color: var(--c-corp); }
 [data-style='10'] .badge--partial { background: var(--c-partial-bg); color: var(--c-partial); }
+
+/* ================= nr 10: karta emitenta (wireframe 1121:4248) =================
+   Klasy z ekranu obligacji korporacyjnych; dochodzi tylko tabela serii
+   z rozbiciem na rachunki. Wiersze maja wcięcie 8 px, zeby pas tla pod
+   rozbiciem nie dotykal tekstu. */
+.issTable { display: flex; flex-direction: column; }
+.issGroup { display: flex; flex-direction: column; border-bottom: 1px solid var(--divider); }
+.issRow {
+  display: grid; grid-template-columns: 2fr 0.8fr 1fr 1fr 1.3fr 1.2fr;
+  align-items: center; gap: 16px; padding: 12px 8px;
+  font-size: 13px; color: var(--ink);
+}
+.issRow .is-num { text-align: right; justify-self: end; }
+.issRow--head { padding-top: 4px; color: var(--muted); border-bottom: 1px solid var(--divider); }
+.issRow__name { display: flex; flex-direction: column; gap: 2px; }
+.issRow__sub, .issRow__muted { font-size: 13px; color: var(--muted); }
+.issRow--account { padding-top: 10px; padding-bottom: 10px; background: var(--screen-bg); }
+.issRow--account + .issRow--account { border-top: 1px solid var(--divider); }
+.issRow--account > :first-child { padding-left: 16px; }
+.issRow--total { font-weight: 500; }
+.issRow__toggle {
+  justify-self: end; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13px; color: var(--ink);
+}
+.issRow__toggle .icon { color: var(--muted); }
+
+/* Zamkniete pozycje emitenta: bez kolumny oprocentowania, emitent jest w tytule. */
+.closedRow--issuer { grid-template-columns: 1.8fr 1.4fr 1fr 1fr 1fr 0.9fr; }
+.closedRow--issuer .closedRow__name.is-num { align-items: flex-end; }
+
+/* Odsylacz do zamknietych pozycji domyka rzad licznikow. */
+.issHead__closed { margin-left: auto; }
+
+/* Emitent z wlasna karta: caly wiersz tabeli struktury prowadzi do niej. */
+.corpRow--link { cursor: pointer; }
+.corpRow--link:hover {
+  background: var(--row-hover);
+  /* Tlo wychodzi 8 px poza tekst po obu stronach, bez ruszania kolumn. */
+  box-shadow: -8px 0 0 var(--row-hover), 8px 0 0 var(--row-hover);
+}

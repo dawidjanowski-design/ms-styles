@@ -39,11 +39,30 @@ export type Serie = {
   curNominal?: number;
   curInterest12m?: number;
   curResult12m?: number;
+  /** podstawa oprocentowania, np. „WIBOR 3M + 4,10” */
+  base?: string;
+  /** najblizsza wyplata odsetek */
+  nextCoupon?: string;
+  /** rozbicie serii na rachunki — sztuki i wartosc na kazdym */
+  accounts?: { account: string; count: number; value: number }[];
 };
 
 export const CORP_SERIES: Serie[] = [
-  { id: 'vhi1128', ticker: 'VHI1128', name: 'seria M', issuer: 'VEHIS', cur: 'PLN', count: 400, rate: 7.85, coupon: 7.9, maturity: '14.11.2028', value: 400000, nominal: 396000, interest12m: 8400, result12m: 14200 },
-  { id: 'vhi0627', ticker: 'VHI0627', name: 'seria K', issuer: 'VEHIS', cur: 'PLN', count: 320, rate: 7.95, coupon: 8.0, maturity: '09.06.2027', value: 320000, nominal: 318000, interest12m: 6900, result12m: 11800 },
+  {
+    id: 'vhi1128', ticker: 'VHI1128', name: 'seria M', issuer: 'VEHIS', cur: 'PLN', count: 400, rate: 7.85, coupon: 7.9, maturity: '14.11.2028', value: 400000, nominal: 396000, interest12m: 8400, result12m: 14200,
+    base: 'WIBOR 3M + 4,10', nextCoupon: '31.12.2026',
+    accounts: [
+      { account: 'Maklerski ·6858', count: 180, value: 180000 },
+      { account: 'OKI ·9120', count: 120, value: 120000 },
+      { account: 'IKE ·7431', count: 60, value: 60000 },
+      { account: 'Maklerski ·7432', count: 40, value: 40000 },
+    ],
+  },
+  {
+    id: 'vhi0627', ticker: 'VHI0627', name: 'seria K', issuer: 'VEHIS', cur: 'PLN', count: 320, rate: 7.95, coupon: 8.0, maturity: '09.06.2027', value: 320000, nominal: 318000, interest12m: 6900, result12m: 11800,
+    base: 'WIBOR 3M + 4,20', nextCoupon: '31.12.2026',
+    accounts: [{ account: 'Maklerski ·6858', count: 320, value: 320000 }],
+  },
   { id: 'nrd0528', ticker: 'NRD0528', name: 'seria B', issuer: 'Nordvik Development', cur: 'PLN', count: 280, rate: 7.3, coupon: 7.35, maturity: '22.05.2028', value: 280000, nominal: 280000, interest12m: 5900, result12m: 9600 },
   { id: 'cvh1226', ticker: 'CVH1226', name: 'seria P2026B', issuer: 'Cavatina Holding', cur: 'EUR', count: 44, rate: 6.8, coupon: 6.7, maturity: '18.12.2026', value: 200000, nominal: 198400, interest12m: 2600, result12m: 5200, curValue: 43330, curNominal: 43000, curInterest12m: 563, curResult12m: 1126 },
   { id: 'vid0928', ticker: 'VID0928', name: 'seria B2', issuer: 'Victoria Dom', cur: 'PLN', count: 195, rate: 7.1, coupon: 7.15, maturity: '30.09.2028', value: 194922, nominal: 192000, interest12m: 4200, result12m: 7400 },
@@ -60,6 +79,13 @@ export const CORP_CLOSED_INTEREST = 12480;
 /* IRR liczy sie z przeplywow w czasie, ktorych prototyp nie trzyma —
    zamiast udawac wzor, bierzemy liczbe z makiety. Jedna wartosc na widok
    walutowy, bo kazdy ma inny zestaw serii. */
+/* Karta emitenta (wireframe 1121:4248). Branza i IRR to dane, nie wzor —
+   IRR z makiety, z tego samego powodu co CORP_IRR nizej. Emitent bez wpisu
+   nie ma jeszcze swojej karty, wiec jego wiersz w tabeli nie jest linkiem. */
+export const CORP_ISSUERS: Record<string, { sector: string; irr: number }> = {
+  VEHIS: { sector: 'leasing i finansowanie pojazdów', irr: 8.41 },
+};
+
 export const CORP_IRR: Record<string, number> = {
   'Łącznie': 7.1,
   PLN: 7.02,
@@ -173,6 +199,10 @@ export const CORP_FLOWS_NOTE =
 
 export type ClosedRow = {
   id: string;
+  issuer: string;
+  /** seria bez nazwy emitenta — na karcie emitenta nazwa jest w tytule */
+  short: string;
+  tx: string;
   name: string;
   sub: string;
   period: string;
@@ -187,6 +217,9 @@ export type ClosedRow = {
 export const CORP_CLOSED: ClosedRow[] = [
   {
     id: 'victoria-a4',
+    issuer: 'Victoria Dom',
+    short: 'VID0726 · seria A4',
+    tx: '3 transakcje',
     name: 'Victoria Dom, seria A4',
     sub: 'VID0726 · 3 transakcje',
     period: '04.2024 – 07.2026',
@@ -199,6 +232,9 @@ export const CORP_CLOSED: ClosedRow[] = [
   },
   {
     id: 'polmax-z',
+    issuer: 'Polmax Energia',
+    short: 'PLM0626 · seria Z',
+    tx: '2 transakcje',
     name: 'Polmax Energia, seria Z',
     sub: 'PLM0626 · 2 transakcje',
     period: '01.2023 – 06.2026',
@@ -211,6 +247,9 @@ export const CORP_CLOSED: ClosedRow[] = [
   },
   {
     id: 'vehis-e',
+    issuer: 'VEHIS',
+    short: 'VHI0326 · seria E',
+    tx: '4 transakcje',
     name: 'VEHIS, seria E',
     sub: 'VHI0326 · 4 transakcje',
     period: '09.2022 – 03.2026',
@@ -247,14 +286,23 @@ export type OpRow = {
   amount: string;
   negative?: boolean;
   status: string;
+  /** seria z CORP_SERIES — po niej karta emitenta zaweza operacje */
+  seriesId?: string;
 };
 
 export const CORP_OPS: OpRow[] = [
-  { id: 'o1', date: '05.10.2026', type: 'Sprzedaż obligacji', instrument: 'VEHIS, seria M', account: 'Maklerski ·6858', amount: '+41 226,00 PLN', status: 'W rozliczeniu' },
+  { id: 'o1', date: '05.10.2026', type: 'Sprzedaż obligacji', instrument: 'VEHIS, seria M', account: 'Maklerski ·6858', amount: '+41 226,00 PLN', status: 'W rozliczeniu', seriesId: 'vhi1128' },
   { id: 'o2', date: '02.10.2026', type: 'Zapis na emisję', instrument: 'Dekpol, seria C', account: 'Maklerski ·7432', amount: '−50 118,00 PLN', negative: true, status: 'Środki zablokowane' },
   { id: 'o3', date: '30.09.2026', type: 'Wypłata odsetek', instrument: 'Nordvik Development, seria B', account: 'Maklerski ·6858', amount: '+5 420,00 PLN', status: 'Rozliczone' },
   { id: 'o4', date: '30.09.2026', type: 'Wykup obligacji', instrument: 'Polmax Energia, seria Z', account: 'Maklerski ·6858', amount: '+60 000,00 PLN', status: 'Rozliczone' },
+  { id: 'o6', date: '30.09.2026', type: 'Wypłata odsetek', instrument: 'VEHIS, seria M', account: 'OKI ·9120', amount: '+6 128,00 PLN', status: 'Rozliczone', seriesId: 'vhi1128' },
   { id: 'o5', date: '31.08.2026', type: 'Wypłata odsetek', instrument: 'Victoria Dom, seria B2', account: 'IKE ·7431', amount: '+4 140,00 PLN', status: 'Rozliczone' },
+];
+
+/* Ekran klasy pokazuje piec najnowszych (CORP_OPS.slice), karta emitenta
+   wszystkie swoje — w tym starsze, ktore tu nie wchodza. */
+export const CORP_OPS_OLDER: OpRow[] = [
+  { id: 'o7', date: '30.06.2026', type: 'Wypłata odsetek', instrument: 'VEHIS, seria K', account: 'Maklerski ·6858', amount: '+6 128,00 PLN', status: 'Rozliczone', seriesId: 'vhi0627' },
 ];
 
 export const CORP_OPS_FILTERS = ['Od początku', 'Wszystkie typy'];
