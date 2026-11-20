@@ -460,33 +460,28 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
   );
 }
 
-/* Kafelek dzialania. „Dodaj" i „Otworz" to dwie rozne rzeczy — kolejny
-   rachunek maklerski mozna miec, IKZE albo sie ma, albo nie — i stad
-   roznica w nazwach, nie w wygladzie. */
-function V10AddTile({ title, sub }: { title: string; sub: string }) {
-  return (
-    <article className="v10Add">
-      <span className="v10Add__plus" aria-hidden="true">
-        +
-      </span>
-      <span className="v10Add__title">{title}</span>
-      <span className="v10Add__sub">{sub}</span>
-    </article>
-  );
-}
-
 function AccountsV10({ styleId }: { styleId: StyleId }) {
   return (
     <div className="v10Groups">
       {V10_ACCOUNT_GROUPS.map((g) => (
         <section className="v10Group" key={g.id}>
-          <h3 className="v10Group__title">{g.title}</h3>
-          <p className="v10Group__sub">{g.sub}</p>
+          {/* Dzialanie grupy stoi przy jej tytule, a nie jako kafelek w
+              siatce: kafelek udawal rachunek, ktorego jeszcze nie ma. */}
+          <div className="v10Group__head">
+            <div className="v10Group__text">
+              <h3 className="v10Group__title">{g.title}</h3>
+              <p className="v10Group__sub">{g.sub}</p>
+            </div>
+            {g.action && (
+              <button type="button" className="btn">
+                {g.action}
+              </button>
+            )}
+          </div>
           <div className="v10Group__grid">
             {g.accounts.map((a) => (
               <V10AccountCard key={a.id} account={a} styleId={styleId} />
             ))}
-            {g.add && <V10AddTile title={g.add.title} sub={g.add.sub} />}
           </div>
         </section>
       ))}

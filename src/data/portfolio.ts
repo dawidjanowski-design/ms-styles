@@ -508,8 +508,9 @@ export type V10AccountGroup = {
   title: string;
   sub: string;
   accounts: V10Account[];
-  /** kafelek z dzialaniem: dodanie kolejnego albo otwarcie brakujacego */
-  add?: { title: string; sub: string };
+  /** dzialanie grupy, przy tytule po prawej: dodanie kolejnego rachunku
+      albo otwarcie brakujacego typu. Nazwa rozni sie celowo. */
+  action?: string;
 };
 
 export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
@@ -548,10 +549,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         ],
       },
     ],
-    add: {
-      title: 'Dodaj kolejny rachunek maklerski',
-      sub: 'Przyda się, gdy chcesz oddzielić środki na emisje od reszty portfela.',
-    },
+    action: 'Dodaj rachunek',
   },
   {
     id: 'am',
@@ -573,10 +571,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         foot: { label: 'Ryzyko', value: '2 / 7' },
       },
     ],
-    add: {
-      title: 'Załóż nową strategię',
-      sub: 'Dobierzemy skład do Twojego profilu. Minimalna wpłata zależy od strategii.',
-    },
+    action: 'Załóż strategię',
   },
   {
     id: 'oki',
@@ -624,17 +619,15 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         ],
       },
     ],
-    add: {
-      title: 'Otwórz rachunek IKZE',
-      sub: 'Nie masz jeszcze IKZE. Wpłaty odliczysz od podstawy opodatkowania w rocznym PIT.',
-    },
+    action: 'Otwórz IKZE',
   },
 ];
 
 export const V10_ACCOUNT_NOTES = [
-  'Rozróżniamy dwa działania: otwarcie brakującego typu rachunku (IKZE — masz go albo nie) ' +
-    'i dodanie kolejnego rachunku lub strategii (maklerskie i AM — możesz mieć ich kilka). ' +
-    'Dlatego nazwy przycisków są inne.',
+  'Rozróżniamy dwa działania: otwarcie brakującego typu rachunku („Otwórz IKZE” — masz go albo ' +
+    'nie) i dodanie kolejnego rachunku lub strategii („Dodaj rachunek”, „Załóż strategię” — ' +
+    'możesz mieć ich kilka). Dlatego nazwy przycisków są inne. Przy OKI przycisku nie ma: ' +
+    'to konto jest jedno.',
   'Kolejność klas aktywów jest ta sama na każdym rachunku, a wolna gotówka zawsze zamyka listę. ' +
     'Klas, których na rachunku nie ma, nie wypisujemy — zamiast pustych etykiet jest cienki ' +
     'pasek struktury nad listą.',
