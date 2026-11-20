@@ -287,7 +287,7 @@ function Structure({ currency }: { currency: Currency }) {
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
-          <button type="button" className="btn btn--small">
+          <button type="button" className="btn">
             <Maximize2 size={14} />
             Pełna tabela
           </button>
@@ -612,7 +612,7 @@ function Ops() {
           {CORP_OPS_FILTERS.map((f) => (
             <Select key={f} label={f} />
           ))}
-          <button type="button" className="btn btn--small">
+          <button type="button" className="btn">
             <Download size={14} />
             Eksport XLS
           </button>

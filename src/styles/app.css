@@ -1570,8 +1570,11 @@ select.field__control {
 .cash__actions { display: flex; align-items: center; gap: 8px; }
 /* Jeden pelny guzik na ekran: mocny akcent przestaje dzialac, gdy jest ich
    kilka obok siebie. Pozostale akcje sa biale z cienkim obrysem. */
+/* Wysokosc sterowania rowna torowi pigulek (38 px przycisku + 2 px
+   wyscielki z kazdej strony) — przyciski i selecty stoja w jednej linii
+   z przelacznikami, a nie pol kroku nizej. */
 .btn {
-  height: 38px; padding: 0 18px; border: 0; border-radius: 999px;
+  height: var(--control-h, 42px); padding: 0 20px; border: 0; border-radius: 999px;
   background: var(--card-bg); color: var(--ink);
   font: 500 13px/1 Inter, system-ui, sans-serif; letter-spacing: -0.01em;
   box-shadow: var(--shadow-pill); cursor: pointer;
@@ -1698,7 +1701,9 @@ select.field__control {
   display: flex; align-items: center; gap: 12px;
   margin-top: auto; padding-top: 16px;
 }
-.btn--small { height: 30px; padding: 0 14px; font-size: 13px; display: inline-flex; align-items: center; }
+/* Jedyny mniejszy wariant: „Zobacz szczegoly" w stopce karty rachunku.
+   Tam przycisk jest czescia tresci karty, a nie sterowaniem sekcja. */
+.btn--small { height: 34px; padding: 0 16px; font-size: 13px; }
 .v10Acct__meta { margin-left: auto; font-size: 13px; color: var(--muted); }
 .v10Acct__meta strong { font-weight: 500; color: var(--ink); }
 .v10Acct__meta.is-warn { color: var(--ink); }
@@ -1750,7 +1755,7 @@ select.field__control {
 
 .selectBtn {
   display: inline-flex; align-items: center; gap: 8px;
-  height: 32px; padding: 0 12px; border: 0; border-radius: 999px;
+  height: var(--control-h, 42px); padding: 0 16px; border: 0; border-radius: 999px;
   background: var(--card-bg); color: var(--ink);
   font: 400 12px/1 Inter, system-ui, sans-serif;
   box-shadow: var(--shadow-pill); cursor: pointer;
@@ -1860,7 +1865,10 @@ select.field__control {
   box-shadow: var(--shadow-card);
 }
 .corpWidget__title { margin: 0; font-size: 13px; font-weight: 500; color: var(--ink); }
+/* Filtry wewnatrz widzetu sa mniejsze: to sterowanie trescia karty,
+   nie calym ekranem. */
 .corpWidget__filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.corpWidget__filters .selectBtn { height: 32px; padding: 0 12px; }
 .corpWidget__value { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
 .corpWidget__sub { font-size: 13px; color: var(--muted); }
 .corpWidget__parts { display: flex; flex-direction: column; gap: 6px; }
