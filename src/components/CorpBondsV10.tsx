@@ -65,18 +65,17 @@ function Select({ label }: { label: string }) {
   );
 }
 
-/* Pas metryk zamiast kafelkow: etykieta nad wartoscia, pozycje rozdzielone
-   cienka kreska. Kolor niesie tylko to, co jest wynikiem — reszta zostaje
-   czarno-biala, zeby zielen cos znaczyla. */
-function Metryka({ m }: { m: Metric & { accent?: boolean; trend?: boolean } }) {
+/* Komorka KPI: etykieta, liczba, podpis. Kolor tylko tam, gdzie liczba
+   jest wynikiem — reszta czarno-biala, zeby zielen cos znaczyla. */
+function Kpi({ m }: { m: Metric & { accent?: boolean; trend?: boolean } }) {
   return (
-    <div className="corpStat">
-      <span className="corpStat__label">{m.label}</span>
-      <span className={`corpStat__value ${m.accent ? 'is-accent' : ''}`}>
-        {m.trend && <TrendingUp size={16} />}
+    <div className="kpi">
+      <span className="kpi__label">{m.label}</span>
+      <span className={`kpi__value ${m.accent ? 'is-accent' : ''}`}>
+        {m.trend && <TrendingUp size={18} />}
         {m.value}
       </span>
-      {m.sub && <span className="corpStat__sub">{m.sub}</span>}
+      {m.sub && <span className="kpi__sub">{m.sub}</span>}
     </div>
   );
 }
@@ -94,9 +93,9 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Wynik 12M', value: `+${kwota(p.wynik, currency)}`, sub: 'nominalnie, po prowizjach', accent: true },
   ];
   const extra = [
-    { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
-    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
-    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
+    { label: 'Wartość nominalna', value: kwota(p.nominal, currency), sub: 'suma nominałów serii' },
+    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon), sub: 'bieżący kupon' },
+    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency), sub: 'z ostatnich 12 miesięcy' },
   ];
   const facts = [
     { label: 'Emitenci', value: String(p.emitenci) },
@@ -108,28 +107,27 @@ function Summary({ currency }: { currency: Currency }) {
   const [calosc, dec] = kwota(p.value, currency).split(',');
 
   return (
-    <section className="corpCard">
-      {/* Pasek w kolorze klasy — ten sam, ktorym klasa jest oznaczona na
-          wykresie portfela, wiec ekran od razu mowi, gdzie jestes. */}
-      <div className="corpCard__hero">
-        <div className="corpCard__lead">
-          <span className="corpCard__label">Wartość bieżąca</span>
-          <div className="corpCard__amountRow">
-            <Amount int={calosc} dec={`,${dec}`} className="corpCard__amount" />
-            <span className="corpCard__delta">
+    <section className="kpiCard">
+      {/* Pasmo z wartoscia calej klasy — jedna liczba, ktora opisuje ekran. */}
+      <div className="kpiCard__band">
+        <div className="kpiCard__lead">
+          <span className="kpiCard__label">Wartość bieżąca</span>
+          <div className="kpiCard__amountRow">
+            <Amount int={calosc} dec={`,${dec}`} className="kpiCard__amount" />
+            <span className="kpiCard__delta">
               <TrendingUp size={14} />
               +8,0%
             </span>
           </div>
-          <span className="corpCard__share">
+          <span className="kpiCard__share">
             {currency === 'Łącznie'
               ? '42,5% wartości całego portfela'
               : `wszystkie pozycje w ${j} · ${p.serie} ${p.serie === 1 ? 'seria' : 'serie'}`}
           </span>
         </div>
-        <dl className="corpFacts">
+        <dl className="kpiFacts">
           {facts.map((f) => (
-            <div className="corpFact" key={f.label}>
+            <div className="kpiFact" key={f.label}>
               <dt>{f.label}</dt>
               <dd>{f.value}</dd>
             </div>
@@ -137,15 +135,15 @@ function Summary({ currency }: { currency: Currency }) {
         </dl>
       </div>
 
-      <div className="corpStats corpStats--main">
+      <div className="kpiGrid kpiGrid--4">
         {main.map((m) => (
-          <Metryka key={m.label} m={m} />
+          <Kpi key={m.label} m={m} />
         ))}
       </div>
 
-      <div className="corpStats corpStats--extra">
+      <div className="kpiGrid kpiGrid--3 kpiGrid--quiet">
         {extra.map((m) => (
-          <Metryka key={m.label} m={m} />
+          <Kpi key={m.label} m={m} />
         ))}
       </div>
     </section>

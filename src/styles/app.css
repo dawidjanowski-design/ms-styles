@@ -1765,58 +1765,60 @@ select.field__control {
 .selectBtn:hover { background: var(--row-hover); }
 
 /* ---- podsumowanie ----
-   Zamiast siatki szarych kafelkow: pas metryk rozdzielonych cienka kreska,
-   jak w Quicken. Kolor niesie wylacznie wynik — stopa zwrotu i wynik 12M
-   sa zielone, reszta zostaje czarno-biala, zeby zielen cos znaczyla.
-   Na lewej krawedzi karty pasek w kolorze klasy, ten sam, ktorym klasa
-   jest oznaczona na wykresie portfela. */
-.corpCard {
+   Uklad KPI: pasmo z jedna liczba opisujaca cala klase, pod nim komorki
+   rozdzielone kreskami — kazda to etykieta, liczba i podpis mowiacy, czym
+   ta liczba jest. Kolor niesie wylacznie wynik, reszta zostaje
+   czarno-biala, zeby zielen cos znaczyla. */
+.kpiCard {
   position: relative; overflow: hidden;
-  display: flex; flex-direction: column; gap: 22px;
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 24px 24px 24px 28px;
+  background: var(--card-bg); border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
 }
-.corpCard::before {
+.kpiCard::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  background: var(--c-corp);
+  background: var(--c-corp); z-index: 1;
 }
-.corpCard__hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
-.corpCard__lead { display: flex; flex-direction: column; gap: 4px; }
-.corpCard__label { font-size: 13px; color: var(--muted); }
-.corpCard__amountRow { display: flex; align-items: center; gap: 12px; }
-.corpCard__amount .amount__int { font-size: var(--amount-size); }
-.corpCard__amount .amount__dec { font-size: var(--amount-decimals); }
-.corpCard__delta {
+.kpiCard__band {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 40px;
+  padding: 24px 24px 24px 28px; background: var(--screen-bg);
+  border-bottom: 1px solid var(--divider);
+}
+.kpiCard__lead { display: flex; flex-direction: column; gap: 4px; }
+.kpiCard__label { font-size: 13px; color: var(--muted); }
+.kpiCard__amountRow { display: flex; align-items: center; gap: 12px; }
+.kpiCard__amount .amount__int { font-size: var(--amount-size); }
+.kpiCard__amount .amount__dec { font-size: var(--amount-decimals); }
+.kpiCard__delta {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 4px 12px; border-radius: 42px; background: var(--c-corp-bg); color: var(--c-corp);
   font-size: 13px; font-weight: 500;
 }
-.corpCard__share { font-size: 13px; color: var(--muted); }
+.kpiCard__share { font-size: 13px; color: var(--muted); }
 
-.corpFacts {
-  display: grid; grid-template-columns: repeat(2, auto); gap: 10px 32px;
-  margin: 2px 0 0; flex: none;
-}
-.corpFact { display: flex; flex-direction: column; gap: 2px; }
-.corpFact dt { font-size: 13px; color: var(--muted); }
-.corpFact dd { margin: 0; font-size: 13px; font-weight: 500; color: var(--ink); }
+.kpiFacts { display: grid; grid-template-columns: repeat(2, auto); gap: 10px 32px; margin: 2px 0 0; flex: none; }
+.kpiFact { display: flex; flex-direction: column; gap: 2px; }
+.kpiFact dt { font-size: 13px; color: var(--muted); }
+.kpiFact dd { margin: 0; font-size: 13px; font-weight: 500; color: var(--ink); }
 
-/* Pas metryk: kreska miedzy pozycjami zamiast kafelka pod kazda. */
-.corpStats { display: grid; gap: 0; }
-.corpStats--main { grid-template-columns: repeat(4, 1fr); }
-.corpStats--extra { grid-template-columns: repeat(3, 1fr); }
-.corpStats--extra { padding-top: 20px; border-top: 1px solid var(--divider); }
-.corpStat { display: flex; flex-direction: column; gap: 4px; padding: 0 20px; min-width: 0; }
-.corpStat:first-child { padding-left: 0; }
-.corpStats > .corpStat + .corpStat { border-left: 1px solid var(--divider); }
-.corpStat__label { font-size: 13px; color: var(--muted); }
-.corpStat__value {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 22px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
+/* Komorki: kreska miedzy nimi, nie ramka wokol kazdej — karta zostaje
+   jedna, a nie rozpada sie na siedem kafelkow. */
+.kpiGrid { display: grid; }
+.kpiGrid--4 { grid-template-columns: repeat(4, 1fr); }
+.kpiGrid--3 { grid-template-columns: repeat(3, 1fr); }
+.kpiGrid--quiet { border-top: 1px solid var(--divider); background: var(--screen-bg); }
+.kpi {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 20px 24px; min-width: 0;
 }
-.corpStat__value.is-accent { color: var(--c-corp); }
-.corpStats--extra .corpStat__value { font-size: 16px; }
-.corpStat__sub { font-size: 13px; color: var(--muted); }
+.kpi + .kpi { border-left: 1px solid var(--divider); }
+.kpi__label { font-size: 13px; color: var(--muted); }
+.kpi__value {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 26px; font-weight: 500; line-height: 1.1; letter-spacing: -0.015em; color: var(--ink);
+}
+.kpi__value.is-accent { color: var(--c-corp); }
+.kpiGrid--quiet .kpi__value { font-size: 18px; }
+.kpi__sub { font-size: 13px; color: var(--muted); }
 
 /* ---- sekcje ---- */
 .corpSection { display: flex; flex-direction: column; gap: 12px; }
