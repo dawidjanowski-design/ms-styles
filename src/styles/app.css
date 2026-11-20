@@ -1716,7 +1716,9 @@ select.field__control {
 .v10Limit__track {
   height: 6px; margin-top: 8px; border-radius: 3px; background: var(--progress-track); overflow: hidden;
 }
-.v10Limit__fill { display: block; height: 100%; border-radius: 3px; background: var(--value-strong); }
+/* Zielen ta sama, co pigulka stopy zwrotu i obligacje korporacyjne —
+   pasek limitu ma czytac sie jako „idzie dobrze", a nie jako ostrzezenie. */
+.v10Limit__fill { display: block; height: 100%; border-radius: 3px; background: var(--c-corp); }
 
 
 .v10Notes { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
