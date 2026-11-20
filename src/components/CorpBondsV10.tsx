@@ -65,11 +65,12 @@ function Select({ label }: { label: string }) {
   );
 }
 
-/* Komorka KPI: etykieta, liczba, podpis. Kolor tylko tam, gdzie liczba
-   jest wynikiem — reszta czarno-biala, zeby zielen cos znaczyla. */
+/* Box KPI: etykieta, liczba, podpis mowiacy czym ta liczba jest. Kolor
+   tylko tam, gdzie liczba jest wynikiem — reszta czarno-biala, zeby
+   zielen cos znaczyla. */
 function Kpi({ m }: { m: Metric & { accent?: boolean; trend?: boolean } }) {
   return (
-    <div className="kpi">
+    <div className={`kpi ${m.accent ? 'kpi--accent' : ''}`}>
       <span className="kpi__label">{m.label}</span>
       <span className={`kpi__value ${m.accent ? 'is-accent' : ''}`}>
         {m.trend && <TrendingUp size={18} />}
@@ -97,56 +98,41 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon), sub: 'bieżący kupon' },
     { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency), sub: 'z ostatnich 12 miesięcy' },
   ];
-  const facts = [
-    { label: 'Emitenci', value: String(p.emitenci) },
-    { label: 'Serie', value: String(p.serie) },
-    { label: 'Najbliższy wykup', value: p.najblizszyWykup },
-    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
-  ];
 
   const [calosc, dec] = kwota(p.value, currency).split(',');
 
   return (
-    <section className="kpiCard">
-      {/* Pasmo z wartoscia calej klasy — jedna liczba, ktora opisuje ekran. */}
-      <div className="kpiCard__band">
-        <div className="kpiCard__lead">
-          <span className="kpiCard__label">Wartość bieżąca</span>
-          <div className="kpiCard__amountRow">
-            <Amount int={calosc} dec={`,${dec}`} className="kpiCard__amount" />
-            <span className="kpiCard__delta">
-              <TrendingUp size={14} />
-              +8,0%
-            </span>
-          </div>
-          <span className="kpiCard__share">
+    <>
+      {/* Jedna liczba, ktora opisuje caly ekran — osobny box, zeby nie
+          konkurowala z metrykami. */}
+      <section className="heroBox">
+        <span className="heroBox__label">Wartość bieżąca</span>
+        <div className="heroBox__row">
+          <Amount int={calosc} dec={`,${dec}`} className="heroBox__amount" />
+          <span className="heroBox__delta">
+            <TrendingUp size={14} />
+            +8,0%
+          </span>
+          <span className="heroBox__share">
             {currency === 'Łącznie'
               ? '42,5% wartości całego portfela'
               : `wszystkie pozycje w ${j} · ${p.serie} ${p.serie === 1 ? 'seria' : 'serie'}`}
           </span>
         </div>
-        <dl className="kpiFacts">
-          {facts.map((f) => (
-            <div className="kpiFact" key={f.label}>
-              <dt>{f.label}</dt>
-              <dd>{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+      </section>
 
-      <div className="kpiGrid kpiGrid--4">
+      <div className="kpiBoxes kpiBoxes--4">
         {main.map((m) => (
           <Kpi key={m.label} m={m} />
         ))}
       </div>
 
-      <div className="kpiGrid kpiGrid--3 kpiGrid--quiet">
+      <div className="kpiBoxes kpiBoxes--3">
         {extra.map((m) => (
           <Kpi key={m.label} m={m} />
         ))}
       </div>
-    </section>
+    </>
   );
 }
 
@@ -291,7 +277,11 @@ function Structure({ currency }: { currency: Currency }) {
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Struktura portfela</h2>
-          <p className="corpSection__sub">{CORP_STRUCTURE_SUB}</p>
+          <p className="corpSection__sub">
+            {p.emitenci} {p.emitenci === 1 ? 'emitent' : 'emitentów'} · {p.serie}{' '}
+            {p.serie === 1 ? 'seria' : 'serii'} · {p.sztuk.toLocaleString('pl')} szt. ·{' '}
+            {CORP_STRUCTURE_SUB.toLowerCase()}
+          </p>
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
@@ -508,13 +498,17 @@ function Widgets() {
 
 /* --------------------------- zapadalnosc i odsetki --------------------------- */
 
-function Flows() {
+function Flows({ currency }: { currency: Currency }) {
   return (
     <section className="corpSection corpSection--card">
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zapadalność i odsetki</h2>
-          <p className="corpSection__sub">Planowane przepływy z portfela obligacji</p>
+          <p className="corpSection__sub">
+            Planowane przepływy z portfela obligacji · najbliższy wykup{' '}
+            <strong>{podsumowanie(currency).najblizszyWykup}</strong> · najbliższa wypłata odsetek{' '}
+            <strong>31.12.2026</strong>
+          </p>
         </div>
         <div className="corpSection__actions">
           {CORP_FLOWS_FILTERS.map((f) => (
@@ -710,7 +704,7 @@ export function CorpBondsV10({
           <Summary currency={currency} />
           <Structure currency={currency} />
           <Widgets />
-          <Flows />
+          <Flows currency={currency} />
           <Closed />
           <Ops />
         </div>
