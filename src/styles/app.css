@@ -1850,9 +1850,12 @@ select.field__control {
 .corpShare__fill { display: block; height: 100%; border-radius: 2px; }
 
 /* ---- widzety analizy ---- */
-.corpWidgets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+/* Trzy widzety stoja w jednym rzedzie, wiec maja konczyc sie rowno —
+   roznia sie trescia, nie wysokoscia. */
+.corpWidgets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
 .corpWidget {
   display: flex; flex-direction: column; gap: 10px;
+  /* Wykres i rozbicie sa na dole karty; miedzy nimi a liczba rosnie luz. */
   background: var(--card-bg); border-radius: var(--card-radius); padding: 20px;
   box-shadow: var(--shadow-card);
 }
@@ -1861,12 +1864,13 @@ select.field__control {
 .corpWidget__value { font-size: 24px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
 .corpWidget__sub { font-size: 11px; color: var(--muted); }
 .corpWidget__parts { display: flex; flex-direction: column; gap: 6px; }
+.corpWidget .divider { margin-top: auto; }
 .corpPart { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .corpPart__label { font-size: 12px; color: var(--muted); }
 .corpPart__value { font-size: 12px; font-weight: 500; color: var(--ink); }
 .corpPart__value.is-negative { color: #c0392b; }
 
-.corpSpark { position: relative; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.corpSpark { position: relative; display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 8px; }
 .corpSpark__bars { display: flex; align-items: flex-end; gap: 4px; height: 56px; }
 /* Slot jest celem kursora na cala wysokosc wykresu — trafienie w 6-pikselowy
    slupek byloby loteria. */
@@ -1875,7 +1879,8 @@ select.field__control {
   display: flex; align-items: flex-end;
 }
 .corpSpark__bar {
-  width: 100%; border-radius: 2px; min-height: 4px; background: var(--progress-track);
+  width: 100%; min-height: 4px; background: #cfe2d3;
+  border-radius: 4px 4px 2px 2px;
   transition: background 120ms ease;
 }
 .corpSpark__slot:hover .corpSpark__bar,
@@ -1886,7 +1891,18 @@ select.field__control {
 .corpLegend { display: flex; gap: 20px; }
 .corpLegend__item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
 .corpLegend__dot { width: 8px; height: 8px; border-radius: 2px; }
-.corpFlows { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 220px; }
+/* Wykres z osia: siatka lezy pod slupkami, podpisy osi po prawej. */
+.corpChart { position: relative; padding-right: 56px; }
+.corpChart__grid {
+  position: absolute; inset: 0 56px 26px 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.corpChart__line { position: relative; border-top: 1px solid var(--divider); }
+.corpChart__tick {
+  position: absolute; right: -56px; top: -7px; width: 48px;
+  font-size: 10px; color: var(--sub-faint); text-align: left;
+}
+.corpFlows { position: relative; display: flex; align-items: flex-end; gap: 8px; height: 240px; }
 .corpFlow {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;
   padding: 0; border: 0; background: none; cursor: pointer; border-radius: 6px;
@@ -1894,9 +1910,13 @@ select.field__control {
 }
 .corpFlow:hover, .corpFlow.is-hot { background: var(--screen-bg); }
 .corpFlow__stack {
-  flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
+  flex: 1; width: 100%; display: flex; flex-direction: column-reverse; justify-content: flex-start;
 }
-.corpFlow__bar { display: block; width: 100%; border-radius: 2px; min-height: 3px; }
+.corpFlow__bar { display: block; width: 100%; }
+/* Zaokraglenie tylko na szczycie stosu — dol siedzi na osi. */
+.corpFlow__bar--strong { background: var(--c-corp); border-radius: 4px 4px 0 0; }
+.corpFlow__bar--soft { background: #cfe2d3; border-radius: 4px 4px 0 0; }
+.corpFlow__stack:has(.corpFlow__bar--strong) .corpFlow__bar--soft { border-radius: 0; }
 .corpFlow__label { font-size: 10px; color: var(--sub-faint); }
 
 /* ---- zamkniete pozycje i operacje ---- */

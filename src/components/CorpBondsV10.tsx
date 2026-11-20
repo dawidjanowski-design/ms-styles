@@ -37,8 +37,17 @@ import {
   SortNone,
 } from '../icons/Feather';
 
-/* Kolor klasy bierzemy z palety nr 2 — ten sam, co na wykresie portfela. */
+/* Kolor klasy z palety nr 2 — ten sam, co na wykresie portfela. Odsetki
+   to jego rozcienczona wersja, a nie szarosc: oba slupki mowia o tej samej
+   klasie, roznia sie rodzajem przeplywu. */
 const SEG = '#046816';
+const SEG_SOFT = '#cfe2d3';
+
+/* Os konczy sie na okraglej liczbie powyzej najwiekszego miesiaca —
+   slupki maja sie do czego odniesc, a podpisy sa do zapamietania. */
+const OS_MAX = 900000;
+const OS_TICKS = [900000, 600000, 300000, 0];
+const tys = (v: number) => (v === 0 ? '0' : `${v / 1000} tys.`);
 
 function Select({ label }: { label: string }) {
   return (
@@ -250,56 +259,63 @@ const zl = (v: number) =>
 
 function FlowsChart() {
   const [hot, setHot] = useState<number | null>(null);
-  const max = Math.max(...CORP_FLOWS.map((m) => m.nominal + m.interest));
 
   return (
-    <div className="corpFlows" onMouseLeave={() => setHot(null)}>
-      {hot !== null && (
-        <Tooltip at={((hot + 0.5) / CORP_FLOWS.length) * 100}>
-          <span className="chartTip__title">{CORP_FLOWS[hot].full}</span>
-          {CORP_FLOWS[hot].nominal > 0 && (
-            <span className="chartTip__row">
-              <span className="chartTip__dot" style={{ background: SEG }} />
-              Wartość nominalna<strong>{zl(CORP_FLOWS[hot].nominal)}</strong>
-            </span>
-          )}
-          <span className="chartTip__row">
-            <span className="chartTip__dot" style={{ background: 'var(--progress-track)' }} />
-            Odsetki<strong>{zl(CORP_FLOWS[hot].interest)}</strong>
-          </span>
-          {CORP_FLOWS[hot].note && (
-            <span className="chartTip__note">{CORP_FLOWS[hot].note}</span>
-          )}
-        </Tooltip>
-      )}
-      {CORP_FLOWS.map((m, i) => (
-        <button
-          type="button"
-          className={`corpFlow ${hot === i ? 'is-hot' : ''}`}
-          key={m.label}
-          onMouseEnter={() => setHot(i)}
-          onFocus={() => setHot(i)}
-          onBlur={() => setHot(null)}
-          aria-label={`${m.full}: nominał ${zl(m.nominal)}, odsetki ${zl(m.interest)}`}
-        >
-          <span className="corpFlow__stack">
-            {m.nominal > 0 && (
-              <span
-                className="corpFlow__bar"
-                style={{ height: `${(m.nominal / max) * 100}%`, background: SEG }}
-              />
+    <div className="corpChart">
+      {/* Siatka z podpisami — bez niej wysokosc slupka nie znaczy nic. */}
+      <div className="corpChart__grid" aria-hidden="true">
+        {OS_TICKS.map((t) => (
+          <div className="corpChart__line" key={t}>
+            <span className="corpChart__tick">{tys(t)}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="corpFlows" onMouseLeave={() => setHot(null)}>
+        {hot !== null && (
+          <Tooltip at={((hot + 0.5) / CORP_FLOWS.length) * 100}>
+            <span className="chartTip__title">{CORP_FLOWS[hot].full}</span>
+            {CORP_FLOWS[hot].nominal > 0 && (
+              <span className="chartTip__row">
+                <span className="chartTip__dot" style={{ background: SEG }} />
+                Wartość nominalna<strong>{zl(CORP_FLOWS[hot].nominal)}</strong>
+              </span>
             )}
-            <span
-              className="corpFlow__bar"
-              style={{
-                height: `${Math.max(2, (m.interest / max) * 100)}%`,
-                background: 'var(--progress-track)',
-              }}
-            />
-          </span>
-          <span className="corpFlow__label">{m.label}</span>
-        </button>
-      ))}
+            <span className="chartTip__row">
+              <span className="chartTip__dot" style={{ background: SEG_SOFT }} />
+              Odsetki<strong>{zl(CORP_FLOWS[hot].interest)}</strong>
+            </span>
+            {CORP_FLOWS[hot].note && (
+              <span className="chartTip__note">{CORP_FLOWS[hot].note}</span>
+            )}
+          </Tooltip>
+        )}
+        {CORP_FLOWS.map((m, i) => (
+          <button
+            type="button"
+            className={`corpFlow ${hot === i ? 'is-hot' : ''}`}
+            key={m.label}
+            onMouseEnter={() => setHot(i)}
+            onFocus={() => setHot(i)}
+            onBlur={() => setHot(null)}
+            aria-label={`${m.full}: nominał ${zl(m.nominal)}, odsetki ${zl(m.interest)}`}
+          >
+            <span className="corpFlow__stack">
+              <span
+                className="corpFlow__bar corpFlow__bar--soft"
+                style={{ height: `${Math.max(1.5, (m.interest / OS_MAX) * 100)}%` }}
+              />
+              {m.nominal > 0 && (
+                <span
+                  className="corpFlow__bar corpFlow__bar--strong"
+                  style={{ height: `${(m.nominal / OS_MAX) * 100}%` }}
+                />
+              )}
+            </span>
+            <span className="corpFlow__label">{m.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -371,7 +387,7 @@ function Flows() {
           Wartość nominalna
         </span>
         <span className="corpLegend__item">
-          <span className="corpLegend__dot" style={{ background: 'var(--progress-track)' }} />
+          <span className="corpLegend__dot" style={{ background: SEG_SOFT }} />
           Odsetki
         </span>
       </div>
