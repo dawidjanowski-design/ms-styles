@@ -2084,14 +2084,30 @@ select.field__control {
 
 /* Emitent z wlasna karta: caly wiersz tabeli struktury prowadzi do niej. */
 .corpRow--link { cursor: pointer; }
-.corpRow--link:hover {
-  background: var(--row-hover);
-  /* Tlo wychodzi 8 px poza tekst po obu stronach, bez ruszania kolumn. */
-  box-shadow: -8px 0 0 var(--row-hover), 8px 0 0 var(--row-hover);
-}
+.corpRow--link:hover { background: var(--row-hover); }
 
 /* Kolor na karcie emitenta tylko tam, gdzie niesie znaczenie: wynik na
    plusie w zieleni klasy i udzial w klasie jako pasek tej samej zieleni. */
 .resultStat__value--pos { color: var(--c-corp); }
 .issShare { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
 .issShare__bar { width: 160px; flex: none; }
+
+/* Tabele na cala szerokosc karty, jak lista zdarzen na pulpicie: karta
+   bez paddingu, kreski od krawedzi do krawedzi, odstep od brzegu siedzi
+   w wierszach (20 px). Reszta tresci karty (notki, wykres, stopka)
+   zachowuje 20 px z kazdej strony. */
+.corpCard { padding: 0; overflow: hidden; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable) {
+  padding-left: 20px; padding-right: 20px;
+}
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):first-child { margin-top: 20px; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):last-child { margin-bottom: 20px; }
+
+.corpCard .corpRow,
+.corpCard .closedRow,
+.corpCard .opsRow,
+.corpCard .issRow { padding-left: 20px; padding-right: 20px; }
+.corpCard .corpRow--head,
+.corpCard .closedRow--head,
+.corpCard .opsRow--head,
+.corpCard .issRow--head { padding-top: 16px; padding-bottom: 10px; }
