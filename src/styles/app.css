@@ -2057,7 +2057,8 @@ select.field__control {
    bez paddingu, kreski od krawedzi do krawedzi, odstep od brzegu siedzi
    w wierszach (20 px). Reszta tresci karty (notki, wykres, stopka)
    zachowuje 20 px z kazdej strony. */
-.corpCard { padding: 0; overflow: hidden; }
+/* Bez overflow: hidden — dymki wykresow wychodza nad karte. */
+.corpCard { padding: 0; }
 .corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable) {
   padding-left: 20px; padding-right: 20px;
 }
