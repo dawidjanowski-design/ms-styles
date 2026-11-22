@@ -10,6 +10,7 @@ import {
   CORP_OPS,
   CORP_OPS_OLDER,
   CORP_SERIES,
+  CORP_SERIES_DETAIL,
   type Metric,
   type Serie,
 } from '../data/corpV10';
@@ -33,7 +34,13 @@ const poDacie = (x: string) => x.split('.').reverse().join('');
 
 /* ------------------------------ serie w portfelu ------------------------------ */
 
-function SeriesTable({ serie }: { serie: Serie[] }) {
+function SeriesTable({
+  serie,
+  onOpenSeries,
+}: {
+  serie: Serie[];
+  onOpenSeries: (id: string) => void;
+}) {
   const e = emitent(serie[0]?.issuer ?? '');
   /* Seria na kilku rachunkach startuje rozwinieta — rozbicie to glowna
      informacja, ktorej nie ma na ekranie klasy. */
@@ -70,7 +77,13 @@ function SeriesTable({ serie }: { serie: Serie[] }) {
               <div className="issGroup" key={s.id}>
                 <div className="issRow">
                   <span className="issRow__name">
-                    {s.ticker} · {s.name}
+                    {CORP_SERIES_DETAIL[s.id] ? (
+                      <button type="button" className="issRow__link" onClick={() => onOpenSeries(s.id)}>
+                        {s.ticker} · {s.name}
+                      </button>
+                    ) : (
+                      `${s.ticker} · ${s.name}`
+                    )}
                     {s.base && <span className="issRow__sub">{s.base}</span>}
                   </span>
                   <span className="is-num">{s.count}</span>
@@ -127,10 +140,12 @@ export function IssuerV10({
   issuer,
   onBack,
   onOpenAsset,
+  onOpenSeries,
 }: {
   issuer: string;
   onBack: () => void;
   onOpenAsset: () => void;
+  onOpenSeries: (id: string) => void;
 }) {
   const e = emitent(issuer);
   const info = CORP_ISSUERS[issuer];
@@ -248,7 +263,7 @@ export function IssuerV10({
             </div>
           </section>
 
-          <SeriesTable serie={e.serie} />
+          <SeriesTable serie={e.serie} onOpenSeries={onOpenSeries} />
 
           {zamkniete.length > 0 && (
             <section className="corpSection" ref={zamknieteRef}>

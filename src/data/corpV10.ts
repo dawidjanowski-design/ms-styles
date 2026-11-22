@@ -66,7 +66,15 @@ export const CORP_SERIES: Serie[] = [
   },
   { id: 'nrd0528', ticker: 'NRD0528', name: 'seria B', issuer: 'Nordvik Development', cur: 'PLN', count: 280, rate: 7.3, coupon: 7.35, maturity: '22.05.2028', value: 280000, nominal: 280000, interest12m: 5900, result12m: 9600 },
   { id: 'cvh1226', ticker: 'CVH1226', name: 'seria P2026B', issuer: 'Cavatina Holding', cur: 'EUR', count: 44, rate: 6.8, coupon: 6.7, maturity: '18.12.2026', value: 200000, nominal: 198400, interest12m: 2600, result12m: 5200, curValue: 43330, curNominal: 43000, curInterest12m: 563, curResult12m: 1126 },
-  { id: 'vid0928', ticker: 'VID0928', name: 'seria B2', issuer: 'Victoria Dom', cur: 'PLN', count: 195, rate: 7.1, coupon: 7.15, maturity: '30.09.2028', value: 194922, nominal: 192000, interest12m: 4200, result12m: 7400 },
+  /* Kupon 7,10% = WIBOR 3M 3,90% + marza 3,20 p.p. (karta serii, wireframe 1121:4573). */
+  {
+    id: 'vid0928', ticker: 'VID0928', name: 'seria B2', issuer: 'Victoria Dom', cur: 'PLN', count: 195, rate: 7.1, coupon: 7.1, maturity: '30.09.2028', value: 194922, nominal: 192000, interest12m: 4200, result12m: 7400,
+    base: 'WIBOR 3M + 3,20', nextCoupon: '31.12.2026',
+    accounts: [
+      { account: 'Maklerski ·6858', count: 55, value: 54922 },
+      { account: 'IKE ·7431', count: 140, value: 140000 },
+    ],
+  },
   { id: 'prg0527', ticker: 'PRG0527', name: 'seria E2', issuer: 'PragmaGO', cur: 'PLN', count: 165, rate: 7.7, coupon: 7.75, maturity: '14.05.2027', value: 165000, nominal: 168000, interest12m: 3200, result12m: 5100 },
   { id: 'dek0228', ticker: 'DEK0228', name: 'seria C', issuer: 'Dekpol', cur: 'PLN', count: 100, rate: 7.4, coupon: 7.45, maturity: '28.02.2028', value: 100000, nominal: 100000, interest12m: 1800, result12m: 3400 },
   { id: 'dek0929', ticker: 'DEK0929', name: 'seria D', issuer: 'Dekpol', cur: 'PLN', count: 80, rate: 7.5, coupon: 7.55, maturity: '14.09.2029', value: 80000, nominal: 79000, interest12m: 1540, result12m: 3040 },
@@ -308,3 +316,60 @@ export const CORP_OPS_OLDER: OpRow[] = [
 
 export const CORP_OPS_FILTERS = ['Od początku', 'Wszystkie typy'];
 export const CORP_OPS_FOOT = 'Wyświetlono 5 z 68 operacji';
+
+/* ------------------------------ karta serii ------------------------------
+   Tresc z wireframe'u 1121:4573. Seria bez wpisu nie ma jeszcze karty, wiec
+   jej wiersz w tabelach nie jest linkiem. Kwoty kuponow to dane (harmonogram
+   emitenta), nie wynik liczenia — po wykupie czesciowym spadaja do 137 szt. */
+export type SeriesDetail = {
+  isin: string;
+  tickerNote?: string;
+  par: number;
+  frequency: string;
+  formula: string;
+  earlyRedemption?: {
+    kind: string;
+    count: number;
+    amount: number;
+    date: string;
+    remaining: number;
+  };
+  cost: number;
+  costSub: string;
+  interestSincePurchase: number;
+  irr: number;
+  coupons: { date: string; amount: number }[];
+  couponsNote?: string;
+  instrument: { label: string; note?: string; value: string }[];
+};
+
+export const CORP_SERIES_DETAIL: Record<string, SeriesDetail> = {
+  vid0928: {
+    isin: 'PLVCTRD00045',
+    tickerNote: 'wspólny z serią B3',
+    par: 1000,
+    frequency: 'kwartalnie',
+    formula:
+      'WIBOR 3M (3,90%) + marża 3,20 p.p. · kupon ustalany na 3 dni robocze przed okresem odsetkowym',
+    earlyRedemption: { kind: 'Wykup częściowy — 30% pozycji', count: 58, amount: 58000, date: '15.06.2027', remaining: 137 },
+    cost: 194100,
+    costSub: '2 transakcje · 10.2025 i 04.2026',
+    interestSincePurchase: 13900,
+    irr: 7.02,
+    coupons: [
+      { date: '31.12.2026', amount: 3460 },
+      { date: '31.03.2027', amount: 3460 },
+      { date: '30.06.2027', amount: 2420 },
+      { date: '30.09.2027', amount: 2420 },
+    ],
+    couponsNote: 'Od 30.06.2027 kwota jest niższa — 30% nominału zostanie wykupione 15.06.2027.',
+    instrument: [
+      { label: 'Rynek notowań', value: 'GPW Catalyst' },
+      { label: 'Data emisji', value: '30.09.2025' },
+      { label: 'Amortyzacja', note: 'nominał spłacany jednorazowo w dniu wykupu', value: 'brak' },
+      { label: 'Zabezpieczenie', note: 'hipoteka na nieruchomości gruntowej', value: 'tak' },
+      { label: 'Wartość nominalna obligacji', value: '1 000,00 PLN' },
+      { label: 'Waluta', value: 'PLN' },
+    ],
+  },
+};

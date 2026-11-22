@@ -14,6 +14,7 @@ import {
   CORP_HEAD,
   CORP_ISSUERS,
   CORP_OPS,
+  CORP_SERIES_DETAIL,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
   CORP_STRUCTURE_NOTE,
@@ -151,9 +152,11 @@ type Sort = { col: string; dir: 1 | -1 };
 function Structure({
   currency,
   onOpenIssuer,
+  onOpenSeries,
 }: {
   currency: Currency;
   onOpenIssuer: (issuer: string) => void;
+  onOpenSeries: (id: string) => void;
 }) {
   const [grouping, setGrouping] = useState('Emitenci');
   /* Udzial malejaco to domyslny porzadek: najpierw to, co wazy najwiecej. */
@@ -188,16 +191,19 @@ function Structure({
   const etykietaWartosci = metric === 'value' ? 'Wartość bieżąca' : 'Wartość nominalna';
 
   const komorki = (r: Wiersz, total?: boolean) => {
-    /* Wiersz emitenta z wlasna karta prowadzi do niej. */
-    const link = !total && grouping === 'Emitenci' && Boolean(CORP_ISSUERS[r.id]);
+    /* Wiersz emitenta albo serii z wlasna karta prowadzi do niej. */
+    const doEmitenta = grouping === 'Emitenci' && Boolean(CORP_ISSUERS[r.id]);
+    const doSerii = grouping === 'Serie' && Boolean(CORP_SERIES_DETAIL[r.id]);
+    const link = !total && (doEmitenta || doSerii);
+    const otworz = () => (doSerii ? onOpenSeries(r.id) : onOpenIssuer(r.id));
     return (
     <div
       className={`corpRow ${total ? 'corpRow--total' : ''} ${link ? 'corpRow--link' : ''}`}
       key={r.id}
       role={link ? 'link' : undefined}
       tabIndex={link ? 0 : undefined}
-      onClick={link ? () => onOpenIssuer(r.id) : undefined}
-      onKeyDown={link ? (ev) => ev.key === 'Enter' && onOpenIssuer(r.id) : undefined}
+      onClick={link ? otworz : undefined}
+      onKeyDown={link ? (ev) => ev.key === 'Enter' && otworz() : undefined}
     >
       <span className="corpRow__issuer">
         {r.title}
@@ -689,11 +695,13 @@ export function CorpBondsV10({
   onCurrencyChange,
   onBack,
   onOpenIssuer,
+  onOpenSeries,
 }: {
   currency: Currency;
   onCurrencyChange: (c: Currency) => void;
   onBack: () => void;
   onOpenIssuer: (issuer: string) => void;
+  onOpenSeries: (id: string) => void;
 }) {
   return (
     <div className="screenOuter">
@@ -732,7 +740,7 @@ export function CorpBondsV10({
           </div>
 
           <Summary currency={currency} />
-          <Structure currency={currency} onOpenIssuer={onOpenIssuer} />
+          <Structure currency={currency} onOpenIssuer={onOpenIssuer} onOpenSeries={onOpenSeries} />
           <Widgets />
           <Flows />
           <Closed />

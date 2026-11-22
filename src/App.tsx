@@ -4,6 +4,7 @@ import { PortfolioScreen } from './components/Portfolio';
 import { AssetDetailScreen } from './components/AssetDetail';
 import { CorpBondsV10 } from './components/CorpBondsV10';
 import { IssuerV10 } from './components/IssuerV10';
+import { SeriesV10 } from './components/SeriesV10';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
@@ -107,6 +108,7 @@ export default function App() {
           onCurrencyChange={setCurrency}
           onBack={() => setScreen({ name: 'portfel' })}
           onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
+          onOpenSeries={(id) => setScreen({ name: 'series', id })}
         />
       )}
       {screen.name === 'asset' && styleId !== '10' && (
@@ -128,6 +130,16 @@ export default function App() {
           issuer={screen.id}
           onBack={() => setScreen({ name: 'portfel' })}
           onOpenAsset={() => setScreen({ name: 'asset', id: 'corp' })}
+          onOpenSeries={(id) => setScreen({ name: 'series', id })}
+        />
+      )}
+      {/* Nr 10: karta serii z wireframe'u 1121:4573. */}
+      {screen.name === 'series' && styleId === '10' && (
+        <SeriesV10
+          id={screen.id}
+          onBack={() => setScreen({ name: 'portfel' })}
+          onOpenAsset={() => setScreen({ name: 'asset', id: 'corp' })}
+          onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
         />
       )}
       {screen.name === 'issuer' && styleId !== '10' && (
@@ -138,7 +150,7 @@ export default function App() {
           onOpenSeries={(id) => setScreen({ name: 'series', id })}
         />
       )}
-      {screen.name === 'series' && (
+      {screen.name === 'series' && styleId !== '10' && (
         <SeriesScreen
           styleId={styleId}
           onBack={() => setScreen({ name: 'portfel' })}

@@ -2,7 +2,14 @@
    wszystko wyliczamy z wierszy serii, zeby przelacznik walut, grupowania
    i metryki nigdy nie rozjechaly sie z tabela pod spodem. */
 
-import { CORP_CLOSED_INTEREST, CORP_IRR, CORP_ISSUERS, CORP_SERIES, type Serie } from './corpV10';
+import {
+  CORP_CLOSED_INTEREST,
+  CORP_IRR,
+  CORP_ISSUERS,
+  CORP_SERIES,
+  CORP_SERIES_DETAIL,
+  type Serie,
+} from './corpV10';
 import type { Currency } from './currencies';
 
 /** Pole liczbowe serii — w walucie widoku, nie zawsze w zlotych. */
@@ -177,3 +184,20 @@ export const odmiana = (n: number, [jeden, kilka, wiele]: [string, string, strin
   const r100 = n % 100;
   return `${n} ${r10 >= 2 && r10 <= 4 && (r100 < 12 || r100 > 14) ? kilka : wiele}`;
 };
+
+/* -------------------------------- karta serii --------------------------------
+   Wynik od zakupu = wyplacone odsetki + zmiana wyceny (wartosc biezaca minus
+   koszt nabycia) — tak jak opisuje go wiersz na karcie. */
+export function seria(id: string) {
+  const s = CORP_SERIES.find((x) => x.id === id);
+  const d = CORP_SERIES_DETAIL[id];
+  if (!s || !d) return null;
+  const konta = s.accounts ?? [];
+  return {
+    s,
+    d,
+    konta,
+    wycena: s.value - d.cost,
+    wynik: d.interestSincePurchase + (s.value - d.cost),
+  };
+}

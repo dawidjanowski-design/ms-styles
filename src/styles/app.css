@@ -2078,3 +2078,75 @@ select.field__control {
    z nr 2: rezerwa dwoch linii pod etykiete i jej kompensata nad blokiem licza
    sie razem, wiec zdjecie samej rezerwy psulo odstep pod kreska. */
 .v10Group__grid .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+/* ================= nr 10: karta serii (wireframe 1121:4573) =================
+   Tresc po lewej, po prawej waska kolumna decyzji — ten sam podzial co
+   zlecenia i kalendarz na pulpicie. */
+.serSplit { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
+.serMain, .serAside { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+.serChips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.serChip {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px;
+  border-radius: 999px; background: var(--card-bg); box-shadow: var(--shadow-pill);
+  font-size: 13px; color: var(--muted);
+}
+.serChip strong { font-weight: 500; color: var(--ink); }
+.serChip__note { color: var(--muted); }
+
+/* Formula kuponu pod kafelkami — szary pas jak notka w karcie wyniku. */
+.serFormula {
+  margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--screen-bg);
+  font-size: 13px; line-height: 20px; color: var(--muted);
+}
+
+.serTable { display: flex; flex-direction: column; }
+.serRow {
+  display: grid; grid-template-columns: minmax(0, 1fr) 120px 160px; gap: 16px; align-items: center;
+  padding: 12px 20px; font-size: 13px; color: var(--ink); border-bottom: 1px solid var(--divider);
+}
+.serRow .is-num, .serKv .is-num { text-align: right; justify-self: end; }
+.serRow--head { padding-top: 16px; padding-bottom: 10px; color: var(--muted); }
+.serRow--total { font-weight: 500; }
+.serRow--pair { grid-template-columns: minmax(0, 1fr) auto; }
+.serTable > .serRow:last-child { border-bottom: 0; }
+
+.serMore {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 14px 20px; border: 0; border-top: 1px solid var(--divider); background: none;
+  font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; text-align: left;
+}
+.serMore:hover { background: var(--row-hover); }
+.serMore__label { font-weight: 500; }
+.serMore__hint { color: var(--muted); margin-right: auto; }
+.serMore .icon { color: var(--muted); }
+
+.serKv {
+  display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; gap: 16px; align-items: center;
+  padding: 12px 20px; font-size: 13px; color: var(--ink); border-top: 1px solid var(--divider);
+}
+.serTable > .serKv:first-child { border-top: 0; }
+.serKv__label, .serKv__note { color: var(--muted); }
+
+.serActions { display: flex; flex-direction: column; gap: 8px; }
+.serActions .btn { width: 100%; justify-content: center; }
+.serActions .corpNote { margin-top: 4px; }
+
+/* Ogloszony wykup: bursztyn ze stanu „czesciowo zrealizowane" na pulpicie. */
+.serAlert {
+  display: flex; flex-direction: column; gap: 6px; padding: 20px;
+  border-radius: var(--card-radius); background: var(--c-partial-bg); color: var(--c-partial);
+}
+.serAlert__title { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; }
+.serAlert__kind { font-size: 13px; font-weight: 500; }
+.serAlert__text { margin: 0; font-size: 13px; line-height: 20px; }
+
+.crumbs__link--static { cursor: default; }
+.issRow__link {
+  padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.issRow__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.issRow__link {
+  padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.issRow__link:hover { text-decoration: underline; text-underline-offset: 3px; }
