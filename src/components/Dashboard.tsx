@@ -168,25 +168,20 @@ function OrdersV10() {
         </span>
       </div>
 
-      {/* W kolumnie nie ma miejsca na szesc kolumn, wiec zlecenie czyta sie
-          dwiema liniami: nazwa i kwota, pod spodem stan, typ i rachunek,
-          a z prawej data zlozenia. Nic sie nie zawija. */}
+      {/* Na pelnej szerokosci zlecenie to jeden wiersz tabeli jak zdarzenia
+          w nr 2: data zlozenia, seria ze stanem, typ i rachunek, kwota. */}
       <div className="eventsCard">
         {V10_ORDERS.map((z) => (
           <button type="button" className="eventRow eventRow--orders" key={z.name}>
-            <span className="eventRow__what">
-              <span className="eventRow__meta">
-                <span className="eventRow__type">{z.name}</span>
-                <span className={`badge badge--${z.tone}`}>{z.status}</span>
-              </span>
-              <span className="eventRow__instrument">
-                {z.type} · {z.account} {z.accountNo}
-              </span>
+            <span className="eventRow__date">{z.date}</span>
+            <span className="eventRow__meta">
+              <span className="eventRow__type">{z.name}</span>
+              <span className={`badge badge--${z.tone}`}>{z.status}</span>
             </span>
-            <span className="eventRow__right">
-              <span className="eventRow__amount">{z.amount}</span>
-              <span className="eventRow__when">{z.date}</span>
+            <span className="eventRow__instrument">
+              {z.type} · {z.account} {z.accountNo}
             </span>
+            <span className="eventRow__amount">{z.amount}</span>
             <span className="eventRow__chev" aria-hidden="true">
               ›
             </span>
@@ -534,19 +529,8 @@ export function DashboardScreen({
             <>
           {styleId === '1' ? <OffersLoop /> : <OffersScroll />}
 
-          {/* Nr 10: zlecenia i zdarzenia obok siebie. Po lewej to, co klient
-              sam zlecil, po prawej to, co przyjdzie samo — kalendarz z nr 8,
-              bo w waskiej kolumnie pelna data w kazdym wierszu powtarzalaby
-              ten sam miesiac. */}
-          {styleId === '10' ? (
-            <section className="dashSplit dashSplit--orders">
-              <OrdersV10 />
-              <div className="events">
-                <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
-                <EventMonths />
-              </div>
-            </section>
-          ) : (
+          {/* Nr 10: zlecenia na pelna szerokosc, pod nimi zdarzenia jak w nr 2. */}
+          {styleId === '10' && <OrdersV10 />}
           <section className="events">
             <h2 className="sectionTitle">Nadchodzące zdarzenia</h2>
             <div className="eventsCard">
@@ -574,7 +558,6 @@ export function DashboardScreen({
               ))}
             </div>
           </section>
-          )}
             </>
           )}
         </div>
