@@ -211,15 +211,27 @@ export function SeriesV10({
                   <h2 className="sectionTitle">Co możesz zrobić</h2>
                 </div>
                 <div className="corpCard">
-                  <div className="serActions">
-                    <button type="button" className="btn">
+                  <div className="serTrade">
+                    <div className="serTrade__info">
+                      <span className="serTrade__label">Do sprzedaży</span>
+                      <span className="serTrade__value">{kwota(s.value, 'PLN')}</span>
+                      <span className="serTrade__sub">
+                        {s.count} szt. · notowania na {d.instrument.find((r) => r.label === 'Rynek notowań')?.value ?? 'Catalyst'}
+                      </span>
+                    </div>
+                    <button type="button" className="btn serTrade__btn">
                       Sprzedaj na Catalyst
                     </button>
-                    <button type="button" className="btn btn--ghost">
-                      Dokumenty serii
-                    </button>
-                    <p className="corpNote">Warunki emisji, raporty bieżące i dokument informacyjny.</p>
                   </div>
+                  <button type="button" className="serLinkRow">
+                    <span className="serLinkRow__text">
+                      <span className="serLinkRow__title">Dokumenty serii</span>
+                      <span className="serLinkRow__sub">
+                        Warunki emisji, raporty bieżące i dokument informacyjny
+                      </span>
+                    </span>
+                    <ChevronRight size={16} />
+                  </button>
                 </div>
               </section>
 
