@@ -1895,6 +1895,10 @@ select.field__control {
 .corpRow__sort, .corpRow__menu { margin-left: 6px; color: var(--muted); }
 .corpRow__sort.is-on { color: var(--ink); }
 .corpRow--head .corpRow__cell, .corpRow--head .corpRow__issuer { display: inline-flex; align-items: center; }
+/* Naglowek pierwszej kolumny dziedziczyl flex-direction: column z
+   .corpRow__issuer — align-items: center centrowal go wtedy w poziomie
+   i „Emitent" uciekal od lewej krawedzi wierszy. */
+.corpRow--head .corpRow__issuer { flex-direction: row; justify-content: flex-start; }
 .corpRow--head .corpRow__cell--num { justify-content: flex-end; }
 .crumbs__sep { color: var(--crumb-sep); }
 .v10Acct__meta { display: inline-flex; align-items: center; gap: 6px; }
