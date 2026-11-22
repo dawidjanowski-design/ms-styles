@@ -1970,11 +1970,12 @@ select.field__control {
    bo w kolumnie polowy szerokosci szesc kolumn by sie pozawijalo. */
 .events__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .events__count { font-size: 13px; font-weight: 400; color: var(--muted); }
-/* Wiersz zlecenia jak wiersz zdarzenia nr 2 (te same odstepy i wysokosc),
-   tylko kolumna serii szersza, bo niesie tez pigulke stanu. Waga jak
-   :root:not([data-style='makieta']) .eventRow (0,3,0). */
-:root:not([data-style='makieta']) .eventRow--orders {
-  grid-template-columns: 100px minmax(0, 1.4fr) minmax(0, 1fr) auto 16px;
+/* Nr 10: zlecenia i zdarzenia to dwie tabele jedna pod druga, wiec maja
+   wspolna siatke — kolumny stoja w tych samych miejscach. Druga kolumna
+   szersza niz w nr 2 (232 px), bo w zleceniach niesie tez pigulke stanu.
+   Waga powyzej :root:not([data-style='makieta']) .eventRow (0,3,0). */
+:root[data-style='10'] .eventRow:not(.eventRow--head) {
+  grid-template-columns: 100px 360px minmax(0, 1fr) auto 16px;
 }
 .eventRow__what { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 /* Stan stoi przy nazwie, nie w osobnej kolumnie — „Czesciowo zrealizowane"
