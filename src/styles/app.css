@@ -2071,7 +2071,7 @@ select.field__control {
 
 /* Nazwy klas w nr 10 sa pelne („Fundusze Inwestycyjne Otwarte"), wiec kafelek
    pozycji dostaje wiecej miejsca niz domyslne 150 px — dwie kolumny zamiast
-   trzech, za to kazda etykieta miesci sie w jednej linii. Przy jednolinijkowych
-   etykietach zapas dwoch linii czyta sie juz tylko jako dziura. */
+   trzech, za to kazda etykieta miesci sie w jednej linii. Reszta rytmu zostaje
+   z nr 2: rezerwa dwoch linii pod etykiete i jej kompensata nad blokiem licza
+   sie razem, wiec zdjecie samej rezerwy psulo odstep pod kreska. */
 .v10Group__grid .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.v10Group__grid .metric__label { min-height: 0; }
