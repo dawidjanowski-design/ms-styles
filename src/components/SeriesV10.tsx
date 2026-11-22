@@ -30,7 +30,7 @@ export function SeriesV10({
   const kartaEmitenta = Boolean(CORP_ISSUERS[s.issuer]);
 
   const kafelki: Metric[] = [
-    { label: 'Aktualne oprocentowanie', value: procent(s.coupon), sub: s.base },
+    { label: 'Aktualne oprocentowanie', value: procent(s.coupon) },
     { label: 'Wypłata odsetek', value: d.frequency },
     { label: 'Najbliższa wypłata', value: s.nextCoupon ?? '—' },
     { label: 'Termin wykupu', value: s.maturity },

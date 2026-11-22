@@ -2057,11 +2057,11 @@ select.field__control {
    zachowuje 20 px z kazdej strony. */
 /* Bez overflow: hidden — dymki wykresow wychodza nad karte. */
 .corpCard { padding: 0; }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable) {
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable) {
   padding-left: 20px; padding-right: 20px;
 }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):first-child { margin-top: 20px; }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):last-child { margin-bottom: 20px; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):first-child { margin-top: 20px; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):last-child { margin-bottom: 20px; }
 
 .corpCard .corpRow,
 .corpCard .closedRow,
