@@ -13,7 +13,6 @@ import {
   V10_LEGEND_ORDER,
   V10_NAMES,
   type V10Account,
-  type V10Position,
   type Account,
   type AssetClass,
   type Metric,
@@ -377,28 +376,9 @@ function CashOverview({
 
 /* ------------------------ nr 10: rachunki (wireframe P02) ------------------------ */
 
-/* Udzialy w pasku licze z kwot pozycji, nie z osobnego pola — jedna liczba
-   mniej do rozjechania sie z lista pod spodem. */
+/* Kwota pozycji jako liczba — do ustalenia, ktora klasa na rachunku wazy
+   najwiecej, a wiec jaki kolor dostaje marker karty. */
 const kwotaPLN = (v: string) => Number(v.replace(/[^\d]/g, '')) / 100;
-
-function AcctBar({ positions, styleId }: { positions: V10Position[]; styleId: StyleId }) {
-  const suma = positions.reduce((s, p) => s + kwotaPLN(p.value), 0);
-  if (!suma) return null;
-  return (
-    <div className="v10Bar">
-      {positions.map((p) => (
-        <span
-          key={p.asset}
-          className="v10Bar__seg"
-          style={{
-            flexGrow: kwotaPLN(p.value) / suma,
-            background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].chart,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function V10AccountCard({ account, styleId }: { account: V10Account; styleId: StyleId }) {
   /* Kolor karty bierze klasa, ktora wazy na tym rachunku najwiecej — marker
@@ -441,10 +421,6 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
       )}
 
       <div className="divider" />
-
-      {/* Pasek struktury zostaje: niesie proporcje, ktorych kafelki nie
-          pokazuja, i zastepuje wypisywanie klas, ktorych na rachunku nie ma. */}
-      <AcctBar positions={account.positions} styleId={styleId} />
 
       {/* Pozycje jako kafelki — ten sam wzorzec, co po drugiej stronie
           przelacznika, w karcie klasy aktywow. */}

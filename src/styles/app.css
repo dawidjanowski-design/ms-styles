@@ -1666,11 +1666,6 @@ select.field__control {
   font-size: 13px; color: var(--muted); white-space: nowrap;
 }
 
-/* Pasek struktury zastepuje puste etykiety: klasy, ktorych na rachunku nie
-   ma, w ogole sie nie pojawiaja, a proporcje widac nad kafelkami. */
-.v10Bar { display: flex; gap: 3px; height: 4px; }
-.v10Bar__seg { border-radius: 2px; min-width: 6px; }
-
 /* Stopka dociagnieta do dolu, zeby karty w rzedzie konczyly sie rowno mimo
    roznej liczby pozycji. Limit wplat ma `order: 1`, wiec stopka idzie za nim. */
 .v10Acct__foot {
