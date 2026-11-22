@@ -1959,10 +1959,16 @@ select.field__control {
 .splitRow { display: flex; flex-direction: column; }
 /* Odstep zamiast kreski — kolor i rozbicie same oddzielaja oba wiersze. */
 .splitRow + .splitRow { margin-top: 14px; }
-.splitRow__parts { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0; }
-/* Kropka miedzy walutami zamiast kolejnego odstepu: trzy pozycje czytaja sie
-   jako jedna linia rozbicia, a nie trzy osobne etykiety. */
-.splitRow__part + .splitRow__part::before { content: '·'; margin-right: 10px; color: var(--muted); }
+/* Rozbicie walutowe pod soba: kazda waluta osobna linia, wciecie do nazwy
+   wiersza legendy (kropka 6 px + odstep 12 px), kod waluty w stalej
+   kolumnie, wiec kwoty zaczynaja sie w jednym miejscu. */
+.splitRow__parts { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 0; padding-left: 18px; }
+.splitRow__part {
+  display: grid; grid-template-columns: 36px auto 1fr; align-items: baseline; column-gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.splitRow__cur { color: var(--muted); }
+.splitRow__amount { color: var(--ink); }
 .splitRow__pln { color: var(--muted); }
 
 /* ---- nr 10: biezace zlecenia ----

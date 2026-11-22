@@ -133,14 +133,15 @@ function SplitChartV10() {
                 </span>
                 <span className="legendRow__value">{u.value}</span>
               </div>
-              <p className="legend__cashSub splitRow__parts">
+              <div className="legend__cashSub splitRow__parts">
                 {u.parts.map((p) => (
                   <span className="splitRow__part" key={p.cur}>
-                    {p.cur} {p.amount}
-                    {p.pln && <span className="splitRow__pln"> ({p.pln})</span>}
+                    <span className="splitRow__cur">{p.cur}</span>
+                    <span className="splitRow__amount">{p.amount}</span>
+                    {p.pln && <span className="splitRow__pln">{p.pln}</span>}
                   </span>
                 ))}
-              </p>
+              </div>
             </div>
           ))}
         </div>
