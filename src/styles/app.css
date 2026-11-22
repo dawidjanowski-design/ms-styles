@@ -2068,3 +2068,10 @@ select.field__control {
 .corpCard .closedRow--head,
 .corpCard .opsRow--head,
 .corpCard .issRow--head { padding-top: 16px; padding-bottom: 10px; }
+
+/* Nazwy klas w nr 10 sa pelne („Fundusze Inwestycyjne Otwarte"), wiec kafelek
+   pozycji dostaje wiecej miejsca niz domyslne 150 px — dwie kolumny zamiast
+   trzech, za to kazda etykieta miesci sie w jednej linii. Przy jednolinijkowych
+   etykietach zapas dwoch linii czyta sie juz tylko jako dziura. */
+.v10Group__grid .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.v10Group__grid .metric__label { min-height: 0; }
