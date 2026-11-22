@@ -2050,8 +2050,6 @@ select.field__control {
 /* Kolor na karcie emitenta tylko tam, gdzie niesie znaczenie: wynik na
    plusie w zieleni klasy i udzial w klasie jako pasek tej samej zieleni. */
 .resultStat__value--pos { color: var(--c-corp); }
-.issShare { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
-.issShare__bar { width: 160px; flex: none; }
 
 /* Tabele na cala szerokosc karty, jak lista zdarzen na pulpicie: karta
    bez paddingu, kreski od krawedzi do krawedzi, odstep od brzegu siedzi

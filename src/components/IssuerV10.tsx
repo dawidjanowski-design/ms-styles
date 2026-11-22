@@ -209,20 +209,13 @@ export function IssuerV10({
               <span className="resultCard__caption">Wartość bieżąca</span>
               <div className="resultCard__amountRow">
                 <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
-                {e.wynik > 0 && (
-                  <span className="resultCard__rate">
-                    <strong>+{kwota(e.wynik, 'PLN')}</strong> w 12M
-                  </span>
+                {e.stopa > 0 && (
+                  <span className="resultCard__rate">+{procent(e.stopa)}</span>
                 )}
               </div>
-              <div className="issShare">
-                <span className="corpShare issShare__bar">
-                  <span className="corpShare__fill" style={{ width: `${e.udzial}%` }} />
-                </span>
-                <span className="resultCard__note resultCard__note--left">
-                  {e.udzial.toFixed(1).replace('.', ',')}% obligacji korporacyjnych
-                </span>
-              </div>
+              <span className="resultCard__note resultCard__note--left">
+                {e.udzial.toFixed(1).replace('.', ',')}% obligacji korporacyjnych
+              </span>
             </div>
 
             <div className="divider" />
