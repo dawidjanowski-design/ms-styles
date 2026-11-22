@@ -401,44 +401,58 @@ function AcctBar({ positions, styleId }: { positions: V10Position[]; styleId: St
 }
 
 function V10AccountCard({ account, styleId }: { account: V10Account; styleId: StyleId }) {
+  /* Kolor karty bierze klasa, ktora wazy na tym rachunku najwiecej — marker
+     ma cos znaczyc, a rachunki nr 10 nie maja wlasnej palety. */
+  const dominanta = [...account.positions].sort((a, b) => kwotaPLN(b.value) - kwotaPLN(a.value))[0];
+  const seg = dominanta
+    ? META[colorId(dominanta.asset, styleId)].colors[paletteOf(styleId)].card
+    : undefined;
+
   return (
-    <article className="v10Acct">
-      <div className="v10Acct__head">
-        <span className="v10Acct__name">{account.name}</span>
-        {account.badge && <span className="v10Acct__badge">{account.badge}</span>}
-        <span className="v10Acct__no">· {account.number}</span>
-        <Amount int={account.amount} dec={account.decimals} className="v10Acct__amount" />
-        <ChevronRight size={16} className="v10Acct__chev" />
+    <article className="acctCard" style={{ ['--seg' as string]: seg }}>
+      <div className="acctCard__head">
+        <div className="acctCard__top">
+          <div className="acctCard__title">
+            <span className="acctCard__dot" />
+            <span className="acctCard__name">{account.name}</span>
+            {account.badge && <span className="v10Acct__badge">{account.badge}</span>}
+            <span className="acctCard__number">· {account.number}</span>
+          </div>
+          <Amount int={account.amount} dec={account.decimals} className="acctCard__amount" />
+        </div>
       </div>
 
       {account.limit && (
-        <div className="v10Limit">
-          <div className="v10Limit__top">
-            <span className="v10Limit__label">{account.limit.label}</span>
-            <span className="v10Limit__left">{account.limit.left}</span>
+        <div className="acctCard__limit">
+          <span className="acctCard__limitLabel">{account.limit.label}</span>
+          <div className="acctCard__limitTop">
+            <span className="acctCard__limitValue">{account.limit.value}</span>
+            <span className="acctCard__limitPct">
+              {Math.round(account.limit.progress * 100)}% wykorzystane
+            </span>
           </div>
-          <span className="v10Limit__value">{account.limit.value}</span>
-          <div className="v10Limit__track">
-            <span
-              className="v10Limit__fill"
-              style={{ width: `${Math.round(account.limit.progress * 100)}%` }}
+          <div className="acctCard__limitTrack">
+            <div
+              className="acctCard__limitFill"
+              style={{ width: `${account.limit.progress * 100}%` }}
             />
           </div>
         </div>
       )}
 
+      <div className="divider" />
+
+      {/* Pasek struktury zostaje: niesie proporcje, ktorych kafelki nie
+          pokazuja, i zastepuje wypisywanie klas, ktorych na rachunku nie ma. */}
       <AcctBar positions={account.positions} styleId={styleId} />
-      <span className="v10Acct__cap">POZYCJE</span>
-      <div className="v10Acct__rows">
+
+      {/* Pozycje jako kafelki — ten sam wzorzec, co po drugiej stronie
+          przelacznika, w karcie klasy aktywow. */}
+      <div className="metrics">
         {account.positions.map((p) => (
-          <div className="v10Pos" key={p.asset}>
-            <span
-              className="v10Pos__dot"
-              style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].card }}
-            />
-            <span className="v10Pos__label">{p.label}</span>
-            <span className="v10Pos__value">{p.value}</span>
-            <ChevronRight size={14} className="v10Pos__chev" />
+          <div className="metric" key={p.asset}>
+            <span className="metric__label">{p.label}</span>
+            <span className="metric__value">{p.value}</span>
           </div>
         ))}
       </div>

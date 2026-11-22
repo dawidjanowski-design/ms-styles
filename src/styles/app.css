@@ -1656,50 +1656,26 @@ select.field__control {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: stretch;
 }
 
-.v10Acct {
-  display: flex; flex-direction: column;
-  background: var(--card-bg); border-radius: var(--card-radius); padding: 20px;
-  box-shadow: var(--shadow-card);
-}
-/* Naglowek nie moze sie lamac: nazwa, numer i kwota stoja w jednej linii,
-   a kiedy brakuje miejsca, skraca sie numer rachunku — nie kwota. */
-.v10Acct__head { display: flex; align-items: baseline; gap: 8px; }
-.v10Acct__name { font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+/* Karta rachunku to karta z nr 2: ten sam naglowek, ta sama kreska
+   i te same kafelki pozycji, co po drugiej stronie przelacznika. Nr 10
+   dokłada do niej tylko to, czego nr 2 nie ma — plakietke typu, pasek
+   struktury i stopke z cecha rachunku. */
+.v10Group__grid .acctCard { height: 100%; }
 .v10Acct__badge {
   flex: none; padding: 2px 8px; border-radius: 999px; background: var(--screen-bg);
   font-size: 13px; color: var(--muted); white-space: nowrap;
 }
-.v10Acct__no {
-  flex: 0 1 auto; min-width: 0; font-size: 13px; color: var(--muted);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.v10Acct__amount {
-  margin-left: auto; flex: none; display: flex; align-items: baseline; white-space: nowrap;
-}
-.v10Acct__amount .amount__int { font-size: 18px; }
-.v10Acct__amount .amount__dec { font-size: 14px; }
-.v10Acct__chev { flex: none; font-size: 14px; color: var(--muted); }
 
 /* Pasek struktury zastepuje puste etykiety: klasy, ktorych na rachunku nie
-   ma, w ogole sie nie pojawiaja, a proporcje widac nad lista. */
-.v10Bar { display: flex; gap: 3px; height: 4px; margin-top: 14px; }
+   ma, w ogole sie nie pojawiaja, a proporcje widac nad kafelkami. */
+.v10Bar { display: flex; gap: 3px; height: 4px; }
 .v10Bar__seg { border-radius: 2px; min-width: 6px; }
 
-.v10Acct__cap {
-  margin-top: 12px; font-size: 13px; letter-spacing: 0.08em; color: var(--muted);
-}
-.v10Acct__rows { display: flex; flex-direction: column; margin-top: 6px; }
-.v10Pos { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
-.v10Pos__dot { width: 6px; height: 6px; border-radius: 999px; flex: none; }
-.v10Pos__label { flex: 1; font-size: 13px; color: var(--ink); }
-.v10Pos__value { font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; }
-.v10Pos__chev { font-size: 13px; color: var(--muted); }
-
-/* Stopka dociagnieta do dolu, zeby karty w rzedzie konczyly sie rowno
-   mimo roznej liczby pozycji. */
+/* Stopka dociagnieta do dolu, zeby karty w rzedzie konczyly sie rowno mimo
+   roznej liczby pozycji. Limit wplat ma `order: 1`, wiec stopka idzie za nim. */
 .v10Acct__foot {
-  display: flex; align-items: center; gap: 12px;
-  margin-top: auto; padding-top: 16px;
+  order: 2; display: flex; align-items: center; gap: 12px;
+  margin-top: auto; padding-top: 4px;
 }
 /* Jedyny mniejszy wariant: „Zobacz szczegoly" w stopce karty rachunku.
    Tam przycisk jest czescia tresci karty, a nie sterowaniem sekcja. */
@@ -1707,23 +1683,6 @@ select.field__control {
 .v10Acct__meta { margin-left: auto; font-size: 13px; color: var(--muted); }
 .v10Acct__meta strong { font-weight: 500; color: var(--ink); }
 .v10Acct__meta.is-warn { color: var(--ink); }
-
-/* Limit wplat: pasek mowi „ile juz", liczba obok „ile zostalo" — razem
-   odpowiadaja na pytanie, czy warto jeszcze w tym roku wplacac. */
-.v10Limit {
-  display: flex; flex-direction: column; gap: 2px;
-  margin-top: 14px; padding: 10px 14px 12px; border-radius: 8px; background: var(--screen-bg);
-}
-.v10Limit__top { display: flex; align-items: baseline; gap: 12px; }
-.v10Limit__label { flex: 1; font-size: 13px; color: var(--muted); }
-.v10Limit__left { font-size: 13px; color: var(--muted); }
-.v10Limit__value { font-size: 13px; font-weight: 500; color: var(--ink); }
-.v10Limit__track {
-  height: 6px; margin-top: 8px; border-radius: 3px; background: var(--progress-track); overflow: hidden;
-}
-/* Zielen ta sama, co pigulka stopy zwrotu i obligacje korporacyjne —
-   pasek limitu ma czytac sie jako „idzie dobrze", a nie jako ostrzezenie. */
-.v10Limit__fill { display: block; height: 100%; border-radius: 3px; background: var(--c-corp); }
 
 /* Kafelek dzialania: przerywany obrys i szare tlo, bo to jeszcze nie jest
    rachunek. Rozciaga sie na cala wysokosc rzedu, zeby siatka byla rowna. */
