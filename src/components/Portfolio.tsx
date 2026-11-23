@@ -303,6 +303,7 @@ function CashOverview({
   onOpenTransit,
   zeroAsNumber = false,
   actions = false,
+  keepEmpty = false,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
@@ -310,8 +311,10 @@ function CashOverview({
   zeroAsNumber?: boolean;
   /** nr 10: wplata, wyplata i transfer stoja przy gotowce, a nie w menu */
   actions?: boolean;
+  /** eksperyment nr 10 (EUR): puste karty zostaja, zeby sekcja nie miala dziury */
+  keepEmpty?: boolean;
 }) {
-  const visible = cards.filter((c) => !isEmpty(c));
+  const visible = keepEmpty ? cards : cards.filter((c) => !isEmpty(c));
   if (visible.length === 0) return null;
 
   return (
@@ -363,7 +366,13 @@ function CashOverview({
                 <KeyValue
                   key={r.label}
                   label={r.label}
-                  value={zeroAsNumber && r.value === '-' ? '0,00' : r.value}
+                  value={
+                    keepEmpty && isEmpty(card)
+                      ? '—'
+                      : zeroAsNumber && r.value === '-'
+                        ? '0,00'
+                        : r.value
+                  }
                 />
               ))}
             </div>
@@ -1108,6 +1117,9 @@ export function PortfolioScreen({
             onOpenTransit={transitHandler}
             zeroAsNumber={styleId === '5'}
             actions={styleId === '10'}
+            /* Eksperyment: w EUR zostaja wszystkie trzy karty, puste z zerem
+               i kreska — w PLN i USD dalej chowamy puste. */
+            keepEmpty={styleId === '10' && currency === 'EUR'}
           />
 
           {/* Wireframe stawia wynik miedzy gotowka a struktura: najpierw
