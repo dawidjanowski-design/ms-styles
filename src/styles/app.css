@@ -2272,3 +2272,26 @@ select.field__control {
 .chartTip__row strong { white-space: nowrap; }
 .chartTip--end { transform: translateX(calc(-100% + 24px)); }
 .chartTip--start { transform: translateX(-24px); }
+
+/* ================= nr 10: pasek wartosci przy przewijaniu (Figma 1145:319) =================
+   Naglowek aplikacji zostaje na gorze, pasek wyjezdza spod niego, gdy
+   podsumowanie portfela schowa sie pod krawedzia. */
+[data-style='10'] .appHeader { position: sticky; top: 0; z-index: 41; }
+.stickyBar {
+  position: fixed; left: 0; right: 0; top: var(--header-h); z-index: 40;
+  background: var(--card-bg); box-shadow: 0 1px 0 var(--divider), 0 6px 16px rgba(0, 0, 0, 0.04);
+  transform: translateY(-100%); opacity: 0; pointer-events: none;
+  transition: transform 220ms var(--ease), opacity 180ms var(--ease);
+}
+.stickyBar.is-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.stickyBar__inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 10px var(--header-px);
+}
+.stickyBar__value { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.stickyBar__label { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+.stickyBar__hint { display: inline-flex; align-items: center; gap: 6px; }
+.stickyBar__amountRow { display: inline-flex; align-items: center; gap: 10px; }
+.stickyBar__amount { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+.stickyBar__controls { display: flex; align-items: center; gap: 12px; flex: none; }
+.stickyBar__sep { width: 1px; height: 24px; background: var(--divider); }

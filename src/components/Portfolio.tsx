@@ -1,5 +1,5 @@
 import { V10_ACCOUNT_DETAIL } from '../data/accountV10';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ASSETS,
   CASH,
@@ -28,7 +28,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { AlertTriangle, ChevronRight, Plus } from '../icons/Feather';
+import { AlertTriangle, ChevronRight, Info, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -940,6 +940,62 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
+/* Nr 10: pasek przyklejony pod naglowkiem (Figma 1145:319). Pojawia sie,
+   gdy podsumowanie portfela zjedzie pod naglowek — wartosc i oba
+   przelaczniki zostaja pod reka przy przewijaniu struktury i wyniku.
+   Stan jest wspolny z ekranem: przelaczenie tu zmienia to samo, co na gorze. */
+function StickyBarV10({
+  visible,
+  total,
+  decimals,
+  currency,
+  onCurrencyChange,
+  view,
+  onViewChange,
+}: {
+  visible: boolean;
+  total: string;
+  decimals: string;
+  currency: Currency;
+  onCurrencyChange: (c: Currency) => void;
+  view: string;
+  onViewChange: (v: string) => void;
+}) {
+  return (
+    <div className={`stickyBar ${visible ? 'is-visible' : ''}`} aria-hidden={!visible}>
+      <div className="stickyBar__inner">
+        <div className="stickyBar__value">
+          <span className="stickyBar__label">
+            Wartość portfela
+            {currency === 'Łącznie' && (
+              <span className="stickyBar__hint">
+                <Info size={13} />
+                wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026
+              </span>
+            )}
+          </span>
+          <span className="stickyBar__amountRow">
+            <span className="stickyBar__amount">
+              {total}
+              {decimals}
+            </span>
+            <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
+          </span>
+        </div>
+        <div className="stickyBar__controls">
+          <Pills
+            items={CURRENCIES}
+            value={currency}
+            onChange={(v) => onCurrencyChange(v as Currency)}
+          />
+          <span className="stickyBar__sep" />
+          <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={onViewChange} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PortfolioScreen({
   styleId,
   currency,
@@ -955,6 +1011,18 @@ export function PortfolioScreen({
 }) {
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
+  /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
+  const summaryRef = useRef<HTMLElement>(null);
+  const [pinned, setPinned] = useState(false);
+  useEffect(() => {
+    const el = summaryRef.current;
+    if (styleId !== '10' || !el) return;
+    const io = new IntersectionObserver(([e]) => setPinned(!e.isIntersecting), {
+      rootMargin: '-68px 0px 0px 0px',
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [styleId]);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
 
@@ -977,7 +1045,19 @@ export function PortfolioScreen({
           {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
+          {styleId === '10' && (
+            <StickyBarV10
+              visible={pinned}
+              total={data.total}
+              decimals={data.decimals}
+              currency={currency}
+              onCurrencyChange={onCurrencyChange}
+              view={view}
+              onViewChange={setView}
+            />
+          )}
           <section
+            ref={summaryRef}
             className="summary"
             style={{ paddingTop: 'var(--summary-pt)' }}
             onMouseLeave={() => setHot(null)}
