@@ -27,7 +27,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { Info, Plus } from '../icons/Feather';
+import { ChevronRight, Info, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -353,10 +353,16 @@ function CashOverview({
                 <span className="cashCard__label" style={{ flex: 1 }}>
                   {card.label}
                 </span>
-                {link && (
-                  <span className="cashCard__chev" aria-hidden="true">
-                    ›
-                  </span>
+                {/* Nr 10: szewron (Feather, 18 px) na kazdej karcie gotowki —
+                    znak „›" byl za maly i stal tylko przy srodkach w drodze. */}
+                {actions ? (
+                  <ChevronRight size={18} className="cashCard__chevIcon" />
+                ) : (
+                  link && (
+                    <span className="cashCard__chev" aria-hidden="true">
+                      ›
+                    </span>
+                  )
                 )}
               </span>
               <Amount int={card.amount} dec={card.decimals} className="cashCard__amount" />

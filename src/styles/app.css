@@ -2318,3 +2318,5 @@ select.field__control {
 /* Eksperyment nr 10 (EUR): pusta karta gotowki stoi w rzedzie, ale wygaszona —
    widac, ze ta kategoria istnieje, tylko w tej walucie nic w niej nie ma. */
 .cashCard--empty { opacity: 0.45; }
+.cashCard__chevIcon { color: var(--muted); flex: none; }
+.cashCard:hover .cashCard__chevIcon { color: var(--ink); }
