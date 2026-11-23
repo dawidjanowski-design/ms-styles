@@ -1,5 +1,5 @@
 import { V10_ACCOUNT_DETAIL } from '../data/accountV10';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   ASSETS,
   CASH,
@@ -27,7 +27,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { ChevronRight, Info, Plus } from '../icons/Feather';
+import { ChevronRight, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -968,58 +968,29 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
-/* Nr 10: pasek przyklejony pod naglowkiem (Figma 1145:319). Pojawia sie,
-   gdy podsumowanie portfela zjedzie pod naglowek — wartosc i oba
-   przelaczniki zostaja pod reka przy przewijaniu struktury i wyniku.
-   Stan jest wspolny z ekranem: przelaczenie tu zmienia to samo, co na gorze. */
-function StickyBarV10({
-  visible,
-  total,
-  decimals,
+/* Nr 10 (eksperyment): przelacznik walut na stale w prawym dolnym rogu,
+   w tej samej czarnej pigulce co przelacznik stylistyk — zastepuje pasek
+   wartosci, ktory wyjezdzal przy przewijaniu. */
+function CurrencyDockV10({
   currency,
-  onCurrencyChange,
-  view,
-  onViewChange,
+  onChange,
 }: {
-  visible: boolean;
-  total: string;
-  decimals: string;
   currency: Currency;
-  onCurrencyChange: (c: Currency) => void;
-  view: string;
-  onViewChange: (v: string) => void;
+  onChange: (c: Currency) => void;
 }) {
   return (
-    <div className={`stickyBar ${visible ? 'is-visible' : ''}`} aria-hidden={!visible}>
-      <div className="stickyBar__inner">
-        {/* Jedna linia zamiast dwoch: dopisek o kursie chowa sie w dymku
-            ikony, zeby pasek zabieral jak najmniej miejsca. */}
-        <div className="stickyBar__value">
-          <span className="stickyBar__label">Wartość portfela</span>
-          <span className="stickyBar__amount">
-            {total}
-            {decimals}
-          </span>
-          <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
-          {currency === 'Łącznie' && (
-            <span
-              className="stickyBar__hint"
-              title="Wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026"
-            >
-              <Info size={14} />
-            </span>
-          )}
-        </div>
-        <div className="stickyBar__controls">
-          <Pills
-            items={CURRENCIES}
-            value={currency}
-            onChange={(v) => onCurrencyChange(v as Currency)}
-          />
-          <span className="stickyBar__sep" />
-          <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={onViewChange} />
-        </div>
-      </div>
+    <div className="currencyDock" role="group" aria-label="Waluta portfela">
+      <span>Waluta</span>
+      {CURRENCIES.map((c) => (
+        <button
+          key={c}
+          type="button"
+          aria-pressed={currency === c}
+          onClick={() => onChange(c as Currency)}
+        >
+          {c}
+        </button>
+      ))}
     </div>
   );
 }
@@ -1039,18 +1010,6 @@ export function PortfolioScreen({
 }) {
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
-  /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
-  const summaryRef = useRef<HTMLElement>(null);
-  const [pinned, setPinned] = useState(false);
-  useEffect(() => {
-    const el = summaryRef.current;
-    if (styleId !== '10' || !el) return;
-    const io = new IntersectionObserver(([e]) => setPinned(!e.isIntersecting), {
-      rootMargin: '-68px 0px 0px 0px',
-    });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [styleId]);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
 
@@ -1088,18 +1047,9 @@ export function PortfolioScreen({
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
           {styleId === '10' && (
-            <StickyBarV10
-              visible={pinned}
-              total={data.total}
-              decimals={data.decimals}
-              currency={currency}
-              onCurrencyChange={onCurrencyChange}
-              view={view}
-              onViewChange={setView}
-            />
+            <CurrencyDockV10 currency={currency} onChange={onCurrencyChange} />
           )}
           <section
-            ref={summaryRef}
             className="summary"
             style={{ paddingTop: 'var(--summary-pt)' }}
             onMouseLeave={() => setHot(null)}
@@ -1109,12 +1059,15 @@ export function PortfolioScreen({
                 {title}
                 <div className="summary__head">
                   <Amount int={data.total} dec={data.decimals} />
-                  <Pills
-                    items={CURRENCIES}
-                    value={currency}
-                    onChange={(v) => onCurrencyChange(v as Currency)}
-                    locked={styleId === 'makieta'}
-                  />
+                  {/* Nr 10: waluta przelacza sie w pigulce w prawym dolnym rogu. */}
+                  {styleId !== '10' && (
+                    <Pills
+                      items={CURRENCIES}
+                      value={currency}
+                      onChange={(v) => onCurrencyChange(v as Currency)}
+                      locked={styleId === 'makieta'}
+                    />
+                  )}
                 </div>
               </div>
               <AllocationChart
