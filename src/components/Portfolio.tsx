@@ -1,5 +1,6 @@
 import { V10_ACCOUNT_DETAIL } from '../data/accountV10';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ASSETS,
   CASH,
@@ -977,7 +978,6 @@ function StickyBarV10({
   total,
   decimals,
   currency,
-  onCurrencyChange,
   view,
   onViewChange,
 }: {
@@ -985,7 +985,6 @@ function StickyBarV10({
   total: string;
   decimals: string;
   currency: Currency;
-  onCurrencyChange: (c: Currency) => void;
   view: string;
   onViewChange: (v: string) => void;
 }) {
@@ -1010,13 +1009,9 @@ function StickyBarV10({
             </span>
           )}
         </div>
+        {/* Waluta przy przewijaniu siedzi w naglowku (zamiast uzytkownika),
+            wiec w pasku zostaje tylko przelacznik struktury. */}
         <div className="stickyBar__controls">
-          <Pills
-            items={CURRENCIES}
-            value={currency}
-            onChange={(v) => onCurrencyChange(v as Currency)}
-          />
-          <span className="stickyBar__sep" />
           <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={onViewChange} />
         </div>
       </div>
@@ -1042,6 +1037,8 @@ export function PortfolioScreen({
   /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
   const summaryRef = useRef<HTMLElement>(null);
   const [pinned, setPinned] = useState(false);
+  const [headerSlot, setHeaderSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => setHeaderSlot(document.getElementById('appHeaderSlot')), []);
   useEffect(() => {
     const el = summaryRef.current;
     if (styleId !== '10' || !el) return;
@@ -1087,13 +1084,23 @@ export function PortfolioScreen({
           {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
+          {styleId === '10' &&
+            pinned &&
+            headerSlot &&
+            createPortal(
+              <Pills
+                items={CURRENCIES}
+                value={currency}
+                onChange={(v) => onCurrencyChange(v as Currency)}
+              />,
+              headerSlot
+            )}
           {styleId === '10' && (
             <StickyBarV10
               visible={pinned}
               total={data.total}
               decimals={data.decimals}
               currency={currency}
-              onCurrencyChange={onCurrencyChange}
               view={view}
               onViewChange={setView}
             />

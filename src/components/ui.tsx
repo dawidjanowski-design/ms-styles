@@ -190,6 +190,9 @@ export function AppHeader({
           </span>
           <span className="appHeader__dot" aria-hidden="true" />
         </button>
+        {/* Miejsce na kontrolki ekranu w naglowku (nr 10: waluta przy
+            przewijaniu Portfela). Gdy cos tu jest, CSS chowa uzytkownika. */}
+        <div id="appHeaderSlot" className="appHeader__slot" />
         <div className="appHeader__user">
           <span className="appHeader__userName">Dawid Jankowski</span>
           <span className="appHeader__avatar">

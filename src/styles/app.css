@@ -2323,3 +2323,9 @@ select.field__control {
 /* Eksperyment nr 10 (EUR): klasa, ktorej w tej walucie nie ma — wygaszona
    tak samo jak pusta karta gotowki. */
 .legendRow--zero { opacity: 0.45; }
+
+/* Nr 10: przy przewijaniu Portfela przelacznik walut wchodzi do naglowka
+   w miejsce uzytkownika (slot wypelnia portal z ekranu). */
+.appHeader__slot:empty { display: none; }
+.appHeader__slot .pills button { height: 32px; padding: 0 12px; font-size: 13px; }
+.appHeader__right:has(.appHeader__slot:not(:empty)) .appHeader__user { display: none; }
