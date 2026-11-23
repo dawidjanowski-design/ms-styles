@@ -2320,3 +2320,6 @@ select.field__control {
 .cashCard--empty { opacity: 0.45; }
 .cashCard__chevIcon { color: var(--muted); flex: none; }
 .cashCard:hover .cashCard__chevIcon { color: var(--ink); }
+/* Eksperyment nr 10 (EUR): klasa, ktorej w tej walucie nie ma — wygaszona
+   tak samo jak pusta karta gotowki. */
+.legendRow--zero { opacity: 0.45; }

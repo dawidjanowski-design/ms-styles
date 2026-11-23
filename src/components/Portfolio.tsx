@@ -94,7 +94,8 @@ export function AllocationChart({
   hot,
   setHot,
 }: { rows: AllocationRow[]; styleId: StyleId } & HoverProps) {
-  const segments = ordered(rows, styleId);
+  /* Klasy z zerem (eksperyment nr 10, EUR) sa tylko w legendzie, nie na wykresie. */
+  const segments = ordered(rows, styleId).filter((s) => s.share > 0);
   const total = segments.reduce((sum, s) => sum + s.share, 0);
 
   return (
@@ -150,7 +151,7 @@ function LegendRow({
   return (
     <button
       type="button"
-      className={`legendRow ${dimClass(id, hot)}`}
+      className={`legendRow ${dimClass(id, hot)} ${share === '0,0%' || share === '0%' ? 'legendRow--zero' : ''}`}
       style={{ ['--seg' as string]: color, cursor: onOpen ? 'pointer' : 'default' }}
       onClick={onOpen}
       onMouseEnter={() => setHot(id)}
@@ -1057,8 +1058,19 @@ export function PortfolioScreen({
   /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
      w widoku lacznym, bo tylko ten wireframe opisuje. W PLN/EUR/USD zostaja
      dane wspolne dla wszystkich stylistyk. */
-  const allocation =
+  const allocation0 =
     styleId === '10' && currency === 'Łącznie' ? V10_ALLOCATION : data.allocation;
+  /* Eksperyment nr 10 (EUR): legenda wypisuje wszystkie klasy, tez te,
+     ktorych w tej walucie nie ma — z zerem, jak puste karty gotowki. */
+  const allocation =
+    styleId === '10' && currency === 'EUR'
+      ? [
+          ...allocation0,
+          ...V10_LEGEND_ORDER.filter((id) => !allocation0.some((r) => r.id === id)).map(
+            (id) => ({ id, share: 0, value: '0 EUR' })
+          ),
+        ]
+      : allocation0;
   const title = <h1 className="pageTitle">Portfel</h1>;
   /* Panel pokazuje rozbicie calosci, wiec otwieramy go tylko w widoku
      lacznym — w PLN/EUR/USD jego liczby by nie pasowaly. */
