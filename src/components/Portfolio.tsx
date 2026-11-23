@@ -8,7 +8,6 @@ import {
   RESULT_RANGES,
   V10_ALLOCATION,
   V10_ASSETS,
-  V10_ASSETS_NOTE,
   V10_CASH_ACTIONS,
   V10_ACCOUNT_GROUPS,
   V10_LEGEND_ORDER,
@@ -599,16 +598,16 @@ function AssetCard({
   /* Nr 10 czyta metryki z wireframe'u: Wynik 12M i stopa zwrotu 12M z przodu,
      liczniki pod kreska. Pozostale stylistyki zostaja przy swoich danych. */
   const v10 = styleId === '10' ? V10_ASSETS[asset.id] : undefined;
-  const highlights = v10 ? v10.highlights : asset.highlights;
-  const footRows = v10 ? v10.rows : asset.rows;
+  /* Metryki w nr 10 te same co w nr 2 — z wireframe'u zostaje tylko naglowek
+     karty (waluty, tylda przy kwocie). */
+  const highlights = asset.highlights;
+  const footRows = asset.rows;
   const dates = v5 ? asset.highlights.filter(isDate) : [];
   const results = asset.highlights.filter((m) => !dates.includes(m));
   const rows = makieta ? [] : v5 ? [...asset.rows, ...dates] : [...highlights, ...footRows];
   /* Wyrozniona metryka ma sens dopiero przy trzech i wiecej wynikach. Przy
-     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie.
-     Nr 10 wyroznia ja zawsze, tez przy dwoch: Wynik 12M ma stac tak samo
-     wysoko na kazdej karcie, inaczej klasy przestaja sie porownywac. */
-  const lead = (v10 ? highlights.length >= 2 : highlights.length >= 3)
+     dwoch rozpychala karte w pionie, zamiast postawic je obok siebie. */
+  const lead = highlights.length >= 3
     ? highlights[0]
     : null;
   const grid = lead ? highlights.slice(1) : highlights;
@@ -1165,9 +1164,6 @@ export function PortfolioScreen({
                 ))
               )}
             </div>
-            {styleId === '10' && view === 'Aktywa' && (
-              <p className="assets__note">{V10_ASSETS_NOTE}</p>
-            )}
           </section>
         </div>
       </div>
