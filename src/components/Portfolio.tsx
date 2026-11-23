@@ -28,7 +28,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { AlertTriangle, ChevronRight, Info, Plus } from '../icons/Feather';
+import { Info, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -411,7 +411,6 @@ function V10AccountCard({
           <div className="acctCard__title">
             <span className="acctCard__dot" />
             <span className="acctCard__name">{account.name}</span>
-            {account.badge && <span className="v10Acct__badge">{account.badge}</span>}
             <span className="acctCard__number">· {account.number}</span>
           </div>
           <Amount int={account.amount} dec={account.decimals} className="acctCard__amount" />
@@ -464,27 +463,14 @@ function V10AccountCard({
                 className="v10Lines__dot"
                 style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].legend }}
               />
-              {/* Krotkie nazwy z nr 2 — w kafelku pelne nazwy funduszy lamaly
-                  sie na dwie linie i rozjezdzaly kropki z kreskami. */}
-              {p.asset === 'cash' ? p.label : META[p.asset]?.name ?? p.label}
+              {/* Pelne nazwy klas jak w legendzie wykresu (V10_NAMES). */}
+              {p.asset === 'cash' ? p.label : nameOf(p.asset, styleId)}
             </span>
             <span className="metric__value">{p.value}</span>
           </div>
         ))}
       </div>
 
-      <div className="v10Acct__foot">
-        <span className="btn btn--small">
-          Zobacz szczegóły
-          <ChevronRight size={14} />
-        </span>
-        {account.foot && (
-          <span className={`v10Acct__meta ${account.foot.warn ? 'is-warn' : ''}`}>
-            {account.foot.warn && <AlertTriangle size={14} />}
-            {account.foot.label} <strong>{account.foot.value}</strong>
-          </span>
-        )}
-      </div>
     </article>
   );
 }

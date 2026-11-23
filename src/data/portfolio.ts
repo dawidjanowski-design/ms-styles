@@ -534,7 +534,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
           { asset: 'skarb', label: 'Obligacje skarbowe', value: '316 398,00 PLN' },
           { asset: 'fiz', label: 'Fundusze Inwestycyjne Zamknięte', value: '421 864,00 PLN' },
           { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '420 610,00 PLN' },
-          { asset: 'cash', label: 'Gotówka', value: '140 366,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '140 366,00 PLN' },
         ],
         foot: { label: 'Rachunek do wypłat', value: 'tak' },
       },
@@ -548,7 +548,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         positions: [
           { asset: 'corp', label: 'Obligacje korporacyjne', value: '240 000,00 PLN' },
           { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '50 000,00 PLN' },
-          { asset: 'cash', label: 'Gotówka', value: '47 491,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '47 491,00 PLN' },
         ],
       },
     ],
@@ -572,7 +572,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         positions: [
           { asset: 'corp', label: 'Obligacje korporacyjne', value: '96 400,00 PLN' },
           { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '58 200,00 PLN' },
-          { asset: 'cash', label: 'Gotówka', value: '14 146,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '14 146,00 PLN' },
         ],
         foot: { label: 'Ryzyko', value: '2 / 7' },
       },
@@ -598,7 +598,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         decimals: ',00 PLN',
         positions: [
           { asset: 'corp', label: 'Obligacje korporacyjne', value: '729 120,00 PLN' },
-          { asset: 'cash', label: 'Gotówka', value: '114 608,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '114 608,00 PLN' },
         ],
         foot: { label: 'Automatyczny transfer nadwyżki', value: 'włączony', warn: true },
       },
@@ -624,7 +624,7 @@ export const V10_ACCOUNT_GROUPS: V10AccountGroup[] = [
         positions: [
           { asset: 'corp', label: 'Obligacje korporacyjne', value: '340 000,00 PLN' },
           { asset: 'fio', label: 'Fundusze Inwestycyjne Otwarte', value: '120 000,00 PLN' },
-          { asset: 'cash', label: 'Gotówka', value: '46 237,00 PLN' },
+          { asset: 'cash', label: 'Wolna gotówka', value: '46 237,00 PLN' },
         ],
       },
     ],
