@@ -1129,11 +1129,9 @@ export function PortfolioScreen({
             </div>
             <div
               className={`assets__list ${
-                styleId === '10'
-                  ? view === 'Aktywa'
-                    ? 'assets__list--grid'
-                    : 'assets__list--plain'
-                  : ''
+                /* Nr 10: karty klas na siatce nr 2 (odstepy, paddingi, metryki) —
+                   tresc i kolejnosc zostaja z wireframe'u nr 10. */
+                styleId === '10' && view === 'Rachunki' ? 'assets__list--plain' : ''
               }`}
             >
               {view === 'Rachunki' && styleId === '10' ? (
