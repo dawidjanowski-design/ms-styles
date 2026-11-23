@@ -477,7 +477,7 @@ export const V10_ALLOCATION = [
   { id: 'fiz', share: 9.8, value: '421 864 PLN' },
   { id: 'fio', share: 13.7, value: '590 610 PLN' },
   { id: 'am', share: 19.6, value: '843 728 PLN' },
-  { id: CASH.id, share: 8.1, value: '≈ 348 354 PLN', sub: CASH.sub },
+  { id: CASH.id, share: 8.1, value: '≈ 348 354 PLN' },
 ];
 
 /* ---------------- nr 10: przelacznik „Rachunki" (wireframe P02) ----------------

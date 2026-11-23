@@ -1058,8 +1058,11 @@ export function PortfolioScreen({
   /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
      w widoku lacznym, bo tylko ten wireframe opisuje. W PLN/EUR/USD zostaja
      dane wspolne dla wszystkich stylistyk. */
-  const allocation0 =
-    styleId === '10' && currency === 'Łącznie' ? V10_ALLOCATION : data.allocation;
+  /* Nr 10 nie pokazuje podpisu pod gotowka w legendzie (we wszystkich
+     walutach) — rozbicie jest w kartach gotowki tuz pod wykresem. */
+  const allocation0 = (
+    styleId === '10' && currency === 'Łącznie' ? V10_ALLOCATION : data.allocation
+  ).map((r) => (styleId === '10' ? { ...r, sub: undefined } : r));
   /* Eksperyment nr 10 (EUR): legenda wypisuje wszystkie klasy, tez te,
      ktorych w tej walucie nie ma — z zerem, jak puste karty gotowki. */
   const allocation =
