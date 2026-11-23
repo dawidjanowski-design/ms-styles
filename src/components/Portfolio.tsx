@@ -418,6 +418,22 @@ function V10AccountCard({
         </div>
       </div>
 
+      {/* Struktura rachunku jako kreski — te same, co stopki slupkow na
+          wykresie portfela: kolor klasy z palety nr 2, dlugosc z kwoty
+          pozycji, wiec kreski i metryki pod spodem mowia to samo. */}
+      <div className="v10Lines" aria-hidden="true">
+        {account.positions.map((p) => {
+          const c = META[colorId(p.asset, styleId)].colors[paletteOf(styleId)];
+          return (
+            <span
+              key={p.asset}
+              className="v10Lines__seg"
+              style={{ flexGrow: kwotaPLN(p.value), background: c.chartFoot ?? c.chart }}
+            />
+          );
+        })}
+      </div>
+
       {account.limit && (
         <div className="acctCard__limit">
           <span className="acctCard__limitLabel">{account.limit.label}</span>
@@ -443,7 +459,13 @@ function V10AccountCard({
       <div className="metrics">
         {account.positions.map((p) => (
           <div className="metric" key={p.asset}>
-            <span className="metric__label">{p.label}</span>
+            <span className="metric__label">
+              <span
+                className="v10Lines__dot"
+                style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].legend }}
+              />
+              {p.label}
+            </span>
             <span className="metric__value">{p.value}</span>
           </div>
         ))}

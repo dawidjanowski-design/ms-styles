@@ -2079,7 +2079,16 @@ select.field__control {
    trzech, za to kazda etykieta miesci sie w jednej linii. Reszta rytmu zostaje
    z nr 2: rezerwa dwoch linii pod etykiete i jej kompensata nad blokiem licza
    sie razem, wiec zdjecie samej rezerwy psulo odstep pod kreska. */
-.v10Group__grid .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+/* Kafelek rachunku nr 10 = kafelek nr 2: siatka metryk z nr 2 (od 150 px,
+   zwykle trzy kolumny), dlugie nazwy klas lamia sie w zarezerwowanych
+   dwoch liniach etykiety. Dochodzi tylko struktura w kreskach i kropka
+   koloru klasy przy etykiecie, ktora laczy metryke z jej kreska. */
+.v10Lines { display: flex; gap: 4px; height: 4px; margin-top: 4px; }
+.v10Lines__seg { flex-basis: 0; min-width: 4px; border-radius: 999px; }
+.v10Lines__dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 999px;
+  margin-right: 6px; vertical-align: 1px;
+}
 
 /* ================= nr 10: karta serii (wireframe 1121:4573) =================
    Tresc po lewej, po prawej waska kolumna decyzji — ten sam podzial co
