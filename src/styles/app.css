@@ -2272,3 +2272,6 @@ select.field__control {
 .chartTip__row strong { white-space: nowrap; }
 .chartTip--end { transform: translateX(calc(-100% + 24px)); }
 .chartTip--start { transform: translateX(-24px); }
+
+/* Nr 10: podpis pod „Gotowka" blizej wiersza — 2 px zamiast 6 px z nr 2. */
+[data-style='10'] .legend__cashSub { padding-top: 2px; }
