@@ -2089,6 +2089,7 @@ select.field__control {
   display: inline-block; width: 6px; height: 6px; border-radius: 999px;
   margin-right: 6px; vertical-align: 1px;
 }
+.v10Group__grid .metric__label { display: flex; align-items: center; }
 
 /* ================= nr 10: karta serii (wireframe 1121:4573) =================
    Tresc po lewej, po prawej waska kolumna decyzji — ten sam podzial co

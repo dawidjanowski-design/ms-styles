@@ -464,7 +464,9 @@ function V10AccountCard({
                 className="v10Lines__dot"
                 style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].legend }}
               />
-              {p.label}
+              {/* Krotkie nazwy z nr 2 — w kafelku pelne nazwy funduszy lamaly
+                  sie na dwie linie i rozjezdzaly kropki z kreskami. */}
+              {p.asset === 'cash' ? p.label : META[p.asset]?.name ?? p.label}
             </span>
             <span className="metric__value">{p.value}</span>
           </div>
