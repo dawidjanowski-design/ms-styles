@@ -358,7 +358,8 @@ function CashOverview({
             </div>
             <div className="divider" />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {card.rows.map((r) => (
+              {/* Nr 10: bez wiersza USD w kartach gotowki. */}
+              {card.rows.filter((r) => !(actions && r.label === 'USD')).map((r) => (
                 <KeyValue
                   key={r.label}
                   label={r.label}
