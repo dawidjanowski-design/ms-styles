@@ -347,9 +347,7 @@ function CashOverview({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span className="cashCard__head">
                 <span className="cashCard__label" style={{ flex: 1 }}>
-                  {/* Nr 10 nazywa wolna gotowke po prostu „Gotowka" — obok stoi
-                      zablokowana i w drodze, wiec przymiotnik nic nie dodaje. */}
-                  {actions && card.label === 'Wolna gotówka' ? 'Gotówka' : card.label}
+                  {card.label}
                 </span>
                 {link && (
                   <span className="cashCard__chev" aria-hidden="true">

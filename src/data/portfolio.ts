@@ -466,15 +466,16 @@ export const V10_NAMES: Record<string, string> = {
 /** Kolejnosc z wireframe'u: obligacje, fundusze, Asset Management. */
 export const V10_LEGEND_ORDER = ['corp', 'skarb', 'fiz', 'fio', 'am'];
 
-/* Udzialy licza sie z kwot i sumy portfela (4 218 640 PLN) — w wireframie
-   kazdy wiersz sie zgadza, lacznie ze 100% po dodaniu wolnej gotowki. */
+/* Gotowka w legendzie to suma trzech kart z sekcji gotowki, jak w nr 2:
+   wolna 253 118 + zablokowana 50 118 + w drodze 45 118 = 348 354 PLN.
+   Udzialy licza sie z kwot wzgledem sumy wszystkich wierszy (4 313 876 PLN). */
 export const V10_ALLOCATION = [
-  { id: 'corp', share: 42.5, value: '1 792 922 PLN' },
-  { id: 'skarb', share: 7.5, value: '316 398 PLN' },
-  { id: 'fiz', share: 10.0, value: '421 864 PLN' },
-  { id: 'fio', share: 14.0, value: '590 610 PLN' },
-  { id: 'am', share: 20.0, value: '843 728 PLN' },
-  { id: CASH.id, share: 6.0, value: '253 118 PLN' },
+  { id: 'corp', share: 41.6, value: '1 792 922 PLN' },
+  { id: 'skarb', share: 7.3, value: '316 398 PLN' },
+  { id: 'fiz', share: 9.8, value: '421 864 PLN' },
+  { id: 'fio', share: 13.7, value: '590 610 PLN' },
+  { id: 'am', share: 19.6, value: '843 728 PLN' },
+  { id: CASH.id, share: 8.1, value: '≈ 348 354 PLN' },
 ];
 
 /* ---------------- nr 10: przelacznik „Rachunki" (wireframe P02) ----------------
