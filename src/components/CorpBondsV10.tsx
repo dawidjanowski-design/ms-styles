@@ -376,7 +376,9 @@ function Structure({
 function Tooltip({ at, children }: { at: number; children: ReactNode }) {
   return (
     <div
-      className="chartTip"
+      /* Przy krawedzi wykresu dymek nie centruje sie na slupku, tylko
+         przykleja do tej krawedzi — inaczej wychodzil poza karte. */
+      className={`chartTip ${at > 80 ? 'chartTip--end' : at < 20 ? 'chartTip--start' : ''}`}
       style={{ left: `${at}%` }}
       role="status"
     >
