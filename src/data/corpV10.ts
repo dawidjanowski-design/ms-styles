@@ -281,10 +281,6 @@ export const CORP_CLOSED_TOTAL = {
   irr: '6,74%',
 };
 
-export const CORP_CLOSED_NOTE =
-  'Stopa zwrotu liczona metodą IRR, w skali roku, po prowizjach — to wynik Twojej inwestycji. ' +
-  'Oprocentowanie to warunki serii (kupon), nie wynik.';
-
 /* --------------------------------- operacje --------------------------------- */
 
 export type OpRow = {

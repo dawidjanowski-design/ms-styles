@@ -6,7 +6,6 @@
 import { useState, type ReactNode } from 'react';
 import {
   CORP_CLOSED,
-  CORP_CLOSED_NOTE,
   CORP_CLOSED_TOTAL,
   CORP_FLOWS,
   CORP_FLOWS_FILTERS,
@@ -626,7 +625,6 @@ function Closed() {
           </div>
         </div>
 
-        <p className="corpNote">{CORP_CLOSED_NOTE}</p>
       </div>
     </section>
   );
@@ -640,9 +638,6 @@ function Ops() {
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Operacje</h2>
-          <p className="corpSection__sub">
-            Te same typy i filtry co w zakładce Operacje — tu zawężone do obligacji korporacyjnych
-          </p>
         </div>
         <div className="corpSection__actions">
           {CORP_OPS_FILTERS.map((f) => (
