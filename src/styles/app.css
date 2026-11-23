@@ -2284,9 +2284,8 @@ select.field__control {
 .chartTip--end { transform: translateX(calc(-100% + 24px)); }
 .chartTip--start { transform: translateX(-24px); }
 
-/* ================= nr 10: pasek wartosci przy przewijaniu (Figma 1145:319) =================
-   Naglowek aplikacji zostaje na gorze, pasek wyjezdza spod niego, gdy
-   podsumowanie portfela schowa sie pod krawedzia. */
+/* ================= nr 10: naglowek przyklejony do gory =================
+   Przy przewijaniu Portfela w miejsce uzytkownika wchodzi przelacznik walut. */
 /* #root ma height: 100%, wiec sticky trzymal sie tylko przez pierwsze 768 px —
    w nr 10 korzen rosnie z trescia, zeby naglowek zostawal na gorze. */
 [data-style='10'] #root { height: auto; min-height: 100%; }
