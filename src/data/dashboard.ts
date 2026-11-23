@@ -79,12 +79,12 @@ export const OFFERS: Offer[] = [
    wykup VEHIS 09.06.2027 z corpViews, odsetki z wypłat 12M poszczególnych
    emitentów. Dzięki temu tabela i oś mówią to samo, co karty na portfelu. */
 export const EVENTS: Event[] = [
-  { date: '14.11.2026', type: 'Wypłata odsetek', instrument: 'Michael / Ström SA, Seria F', amount: '8 388,00 PLN', asset: 'corp' },
-  { date: '28.11.2026', type: 'Kupon, obligacje korporacyjne', instrument: 'VEHIS, Seria K', amount: '12 860,00 PLN', asset: 'corp' },
-  { date: '09.12.2026', type: 'Wypłata odsetek', instrument: 'Victoria Dom, Seria B2', amount: '7 100,00 PLN', asset: 'corp' },
+  { date: '14.11.2026', type: 'Wypłata odsetek', instrument: 'VEHIS, seria M', amount: '8 400,00 PLN', asset: 'corp' },
+  { date: '28.11.2026', type: 'Kupon, obligacje korporacyjne', instrument: 'VEHIS, seria K', amount: '12 860,00 PLN', asset: 'corp' },
+  { date: '09.12.2026', type: 'Wypłata odsetek', instrument: 'Victoria Dom, seria B2', amount: '7 100,00 PLN', asset: 'corp' },
   { date: '31.12.2026', type: 'Koniec limitu wpłat IKE', instrument: 'IKE · 00-00-007431', amount: '10 000,00 PLN do wpłaty', asset: 'fio' },
-  { date: '31.12.2026', type: 'Okno umorzenia', instrument: 'Fundusze zamknięte (FIZ)', amount: '', asset: 'fiz' },
-  { date: '09.06.2027', type: 'Wykup, zwrot kapitału', instrument: 'VEHIS, Seria K', amount: '450 000,00 PLN', asset: 'corp' },
+  { date: '31.12.2026', type: 'Okno umorzenia', instrument: 'Fundusze Inwestycyjne Zamknięte', amount: '', asset: 'fiz' },
+  { date: '09.06.2027', type: 'Wykup, zwrot kapitału', instrument: 'VEHIS, seria K', amount: '450 000,00 PLN', asset: 'corp' },
 ];
 
 /* ---------------- nr 10: biezace zlecenia (wireframe PU03, 1168:476) ----------------
