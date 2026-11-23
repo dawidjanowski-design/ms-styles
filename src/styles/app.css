@@ -2276,6 +2276,9 @@ select.field__control {
 /* ================= nr 10: pasek wartosci przy przewijaniu (Figma 1145:319) =================
    Naglowek aplikacji zostaje na gorze, pasek wyjezdza spod niego, gdy
    podsumowanie portfela schowa sie pod krawedzia. */
+/* #root ma height: 100%, wiec sticky trzymal sie tylko przez pierwsze 768 px —
+   w nr 10 korzen rosnie z trescia, zeby naglowek zostawal na gorze. */
+[data-style='10'] #root { height: auto; min-height: 100%; }
 [data-style='10'] .appHeader { position: sticky; top: 0; z-index: 41; }
 .stickyBar {
   position: fixed; left: 0; right: 0; top: var(--header-h); z-index: 40;
