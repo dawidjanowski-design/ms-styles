@@ -1,3 +1,4 @@
+import { V10_ACCOUNT_DETAIL } from '../data/accountV10';
 import { useState, type ReactNode } from 'react';
 import {
   ASSETS,
@@ -380,7 +381,15 @@ function CashOverview({
    najwiecej, a wiec jaki kolor dostaje marker karty. */
 const kwotaPLN = (v: string) => Number(v.replace(/[^\d]/g, '')) / 100;
 
-function V10AccountCard({ account, styleId }: { account: V10Account; styleId: StyleId }) {
+function V10AccountCard({
+  account,
+  styleId,
+  onOpen,
+}: {
+  account: V10Account;
+  styleId: StyleId;
+  onOpen?: () => void;
+}) {
   /* Kolor karty bierze klasa, ktora wazy na tym rachunku najwiecej — marker
      ma cos znaczyc, a rachunki nr 10 nie maja wlasnej palety. */
   const dominanta = [...account.positions].sort((a, b) => kwotaPLN(b.value) - kwotaPLN(a.value))[0];
@@ -389,7 +398,14 @@ function V10AccountCard({ account, styleId }: { account: V10Account; styleId: St
     : undefined;
 
   return (
-    <article className="acctCard" style={{ ['--seg' as string]: seg }}>
+    <article
+      className={`acctCard ${onOpen ? 'acctCard--link' : ''}`}
+      style={{ ['--seg' as string]: seg }}
+      role={onOpen ? 'link' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onClick={onOpen}
+      onKeyDown={onOpen ? (e) => e.key === 'Enter' && onOpen() : undefined}
+    >
       <div className="acctCard__head">
         <div className="acctCard__top">
           <div className="acctCard__title">
@@ -465,7 +481,13 @@ function V10AddTile({ title, sub }: { title: string; sub: string }) {
   );
 }
 
-function AccountsV10({ styleId }: { styleId: StyleId }) {
+function AccountsV10({
+  styleId,
+  onOpenAccount,
+}: {
+  styleId: StyleId;
+  onOpenAccount: (id: string) => void;
+}) {
   return (
     <div className="v10Groups">
       {V10_ACCOUNT_GROUPS.map((g) => (
@@ -478,7 +500,13 @@ function AccountsV10({ styleId }: { styleId: StyleId }) {
           </div>
           <div className="v10Group__grid">
             {g.accounts.map((a) => (
-              <V10AccountCard key={a.id} account={a} styleId={styleId} />
+              <V10AccountCard
+                key={a.id}
+                account={a}
+                styleId={styleId}
+                /* Karta rachunku nr 10 istnieje na razie tylko dla Glownego. */
+                onOpen={V10_ACCOUNT_DETAIL[a.id] ? () => onOpenAccount(a.id) : undefined}
+              />
             ))}
             {g.add && <V10AddTile title={g.add.title} sub={g.add.sub} />}
           </div>
@@ -1022,7 +1050,7 @@ export function PortfolioScreen({
                 /* Nr 10 grupuje rachunki typem, zgodnie z wireframem P02:
                    plaska lista nie pokazywala, ze kazdy typ rzadzi sie
                    innymi zasadami. */
-                <AccountsV10 styleId={styleId} />
+                <AccountsV10 styleId={styleId} onOpenAccount={onOpenAccount} />
               ) : view === 'Aktywa' ? (
                 data.assets.map((a) => (
                     <AssetCard

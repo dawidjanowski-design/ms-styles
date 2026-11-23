@@ -53,10 +53,11 @@ export const CORP_SERIES: Serie[] = [
     id: 'vhi1128', ticker: 'VHI1128', name: 'seria M', issuer: 'VEHIS', cur: 'PLN', count: 400, rate: 7.85, coupon: 7.9, maturity: '14.11.2028', value: 400000, nominal: 396000, interest12m: 8400, result12m: 14200,
     base: 'WIBOR 3M + 4,10', nextCoupon: '31.12.2026',
     accounts: [
-      { account: 'Maklerski ·6858', count: 180, value: 180000 },
+      /* Na Glownym (·6858) seria M zostala sprzedana 05.10.2026 — karta
+         rachunku pokazuje tam tylko serie K. */
+      { account: 'Maklerski ·7432', count: 220, value: 220000 },
       { account: 'OKI ·9120', count: 120, value: 120000 },
       { account: 'IKE ·7431', count: 60, value: 60000 },
-      { account: 'Maklerski ·7432', count: 40, value: 40000 },
     ],
   },
   {

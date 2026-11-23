@@ -5,6 +5,7 @@ import { AssetDetailScreen } from './components/AssetDetail';
 import { CorpBondsV10 } from './components/CorpBondsV10';
 import { IssuerV10 } from './components/IssuerV10';
 import { SeriesV10 } from './components/SeriesV10';
+import { AccountV10 } from './components/AccountV10';
 import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
@@ -121,7 +122,16 @@ export default function App() {
           onOpenSeries={(id) => setScreen({ name: 'series', id })}
         />
       )}
-      {screen.name === 'account' && (
+      {/* Nr 10: karta rachunku z wireframe'u 1130:27. */}
+      {screen.name === 'account' && styleId === '10' && (
+        <AccountV10
+          id={screen.id}
+          onBack={() => setScreen({ name: 'portfel' })}
+          onOpenIssuer={(id) => setScreen({ name: 'issuer', id })}
+          onOpenSeries={(id) => setScreen({ name: 'series', id })}
+        />
+      )}
+      {screen.name === 'account' && styleId !== '10' && (
         <AccountScreen styleId={styleId} onBack={() => setScreen({ name: 'portfel' })} />
       )}
       {/* Nr 10: karta emitenta z wireframe'u 1121:4248. */}
