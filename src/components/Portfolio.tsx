@@ -28,7 +28,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { ChevronRight, Info, Plus } from '../icons/Feather';
+import { ChevronRight, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -969,56 +969,6 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
-/* Nr 10: pasek przyklejony pod naglowkiem (Figma 1145:319). Pojawia sie,
-   gdy podsumowanie portfela zjedzie pod naglowek — wartosc i oba
-   przelaczniki zostaja pod reka przy przewijaniu struktury i wyniku.
-   Stan jest wspolny z ekranem: przelaczenie tu zmienia to samo, co na gorze. */
-function StickyBarV10({
-  visible,
-  total,
-  decimals,
-  currency,
-  view,
-  onViewChange,
-}: {
-  visible: boolean;
-  total: string;
-  decimals: string;
-  currency: Currency;
-  view: string;
-  onViewChange: (v: string) => void;
-}) {
-  return (
-    <div className={`stickyBar ${visible ? 'is-visible' : ''}`} aria-hidden={!visible}>
-      <div className="stickyBar__inner">
-        {/* Jedna linia zamiast dwoch: dopisek o kursie chowa sie w dymku
-            ikony, zeby pasek zabieral jak najmniej miejsca. */}
-        <div className="stickyBar__value">
-          <span className="stickyBar__label">Wartość portfela</span>
-          <span className="stickyBar__amount">
-            {total}
-            {decimals}
-          </span>
-          <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
-          {currency === 'Łącznie' && (
-            <span
-              className="stickyBar__hint"
-              title="Wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026"
-            >
-              <Info size={14} />
-            </span>
-          )}
-        </div>
-        {/* Waluta przy przewijaniu siedzi w naglowku (zamiast uzytkownika),
-            wiec w pasku zostaje tylko przelacznik struktury. */}
-        <div className="stickyBar__controls">
-          <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={onViewChange} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function PortfolioScreen({
   styleId,
   currency,
@@ -1034,7 +984,8 @@ export function PortfolioScreen({
 }) {
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
-  /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
+  /* Nr 10: gdy podsumowanie schowa sie pod naglowkiem, waluta wchodzi do
+     gornego menu w miejsce uzytkownika. */
   const summaryRef = useRef<HTMLElement>(null);
   const [pinned, setPinned] = useState(false);
   const [headerSlot, setHeaderSlot] = useState<HTMLElement | null>(null);
@@ -1095,16 +1046,6 @@ export function PortfolioScreen({
               />,
               headerSlot
             )}
-          {styleId === '10' && (
-            <StickyBarV10
-              visible={pinned}
-              total={data.total}
-              decimals={data.decimals}
-              currency={currency}
-              view={view}
-              onViewChange={setView}
-            />
-          )}
           <section
             ref={summaryRef}
             className="summary"
