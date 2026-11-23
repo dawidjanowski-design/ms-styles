@@ -973,23 +973,23 @@ function StickyBarV10({
   return (
     <div className={`stickyBar ${visible ? 'is-visible' : ''}`} aria-hidden={!visible}>
       <div className="stickyBar__inner">
+        {/* Jedna linia zamiast dwoch: dopisek o kursie chowa sie w dymku
+            ikony, zeby pasek zabieral jak najmniej miejsca. */}
         <div className="stickyBar__value">
-          <span className="stickyBar__label">
-            Wartość portfela
-            {currency === 'Łącznie' && (
-              <span className="stickyBar__hint">
-                <Info size={13} />
-                wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026
-              </span>
-            )}
+          <span className="stickyBar__label">Wartość portfela</span>
+          <span className="stickyBar__amount">
+            {total}
+            {decimals}
           </span>
-          <span className="stickyBar__amountRow">
-            <span className="stickyBar__amount">
-              {total}
-              {decimals}
+          <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
+          {currency === 'Łącznie' && (
+            <span
+              className="stickyBar__hint"
+              title="Wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026"
+            >
+              <Info size={14} />
             </span>
-            <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
-          </span>
+          )}
         </div>
         <div className="stickyBar__controls">
           <Pills

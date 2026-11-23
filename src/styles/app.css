@@ -2293,19 +2293,24 @@ select.field__control {
 [data-style='10'] .appHeader { position: sticky; top: 0; z-index: 41; }
 .stickyBar {
   position: fixed; left: 0; right: 0; top: var(--header-h); z-index: 40;
-  background: var(--card-bg); box-shadow: 0 1px 0 var(--divider), 0 6px 16px rgba(0, 0, 0, 0.04);
+  /* Polprzezroczysty z rozmyciem: tresc pod spodem przeswituje, wiec pasek
+     nie odcina kawalka ekranu tak mocno jak pelna biel. */
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
   transform: translateY(-100%); opacity: 0; pointer-events: none;
   transition: transform 220ms var(--ease), opacity 180ms var(--ease);
 }
 .stickyBar.is-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
 .stickyBar__inner {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 10px var(--header-px);
+  padding: 6px var(--header-px);
 }
-.stickyBar__value { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.stickyBar__label { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
-.stickyBar__hint { display: inline-flex; align-items: center; gap: 6px; }
-.stickyBar__amountRow { display: inline-flex; align-items: center; gap: 10px; }
-.stickyBar__amount { font-size: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+.stickyBar__value { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.stickyBar__label { font-size: 13px; color: var(--muted); }
+.stickyBar__hint { display: inline-flex; color: var(--muted); cursor: help; }
+.stickyBar__amount { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
+/* Mniejsze pigulki niz na ekranie — pasek ma 44 px zamiast 70. */
+.stickyBar .pills button { height: 30px; padding: 0 12px; font-size: 13px; }
 .stickyBar__controls { display: flex; align-items: center; gap: 12px; flex: none; }
 .stickyBar__sep { width: 1px; height: 24px; background: var(--divider); }
