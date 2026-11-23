@@ -48,15 +48,18 @@ export const ASSETS: AssetClass[] = [
     amountDecimals: ',00 PLN',
     legendValue: '1 792 922 PLN',
     colors: { '1': { chart: '#065eec', legend: '#065eec', card: '#042468' }, '2': { chart: '#046816', legend: '#046816', card: '#046816' }, '3': { chart: '#c2e6ee', chartFoot: '#78d2e5', legend: '#78d2e5', card: '#78d2e5' }, '4': { chart: '#dbecef', chartFoot: '#11aebd', legend: '#11aebd', card: '#11aebd' } , '5': { chart: '#401cff', legend: '#5f39be', card: '#401cff' } },
+    /* Wczesniej karta miala skopiowane metryki obligacji skarbowych (Emitent 1,
+       Serie 2, 5,24%). Liczby z podsumowania ekranu obligacji korporacyjnych
+       (corpMath, widok laczny): 7 emitentow, 9 serii, rentownosc 7,50%. */
     rows: [
-      { label: 'Emitent', value: '1' },
-      { label: 'Serie', value: '2' },
+      { label: 'Emitenci', value: '7' },
+      { label: 'Serie', value: '9' },
     ],
     highlights: [
-      { label: 'Śr. rentowność (ważona)', value: '5,24%' },
-      { label: 'Wypłacone odsetki 12M', value: '5 240 PLN' },
-      { label: 'Śr. oprocentowanie', value: '5,10%' },
-      { label: 'Najbliższy wykup', value: '25.03.2027' },
+      { label: 'Śr. rentowność (ważona)', value: '7,50%' },
+      { label: 'Wypłacone odsetki 12M', value: '48 220 PLN' },
+      { label: 'Śr. oprocentowanie', value: '7,53%' },
+      { label: 'Najbliższy wykup', value: '18.12.2026' },
     ],
   },
   {
