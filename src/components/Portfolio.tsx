@@ -342,7 +342,9 @@ function CashOverview({
           const link = onOpenTransit && card.label === 'Środki w drodze';
           return (
           <article
-            className={`cashCard ${link ? 'cashCard--link' : ''}`}
+            className={`cashCard ${link ? 'cashCard--link' : ''} ${
+              keepEmpty && isEmpty(card) ? 'cashCard--empty' : ''
+            }`}
             key={i}
             onClick={link ? onOpenTransit : undefined}
           >
