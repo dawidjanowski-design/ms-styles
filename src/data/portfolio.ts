@@ -453,7 +453,7 @@ export const V10_ASSETS_NOTE =
  *  miedzy rachunkami zostaje na karcie rachunku. */
 export const V10_CASH_ACTIONS: { label: string; ghost: boolean }[] = [
   { label: 'Wpłać', ghost: false },
-  { label: 'Wypłać', ghost: false },
+  { label: 'Przelej', ghost: false },
 ];
 
 /* Nazwy klas w wireframe'ach sa pelne — „Fundusze Inwestycyjne Zamkniete”,
