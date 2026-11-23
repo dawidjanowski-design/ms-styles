@@ -1037,8 +1037,6 @@ export function PortfolioScreen({
   /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
   const summaryRef = useRef<HTMLElement>(null);
   const [pinned, setPinned] = useState(false);
-  const [headerSlot, setHeaderSlot] = useState<HTMLElement | null>(null);
-  useEffect(() => setHeaderSlot(document.getElementById('appHeaderSlot')), []);
   useEffect(() => {
     const el = summaryRef.current;
     if (styleId !== '10' || !el) return;
@@ -1086,14 +1084,15 @@ export function PortfolioScreen({
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
           {styleId === '10' &&
             pinned &&
-            headerSlot &&
             createPortal(
-              <Pills
-                items={CURRENCIES}
-                value={currency}
-                onChange={(v) => onCurrencyChange(v as Currency)}
-              />,
-              headerSlot
+              <div className="currencyDock">
+                <Pills
+                  items={CURRENCIES}
+                  value={currency}
+                  onChange={(v) => onCurrencyChange(v as Currency)}
+                />
+              </div>,
+              document.body
             )}
           {styleId === '10' && (
             <StickyBarV10

@@ -2324,19 +2324,23 @@ select.field__control {
    tak samo jak pusta karta gotowki. */
 .legendRow--zero { opacity: 0.45; }
 
-/* Nr 10: przy przewijaniu Portfela przelacznik walut wchodzi do naglowka
-   w miejsce uzytkownika (slot wypelnia portal z ekranu). */
+/* Nr 10: przy przewijaniu Portfela przelacznik walut laduje nad
+   przelacznikiem stylistyk na dole ekranu, w tej samej czarnej pigulce. */
 .appHeader__slot:empty { display: none; }
-/* Czarna pigulka jak przelacznik stylistyk na dole ekranu. */
-.appHeader__slot .pills {
-  padding: 4px; gap: 4px; border-radius: 999px;
-  background: rgba(22, 22, 24, 0.9); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+.currencyDock {
+  position: fixed; z-index: 50; left: 50%; bottom: 70px; transform: translateX(-50%);
+  animation: currencyDockIn 200ms var(--ease);
 }
-.appHeader__slot .pills__glide { display: none; }
-.appHeader__slot .pills button {
+@keyframes currencyDockIn { from { opacity: 0; transform: translate(-50%, 6px); } }
+.currencyDock .pills {
+  padding: 4px; gap: 4px; border-radius: 999px;
+  background: rgba(22, 22, 24, 0.9); backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+.currencyDock .pills__glide { display: none; }
+.currencyDock .pills button {
   height: 30px; padding: 0 14px; border-radius: 999px; box-shadow: none;
   font-size: 12px; font-weight: 500; color: #b9b9bd; background: transparent;
 }
-.appHeader__slot .pills button:hover { color: #fff; }
-.appHeader__slot .pills button[aria-pressed='true'] { background: #fff; color: #161618; }
-.appHeader__right:has(.appHeader__slot:not(:empty)) .appHeader__user { display: none; }
+.currencyDock .pills button:hover { color: #fff; }
+.currencyDock .pills button[aria-pressed='true'] { background: #fff; color: #161618; }
