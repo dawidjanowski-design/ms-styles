@@ -110,6 +110,14 @@ export const Search = (p: Props) => (
   </Svg>
 );
 
+export const Menu = (p: Props) => (
+  <Svg {...p}>
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </Svg>
+);
+
 export const Info = (p: Props) => (
   <Svg {...p}>
     <circle cx="12" cy="12" r="10" />

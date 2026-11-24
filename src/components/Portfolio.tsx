@@ -28,7 +28,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
-import { ChevronRight, Info, Plus } from '../icons/Feather';
+import { ChevronRight, Menu, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -969,51 +969,41 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
-/* Nr 10: pasek przyklejony pod naglowkiem (Figma 1145:319). Pojawia sie,
-   gdy podsumowanie portfela zjedzie pod naglowek — wartosc i oba
-   przelaczniki zostaja pod reka przy przewijaniu struktury i wyniku.
-   Stan jest wspolny z ekranem: przelaczenie tu zmienia to samo, co na gorze. */
-function StickyBarV10({
-  visible,
-  total,
-  decimals,
-  currency,
-  view,
-  onViewChange,
+/* Nr 10: pasek ekranu przy przewijaniu. Naglowek aplikacji odjezdza do gory,
+   na jego miejsce wjezdza nizszy pasek z przyciskiem Menu i nazwa ekranu.
+   Przelacznik walut nie ma tu kopii — ten sam element z podsumowania
+   przykleja sie w pasku (patrz efekt w PortfolioScreen). Menu przywraca
+   naglowek nad paskiem; przewiniecie w dol chowa go z powrotem. */
+function ScreenBarV10({
+  title,
+  menuOpen,
+  onMenu,
+  onClose,
 }: {
-  visible: boolean;
-  total: string;
-  decimals: string;
-  currency: Currency;
-  view: string;
-  onViewChange: (v: string) => void;
+  title: string;
+  menuOpen: boolean;
+  onMenu: () => void;
+  onClose: () => void;
 }) {
+  useEffect(() => {
+    if (!menuOpen) return;
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > last + 24) onClose();
+      last = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [menuOpen, onClose]);
   return (
-    <div className={`stickyBar ${visible ? 'is-visible' : ''}`} aria-hidden={!visible}>
-      <div className="stickyBar__inner">
-        {/* Jedna linia zamiast dwoch: dopisek o kursie chowa sie w dymku
-            ikony, zeby pasek zabieral jak najmniej miejsca. */}
-        <div className="stickyBar__value">
-          <span className="stickyBar__label">Wartość portfela</span>
-          <span className="stickyBar__amount">
-            {total}
-            {decimals}
-          </span>
-          <span className="resultCard__rate">+{RESULT_RANGES[0].rate}</span>
-          {currency === 'Łącznie' && (
-            <span
-              className="stickyBar__hint"
-              title="Wszystkie waluty przeliczone na PLN · kurs NBP z 30.10.2026"
-            >
-              <Info size={14} />
-            </span>
-          )}
-        </div>
-        {/* Waluta przy przewijaniu siedzi w naglowku (zamiast uzytkownika),
-            wiec w pasku zostaje tylko przelacznik struktury. */}
-        <div className="stickyBar__controls">
-          <Pills items={['Aktywa', 'Rachunki']} value={view} onChange={onViewChange} />
-        </div>
+    <div className={`screenBar ${menuOpen ? 'screenBar--below' : ''}`} role="region" aria-label="Pasek ekranu">
+      <div className="screenBar__inner">
+        <button type="button" className="screenBar__menu" aria-expanded={menuOpen} onClick={onMenu}>
+          <Menu size={16} />
+          <span>Menu</span>
+        </button>
+        <span className="screenBar__title">{title}</span>
       </div>
     </div>
   );
@@ -1034,18 +1024,57 @@ export function PortfolioScreen({
 }) {
   const [view, setView] = useState<string>('Aktywa');
   const [hot, setHot] = useState<string | null>(null);
-  /* Nr 10: pasek pojawia sie, gdy podsumowanie schowa sie pod naglowkiem. */
-  const summaryRef = useRef<HTMLElement>(null);
-  const [pinned, setPinned] = useState(false);
+  /* Nr 10: przewijanie. Gdy przelacznik walut z podsumowania dojedzie do
+     krawedzi, naglowek odjezdza, wjezdza pasek ekranu, a sam przelacznik
+     przechodzi na position: fixed i zostaje w pasku po prawej. */
+  const pillsRef = useRef<HTMLDivElement>(null);
+  const [compact, setCompact] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
-    const el = summaryRef.current;
-    if (styleId !== '10' || !el) return;
-    const io = new IntersectionObserver(([e]) => setPinned(!e.isIntersecting), {
-      rootMargin: '-68px 0px 0px 0px',
-    });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [styleId]);
+    if (!compact) setMenuOpen(false);
+  }, [compact]);
+  useEffect(() => {
+    const pills = pillsRef.current?.querySelector<HTMLElement>('.pills');
+    const holder = pillsRef.current;
+    if (styleId !== '10' || !pills || !holder) return;
+    const HEADER = 68;
+    const BAR = 60;
+    let docked = false;
+    const undock = () => {
+      pills.style.position = '';
+      pills.style.top = '';
+      pills.style.left = '';
+      holder.style.minHeight = '';
+      docked = false;
+    };
+    const update = () => {
+      const h = holder.getBoundingClientRect();
+      setCompact(h.top < HEADER);
+      const target = (menuOpen ? HEADER : 0) + (BAR - pills.offsetHeight) / 2;
+      if (h.top <= target) {
+        if (!docked) holder.style.minHeight = `${pills.offsetHeight}px`;
+        docked = true;
+        pills.style.position = 'fixed';
+        pills.style.top = `${target}px`;
+        pills.style.left = `${h.right - pills.offsetWidth}px`;
+      } else if (docked) undock();
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      undock();
+    };
+  }, [styleId, menuOpen, currency]);
+  useEffect(() => {
+    if (styleId !== '10') return;
+    const root = document.documentElement;
+    if (compact && !menuOpen) root.setAttribute('data-compact', '');
+    else root.removeAttribute('data-compact');
+    return () => root.removeAttribute('data-compact');
+  }, [styleId, compact, menuOpen]);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
 
@@ -1083,29 +1112,17 @@ export function PortfolioScreen({
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
           {styleId === '10' &&
-            pinned &&
+            compact &&
             createPortal(
-              <div className="currencyDock">
-                <Pills
-                  items={CURRENCIES}
-                  value={currency}
-                  onChange={(v) => onCurrencyChange(v as Currency)}
-                />
-              </div>,
+              <ScreenBarV10
+                title="Portfel"
+                menuOpen={menuOpen}
+                onMenu={() => setMenuOpen((o) => !o)}
+                onClose={() => setMenuOpen(false)}
+              />,
               document.body
             )}
-          {styleId === '10' && (
-            <StickyBarV10
-              visible={pinned}
-              total={data.total}
-              decimals={data.decimals}
-              currency={currency}
-              view={view}
-              onViewChange={setView}
-            />
-          )}
           <section
-            ref={summaryRef}
             className="summary"
             style={{ paddingTop: 'var(--summary-pt)' }}
             onMouseLeave={() => setHot(null)}
@@ -1115,12 +1132,14 @@ export function PortfolioScreen({
                 {title}
                 <div className="summary__head">
                   <Amount int={data.total} dec={data.decimals} />
-                  <Pills
-                    items={CURRENCIES}
-                    value={currency}
-                    onChange={(v) => onCurrencyChange(v as Currency)}
-                    locked={styleId === 'makieta'}
-                  />
+                  <div className="summary__pills" ref={pillsRef}>
+                    <Pills
+                      items={CURRENCIES}
+                      value={currency}
+                      onChange={(v) => onCurrencyChange(v as Currency)}
+                      locked={styleId === 'makieta'}
+                    />
+                  </div>
                 </div>
               </div>
               <AllocationChart

@@ -2284,36 +2284,50 @@ select.field__control {
 .chartTip--end { transform: translateX(calc(-100% + 24px)); }
 .chartTip--start { transform: translateX(-24px); }
 
-/* ================= nr 10: pasek wartosci przy przewijaniu (Figma 1145:319) =================
-   Naglowek aplikacji zostaje na gorze, pasek wyjezdza spod niego, gdy
-   podsumowanie portfela schowa sie pod krawedzia. */
+/* ================= nr 10: pasek ekranu przy przewijaniu =================
+   Naglowek odjezdza do gory, wjezdza nizszy pasek z Menu i nazwa ekranu,
+   a przelacznik walut z podsumowania przykleja sie w nim po prawej. */
 /* #root ma height: 100%, wiec sticky trzymal sie tylko przez pierwsze 768 px —
    w nr 10 korzen rosnie z trescia, zeby naglowek zostawal na gorze. */
 [data-style='10'] #root { height: auto; min-height: 100%; }
-[data-style='10'] .appHeader { position: sticky; top: 0; z-index: 41; }
-.stickyBar {
-  position: fixed; left: 0; right: 0; top: var(--header-h); z-index: 40;
-  /* Polprzezroczysty z rozmyciem: tresc pod spodem przeswituje, wiec pasek
-     nie odcina kawalka ekranu tak mocno jak pelna biel. */
-  background: rgba(255, 255, 255, 0.72);
-  -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
-  transform: translateY(-100%); opacity: 0; pointer-events: none;
-  transition: transform 220ms var(--ease), opacity 180ms var(--ease);
+[data-style='10'] .appHeader {
+  position: sticky; top: 0; z-index: 43;
+  transition: transform 260ms var(--ease);
 }
-.stickyBar.is-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
-.stickyBar__inner {
-  display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 6px var(--header-px);
+[data-style='10'][data-compact] .appHeader { transform: translateY(-100%); }
+/* Miejsce na przelacznik zostaje, gdy ten przejdzie na fixed — tresc nie skacze. */
+.summary__pills { display: flex; }
+[data-style='10'] .summary__pills .pills { z-index: 45; }
+.screenBar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 42;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(18px); backdrop-filter: saturate(180%) blur(18px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  animation: screenBarIn 260ms var(--ease);
+  transition: top 260ms var(--ease);
 }
-.stickyBar__value { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.stickyBar__label { font-size: 13px; color: var(--muted); }
-.stickyBar__hint { display: inline-flex; color: var(--muted); cursor: help; }
-.stickyBar__amount { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
-/* Mniejsze pigulki niz na ekranie — pasek ma 44 px zamiast 70. */
-.stickyBar .pills button { height: 30px; padding: 0 12px; font-size: 13px; }
-.stickyBar__controls { display: flex; align-items: center; gap: 12px; flex: none; }
-.stickyBar__sep { width: 1px; height: 24px; background: var(--divider); }
+.screenBar--below { top: var(--header-h); }
+@keyframes screenBarIn { from { transform: translateY(-100%); } }
+.screenBar__inner {
+  width: min(var(--content-w), 100% - 2 * var(--screen-pad-x) - 10px); margin: 0 auto;
+  height: 60px; display: flex; align-items: center; gap: 14px;
+}
+.screenBar__menu {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 16px 0 13px; border-radius: 999px;
+  background: var(--card-bg); box-shadow: var(--shadow-pill);
+  font-size: 13px; font-weight: 500; color: var(--ink);
+  transition: background 140ms var(--ease);
+}
+.screenBar__menu:hover, .screenBar__menu[aria-expanded='true'] { background: var(--nav-active-bg); }
+.screenBar__menu:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.screenBar__title {
+  padding-left: 14px; border-left: 1px solid var(--divider);
+  font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-style='10'] .appHeader, .screenBar { transition: none; animation: none; }
+}
 
 /* Eksperyment nr 10 (EUR): pusta karta gotowki stoi w rzedzie, ale wygaszona —
    widac, ze ta kategoria istnieje, tylko w tej walucie nic w niej nie ma. */
@@ -2324,23 +2338,4 @@ select.field__control {
    tak samo jak pusta karta gotowki. */
 .legendRow--zero { opacity: 0.45; }
 
-/* Nr 10: przy przewijaniu Portfela przelacznik walut laduje nad
-   przelacznikiem stylistyk na dole ekranu, w tej samej czarnej pigulce. */
 .appHeader__slot:empty { display: none; }
-.currencyDock {
-  position: fixed; z-index: 50; left: 50%; bottom: 70px; transform: translateX(-50%);
-  animation: currencyDockIn 200ms var(--ease);
-}
-@keyframes currencyDockIn { from { opacity: 0; transform: translate(-50%, 6px); } }
-.currencyDock .pills {
-  padding: 4px; gap: 4px; border-radius: 999px;
-  background: rgba(22, 22, 24, 0.9); backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-}
-.currencyDock .pills__glide { display: none; }
-.currencyDock .pills button {
-  height: 30px; padding: 0 14px; border-radius: 999px; box-shadow: none;
-  font-size: 12px; font-weight: 500; color: #b9b9bd; background: transparent;
-}
-.currencyDock .pills button:hover { color: #fff; }
-.currencyDock .pills button[aria-pressed='true'] { background: #fff; color: #161618; }
