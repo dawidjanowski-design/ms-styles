@@ -11,9 +11,9 @@ export type ClientId = 'dj' | 'ak' | 'mw' | 'zn';
 
 export const CLIENTS: { id: ClientId; name: string; initials: string; note: string }[] = [
   { id: 'dj', name: 'Dawid Jankowski', initials: 'DJ', note: 'Pełny portfel · PLN, EUR, USD' },
-  { id: 'ak', name: 'Anna Kowalczyk', initials: 'AK', note: 'Tylko obligacje korporacyjne' },
-  { id: 'mw', name: 'Marek Wiśniewski', initials: 'MW', note: 'Fundusze, Asset Management i IKE' },
-  { id: 'zn', name: 'Zofia Nowak', initials: 'ZN', note: 'Nowy klient · tylko gotówka' },
+  { id: 'ak', name: 'Katarzyna Lewandowska', initials: 'KL', note: 'Tylko obligacje korporacyjne' },
+  { id: 'mw', name: 'Tomasz Zieliński', initials: 'TZ', note: 'Fundusze, Asset Management i IKE' },
+  { id: 'zn', name: 'Julia Kamińska', initials: 'JK', note: 'Nowy klient · tylko gotówka' },
 ];
 
 /* Kafelek klasy, ktorej klient nie ma — w miejscu jej karty. */

@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Logo, BellIcon, BellIconRound } from '../icons/Logo';
 import { NAV, V10_NAV } from '../data/portfolio';
 import { CLIENTS, type ClientId } from '../data/clientsV10';
-import { ChevronDown } from '../icons/Feather';
 
 /* Kwota przewija sie jak licznik: znak, ktory sie zmienil, wyjezdza w gore,
    a nowy wjezdza z dolu. Znaki bez zmiany stoja w miejscu, wiec przy zmianie
@@ -257,7 +256,6 @@ function ClientSwitch({ client, onChange }: { client: ClientId; onChange: (id: C
       >
         <span className="appHeader__userName">{c.name}</span>
         <ClientAvatar id={c.id} initials={c.initials} />
-        <ChevronDown size={14} className="clientSw__chev" />
       </button>
       {open && (
         <div className="clientSw__menu" role="group" aria-label="Przełącz klienta">

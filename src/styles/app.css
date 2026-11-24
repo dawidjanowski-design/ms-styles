@@ -2402,7 +2402,7 @@ select.field__control {
 /* ================= nr 10: przelacznik klientow (prototyp) ================= */
 .clientSw { position: relative; }
 .clientSw__btn {
-  height: 40px; padding: 0 10px 0 14px; gap: 10px; border-radius: 999px;
+  height: 40px; padding: 0 4px 0 14px; gap: 10px; border-radius: 999px;
   transition: background 140ms var(--ease);
 }
 .clientSw__btn:hover, .clientSw__btn[aria-expanded='true'] { background: var(--nav-active-bg); }
