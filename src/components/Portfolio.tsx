@@ -582,34 +582,50 @@ function ResultSection({ ranges = RESULT_RANGES }: { ranges?: typeof RESULT_RANG
   return (
     <section className="result">
       <div className="result__head">
-        <h2 className="sectionTitle">Wynik portfela</h2>
+        <div className="result__titleRow">
+          <h2 className="sectionTitle">Wynik portfela</h2>
+          <span className="result__period">{data.note.split('okres ')[1] ?? ''}</span>
+        </div>
         <Pills items={ranges.map((r) => r.id)} value={range} onChange={setRange} />
       </div>
-      <article className="resultCard">
-        <div className="resultCard__top">
-          <div className="resultCard__lead">
-            <span className="resultCard__caption">{data.caption}</span>
-            <div className="resultCard__amountRow">
-              <Amount int={data.amount} dec={data.decimals} className="resultCard__amount" />
-              <span className="resultCard__rate">
-                Stopa zwrotu: <strong>{data.rate}</strong>
-              </span>
-            </div>
-          </div>
-          <span className="resultCard__link">
-            Pogłębiona analiza wyniku<span aria-hidden="true">›</span>
+      {/* Uklad z review 11f: po lewej wynik i XIRR, po prawej rachunek zmiany
+          wartosci portfela — od wartosci poczatkowej do koncowej. */}
+      <article className="resultCard rp">
+        <div className="rp__lead">
+          <span className="rp__label">Wynik inwestycyjny</span>
+          <Amount int={data.amount} dec={data.decimals} className="rp__amount" />
+          <span className="rp__rateLabel">Roczna stopa zwrotu (XIRR)</span>
+          <span className={`rp__rate ${/^\d/.test(data.rate) && data.rate !== '0,00%' ? 'rp__rate--pos' : ''}`}>
+            {/^\d/.test(data.rate) ? `+${data.rate}` : data.rate}
           </span>
+          <button type="button" className="btnAction rp__btn">
+            Pogłębiona analiza wyniku
+            <span className="btnAction__chev" aria-hidden="true">
+              <ChevronRight size={16} />
+            </span>
+          </button>
         </div>
-        <div className="divider" />
-        <div className="resultCard__stats">
-          {data.stats.map((s) => (
-            <div className="resultStat" key={s.label}>
-              <span className="resultStat__label">{s.label}</span>
-              <span className="resultStat__value">{s.value}</span>
-            </div>
-          ))}
+        <div className="rp__change">
+          <div className="rp__changeHead">
+            <span className="rp__label">Zmiana wartości portfela</span>
+            <span className="rp__cur">PLN</span>
+          </div>
+          <dl className="rp__rows">
+            {[
+              ...data.stats.filter((x) => x.label !== 'Wartość końcowa'),
+              { label: 'Wynik inwestycyjny', value: `${data.amount},00` },
+            ].map((x) => (
+              <div className="rp__row" key={x.label}>
+                <dt>{x.label}</dt>
+                <dd>{x.value.replace(/ PLN$/, '')}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="rp__row rp__row--total">
+            <span>Wartość końcowa</span>
+            <span>{(data.stats.find((x) => x.label === 'Wartość końcowa')?.value ?? '').replace(/ PLN$/, '')}</span>
+          </div>
         </div>
-        <span className="resultCard__note">{data.note}</span>
       </article>
     </section>
   );

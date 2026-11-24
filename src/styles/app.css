@@ -2512,3 +2512,42 @@ select.field__control {
 .corpMore__chev { color: var(--muted); transition: transform 200ms var(--ease); }
 .corpMore__toggle[aria-expanded='true'] .corpMore__chev { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) { .corpMore, .corpMore__chev { transition: none; } }
+
+/* ================= nr 10: wynik portfela (uklad z review 11f) =================
+   Dwie kolumny: wynik z XIRR i rachunek zmiany wartosci. Wiersze po prawej
+   z wieksza interlinia niz w review (10 px zamiast 6 px w pionie). */
+.resultCard.rp {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0;
+  padding: 28px 32px;
+}
+.rp__lead { display: flex; flex-direction: column; padding-right: 36px; }
+.rp__label { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink); }
+.rp__amount { margin-top: 12px; white-space: nowrap; }
+.rp__amount .amount__int { font-size: 42px; line-height: 50px; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
+.rp__amount .amount__dec { font-size: 24px; line-height: 50px; color: var(--muted); }
+.rp__rateLabel { margin-top: 24px; font-size: 13px; line-height: 20px; color: var(--muted); }
+.rp__rate { margin-top: 2px; font-size: 26px; line-height: 32px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rp__rate--pos { color: var(--c-corp); }
+.rp__btn { align-self: flex-start; margin-top: 28px; }
+.rp__change { display: flex; flex-direction: column; padding-left: 36px; box-shadow: inset 1px 0 0 var(--divider); }
+.rp__changeHead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.rp__cur { font-size: 13px; color: var(--muted); }
+.rp__rows { margin: 0; display: flex; flex-direction: column; }
+.rp__row {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 10px 0; font-size: 14px; line-height: 22px;
+}
+.rp__row dt { color: var(--muted); }
+.rp__row dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rp__row--total {
+  margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--divider);
+  font-weight: 500; color: var(--ink);
+}
+.rp__row--total span:last-child { font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) {
+  .resultCard.rp { grid-template-columns: 1fr; gap: 28px; }
+  .rp__lead { padding-right: 0; }
+  .rp__change { padding-left: 0; box-shadow: none; }
+}
+.result__titleRow { display: flex; align-items: baseline; gap: 10px; }
+.result__period { font-size: 13px; color: var(--muted); }
