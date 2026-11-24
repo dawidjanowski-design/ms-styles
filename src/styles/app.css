@@ -2437,11 +2437,3 @@ select.field__control {
 .clientSw__name { font-size: 14px; font-weight: 500; color: var(--ink); }
 .clientSw__note { font-size: 13px; color: var(--muted); }
 .clientSw__check { width: 16px; font-size: 13px; color: var(--ink); text-align: center; }
-
-/* ================= nr 10: kafelek klasy, ktorej klient nie ma =================
-   Skorupa karty aktywa, kreska w kolorze klasy, opis i przycisk do oferty. */
-.assetAdd { cursor: default; justify-content: flex-start; }
-.assetAdd .assetCard__bar { opacity: 0.45; }
-.assetAdd__sub { margin: 0; font-size: 13px; line-height: 20px; color: var(--muted); max-width: 52ch; }
-.assetAdd__first { color: var(--ink); }
-.assetAdd__btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin-top: auto; }

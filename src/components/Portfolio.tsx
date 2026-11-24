@@ -997,31 +997,11 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
-/* Nr 10: kafelek klasy, ktorej klient nie ma — stoi w siatce tam, gdzie
-   stalaby jej karta. Ta sama skorupa co karta aktywa, kreska w kolorze klasy,
-   zamiast liczb krotki opis i przycisk do oferty. */
+/* Nr 10: kafelek klasy, ktorej klient nie ma — ten sam przerywany kafelek
+   co „Dodaj kolejny rachunek” w widoku Rachunki, w miejscu karty klasy. */
 function AssetAddTile({ id, styleId }: { id: string; styleId: StyleId }) {
   const p = ASSET_PROMO[id];
-  return (
-    <article
-      className="assetCard assetAdd"
-      style={{ ['--seg' as string]: META[colorId(id, styleId)].colors[paletteOf(styleId)].card }}
-    >
-      <div className="assetCard__head">
-        <div className="assetCard__title">
-          <span className="assetCard__bar" />
-          <span className="assetCard__name">{nameOf(id, styleId)}</span>
-        </div>
-      </div>
-      <p className="assetAdd__sub">
-        <span className="assetAdd__first">{p.first}</span> {p.rest}
-      </p>
-      <button type="button" className="btn assetAdd__btn">
-        <Plus size={16} />
-        {p.cta}
-      </button>
-    </article>
-  );
+  return <V10AddTile title={nameOf(id, styleId)} sub={`${p.first} ${p.rest}`} />;
 }
 
 /* Nr 10: pasek ekranu przy przewijaniu. Naglowek aplikacji odjezdza do gory,
