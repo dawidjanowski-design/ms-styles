@@ -1166,7 +1166,7 @@ export function PortfolioScreen({
   return (
     <div className="screenOuter">
       <div className="screen">
-        <div className="content">
+        <div className="content content--airy">
           {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}

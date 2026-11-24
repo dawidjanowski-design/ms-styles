@@ -734,7 +734,7 @@ export function CorpBondsV10({
   return (
     <div className="screenOuter">
       <div className="screen">
-        <div className="content">
+        <div className="content content--airy">
           <nav className="crumbs" aria-label="Ścieżka nawigacji">
             <button type="button" className="crumbs__link" onClick={onBack}>
               Portfel

@@ -2558,3 +2558,7 @@ select.field__control {
 }
 .result__titleRow { display: flex; align-items: baseline; gap: 10px; }
 .result__period { font-size: 13px; color: var(--muted); }
+
+/* Nr 10: wiecej powietrza miedzy sekcjami na Portfelu, w obligacjach,
+   u emitenta, w serii i na rachunku (24 -> 40 px). Pulpit bez zmian. */
+[data-style='10'] .content--airy { gap: 40px; }
