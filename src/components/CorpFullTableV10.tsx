@@ -95,7 +95,7 @@ export function CorpFullTableV10({
 
   /* Wiersz zbiorczy: grupa emitenta albo „Razem”. */
   const agg = (list: Serie[]) => ({
-    count: String(list.reduce((a, s) => a + s.count, 0)),
+    count: String(list.reduce((a, s) => a + s.count, 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '),
     coupon: procent(wazona(list, 'coupon')),
     rate: procent(wazona(list, 'rate')),
     next: najblizsza(list, (s) => s.nextCoupon),
