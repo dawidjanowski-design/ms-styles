@@ -317,49 +317,55 @@ function Structure({
           </button>
         </div>
       </div>
-      <div className="corpCard">
-
+      {/* Test: tabela w wrapperze — biala karta z wierszami siedzi w szarej
+          skorupie, a podsumowanie i notka schodza pod nia na szare tlo. */}
+      <div className={`corpCard ${p.pusto ? '' : 'corpShell'}`}>
         {p.pusto ? (
           <p className="corpEmpty">
             Nie masz obligacji korporacyjnych rozliczanych w {jednostka(currency)}.
           </p>
         ) : (
           <>
-            <div className="corpTable">
-              <div className="corpRow corpRow--head">
-                {naglowek('name', grouping === 'Serie' ? 'Seria' : 'Emitent', { sort: true })}
-                {naglowek('count', grouping === 'Serie' ? 'Sztuk' : 'Serie', { sort: true })}
-                {naglowek('rate', grouping === 'Serie' ? 'Rentowność' : 'Śr. rentowność', {
-                  num: true,
-                  sort: true,
-                })}
-                {naglowek('maturity', grouping === 'Serie' ? 'Wykup' : 'Najbliższy wykup', {
-                  num: true,
-                  sort: true,
-                })}
-                {naglowek('value', etykietaWartosci, { num: true, menu: true })}
-                {naglowek('share', 'Udział', { num: true, sort: true })}
+            <div className="corpShell__inner">
+              <div className="corpTable">
+                <div className="corpRow corpRow--head">
+                  {naglowek('name', grouping === 'Serie' ? 'Seria' : 'Emitent', { sort: true })}
+                  {naglowek('count', grouping === 'Serie' ? 'Sztuk' : 'Serie', { sort: true })}
+                  {naglowek('rate', grouping === 'Serie' ? 'Rentowność' : 'Śr. rentowność', {
+                    num: true,
+                    sort: true,
+                  })}
+                  {naglowek('maturity', grouping === 'Serie' ? 'Wykup' : 'Najbliższy wykup', {
+                    num: true,
+                    sort: true,
+                  })}
+                  {naglowek('value', etykietaWartosci, { num: true, menu: true })}
+                  {naglowek('share', 'Udział', { num: true, sort: true })}
+                </div>
+
+                {widoczne.map((r) => komorki(r))}
               </div>
-
-              {widoczne.map((r) => komorki(r))}
-
-              {komorki(
-                {
-                  id: 'razem',
-                  title: `Razem · ${p.emitenci} ${p.emitenci === 1 ? 'emitent' : 'emitentów'}`,
-                  sub: grouping === 'Serie' ? `${p.serie} serii` : undefined,
-                  count: grouping === 'Serie' ? String(p.sztuk) : `${p.serie} serii`,
-                  countNum: p.serie,
-                  rate: p.rate,
-                  maturity: p.najblizszyWykup,
-                  value: p.value,
-                  nominal: p.nominal,
-                },
-                true
-              )}
             </div>
 
-            <p className="corpNote">{CORP_STRUCTURE_NOTE}</p>
+            <div className="corpShell__foot">
+              <div className="corpTable">
+                {komorki(
+                  {
+                    id: 'razem',
+                    title: `Razem · ${p.emitenci} ${p.emitenci === 1 ? 'emitent' : 'emitentów'}`,
+                    sub: grouping === 'Serie' ? `${p.serie} serii` : undefined,
+                    count: grouping === 'Serie' ? String(p.sztuk) : `${p.serie} serii`,
+                    countNum: p.serie,
+                    rate: p.rate,
+                    maturity: p.najblizszyWykup,
+                    value: p.value,
+                    nominal: p.nominal,
+                  },
+                  true
+                )}
+              </div>
+              <p className="corpShell__note">{CORP_STRUCTURE_NOTE}</p>
+            </div>
           </>
         )}
       </div>

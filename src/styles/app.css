@@ -2059,11 +2059,11 @@ select.field__control {
    zachowuje 20 px z kazdej strony. */
 /* Bez overflow: hidden — dymki wykresow wychodza nad karte. */
 .corpCard { padding: 0; }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets) {
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets):not(.corpShell__inner):not(.corpShell__foot) {
   padding-left: 20px; padding-right: 20px;
 }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets):first-child { margin-top: 20px; }
-.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets):last-child { margin-bottom: 20px; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets):not(.corpShell__inner):not(.corpShell__foot):first-child { margin-top: 20px; }
+.corpCard > :not(.corpTable):not(.closedTable):not(.opsTable):not(.issTable):not(.serTable):not(.acctAssets):not(.corpShell__inner):not(.corpShell__foot):last-child { margin-bottom: 20px; }
 
 .corpCard .corpRow,
 .corpCard .closedRow,
@@ -2467,3 +2467,24 @@ select.field__control {
   outline: 2px solid var(--ink); outline-offset: 2px;
 }
 [data-style='10'] .btnAction--primary .btnAction__chev { color: rgba(255, 255, 255, 0.6); }
+
+/* ================= nr 10: tabela w wrapperze (test, Struktura portfela) =================
+   Szara skorupa z obrysem, w niej biala karta z wierszami (ten sam obrys,
+   krawedzie na krawedziach skorupy). Podsumowanie i notka leza pod karta
+   na szarym tle, rozdzielone kreska. Bez cienia — robota obrysow. */
+.corpCard.corpShell {
+  gap: 0; background: var(--screen-bg);
+  box-shadow: inset 0 0 0 1px var(--shell-line);
+}
+[data-style='10'] { --shell-line: #e9e9eb; }
+.corpShell__inner {
+  margin: 0; background: var(--card-bg); border-radius: var(--card-radius);
+  box-shadow: 0 0 0 1px var(--shell-line), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.corpShell__inner .corpRow:last-child,
+.corpShell__inner .corpRow:last-child.corpRow--link:hover {
+  border-bottom-left-radius: var(--card-radius); border-bottom-right-radius: var(--card-radius);
+}
+.corpShell__foot { display: flex; flex-direction: column; }
+.corpShell__foot .corpRow { border-bottom: 1px solid var(--shell-line); padding-top: 14px; padding-bottom: 14px; }
+.corpShell__note { margin: 0; padding: 14px 20px 16px; font-size: 13px; line-height: 20px; color: var(--muted); }
