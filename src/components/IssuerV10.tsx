@@ -106,9 +106,13 @@ function SeriesTable({
                 </div>
 
                 {rozwiniete &&
-                  konta.map((k) => (
-                    <div className="issRow issRow--account" key={k.account}>
-                      <span className="issRow__muted">{k.account}</span>
+                  konta.map((k, i) => (
+                    <div
+                      className={`issRow issRow--account ${i === konta.length - 1 ? 'is-last' : ''}`}
+                      key={k.account}
+                    >
+                      {/* Galaz drzewa laczy rachunek z seria powyzej. */}
+                      <span className="issRow__muted issRow__branch">{k.account}</span>
                       <span className="is-num">{k.count}</span>
                       <span />
                       <span />
