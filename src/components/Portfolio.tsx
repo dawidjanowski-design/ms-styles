@@ -1211,9 +1211,9 @@ export function PortfolioScreen({
             onOpenCash={styleId === '10' ? (l) => setCashKind(l as CashKind) : undefined}
             zeroAsNumber={styleId === '5'}
             actions={styleId === '10'}
-            /* Eksperyment: w EUR zostaja wszystkie trzy karty, puste z zerem
-               i kreska — w PLN i USD dalej chowamy puste. */
-            keepEmpty={styleId === '10' && currency === 'EUR'}
+            /* Nr 10: wszystkie trzy karty zostaja w kazdej walucie i u kazdego
+               klienta — pusta jest przygaszona, z kreska zamiast kwot. */
+            keepEmpty={styleId === '10'}
           />
 
           {/* Wireframe stawia wynik miedzy gotowka a struktura: najpierw
