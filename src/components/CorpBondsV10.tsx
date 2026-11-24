@@ -100,16 +100,16 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Najbliższy wykup', value: p.najblizszyWykup },
   ];
 
-  /* Czysciej: na wierzchu tylko cztery metryki wyniku, w jednej linii bez
-     kafelkow (wzorzec „Your position” z Origin/Quicken). Metryki portfela
-     chowaja sie pod „Więcej szczegółów” w stopce — rozwijaja sie w tej samej
-     siatce, wiec kolumny stoja pod kolumnami. */
+  /* Pierwszy rzad kafelkow (wynik) zawsze widoczny, drugi (metryki portfela)
+     chowa sie pod „Więcej szczegółów” w stopce. */
   const [open, setOpen] = useState(false);
-  const kpi = (m: Metric) => (
-    <div className="corpKpi" key={m.label}>
-      <span className="corpKpi__label">{m.label}</span>
-      <span className={`corpKpi__value ${m.positive ? 'corpKpi__value--pos' : ''}`}>{m.value}</span>
-      {m.sub && <span className="corpKpi__sub">{m.sub}</span>}
+  const kafelek = (m: Metric) => (
+    <div className="resultStat" key={m.label}>
+      <span className="resultStat__label">{m.label}</span>
+      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
+        {m.value}
+      </span>
+      {m.sub && <span className="resultStat__sub">{m.sub}</span>}
     </div>
   );
 
@@ -129,12 +129,12 @@ function Summary({ currency }: { currency: Currency }) {
       </div>
 
       <div className="divider" />
-      <div className="corpKpis">{wynikowe.map(kpi)}</div>
+      <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
 
       <div className={`corpMore ${open ? 'is-open' : ''}`} aria-hidden={!open}>
         <div className="corpMore__clip">
-          <div className="corpKpis corpKpis--more" id="corpMoreDetails">
-            {portfelowe.map(kpi)}
+          <div className="resultCard__stats corpMore__stats" id="corpMoreDetails">
+            {portfelowe.map(kafelek)}
           </div>
         </div>
       </div>
