@@ -156,7 +156,7 @@ export const CASH = {
 export const CASH_BY_CURRENCY = {
   title: 'Wolna gotówka',
   rows: [
-    { label: 'PLN', value: '190 118,00 PLN' },
+    { label: 'PLN', value: '190 268,00 PLN' },
     { label: 'EUR', value: '12 000,00 EUR' },
     { label: 'USD', value: '3 000,00 USD' },
   ],
@@ -170,7 +170,7 @@ export const CASH_CARDS = [
     amount: '253 118',
     decimals: ',00 PLN',
     rows: [
-      { label: 'PLN', value: '190 118,00' },
+      { label: 'PLN', value: '190 268,00' },
       { label: 'EUR', value: '12 000,00' },
       { label: 'USD', value: '3 000,00' },
     ],

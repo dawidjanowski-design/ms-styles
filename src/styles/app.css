@@ -2393,5 +2393,8 @@ select.field__control {
 :is(.cdr__row--link, .cdr__gHead--link):hover .cdr__chev { color: var(--ink); transform: translateX(2px); }
 :is(.cdr__row--link, .cdr__gHead--link):focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 .cdr__note { margin-top: 24px; }
+/* Filtr kierunku w srodkach w drodze — mniejsze pigulki, nie konkuruja z suma. */
+.cdr__filter { margin: -8px 0 16px; }
+.cdr__filter .pills button { height: 30px; padding: 0 12px; font-size: 13px; }
 .cashCard--link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (max-width: 560px) { .drawer.cdr { padding: 22px 20px 24px; } }

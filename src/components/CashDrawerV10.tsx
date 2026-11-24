@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from '../icons/Feather';
-import { Amount } from './ui';
+import { Amount, Pills } from './ui';
 import { V10_CASH_DETAIL, type CashKind, type CashRow } from '../data/cashV10';
 
 /* Nr 10: szuflada karty gotowki. Mechanika z review (wersja 11f): suma na
@@ -39,6 +39,10 @@ export function CashDrawerV10({
   canOpen: (id: string) => boolean;
 }) {
   const ref = useRef<HTMLElement>(null);
+  /* Srodki w drodze: delikatny filtr kierunku — naleznosci (przychodzace)
+     i zobowiazania (wychodzace). */
+  const [dir, setDir] = useState<string>('Wszystkie');
+  useEffect(() => setDir('Wszystkie'), [kind]);
   useEffect(() => {
     if (!kind) return;
     const prev = document.activeElement as HTMLElement | null;
@@ -56,8 +60,16 @@ export function CashDrawerV10({
   const d = V10_CASH_DETAIL[kind];
   const all = currency === 'Łącznie';
   const signed = kind === 'Środki w drodze';
+  const showFilter = signed && d.accounts.some((a) => a.rows.some((r) => all || r.cur === currency));
   const accounts = d.accounts
-    .map((a) => ({ ...a, rows: all ? a.rows : a.rows.filter((r) => r.cur === currency) }))
+    .map((a) => ({
+      ...a,
+      rows: a.rows.filter(
+        (r) =>
+          (all || r.cur === currency) &&
+          (dir === 'Wszystkie' || r.dir === (dir === 'Należności' ? 'in' : 'out'))
+      ),
+    }))
     .filter((a) => a.rows.length);
   const unit = all ? 'PLN' : currency;
   const sumOf = (rows: CashRow[]) => rows.reduce((t, r) => t + (all ? inPln(r) : parse(r.amount)), 0);
@@ -91,7 +103,10 @@ export function CashDrawerV10({
         </div>
 
         <div className="cdr__sum">
-          <span className="cdr__sumLabel">{all ? 'Łącznie' : `Łącznie w ${currency}`}</span>
+          <span className="cdr__sumLabel">
+            {dir === 'Należności' ? 'Należności' : dir === 'Zobowiązania' ? 'Zobowiązania' : 'Łącznie'}
+            {all ? '' : ` w ${currency}`}
+          </span>
           <Amount int={int} dec={dec} />
           {all && byCur.length > 1 && kind !== 'Wolna gotówka' && (
             <div className="cdr__break">
@@ -107,7 +122,17 @@ export function CashDrawerV10({
           )}
         </div>
 
-        {accounts.length === 0 && <p className="drawer__note">Brak pozycji w tej walucie.</p>}
+        {showFilter && (
+          <div className="cdr__filter">
+            <Pills items={['Wszystkie', 'Należności', 'Zobowiązania']} value={dir} onChange={setDir} />
+          </div>
+        )}
+
+        {accounts.length === 0 && (
+          <p className="drawer__note">
+            {dir === 'Wszystkie' ? 'Brak pozycji w tej walucie.' : `Brak ${dir === 'Należności' ? 'należności' : 'zobowiązań'} w rozliczeniu.`}
+          </p>
+        )}
 
         {/* Wolna gotowka: grupy walutowe, w kazdej rachunki z saldem. */}
         {kind === 'Wolna gotówka' &&
