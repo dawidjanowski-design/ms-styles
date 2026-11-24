@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from '../icons/Feather';
 import { Amount, Pills } from './ui';
-import { V10_CASH_DETAIL, type CashKind, type CashRow } from '../data/cashV10';
+import { V10_CASH_DETAIL, type CashDetail, type CashKind, type CashRow } from '../data/cashV10';
 
 /* Nr 10: szuflada karty gotowki. Mechanika z review (wersja 11f): suma na
    gorze, pod nia rachunki z pozycjami, przy wolnej gotowce grupy walutowe.
@@ -31,12 +31,15 @@ export function CashDrawerV10({
   onClose,
   onOpenAccount,
   canOpen,
+  detail,
 }: {
   kind: CashKind | null;
   currency: string;
   onClose: () => void;
   onOpenAccount: (id: string) => void;
   canOpen: (id: string) => boolean;
+  /** scenariusz innego klienta (przelacznik klientow) */
+  detail?: Record<CashKind, CashDetail>;
 }) {
   const ref = useRef<HTMLElement>(null);
   /* Srodki w drodze: delikatny filtr kierunku — naleznosci (przychodzace)
@@ -57,7 +60,7 @@ export function CashDrawerV10({
   }, [kind, onClose]);
   if (!kind) return null;
 
-  const d = V10_CASH_DETAIL[kind];
+  const d = (detail ?? V10_CASH_DETAIL)[kind];
   const all = currency === 'Łącznie';
   const signed = kind === 'Środki w drodze';
   const showFilter = signed && d.accounts.some((a) => a.rows.some((r) => all || r.cur === currency));

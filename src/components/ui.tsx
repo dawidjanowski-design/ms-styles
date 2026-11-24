@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Logo, BellIcon, BellIconRound } from '../icons/Logo';
 import { NAV, V10_NAV } from '../data/portfolio';
+import { CLIENTS, type ClientId } from '../data/clientsV10';
+import { ChevronDown } from '../icons/Feather';
 
 /* Kwota przewija sie jak licznik: znak, ktory sie zmienil, wyjezdza w gore,
    a nowy wjezdza z dolu. Znaki bez zmiany stoja w miejscu, wiec przy zmianie
@@ -149,10 +151,15 @@ export function AppHeader({
   active = 'Portfel',
   onNavigate,
   styleId,
+  client,
+  onClientChange,
 }: {
   active?: string;
   onNavigate?: (item: string) => void;
   styleId?: string;
+  /** nr 10: przelacznik klientow (prototyp) */
+  client?: ClientId;
+  onClientChange?: (id: ClientId) => void;
 } = {}) {
   const items = styleId === '10' ? V10_NAV : NAV;
   return (
@@ -193,16 +200,91 @@ export function AppHeader({
         {/* Miejsce na kontrolki ekranu w naglowku (nr 10: waluta przy
             przewijaniu Portfela). Gdy cos tu jest, CSS chowa uzytkownika. */}
         <div id="appHeaderSlot" className="appHeader__slot" />
-        <div className="appHeader__user">
-          <span className="appHeader__userName">Dawid Jankowski</span>
-          <span className="appHeader__avatar">
-            <img src="avatar.jpg" width={32} height={32} alt="" />
-            <span className="appHeader__initials" aria-hidden="true">
-              DJ
+        {styleId === '10' && client && onClientChange ? (
+          <ClientSwitch client={client} onChange={onClientChange} />
+        ) : (
+          <div className="appHeader__user">
+            <span className="appHeader__userName">Dawid Jankowski</span>
+            <span className="appHeader__avatar">
+              <img src="avatar.jpg" width={32} height={32} alt="" />
+              <span className="appHeader__initials" aria-hidden="true">
+                DJ
+              </span>
             </span>
-          </span>
-        </div>
+          </div>
+        )}
       </div>
     </header>
+  );
+}
+
+/* Nr 10: przelacznik klientow w miejscu uzytkownika (prototyp, review 11f).
+   Kazdy klient to inny scenariusz portfela. */
+function ClientAvatar({ id, initials }: { id: ClientId; initials: string }) {
+  return id === 'dj' ? (
+    <span className="appHeader__avatar">
+      <img src="avatar.jpg" width={32} height={32} alt="" />
+    </span>
+  ) : (
+    <span className={`clientAv clientAv--${id}`} aria-hidden="true">
+      {initials}
+    </span>
+  );
+}
+
+function ClientSwitch({ client, onChange }: { client: ClientId; onChange: (id: ClientId) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const c = CLIENTS.find((x) => x.id === client) ?? CLIENTS[0];
+  useEffect(() => {
+    if (!open) return;
+    const out = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', out);
+    document.addEventListener('keydown', key);
+    return () => {
+      document.removeEventListener('mousedown', out);
+      document.removeEventListener('keydown', key);
+    };
+  }, [open]);
+  return (
+    <div className="clientSw" ref={ref}>
+      <button
+        type="button"
+        className="appHeader__user clientSw__btn"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="appHeader__userName">{c.name}</span>
+        <ClientAvatar id={c.id} initials={c.initials} />
+        <ChevronDown size={14} className="clientSw__chev" />
+      </button>
+      {open && (
+        <div className="clientSw__menu" role="group" aria-label="Przełącz klienta">
+          <div className="clientSw__head">Przełącz klienta · prototyp</div>
+          {CLIENTS.map((x) => (
+            <button
+              type="button"
+              key={x.id}
+              className={`clientSw__item ${x.id === c.id ? 'is-active' : ''}`}
+              aria-current={x.id === c.id ? 'true' : undefined}
+              onClick={() => {
+                setOpen(false);
+                if (x.id !== c.id) onChange(x.id);
+              }}
+            >
+              <ClientAvatar id={x.id} initials={x.initials} />
+              <span className="clientSw__text">
+                <span className="clientSw__name">{x.name}</span>
+                <span className="clientSw__note">{x.note}</span>
+              </span>
+              <span className="clientSw__check" aria-hidden="true">
+                {x.id === c.id ? '✓' : ''}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

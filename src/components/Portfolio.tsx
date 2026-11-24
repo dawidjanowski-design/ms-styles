@@ -30,6 +30,15 @@ import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 import { CashDrawerV10 } from './CashDrawerV10';
 import type { CashKind } from '../data/cashV10';
+import {
+  ASSET_PROMO,
+  clientCash,
+  clientGroups,
+  clientResult,
+  clientView,
+  hasScenario,
+  type ClientId,
+} from '../data/clientsV10';
 import { ChevronRight, Menu, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
@@ -527,13 +536,15 @@ function V10AddTile({ title, sub }: { title: string; sub: string }) {
 function AccountsV10({
   styleId,
   onOpenAccount,
+  groups = V10_ACCOUNT_GROUPS,
 }: {
   styleId: StyleId;
   onOpenAccount: (id: string) => void;
+  groups?: typeof V10_ACCOUNT_GROUPS;
 }) {
   return (
     <div className="v10Groups">
-      {V10_ACCOUNT_GROUPS.map((g) => (
+      {groups.map((g) => (
         <section className="v10Group" key={g.id}>
           <div className="v10Group__head">
             <div className="v10Group__text">
@@ -564,15 +575,15 @@ function AccountsV10({
 /* Sekcja z wireframe'u P01. Zakres zmienia wszystko w karcie naraz — kwote,
    stope zwrotu, cztery kafelki i okres w stopce — wiec trzymam go w jednym
    stanie, a nie w czterech. */
-function ResultSection() {
-  const [range, setRange] = useState(RESULT_RANGES[0].id);
-  const data = RESULT_RANGES.find((r) => r.id === range) ?? RESULT_RANGES[0];
+function ResultSection({ ranges = RESULT_RANGES }: { ranges?: typeof RESULT_RANGES }) {
+  const [range, setRange] = useState(ranges[0].id);
+  const data = ranges.find((r) => r.id === range) ?? ranges[0];
 
   return (
     <section className="result">
       <div className="result__head">
         <h2 className="sectionTitle">Wynik portfela</h2>
-        <Pills items={RESULT_RANGES.map((r) => r.id)} value={range} onChange={setRange} />
+        <Pills items={ranges.map((r) => r.id)} value={range} onChange={setRange} />
       </div>
       <article className="resultCard">
         <div className="resultCard__top">
@@ -612,10 +623,13 @@ function AssetCard({
   asset,
   styleId,
   onOpen,
+  plain = false,
 }: {
   asset: AssetClass;
   styleId: StyleId;
   onOpen?: () => void;
+  /** scenariusz klienta: bez walut i tyldy z danych Dawida */
+  plain?: boolean;
 }) {
   const makieta = styleId === 'makieta';
   /* Kafelki w kazdej stylistyce poza makieta i nr 5: etykieta stoi nad
@@ -631,7 +645,7 @@ function AssetCard({
   const strip = makieta || v5;
   /* Nr 10 czyta metryki z wireframe'u: Wynik 12M i stopa zwrotu 12M z przodu,
      liczniki pod kreska. Pozostale stylistyki zostaja przy swoich danych. */
-  const v10 = styleId === '10' ? V10_ASSETS[asset.id] : undefined;
+  const v10 = styleId === '10' && !plain ? V10_ASSETS[asset.id] : undefined;
   /* Metryki w nr 10 te same co w nr 2 — z wireframe'u zostaje tylko naglowek
      karty (waluty, tylda przy kwocie). */
   const highlights = asset.highlights;
@@ -983,6 +997,33 @@ function AccountCard({
 
 /* ----------------------------- ekran ----------------------------- */
 
+/* Nr 10: kafelek klasy, ktorej klient nie ma — stoi w siatce tam, gdzie
+   stalaby jej karta. Ta sama skorupa co karta aktywa, kreska w kolorze klasy,
+   zamiast liczb krotki opis i przycisk do oferty. */
+function AssetAddTile({ id, styleId }: { id: string; styleId: StyleId }) {
+  const p = ASSET_PROMO[id];
+  return (
+    <article
+      className="assetCard assetAdd"
+      style={{ ['--seg' as string]: META[colorId(id, styleId)].colors[paletteOf(styleId)].card }}
+    >
+      <div className="assetCard__head">
+        <div className="assetCard__title">
+          <span className="assetCard__bar" />
+          <span className="assetCard__name">{nameOf(id, styleId)}</span>
+        </div>
+      </div>
+      <p className="assetAdd__sub">
+        <span className="assetAdd__first">{p.first}</span> {p.rest}
+      </p>
+      <button type="button" className="btn assetAdd__btn">
+        <Plus size={16} />
+        {p.cta}
+      </button>
+    </article>
+  );
+}
+
 /* Nr 10: pasek ekranu przy przewijaniu. Naglowek aplikacji odjezdza do gory,
    na jego miejsce wjezdza nizszy pasek z przyciskiem Menu i nazwa ekranu.
    Przelacznik walut nie ma tu kopii — ten sam element z podsumowania
@@ -1029,14 +1070,20 @@ export function PortfolioScreen({
   onCurrencyChange,
   onOpenAsset,
   onOpenAccount,
+  client = 'dj',
 }: {
   styleId: StyleId;
   currency: Currency;
   onCurrencyChange: (c: Currency) => void;
   onOpenAsset: (id: string) => void;
   onOpenAccount: (id: string) => void;
+  /** nr 10: scenariusz z przelacznika klientow */
+  client?: ClientId;
 }) {
   const [view, setView] = useState<string>('Aktywa');
+  /* Inny klient niz Dawid = scenariusz z clientsV10: tylko PLN, bez ekranow
+     szczegolow (te sa narysowane na danych Dawida). */
+  const scen = styleId === '10' && hasScenario(client) ? client : null;
   const [hot, setHot] = useState<string | null>(null);
   /* Nr 10: przewijanie. Gdy przelacznik walut z podsumowania dojedzie do
      krawedzi, naglowek odjezdza, wjezdza pasek ekranu, a sam przelacznik
@@ -1094,14 +1141,16 @@ export function PortfolioScreen({
   /* Nr 10: otwarta szuflada karty gotowki. */
   const [cashKind, setCashKind] = useState<CashKind | null>(null);
 
-  const data = VIEWS[currency];
+  const data = scen ? clientView(scen) : VIEWS[currency];
+  const currencies = scen ? (['Łącznie', 'PLN'] as const) : CURRENCIES;
+  const openAsset = scen ? undefined : onOpenAsset;
   /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
      w widoku lacznym, bo tylko ten wireframe opisuje. W PLN/EUR/USD zostaja
      dane wspolne dla wszystkich stylistyk. */
   /* Nr 10 nie pokazuje podpisu pod gotowka w legendzie (we wszystkich
      walutach) — rozbicie jest w kartach gotowki tuz pod wykresem. */
   const allocation0 = (
-    styleId === '10' && currency === 'Łącznie' ? V10_ALLOCATION : data.allocation
+    styleId === '10' && currency === 'Łącznie' && !scen ? V10_ALLOCATION : data.allocation
   ).map((r) => (styleId === '10' ? { ...r, sub: undefined } : r));
   /* Eksperyment nr 10 (EUR): legenda wypisuje wszystkie klasy, tez te,
      ktorych w tej walucie nie ma — z zerem, jak puste karty gotowki. */
@@ -1150,7 +1199,7 @@ export function PortfolioScreen({
                   <Amount int={data.total} dec={data.decimals} />
                   <div className="summary__pills" ref={pillsRef}>
                     <Pills
-                      items={CURRENCIES}
+                      items={currencies}
                       value={currency}
                       onChange={(v) => onCurrencyChange(v as Currency)}
                       locked={styleId === 'makieta'}
@@ -1170,7 +1219,7 @@ export function PortfolioScreen({
               styleId={styleId}
               hot={hot}
               setHot={setHot}
-              onOpenAsset={onOpenAsset}
+              onOpenAsset={openAsset}
               cashCards={data.cashCards}
               total={data.total}
             />
@@ -1190,7 +1239,9 @@ export function PortfolioScreen({
           {/* Wireframe stawia wynik miedzy gotowka a struktura: najpierw
               „ile mam pod reka”, potem „ile na tym zarobilem”, na koncu
               „z czego to sie sklada”. */}
-          {styleId === '10' && <ResultSection />}
+          {styleId === '10' && (
+            <ResultSection key={client} ranges={scen ? clientResult(scen) : undefined} />
+          )}
 
           <section className="assets">
             <div className="assets__head">
@@ -1215,16 +1266,29 @@ export function PortfolioScreen({
                 /* Nr 10 grupuje rachunki typem, zgodnie z wireframem P02:
                    plaska lista nie pokazywala, ze kazdy typ rzadzi sie
                    innymi zasadami. */
-                <AccountsV10 styleId={styleId} onOpenAccount={onOpenAccount} />
+                <AccountsV10
+                  styleId={styleId}
+                  onOpenAccount={onOpenAccount}
+                  groups={scen ? clientGroups(scen) : undefined}
+                />
               ) : view === 'Aktywa' ? (
-                data.assets.map((a) => (
+                <>
+                  {data.assets.map((a) => (
                     <AssetCard
                       key={a.id}
                       asset={a}
                       styleId={styleId}
-                      onOpen={DETAIL_ASSETS.has(a.id) ? () => onOpenAsset(a.id) : undefined}
+                      plain={!!scen}
+                      onOpen={openAsset && DETAIL_ASSETS.has(a.id) ? () => openAsset(a.id) : undefined}
                     />
-                  ))
+                  ))}
+                  {/* Nr 10: klasy, ktorych klient nie ma — kafelek zamiast karty. */}
+                  {styleId === '10' &&
+                    currency === 'Łącznie' &&
+                    V10_LEGEND_ORDER.filter((id) => !data.assets.some((a) => a.id === id)).map((id) => (
+                      <AssetAddTile key={`add-${id}`} id={id} styleId={styleId} />
+                    ))}
+                </>
               ) : (
                 data.accounts.map((a) => (
                   <AccountCard
@@ -1256,7 +1320,8 @@ export function PortfolioScreen({
             setCashKind(null);
             onOpenAccount(id);
           }}
-          canOpen={(id) => !!V10_ACCOUNT_DETAIL[id]}
+          canOpen={(id) => !scen && !!V10_ACCOUNT_DETAIL[id]}
+          detail={scen ? clientCash(scen) : undefined}
         />
       )}
     </div>

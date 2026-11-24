@@ -2398,3 +2398,50 @@ select.field__control {
 .cdr__filter .pills button { height: 30px; padding: 0 12px; font-size: 13px; }
 .cashCard--link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (max-width: 560px) { .drawer.cdr { padding: 22px 20px 24px; } }
+
+/* ================= nr 10: przelacznik klientow (prototyp) ================= */
+.clientSw { position: relative; }
+.clientSw__btn {
+  height: 40px; padding: 0 10px 0 14px; gap: 10px; border-radius: 999px;
+  transition: background 140ms var(--ease);
+}
+.clientSw__btn:hover, .clientSw__btn[aria-expanded='true'] { background: var(--nav-active-bg); }
+.clientSw__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.clientSw__chev { color: var(--muted); transition: transform 160ms var(--ease); }
+.clientSw__btn[aria-expanded='true'] .clientSw__chev { transform: rotate(180deg); }
+.clientAv {
+  width: 32px; height: 32px; flex: none; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: #fff; background: #4a4a4d;
+}
+.clientAv--ak { background: #3d6b4f; }
+.clientAv--mw { background: #7a4b2e; }
+.clientAv--zn { background: #5b4a8a; }
+.clientSw__menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 200;
+  width: 320px; padding: 6px; border-radius: 16px; background: var(--card-bg);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.22);
+  animation: clientSwIn 160ms var(--ease);
+}
+@keyframes clientSwIn { from { opacity: 0; transform: translateY(-4px); } }
+.clientSw__head { padding: 10px 12px 8px; font-size: 13px; color: var(--muted); }
+.clientSw__item {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px;
+  padding: 8px 12px; border-radius: 12px; text-align: left;
+  transition: background 140ms var(--ease);
+}
+.clientSw__item:hover { background: var(--screen-bg); }
+.clientSw__item.is-active { background: var(--nav-active-bg); }
+.clientSw__item:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.clientSw__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.clientSw__name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.clientSw__note { font-size: 13px; color: var(--muted); }
+.clientSw__check { width: 16px; font-size: 13px; color: var(--ink); text-align: center; }
+
+/* ================= nr 10: kafelek klasy, ktorej klient nie ma =================
+   Skorupa karty aktywa, kreska w kolorze klasy, opis i przycisk do oferty. */
+.assetAdd { cursor: default; justify-content: flex-start; }
+.assetAdd .assetCard__bar { opacity: 0.45; }
+.assetAdd__sub { margin: 0; font-size: 13px; line-height: 20px; color: var(--muted); max-width: 52ch; }
+.assetAdd__first { color: var(--ink); }
+.assetAdd__btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; margin-top: auto; }

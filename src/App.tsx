@@ -10,6 +10,7 @@ import { DashboardScreen } from './components/Dashboard';
 import { IssuerScreen, SeriesScreen } from './components/Issuer';
 import { AccountScreen } from './components/Account';
 import { CURRENCIES, type Currency } from './data/currencies';
+import type { ClientId } from './data/clientsV10';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 const STYLES: { id: StyleId; label: string }[] = [
@@ -50,6 +51,25 @@ export default function App() {
   /* Waluta jest wspolna dla Portfela i ekranu klasy aktywow — wejscie w
      obligacje z widoku EUR ma pokazac obligacje w EUR, a nie zaczynac od nowa. */
   const [currency, setCurrency] = useState<Currency>(CURRENCIES[0]);
+  /* Nr 10: klient z przelacznika w naglowku — scenariusz portfela. */
+  const [client, setClient] = useState<ClientId>(() => {
+    try {
+      const v = localStorage.getItem('ms-client');
+      return v === 'ak' || v === 'mw' || v === 'zn' ? v : 'dj';
+    } catch {
+      return 'dj';
+    }
+  });
+  const pickClient = (id: ClientId) => {
+    setClient(id);
+    setCurrency(CURRENCIES[0]);
+    setScreen({ name: 'portfel' });
+    try {
+      localStorage.setItem('ms-client', id);
+    } catch {
+      /* brak storage */
+    }
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute('data-style', styleId);
@@ -79,6 +99,8 @@ export default function App() {
       <AppHeader
         active={screen.name === 'pulpit' ? 'Pulpit' : 'Portfel'}
         styleId={styleId}
+        client={client}
+        onClientChange={pickClient}
         onNavigate={(item) => {
           if (item === 'Pulpit') setScreen({ name: 'pulpit' });
           if (item === 'Portfel') setScreen({ name: 'portfel' });
@@ -99,6 +121,7 @@ export default function App() {
           onCurrencyChange={setCurrency}
           onOpenAsset={(id) => setScreen({ name: 'asset', id })}
           onOpenAccount={(id) => setScreen({ name: 'account', id })}
+          client={client}
         />
       )}
       {/* Nr 10 ma wlasny ekran obligacji korporacyjnych — uklad sekcji jest
