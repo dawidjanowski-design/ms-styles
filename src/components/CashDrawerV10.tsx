@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronRight } from '../icons/Feather';
+import { ArrowDownLeft, ArrowUpRight, ChevronRight, X } from '../icons/Feather';
 import { Amount, Pills } from './ui';
 import { V10_CASH_DETAIL, type CashDetail, type CashKind, type CashRow } from '../data/cashV10';
 
@@ -101,7 +101,7 @@ export function CashDrawerV10({
             <span className="drawer__sub">{d.sub}</span>
           </div>
           <button type="button" className="drawer__close" aria-label="Zamknij" onClick={onClose}>
-            ✕
+            <X size={18} />
           </button>
         </div>
 
@@ -213,7 +213,7 @@ export function CashDrawerV10({
                       <li className={`cdr__row ${r.dir ? `cdr__row--${r.dir}` : ''}`} key={i}>
                         {r.dir && (
                           <span className="cdr__dir" aria-label={r.dir === 'in' ? 'Przychodzące' : 'Wychodzące'}>
-                            {r.dir === 'in' ? '↓' : '↑'}
+                            {r.dir === 'in' ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
                           </span>
                         )}
                         <div className="cdr__rowMain">
