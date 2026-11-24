@@ -2490,3 +2490,33 @@ select.field__control {
   border-bottom: 0; border-top: 0; padding-top: 14px; padding-bottom: 14px; background: transparent;
 }
 .corpShell__row { padding: 14px 20px; }
+
+/* ================= nr 10: podsumowanie obligacji — mniej na raz =================
+   Cztery metryki wyniku w jednej linii, bez szarych kafelkow, rozdzielone
+   pionowa kreska. Metryki portfela rozwijaja sie pod nimi w tej samej siatce. */
+.corpKpis { display: grid; grid-template-columns: repeat(4, 1fr); }
+.corpKpi { display: flex; flex-direction: column; gap: 4px; padding: 4px 24px; min-width: 0; }
+.corpKpi:first-child { padding-left: 0; }
+.corpKpi + .corpKpi { box-shadow: inset 1px 0 0 var(--divider); }
+.corpKpi__label { font-size: 13px; line-height: 20px; color: var(--muted); }
+.corpKpi__value { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.corpKpi__value--pos { color: var(--c-corp); }
+.corpKpi__sub { font-size: 13px; line-height: 18px; color: var(--muted); }
+.corpKpis--more { padding-top: 20px; }
+.corpKpis--more .corpKpi__value { font-size: 15px; line-height: 22px; }
+/* Rozwijanie wysokoscia przez grid-template-rows — bez mierzenia w JS. */
+.corpMore { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 260ms var(--ease), opacity 200ms var(--ease); opacity: 0; }
+.corpMore.is-open { grid-template-rows: 1fr; opacity: 1; }
+.corpMore__clip { overflow: hidden; min-height: 0; }
+.corpSummary { gap: 20px; }
+.corpSummary__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.corpMore__toggle {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; margin-right: -12px;
+  border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink);
+  transition: background 140ms var(--ease);
+}
+.corpMore__toggle:hover { background: var(--row-hover); }
+.corpMore__toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.corpMore__chev { color: var(--muted); transition: transform 200ms var(--ease); }
+.corpMore__toggle[aria-expanded='true'] .corpMore__chev { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .corpMore, .corpMore__chev { transition: none; } }

@@ -100,18 +100,21 @@ function Summary({ currency }: { currency: Currency }) {
     { label: 'Najbliższy wykup', value: p.najblizszyWykup },
   ];
 
-  const kafelek = (m: Metric) => (
-    <div className="resultStat" key={m.label}>
-      <span className="resultStat__label">{m.label}</span>
-      <span className={`resultStat__value ${m.positive ? 'resultStat__value--pos' : ''}`}>
-        {m.value}
-      </span>
-      {m.sub && <span className="resultStat__sub">{m.sub}</span>}
+  /* Czysciej: na wierzchu tylko cztery metryki wyniku, w jednej linii bez
+     kafelkow (wzorzec „Your position” z Origin/Quicken). Metryki portfela
+     chowaja sie pod „Więcej szczegółów” w stopce — rozwijaja sie w tej samej
+     siatce, wiec kolumny stoja pod kolumnami. */
+  const [open, setOpen] = useState(false);
+  const kpi = (m: Metric) => (
+    <div className="corpKpi" key={m.label}>
+      <span className="corpKpi__label">{m.label}</span>
+      <span className={`corpKpi__value ${m.positive ? 'corpKpi__value--pos' : ''}`}>{m.value}</span>
+      {m.sub && <span className="corpKpi__sub">{m.sub}</span>}
     </div>
   );
 
   return (
-    <section className="resultCard">
+    <section className="resultCard corpSummary">
       <div className="resultCard__lead">
         <span className="resultCard__caption">Wartość bieżąca</span>
         <div className="resultCard__amountRow">
@@ -126,18 +129,36 @@ function Summary({ currency }: { currency: Currency }) {
       </div>
 
       <div className="divider" />
-      <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
+      <div className="corpKpis">{wynikowe.map(kpi)}</div>
 
-      <div className="resultCard__stats">{portfelowe.map(kafelek)}</div>
+      <div className={`corpMore ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+        <div className="corpMore__clip">
+          <div className="corpKpis corpKpis--more" id="corpMoreDetails">
+            {portfelowe.map(kpi)}
+          </div>
+        </div>
+      </div>
 
       <div className="divider" />
-      <div className="corpCounters">
-        {liczniki.map((c) => (
-          <span className="corpCounter" key={c.label}>
-            {c.label}
-            <strong>{c.value}</strong>
-          </span>
-        ))}
+      <div className="corpSummary__foot">
+        <div className="corpCounters">
+          {liczniki.map((c) => (
+            <span className="corpCounter" key={c.label}>
+              {c.label}
+              <strong>{c.value}</strong>
+            </span>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="corpMore__toggle"
+          aria-expanded={open}
+          aria-controls="corpMoreDetails"
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? 'Mniej szczegółów' : 'Więcej szczegółów'}
+          <ChevronDown size={14} className="corpMore__chev" />
+        </button>
       </div>
     </section>
   );
