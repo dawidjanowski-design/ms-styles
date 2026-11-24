@@ -16,7 +16,6 @@ import {
   CORP_SERIES_DETAIL,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
-  CORP_STRUCTURE_NOTE,
   CORP_STRUCTURE_SUB,
   CORP_WIDGETS,
   type Metric,
@@ -317,8 +316,8 @@ function Structure({
           </button>
         </div>
       </div>
-      {/* Test: tabela w wrapperze — biala karta z wierszami siedzi w szarej
-          skorupie, a podsumowanie i notka schodza pod nia na szare tlo. */}
+      {/* Tabela w wrapperze — biala karta z wierszami siedzi w szarej
+          skorupie, a podsumowanie schodzi pod nia na szare tlo. */}
       <div className={`corpCard ${p.pusto ? '' : 'corpShell'}`}>
         {p.pusto ? (
           <p className="corpEmpty">
@@ -364,7 +363,6 @@ function Structure({
                   true
                 )}
               </div>
-              <p className="corpShell__note">{CORP_STRUCTURE_NOTE}</p>
             </div>
           </>
         )}
@@ -588,8 +586,8 @@ function Closed() {
         </div>
         <Select label="Od początku" />
       </div>
-      <div className="corpCard">
-
+      <div className="corpCard corpShell">
+        <div className="corpShell__inner">
         <div className="closedTable">
           <div className="closedRow closedRow--head">
             <span>Emitent i seria</span>
@@ -617,6 +615,10 @@ function Closed() {
               <span className="is-num">{r.irr}</span>
             </div>
           ))}
+        </div>
+        </div>
+        <div className="corpShell__foot">
+        <div className="closedTable">
           <div className="closedRow closedRow--total">
             <span className="closedRow__name">
               {CORP_CLOSED_TOTAL.name}
@@ -630,7 +632,7 @@ function Closed() {
             <span className="is-num">{CORP_CLOSED_TOTAL.irr}</span>
           </div>
         </div>
-
+        </div>
       </div>
     </section>
   );
@@ -655,8 +657,8 @@ function Ops() {
           </button>
         </div>
       </div>
-      <div className="corpCard">
-
+      <div className="corpCard corpShell">
+        <div className="corpShell__inner">
         <div className="opsTable">
           <div className="opsRow opsRow--head">
             <span>Data</span>
@@ -678,13 +680,15 @@ function Ops() {
             </div>
           ))}
         </div>
-
-        <div className="corpSection__foot">
-          <span className="corpNote">{CORP_OPS_FOOT}</span>
-          <span className="corpLink">
-            Zobacz wszystkie w Operacjach
-            <ChevronRight size={14} />
-          </span>
+        </div>
+        <div className="corpShell__foot">
+          <div className="corpSection__foot corpShell__row">
+            <span className="corpNote">{CORP_OPS_FOOT}</span>
+            <span className="corpLink">
+              Zobacz wszystkie w Operacjach
+              <ChevronRight size={14} />
+            </span>
+          </div>
         </div>
       </div>
     </section>

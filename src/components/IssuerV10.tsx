@@ -57,8 +57,8 @@ function SeriesTable({
         </div>
         <Select label="Wykup rosnąco" />
       </div>
-      <div className="corpCard">
-
+      <div className="corpCard corpShell">
+        <div className="corpShell__inner">
         <div className="issTable">
           <div className="issRow issRow--head">
             <span>Seria</span>
@@ -119,7 +119,10 @@ function SeriesTable({
               </div>
             );
           })}
-
+        </div>
+        </div>
+        <div className="corpShell__foot">
+        <div className="issTable">
           <div className="issRow issRow--total">
             <span>Razem · {odmiana(serie.length, SERIE)}</span>
             <span className="is-num">{e.sztuk}</span>
@@ -128,6 +131,7 @@ function SeriesTable({
             <span className="is-num">{kwota(e.value, 'PLN')}</span>
             <span className="is-num">{odmiana(e.rachunki, RACHUNKI)}</span>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -273,8 +277,8 @@ export function IssuerV10({
                 </div>
                 <Select label="Od początku" />
               </div>
-              <div className="corpCard">
-
+              <div className="corpCard corpShell">
+                <div className="corpShell__inner">
                 <div className="closedTable">
                   <div className="closedRow closedRow--issuer closedRow--head">
                     <span>Seria</span>
@@ -301,6 +305,7 @@ export function IssuerV10({
                     </div>
                   ))}
                 </div>
+                </div>
               </div>
             </section>
           )}
@@ -319,8 +324,8 @@ export function IssuerV10({
                 </button>
               </div>
             </div>
-            <div className="corpCard">
-
+            <div className="corpCard corpShell">
+              <div className="corpShell__inner">
               <div className="opsTable">
                 <div className="opsRow opsRow--head">
                   <span>Data</span>
@@ -344,6 +349,7 @@ export function IssuerV10({
                     </div>
                   );
                 })}
+              </div>
               </div>
             </div>
           </section>
