@@ -598,11 +598,9 @@ function ResultSection({ ranges = RESULT_RANGES }: { ranges?: typeof RESULT_RANG
           <span className={`rp__rate ${/^\d/.test(data.rate) && data.rate !== '0,00%' ? 'rp__rate--pos' : ''}`}>
             {/^\d/.test(data.rate) ? `+${data.rate}` : data.rate}
           </span>
-          <button type="button" className="btnAction rp__btn">
+          <button type="button" className="btn btn--ghost rp__btn">
             Pogłębiona analiza wyniku
-            <span className="btnAction__chev" aria-hidden="true">
-              <ChevronRight size={16} />
-            </span>
+            <ChevronRight size={16} className="rp__btnChev" />
           </button>
         </div>
         <div className="rp__change">
