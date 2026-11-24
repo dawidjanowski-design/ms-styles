@@ -2339,3 +2339,59 @@ select.field__control {
 .legendRow--zero { opacity: 0.45; }
 
 .appHeader__slot:empty { display: none; }
+
+/* ================= nr 10: szuflady kart gotowki =================
+   Mechanika z review (11f): suma, rachunki, pozycje. Tokeny nr 10. */
+.drawer.cdr { width: 520px; padding: 28px 32px 32px; gap: 0; }
+.drawer.cdr > * { flex: none; }
+.cdr .drawer__head { margin-bottom: 20px; }
+.cdr__sum {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 18px 20px; border-radius: 14px; background: var(--screen-bg);
+  margin-bottom: 24px;
+}
+.cdr__sumLabel { font-size: 13px; color: var(--muted); }
+.cdr__break { display: flex; flex-direction: column; margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--divider); }
+.cdr__breakRow { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; color: var(--muted); }
+.cdr__breakVal { color: var(--ink); font-variant-numeric: tabular-nums; }
+/* Grupa = karta z szarym naglowkiem, jak w review. */
+.cdr__group {
+  border-radius: 14px; overflow: hidden; background: var(--card-bg);
+  box-shadow: inset 0 0 0 1px var(--divider);
+}
+.cdr__group + .cdr__group { margin-top: 12px; }
+.cdr__gHead {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; background: var(--screen-bg);
+}
+.cdr__gHead--link { cursor: pointer; transition: background 140ms var(--ease); }
+.cdr__gHead--link:hover { background: var(--nav-active-bg); }
+.cdr__gTitle { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cdr__gName { font-size: 14px; font-weight: 500; color: var(--ink); }
+.cdr__gMeta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cdr__gTotal { font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cdr__rows { margin: 0; padding: 0 18px; list-style: none; }
+.cdr__row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; }
+.cdr__row + .cdr__row { border-top: 1px solid var(--divider); }
+.cdr__row--link {
+  margin: 0 -18px; padding-left: 18px; padding-right: 14px; align-items: center;
+  cursor: pointer; transition: background 140ms var(--ease);
+}
+.cdr__row--link:hover { background: var(--nav-active-bg); }
+.cdr__dir {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 999px;
+  font-size: 13px; background: var(--screen-bg); color: var(--muted);
+}
+.cdr__row--in .cdr__dir { background: var(--c-corp-bg); color: var(--c-corp); }
+.cdr__rowMain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cdr__rowTitle { font-size: 14px; line-height: 20px; color: var(--ink); }
+.cdr__rowMeta { font-size: 13px; line-height: 18px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cdr__rowAmt { flex: none; font-size: 14px; line-height: 20px; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cdr__row--in .cdr__rowAmt { color: var(--c-corp); }
+.cdr__chev { flex: none; color: var(--muted); transition: transform 140ms var(--ease), color 140ms var(--ease); }
+:is(.cdr__row--link, .cdr__gHead--link):hover .cdr__chev { color: var(--ink); transform: translateX(2px); }
+:is(.cdr__row--link, .cdr__gHead--link):focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.cdr__note { margin-top: 24px; }
+.cashCard--link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 560px) { .drawer.cdr { padding: 22px 20px 24px; } }

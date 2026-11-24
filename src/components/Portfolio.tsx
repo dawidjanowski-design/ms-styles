@@ -28,6 +28,8 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
+import { CashDrawerV10 } from './CashDrawerV10';
+import type { CashKind } from '../data/cashV10';
 import { ChevronRight, Menu, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
@@ -306,9 +308,12 @@ function CashOverview({
   zeroAsNumber = false,
   actions = false,
   keepEmpty = false,
+  onOpenCash,
 }: {
   cards: CashCard[];
   onOpenTransit?: () => void;
+  /** nr 10: kazda karta otwiera swoja szuflade */
+  onOpenCash?: (label: string) => void;
   /** nr 5 (Figma 997:519) pisze puste saldo jako 0,00, a nie myslnikiem */
   zeroAsNumber?: boolean;
   /** nr 10: wplata, wyplata i transfer stoja przy gotowce, a nie w menu */
@@ -341,14 +346,23 @@ function CashOverview({
       )}
       <div className="cash__grid">
         {visible.map((card, i) => {
-          const link = onOpenTransit && card.label === 'Środki w drodze';
+          const cashLink = onOpenCash && !isEmpty(card);
+          const open = cashLink
+            ? () => onOpenCash(card.label)
+            : onOpenTransit && card.label === 'Środki w drodze'
+              ? onOpenTransit
+              : undefined;
+          const link = !!open;
           return (
           <article
             className={`cashCard ${link ? 'cashCard--link' : ''} ${
               keepEmpty && isEmpty(card) ? 'cashCard--empty' : ''
             }`}
             key={i}
-            onClick={link ? onOpenTransit : undefined}
+            role={cashLink ? 'button' : undefined}
+            tabIndex={cashLink ? 0 : undefined}
+            onClick={open}
+            onKeyDown={cashLink ? (e) => e.key === 'Enter' && open?.() : undefined}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span className="cashCard__head">
@@ -1077,6 +1091,8 @@ export function PortfolioScreen({
   }, [styleId, compact, menuOpen]);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
+  /* Nr 10: otwarta szuflada karty gotowki. */
+  const [cashKind, setCashKind] = useState<CashKind | null>(null);
 
   const data = VIEWS[currency];
   /* Nr 10 bierze udzialy i wiersz gotowki wprost z wireframe'u — ale tylko
@@ -1163,6 +1179,7 @@ export function PortfolioScreen({
           <CashOverview
             cards={data.cashCards}
             onOpenTransit={transitHandler}
+            onOpenCash={styleId === '10' ? (l) => setCashKind(l as CashKind) : undefined}
             zeroAsNumber={styleId === '5'}
             actions={styleId === '10'}
             /* Eksperyment: w EUR zostaja wszystkie trzy karty, puste z zerem
@@ -1230,6 +1247,18 @@ export function PortfolioScreen({
       </div>
 
       <InTransitDrawer open={transit} onClose={() => setTransit(false)} />
+      {styleId === '10' && (
+        <CashDrawerV10
+          kind={cashKind}
+          currency={currency}
+          onClose={() => setCashKind(null)}
+          onOpenAccount={(id) => {
+            setCashKind(null);
+            onOpenAccount(id);
+          }}
+          canOpen={(id) => !!V10_ACCOUNT_DETAIL[id]}
+        />
+      )}
     </div>
   );
 }
