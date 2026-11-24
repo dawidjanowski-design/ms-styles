@@ -451,8 +451,8 @@ export const V10_ASSETS_NOTE =
 
 /** Akcje gotowkowe na Portfelu nr 10: wplata i wyplata. Przeniesienie
  *  miedzy rachunkami zostaje na karcie rachunku. */
-export const V10_CASH_ACTIONS: { label: string; ghost: boolean }[] = [
-  { label: 'Wpłać', ghost: false },
+export const V10_CASH_ACTIONS: { label: string; ghost: boolean; primary?: boolean }[] = [
+  { label: 'Wpłać', ghost: false, primary: true },
   { label: 'Przelej', ghost: false },
 ];
 

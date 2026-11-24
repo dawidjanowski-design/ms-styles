@@ -343,7 +343,7 @@ function CashOverview({
               <button
                 key={a.label}
                 type="button"
-                className={`btn ${a.ghost ? 'btn--ghost' : ''}`}
+                className={`btn ${a.ghost ? 'btn--ghost' : ''} ${a.primary ? 'btn--primary' : ''}`}
               >
                 {a.label}
               </button>

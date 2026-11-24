@@ -2437,3 +2437,33 @@ select.field__control {
 .clientSw__name { font-size: 14px; font-weight: 500; color: var(--ink); }
 .clientSw__note { font-size: 13px; color: var(--muted); }
 .clientSw__check { width: 16px; font-size: 13px; color: var(--ink); text-align: center; }
+
+/* ================= nr 10: glowny przycisk — grafit =================
+   Jeden na ekran (Wplac na Portfelu, Przejdz do portfela na Pulpicie).
+   Ten sam stos cieni co biale przyciski — miekki cien pod spodem, cienki
+   obrys i jasna krawedz u gory od srodka — tylko przelozony na ciemne tlo.
+   Reszta przyciskow zostaje biala. */
+[data-style='10'] {
+  --primary-bg: linear-gradient(180deg, #3b3c40 0%, #2b2c30 100%);
+  --primary-bg-hover: linear-gradient(180deg, #46474c 0%, #333438 100%);
+  --primary-fg: #f6f6f7;
+  --primary-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(24, 24, 27, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 6px 12px -6px rgba(24, 24, 27, 0.35);
+  --primary-shadow-press: 0 0 0 1px rgba(24, 24, 27, 0.9), inset 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+[data-style='10'] :is(.btn--primary, .btnAction--primary) {
+  background: var(--primary-bg); color: var(--primary-fg);
+  box-shadow: var(--primary-shadow);
+  transition: background 140ms var(--ease), box-shadow 140ms var(--ease), transform 140ms var(--ease);
+}
+[data-style='10'] :is(.btn--primary, .btnAction--primary):hover {
+  background: var(--primary-bg-hover); color: var(--primary-fg);
+}
+[data-style='10'] :is(.btn--primary, .btnAction--primary):active {
+  box-shadow: var(--primary-shadow-press); transform: translateY(0.5px);
+}
+[data-style='10'] :is(.btn--primary, .btnAction--primary):focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 2px;
+}
+[data-style='10'] .btnAction--primary .btnAction__chev { color: rgba(255, 255, 255, 0.6); }

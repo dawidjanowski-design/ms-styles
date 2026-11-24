@@ -478,7 +478,12 @@ export function DashboardScreen({
                 </span>
                 <Amount int={total.total} dec={total.decimals} />
               </div>
-              <button type="button" className="btnAction" onClick={onOpenPortfolio}>
+              <button
+                type="button"
+                /* Nr 10: jedyna glowna akcja pulpitu — grafit. */
+                className={`btnAction ${styleId === '10' ? 'btnAction--primary' : ''}`}
+                onClick={onOpenPortfolio}
+              >
                 {DASHBOARD.action}
                 <span className="btnAction__chev" aria-hidden="true">
                   <Chevron dir="right" weight={1.5} />
