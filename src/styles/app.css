@@ -2517,10 +2517,14 @@ select.field__control {
    Dwie kolumny: wynik z XIRR i rachunek zmiany wartosci. Wiersze po prawej
    z wieksza interlinia niz w review (10 px zamiast 6 px w pionie). */
 .resultCard.rp {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0;
+  /* Lewa kolumna wezsza (5:7) — wynik i XIRR to dwie liczby, rachunek po
+     prawej to piec wierszy. Przycisk siedzi na dole, na wysokosci wartosci
+     koncowej, wiec obie kolumny koncza sie razem. */
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0;
   padding: 28px 32px;
 }
-.rp__lead { display: flex; flex-direction: column; padding-right: 36px; }
+.rp__lead { display: flex; flex-direction: column; padding-right: 40px; }
+.rp__rate { margin-bottom: 24px; }
 .rp__label { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink); }
 .rp__amount { margin-top: 12px; white-space: nowrap; }
 .rp__amount .amount__int { font-size: 42px; line-height: 50px; font-weight: 500; letter-spacing: -0.03em; color: var(--ink); }
@@ -2528,11 +2532,11 @@ select.field__control {
 .rp__rateLabel { margin-top: 24px; font-size: 13px; line-height: 20px; color: var(--muted); }
 .rp__rate { margin-top: 2px; font-size: 26px; line-height: 32px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .rp__rate--pos { color: var(--c-corp); }
-.rp__btn { align-self: flex-start; margin-top: 24px; margin-left: -16px; padding: 0 14px 0 16px; gap: 4px; }
+.rp__btn { align-self: flex-start; margin-top: auto; margin-bottom: -8px; margin-left: -16px; padding: 0 14px 0 16px; gap: 4px; }
 /* Ghost bez obrysu wyrownuje tekst z kolumna, tlo pojawia sie dopiero na hover. */
 .rp__btnChev { color: var(--muted); transition: transform 140ms var(--ease); }
 .rp__btn:hover .rp__btnChev { transform: translateX(2px); color: var(--ink); }
-.rp__change { display: flex; flex-direction: column; padding-left: 36px; box-shadow: inset 1px 0 0 var(--divider); }
+.rp__change { display: flex; flex-direction: column; padding-left: 40px; box-shadow: inset 1px 0 0 var(--divider); }
 .rp__changeHead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .rp__cur { font-size: 13px; color: var(--muted); }
 .rp__rows { margin: 0; display: flex; flex-direction: column; }
