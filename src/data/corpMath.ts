@@ -17,7 +17,7 @@ type Pole = 'value' | 'nominal' | 'interest12m' | 'result12m';
 
 /* W widoku jednowalutowym pokazujemy kwoty w tej walucie, a nie ich
    przeliczenie: klient trzyma tam EUR i chce widziec EUR. */
-const w = (s: Serie, pole: Pole, waluta: Currency): number => {
+export const w = (s: Serie, pole: Pole, waluta: Currency): number => {
   if (waluta === 'Łącznie' || s.cur === 'PLN') return s[pole];
   const po = (
     { value: 'curValue', nominal: 'curNominal', interest12m: 'curInterest12m', result12m: 'curResult12m' } as const

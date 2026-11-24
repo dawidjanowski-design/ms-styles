@@ -31,6 +31,7 @@ import {
 } from '../data/corpMath';
 import { CURRENCIES, type Currency } from '../data/currencies';
 import { Amount, Pills } from './ui';
+import { CorpFullTableV10 } from './CorpFullTableV10';
 import {
   Check,
   ChevronDown,
@@ -183,6 +184,8 @@ function Structure({
   /* Kolumna wartosci ma dwie metryki — biezaca i nominalna. */
   const [metric, setMetric] = useState<'value' | 'nominal'>('value');
   const [menu, setMenu] = useState(false);
+  /* „Pełna tabela” — wszystkie kolumny serii na calym ekranie. */
+  const [full, setFull] = useState(false);
 
   const p = podsumowanie(currency);
   const rows = wiersze(currency, grouping);
@@ -331,12 +334,19 @@ function Structure({
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
-          <button type="button" className="btn">
+          <button type="button" className="btn" onClick={() => setFull(true)}>
             <Maximize2 size={14} />
             Pełna tabela
           </button>
         </div>
       </div>
+      <CorpFullTableV10
+        open={full}
+        currency={currency}
+        onClose={() => setFull(false)}
+        onOpenIssuer={onOpenIssuer}
+        onOpenSeries={onOpenSeries}
+      />
       {/* Tabela w wrapperze — biala karta z wierszami siedzi w szarej
           skorupie, a podsumowanie schodzi pod nia na szare tlo. */}
       <div className={`corpCard ${p.pusto ? '' : 'corpShell'}`}>
