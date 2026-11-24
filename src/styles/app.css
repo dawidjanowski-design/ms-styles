@@ -2565,3 +2565,14 @@ select.field__control {
 [data-style='10'] .content--airy { gap: 40px; }
 /* Okruszki zostaja przy tytule ekranu (jak wczesniej, 24 px). */
 [data-style='10'] .content--airy > .crumbs + * { margin-top: -16px; }
+
+/* Szuflady gotowki: grupa rachunku w tym samym jezyku co tabele obligacji —
+   szara skorupa z obrysem, naglowek rachunku na szarym, pozycje w bialej
+   karcie z tym samym obrysem. */
+.cdr__group { background: var(--shell-bg); box-shadow: inset 0 0 0 1px var(--shell-line); overflow: visible; }
+.cdr__gHead { background: transparent; border-radius: var(--card-radius) var(--card-radius) 0 0; }
+.cdr__gHead--link:hover { background: rgba(0, 0, 0, 0.03); }
+.cdr__rows {
+  background: var(--card-bg); border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--shell-line), 0 1px 2px rgba(0, 0, 0, 0.04);
+}

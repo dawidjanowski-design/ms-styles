@@ -23,7 +23,6 @@ const fmt = (v: number, cur: string, signed = false) => {
 };
 /* W widoku lacznym wszystko w PLN: pozycje walutowe licza sie po rownowartosci. */
 const inPln = (r: CashRow) => (r.cur === 'PLN' ? parse(r.amount) : Math.sign(parse(r.amount)) * parse(r.sub));
-const odmiana = (n: number) => (n === 1 ? 'rachunek' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 'rachunki' : 'rachunków');
 
 export function CashDrawerV10({
   kind,
@@ -111,7 +110,7 @@ export function CashDrawerV10({
             {all ? '' : ` w ${currency}`}
           </span>
           <Amount int={int} dec={dec} />
-          {all && byCur.length > 1 && kind !== 'Wolna gotówka' && (
+          {all && byCur.length > 1 && (
             <div className="cdr__break">
               {byCur.map((g) => (
                 <div className="cdr__breakRow" key={g.cur}>
@@ -137,54 +136,9 @@ export function CashDrawerV10({
           </p>
         )}
 
-        {/* Wolna gotowka: grupy walutowe, w kazdej rachunki z saldem. */}
-        {kind === 'Wolna gotówka' &&
-          byCur.map((g) => {
-            const pln = g.cur === 'PLN' ? 0 : g.rows.reduce((t, x) => t + parse(x.r.sub), 0);
-            return (
-              <section className="cdr__group" key={g.cur}>
-                <div className="cdr__gHead">
-                  <div className="cdr__gTitle">
-                    <span className="cdr__gName">{g.cur}</span>
-                    <span className="cdr__gMeta">
-                      {g.rows.length} {odmiana(g.rows.length)}
-                      {pln ? ` · równowartość ${fmt(pln, 'PLN')}` : ''}
-                    </span>
-                  </div>
-                  <span className="cdr__gTotal">{fmt(g.rows.reduce((t, x) => t + parse(x.r.amount), 0), g.cur)}</span>
-                </div>
-                <div className="cdr__rows">
-                  {g.rows.map(({ a, r }) => {
-                    const open = go(a.id);
-                    return (
-                      <div
-                        className={`cdr__row ${open ? 'cdr__row--link' : ''}`}
-                        key={a.id + r.cur}
-                        role={open ? 'link' : undefined}
-                        tabIndex={open ? 0 : undefined}
-                        onClick={open}
-                        onKeyDown={open ? (e) => e.key === 'Enter' && open() : undefined}
-                      >
-                        <div className="cdr__rowMain">
-                          <span className="cdr__rowTitle">{a.name}</span>
-                          <span className="cdr__rowMeta">
-                            {a.number}
-                            {r.cur === 'PLN' ? '' : `/${r.cur}`}
-                          </span>
-                        </div>
-                        <span className="cdr__rowAmt">{r.amount}</span>
-                        {open && <ChevronRight size={16} className="cdr__chev" />}
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            );
-          })}
-
-        {/* Zablokowana i w drodze: rachunki, pod kazdym jego pozycje. */}
-        {kind !== 'Wolna gotówka' &&
-          accounts.map((a) => {
+        {/* Wszystkie trzy szuflady tak samo: rachunek w szarej skorupie (jak tabele
+            w obligacjach), pod nim biala karta z jego pozycjami. */}
+        {accounts.map((a) => {
             const open = go(a.id);
             return (
               <section className="cdr__group" key={a.id}>
@@ -229,7 +183,7 @@ export function CashDrawerV10({
             );
           })}
 
-        {d.note && (all || kind !== 'Wolna gotówka') && <p className="drawer__note cdr__note">{d.note}</p>}
+        {d.note && <p className="drawer__note cdr__note">{d.note}</p>}
       </aside>
     </div>
   );
