@@ -153,7 +153,21 @@ export function CashDrawerV10({
                     <span className="cdr__gName">{a.name}</span>
                     <span className="cdr__gMeta">{a.number}</span>
                   </div>
-                  <span className="cdr__gTotal">{fmt(sumOf(a.rows), unit, signed)}</span>
+                  {/* Rachunek z kilkoma walutami: suma osobno w kazdej, jedna pod druga. */}
+                  {(() => {
+                    const curs = CURS.filter((c) => a.rows.some((r) => r.cur === c));
+                    return all && curs.length > 1 ? (
+                      <span className="cdr__gTotal cdr__gTotal--stack">
+                        {curs.map((c) => (
+                          <span key={c}>
+                            {fmt(a.rows.filter((r) => r.cur === c).reduce((t, r) => t + parse(r.amount), 0), c, signed)}
+                          </span>
+                        ))}
+                      </span>
+                    ) : (
+                      <span className="cdr__gTotal">{fmt(sumOf(a.rows), unit, signed)}</span>
+                    );
+                  })()}
                   {open && <ChevronRight size={16} className="cdr__chev" />}
                 </div>
                 <ul className="cdr__rows">

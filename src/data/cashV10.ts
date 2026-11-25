@@ -87,7 +87,7 @@ export const V10_CASH_DETAIL: Record<CashKind, CashDetail> = {
     ],
   },
   'Środki w drodze': {
-    sub: `7 transakcji w rozliczeniu · ${STAN}`,
+    sub: `8 transakcji w rozliczeniu · ${STAN}`,
     note: 'Środki w drodze nie są dostępne do nowych dyspozycji. Przychodzące pojawią się jako wolna gotówka, wychodzące jako instrumenty — po rozliczeniu transakcji.',
     accounts: [
       {
@@ -97,7 +97,9 @@ export const V10_CASH_DETAIL: Record<CashKind, CashDetail> = {
         rows: [
           { cur: 'PLN', date: '18.11', dir: 'in', title: 'VEHIS, seria M · sprzedaż obligacji', amount: '+ 26 500,00 PLN' },
           { cur: 'PLN', date: '19.11', dir: 'out', title: 'Michael / Ström SA, seria K · opłacenie zapisu', amount: '− 15 000,00 PLN' },
-          { cur: 'EUR', date: '19.11', dir: 'in', title: 'Rockbridge FIZ · wykup certyfikatów', amount: '+ 3 500,00 EUR', sub: '15 118,00 PLN' },
+          { cur: 'EUR', date: '19.11', dir: 'in', title: 'Rockbridge FIZ · wykup certyfikatów', amount: '+ 6 500,00 EUR', sub: '28 076,00 PLN' },
+          /* Wychodzace EUR: per saldo w drodze dalej 3 500 EUR (15 118 PLN), jak na karcie. */
+          { cur: 'EUR', date: '20.11', dir: 'out', title: 'Cavatina Holding, seria P2026B · kupno obligacji', amount: '− 3 000,00 EUR', sub: '12 958,00 PLN' },
         ],
       },
       {
