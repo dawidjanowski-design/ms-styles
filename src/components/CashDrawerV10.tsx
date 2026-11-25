@@ -174,7 +174,7 @@ export function CashDrawerV10({
                   {a.rows.map((r, i) => {
                     const [head, ...rest] = r.title.split(' · ');
                     const what = rest.join(' · ');
-                    const meta = [r.tag, what && what[0].toUpperCase() + what.slice(1), r.date, r.sub && (r.cur === 'PLN' ? r.sub : `≈ ${r.sub}`)]
+                    const meta = [r.tag, what && what[0].toUpperCase() + what.slice(1), r.date, r.cur === 'PLN' && r.sub]
                       .filter(Boolean)
                       .join(' · ');
                     return (
@@ -188,7 +188,11 @@ export function CashDrawerV10({
                           <span className="cdr__rowTitle">{head}</span>
                           {meta && <span className="cdr__rowMeta">{meta}</span>}
                         </div>
-                        <span className="cdr__rowAmt">{r.amount}</span>
+                        {/* Kwota walutowa: przeliczenie na PLN drobno pod kwota, nie w opisie. */}
+                        <span className="cdr__rowAmt">
+                          {r.amount}
+                          {r.cur !== 'PLN' && r.sub && <span className="cdr__rowAmtSub">≈ {r.sub}</span>}
+                        </span>
                       </li>
                     );
                   })}
