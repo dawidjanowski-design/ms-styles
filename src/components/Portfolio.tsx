@@ -633,6 +633,22 @@ function ResultSection({ ranges = RESULT_RANGES }: { ranges?: typeof RESULT_RANG
 
 const isDate = (m: Metric) => /^\d{2}\.\d{2}\.\d{4}$/.test(m.value);
 
+/* Nr 10 (review 11f): przy wynikach i stopach zwrotu strzalka zamiast znaku
+   +/−. Trojkat w gore zielony, w dol czerwony; liczba zostaje w kolorze tekstu. */
+function TrendValue({ value, on }: { value: string; on: boolean }) {
+  const m = on ? /^\s*([+−-])\s*(.*)$/.exec(value) : null;
+  if (!m) return <>{value}</>;
+  const up = m[1] === '+';
+  return (
+    <span className={`trend trend--${up ? 'up' : 'down'}`}>
+      <svg className="trend__icon" width={10} height={10} viewBox="0 0 10 10" role="img" aria-label={up ? 'wzrost' : 'spadek'}>
+        <path d={up ? 'M5 1.5 9 7.5H1z' : 'M5 8.5 1 2.5h8z'} fill="currentColor" />
+      </svg>
+      {m[2]}
+    </span>
+  );
+}
+
 function AssetCard({
   asset,
   styleId,
@@ -707,7 +723,9 @@ function AssetCard({
           {lead && (
             <div className="metricLead">
               <span className="metric__label">{lead.label}</span>
-              <span className="metricLead__value">{lead.value}</span>
+              <span className="metricLead__value">
+                <TrendValue value={lead.value} on={styleId === '10'} />
+              </span>
             </div>
           )}
           {grid.length > 0 && (
@@ -715,7 +733,9 @@ function AssetCard({
               {grid.map((r) => (
                 <div className="metric" key={r.label}>
                   <span className="metric__label">{r.label}</span>
-                  <span className="metric__value">{r.value}</span>
+                  <span className="metric__value">
+                    <TrendValue value={r.value} on={styleId === '10'} />
+                  </span>
                 </div>
               ))}
             </div>

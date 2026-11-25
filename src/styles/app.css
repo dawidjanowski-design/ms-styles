@@ -2653,3 +2653,9 @@ select.field__control {
 .ftGroup .ftRow--nested:last-child { padding-bottom: 14px; }
 .ftRow--total { font-weight: 500; border-bottom: 0; padding-top: 14px; padding-bottom: 14px; }
 .ftRow--total .ftRow__sub { font-weight: 400; }
+
+/* Nr 10: wyniki i stopy zwrotu na kartach aktywow — strzalka zamiast +/− (review 11f). */
+.trend { display: inline-flex; align-items: center; gap: 6px; }
+.trend__icon { flex: none; }
+.trend--up .trend__icon { color: var(--c-corp); }
+.trend--down .trend__icon { color: #c0392b; }
