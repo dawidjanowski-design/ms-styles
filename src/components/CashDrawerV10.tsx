@@ -174,7 +174,7 @@ export function CashDrawerV10({
                   {a.rows.map((r, i) => {
                     const [head, ...rest] = r.title.split(' · ');
                     const what = rest.join(' · ');
-                    const meta = [r.tag, what && what[0].toUpperCase() + what.slice(1), r.date, r.sub && (r.cur === 'PLN' ? r.sub : `równowartość ${r.sub}`)]
+                    const meta = [r.tag, what && what[0].toUpperCase() + what.slice(1), r.date, r.sub && (r.cur === 'PLN' ? r.sub : `≈ ${r.sub}`)]
                       .filter(Boolean)
                       .join(' · ');
                     return (
