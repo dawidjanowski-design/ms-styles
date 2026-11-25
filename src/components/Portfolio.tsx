@@ -366,7 +366,7 @@ function CashOverview({
           <article
             className={`cashCard ${link ? 'cashCard--link' : ''} ${
               keepEmpty && isEmpty(card) ? 'cashCard--empty' : ''
-            }`}
+            } ${onOpenCash && card.label === 'Wolna gotówka' ? 'cashCard--free' : ''}`}
             key={i}
             role={cashLink ? 'button' : undefined}
             tabIndex={cashLink ? 0 : undefined}
