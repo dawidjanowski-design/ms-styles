@@ -523,13 +523,13 @@ function V10AccountCard({
    IKZE albo sie ma, albo nie. */
 function V10AddTile({ title, sub }: { title: string; sub: string }) {
   return (
-    <article className="v10Add">
+    <button type="button" className="v10Add">
       <span className="v10Add__plus">
         <Plus size={18} />
       </span>
       <span className="v10Add__title">{title}</span>
       <span className="v10Add__sub">{sub}</span>
-    </article>
+    </button>
   );
 }
 
