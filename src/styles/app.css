@@ -2698,3 +2698,7 @@ select.field__control {
 .v10Add:hover .v10Add__plus { background: var(--ink); color: var(--card-bg); transform: scale(1.04); }
 .v10Add:active .v10Add__plus { transform: scale(0.96); }
 .v10Add:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* Nr 10: znacznik w legendzie wykresu to ta sama kreska co na kartach
+   aktywow (4 x 16, zaokraglona), nie kropka. */
+[data-style='10'] .legendRow__dot { width: 4px; height: 16px; border-radius: 4px; }
