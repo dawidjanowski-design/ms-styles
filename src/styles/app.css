@@ -2677,19 +2677,17 @@ select.field__control {
 .cdr__rowAmt { display: flex; flex-direction: column; align-items: flex-end; }
 .cdr__rowAmtSub { font-size: 13px; line-height: 18px; color: var(--muted); }
 
-/* Nr 10: kafelki „Dodaj / Załóż / Otwórz” to akcje — na hover przerywana
-   ramka ciemnieje, tlo bieleje, a plus dostaje kolko. */
+/* Nr 10: kafelki „Dodaj / Załóż / Otwórz” to akcje — plus od razu w czarnym
+   kolku, na hover tylko tlo kafelka bieleje. */
 .v10Add {
   width: 100%; font: inherit; cursor: pointer;
-  transition: background 180ms var(--ease), border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+  transition: background 180ms var(--ease);
 }
 .v10Add__plus {
   width: 32px; height: 32px; border-radius: 999px; align-items: center; justify-content: center;
-  transition: background 180ms var(--ease), color 180ms var(--ease), transform 180ms var(--ease);
+  background: var(--ink); color: var(--card-bg);
 }
-.v10Add:hover { background: var(--card-bg); border-color: rgba(24, 24, 27, 0.28); }
-.v10Add:hover .v10Add__plus { background: var(--ink); color: var(--card-bg); transform: scale(1.04); }
-.v10Add:active .v10Add__plus { transform: scale(0.96); }
+.v10Add:hover { background: var(--card-bg); }
 .v10Add:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 /* Nr 10: znacznik w legendzie wykresu to ta sama kreska co na kartach
