@@ -692,7 +692,10 @@ function AssetCard({
   const v10 = styleId === '10' && !plain ? V10_ASSETS[asset.id] : undefined;
   /* Metryki w nr 10 te same co w nr 2 — z wireframe'u zostaje tylko naglowek
      karty (waluty, tylda przy kwocie). */
-  const highlights = asset.highlights;
+  /* Nr 10: na kartach obligacji bez „Najbliższy wykup” — data jest na ekranie
+     szczegolow, karta zostaje przy wynikach. */
+  const highlights =
+    styleId === '10' ? asset.highlights.filter((m) => m.label !== 'Najbliższy wykup') : asset.highlights;
   const footRows = asset.rows;
   const dates = v5 ? asset.highlights.filter(isDate) : [];
   const results = asset.highlights.filter((m) => !dates.includes(m));
