@@ -2697,3 +2697,17 @@ select.field__control {
 /* Nr 10: gotowka rachunku przypieta do dolu karty, za kreska — w jednej
    linii z gotowka w sasiednich kartach (siatka wyrownuje wysokosci). */
 .acctCard__cash { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--divider); }
+
+/* ================= nr 10: karta rachunku jako lista (review 11f) ================= */
+.acctV10.acctCard { gap: 16px; }
+.acctV10__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.acctV10__titleBlock { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.acctV10__name { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--ink); }
+.acctV10__number { font-size: 13px; line-height: 18px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.acctV10__cur { font-size: 13px; line-height: 22px; color: var(--muted); white-space: nowrap; }
+.acctV10 .acctCard__amount { margin-top: -6px; }
+.acctV10__rows { display: flex; flex-direction: column; gap: 8px; }
+.acctV10__row { display: flex; align-items: center; gap: 12px; font-size: 13px; line-height: 20px; }
+.acctV10__mark { width: 4px; height: 16px; border-radius: 4px; flex: none; }
+.acctV10__label { flex: 1; min-width: 0; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acctV10__value { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }

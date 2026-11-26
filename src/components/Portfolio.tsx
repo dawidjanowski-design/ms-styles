@@ -29,7 +29,7 @@ import {
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
 import { CashDrawerV10 } from './CashDrawerV10';
-import type { CashKind } from '../data/cashV10';
+import { V10_CASH_DETAIL, type CashKind } from '../data/cashV10';
 import {
   ASSET_PROMO,
   clientCash,
@@ -423,6 +423,15 @@ function CashOverview({
    najwiecej, a wiec jaki kolor dostaje marker karty. */
 const kwotaPLN = (v: string) => Number(v.replace(/[^\d]/g, '')) / 100;
 
+/* Waluty rachunku: z pozycji gotowki w szufladach (cashV10); bez danych — PLN. */
+function walutyRachunku(id: string) {
+  const c = new Set<string>();
+  Object.values(V10_CASH_DETAIL).forEach((d) =>
+    d.accounts.filter((a) => a.id === id).forEach((a) => a.rows.forEach((r) => c.add(r.cur)))
+  );
+  return ['PLN', 'EUR', 'USD'].filter((x) => c.has(x) || (x === 'PLN' && c.size === 0));
+}
+
 function V10AccountCard({
   account,
   styleId,
@@ -441,23 +450,23 @@ function V10AccountCard({
 
   return (
     <article
-      className={`acctCard ${onOpen ? 'acctCard--link' : ''}`}
+      className={`acctCard acctV10 ${onOpen ? 'acctCard--link' : ''}`}
       style={{ ['--seg' as string]: seg }}
       role={onOpen ? 'link' : undefined}
       tabIndex={onOpen ? 0 : undefined}
       onClick={onOpen}
       onKeyDown={onOpen ? (e) => e.key === 'Enter' && onOpen() : undefined}
     >
-      <div className="acctCard__head">
-        <div className="acctCard__top">
-          <div className="acctCard__title">
-            {/* Bez kolorowej kreski — kolor rachunku nic nie znaczy. */}
-            <span className="acctCard__name">{account.name}</span>
-            <span className="acctCard__number">· {account.number}</span>
-          </div>
-          <Amount int={account.amount} dec={account.decimals} className="acctCard__amount" />
+      {/* Uklad z review 11f: nazwa, pod nia numer, waluty rachunku po prawej,
+          nizej kwota. */}
+      <div className="acctV10__head">
+        <div className="acctV10__titleBlock">
+          <span className="acctV10__name">{account.name}</span>
+          <span className="acctV10__number">{account.number}</span>
         </div>
+        <span className="acctV10__cur">{walutyRachunku(account.id).join(' · ')}</span>
       </div>
+      <Amount int={account.amount} dec={account.decimals} className="acctCard__amount" />
 
       {/* Struktura rachunku jako kreski — te same, co stopki slupkow na
           wykresie portfela: kolor klasy z palety nr 2, dlugosc z kwoty
@@ -493,31 +502,27 @@ function V10AccountCard({
         </div>
       )}
 
-      <div className="divider" />
-
       {/* Pozycje jako kafelki — ten sam wzorzec, co po drugiej stronie
           przelacznika, w karcie klasy aktywow. Gotowka nie miesza sie z
           instrumentami: stoi zawsze na dole karty, za kreska (review 11f). */}
       {(() => {
         const pozycja = (p: (typeof account.positions)[number]) => (
-          <div className="metric" key={p.asset}>
-            <span className="metric__label">
-              <span
-                className="v10Lines__dot"
-                style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].legend }}
-              />
-              {/* Pelne nazwy klas jak w legendzie wykresu (V10_NAMES). */}
-              {p.asset === 'cash' ? p.label : nameOf(p.asset, styleId)}
-            </span>
-            <span className="metric__value">{p.value}</span>
+          <div className="acctV10__row" key={p.asset}>
+            <span
+              className="acctV10__mark"
+              style={{ background: META[colorId(p.asset, styleId)].colors[paletteOf(styleId)].card }}
+            />
+            {/* Pelne nazwy klas jak w legendzie wykresu (V10_NAMES). */}
+            <span className="acctV10__label">{p.asset === 'cash' ? p.label : nameOf(p.asset, styleId)}</span>
+            <span className="acctV10__value">{p.value}</span>
           </div>
         );
         const inne = account.positions.filter((p) => p.asset !== 'cash');
         const gotowka = account.positions.find((p) => p.asset === 'cash');
         return (
           <>
-            {inne.length > 0 && <div className="metrics">{inne.map(pozycja)}</div>}
-            {gotowka && <div className="acctCard__cash metrics">{pozycja(gotowka)}</div>}
+            {inne.length > 0 && <div className="acctV10__rows">{inne.map(pozycja)}</div>}
+            {gotowka && <div className="acctCard__cash">{pozycja(gotowka)}</div>}
           </>
         );
       })()}
