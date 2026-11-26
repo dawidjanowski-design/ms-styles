@@ -451,7 +451,7 @@ function V10AccountCard({
       <div className="acctCard__head">
         <div className="acctCard__top">
           <div className="acctCard__title">
-            <span className="acctCard__dot" />
+            {/* Bez kolorowej kreski — kolor rachunku nic nie znaczy. */}
             <span className="acctCard__name">{account.name}</span>
             <span className="acctCard__number">· {account.number}</span>
           </div>
@@ -496,9 +496,10 @@ function V10AccountCard({
       <div className="divider" />
 
       {/* Pozycje jako kafelki — ten sam wzorzec, co po drugiej stronie
-          przelacznika, w karcie klasy aktywow. */}
-      <div className="metrics">
-        {account.positions.map((p) => (
+          przelacznika, w karcie klasy aktywow. Gotowka nie miesza sie z
+          instrumentami: stoi zawsze na dole karty, za kreska (review 11f). */}
+      {(() => {
+        const pozycja = (p: (typeof account.positions)[number]) => (
           <div className="metric" key={p.asset}>
             <span className="metric__label">
               <span
@@ -510,8 +511,16 @@ function V10AccountCard({
             </span>
             <span className="metric__value">{p.value}</span>
           </div>
-        ))}
-      </div>
+        );
+        const inne = account.positions.filter((p) => p.asset !== 'cash');
+        const gotowka = account.positions.find((p) => p.asset === 'cash');
+        return (
+          <>
+            {inne.length > 0 && <div className="metrics">{inne.map(pozycja)}</div>}
+            {gotowka && <div className="acctCard__cash metrics">{pozycja(gotowka)}</div>}
+          </>
+        );
+      })()}
 
     </article>
   );

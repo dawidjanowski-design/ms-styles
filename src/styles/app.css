@@ -2693,3 +2693,7 @@ select.field__control {
 /* Nr 10: znacznik w legendzie wykresu to ta sama kreska co na kartach
    aktywow (4 x 16, zaokraglona), nie kropka. */
 [data-style='10'] .legendRow__dot { width: 4px; height: 16px; border-radius: 4px; }
+
+/* Nr 10: gotowka rachunku przypieta do dolu karty, za kreska — w jednej
+   linii z gotowka w sasiednich kartach (siatka wyrownuje wysokosci). */
+.acctCard__cash { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--divider); }
