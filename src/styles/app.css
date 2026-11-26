@@ -2711,3 +2711,5 @@ select.field__control {
 .acctV10__mark { width: 4px; height: 16px; border-radius: 4px; flex: none; }
 .acctV10__label { flex: 1; min-width: 0; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .acctV10__value { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Kolejnosc jak w review: pozycje, limit wplat, gotowka na samym dole. */
+.acctV10 > .acctCard__cash { order: 2; }
