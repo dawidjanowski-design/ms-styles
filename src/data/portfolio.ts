@@ -406,8 +406,6 @@ export const V10_ASSETS: Record<
   },
   am: {
     currencies: 'PLN · EUR',
-    /* Czesc strategii jest prowadzona w EUR, wiec zlotowa suma jest
-       przeliczeniem po kursie dnia — stad tylda przed kwota. */
     highlights: [
       { label: 'Wynik 12M', value: '+58 520,00 PLN' },
       { label: 'Stopa zwrotu 12M', value: '6,10%' },
