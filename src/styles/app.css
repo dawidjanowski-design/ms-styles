@@ -2673,13 +2673,6 @@ select.field__control {
   [data-style='10'] :is(.assets__list .assetCard, .cashCard--link):hover { transform: none; }
 }
 
-/* Nr 10: Wolna gotowka wyrozniona delikatnym ciemnym obrysem — to te
-   pieniadze klient moze od razu wydac. */
-[data-style='10'] { --free-ring: 0 0 0 1px rgba(24, 24, 27, 0.32); }
-[data-style='10'] .cashCard.cashCard--free { box-shadow: var(--free-ring); }
-[data-style='10'] .cashCard.cashCard--free:hover {
-  box-shadow: var(--free-ring), 0 8px 20px -10px rgba(24, 24, 27, 0.14), 0 2px 6px -2px rgba(24, 24, 27, 0.06);
-}
 .cdr__gTotal--stack { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .cdr__rowAmt { display: flex; flex-direction: column; align-items: flex-end; }
 .cdr__rowAmtSub { font-size: 13px; line-height: 18px; color: var(--muted); }
