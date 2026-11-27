@@ -9,7 +9,6 @@ import {
   CORP_CLOSED_TOTAL,
   CORP_FLOWS,
   CORP_FLOWS_FILTERS,
-  CORP_FLOWS_NOTE,
   CORP_HEAD,
   CORP_ISSUERS,
   CORP_OPS,
@@ -17,7 +16,6 @@ import {
   CORP_SERIES_DETAIL,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
-  CORP_STRUCTURE_SUB,
   CORP_WIDGETS,
   type Metric,
   type Widget,
@@ -407,7 +405,6 @@ function Structure({
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Struktura portfela</h2>
-          <p className="corpSection__sub">{CORP_STRUCTURE_SUB}</p>
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
@@ -654,7 +651,6 @@ function Flows() {
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zapadalność i odsetki</h2>
-          <p className="corpSection__sub">Planowane przepływy z portfela obligacji</p>
         </div>
         <div className="corpSection__actions">
           {CORP_FLOWS_FILTERS.map((f) => (
@@ -676,9 +672,6 @@ function Flows() {
         </div>
 
         <FlowsChart />
-
-        <div className="divider" />
-        <p className="corpNote">{CORP_FLOWS_NOTE}</p>
       </div>
     </section>
   );
@@ -692,10 +685,6 @@ function Closed() {
       <div className="corpSection__head">
         <div className="corpSection__text">
           <h2 className="sectionTitle">Zamknięte pozycje</h2>
-          <p className="corpSection__sub">
-            Serie sprzedane lub wykupione w całości. Wynik obejmuje wszystkie zakupy, dokupienia
-            i częściowe sprzedaże na danej pozycji.
-          </p>
         </div>
         <Select label="Od początku" />
       </div>
