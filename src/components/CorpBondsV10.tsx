@@ -93,6 +93,14 @@ function Select({ label }: { label: string }) {
 /* Tresc z makiety 1264:4724: wartosc wiodaca z pigulka zmiany, cztery
    metryki wyniku z podpisami, trzy metryki portfela bez podpisow, a pod
    kreska liczniki skladu i najblizsze zdarzenia. */
+type CorpTab = 'struktura' | 'analiza' | 'przeplywy' | 'historia';
+const CORP_TABS: { id: CorpTab; label: string }[] = [
+  { id: 'struktura', label: 'Struktura' },
+  { id: 'analiza', label: 'Analiza' },
+  { id: 'przeplywy', label: 'Zapadalność i odsetki' },
+  { id: 'historia', label: 'Historia' },
+];
+
 /* Chevron przy tytule: lista klas aktywow z kwotami. Wlasny ekran ma na razie
    tylko ta klasa — pozostale sa przygaszone. */
 function ClassSwitch({ onBack }: { onBack: () => void }) {
@@ -826,6 +834,17 @@ export function CorpBondsV10({
   onOpenSeries: (id: string) => void;
 }) {
   const [konta, setKonta] = useState<string[]>(KONTA.map((k) => k.id));
+  const [tab, setTab] = useState<CorpTab>('struktura');
+  const tabsRef = useRef<HTMLDivElement>(null);
+  /* Po zmianie zakladki przy przewinietej stronie wracamy do gornej krawedzi
+     zakladek (pod pasek ekranu), zeby nowa sekcja zaczynala sie od poczatku. */
+  const wybierz = (id: CorpTab) => {
+    setTab(id);
+    const el = tabsRef.current;
+    if (el && el.getBoundingClientRect().top < 0) {
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
+    }
+  };
   const p = podsumowanie(currency);
   const [calosc, dec] = kwota(p.value, currency).split(',');
   /* Udzial z wykresu portfela (V10_ALLOCATION), zeby dwie liczby sie zgadzaly. */
@@ -879,11 +898,41 @@ export function CorpBondsV10({
           </div>
 
           <Summary currency={currency} />
-          <Structure currency={currency} onOpenIssuer={onOpenIssuer} onOpenSeries={onOpenSeries} />
-          <Widgets />
-          <Flows />
-          <Closed />
-          <Ops />
+
+          {/* Zakladki zamiast szesciu sekcji jedna pod druga (Quicken, Coinbase,
+              Uniswap): metryki zostaja nad nimi, pod spodem jedna sekcja naraz. */}
+          <div className="corpTabsWrap" ref={tabsRef}>
+            <div className="corpTabs" role="tablist" aria-label="Sekcje obligacji">
+              {CORP_TABS.map((t) => (
+                <button
+                  type="button"
+                  key={t.id}
+                  role="tab"
+                  id={`corpTab-${t.id}`}
+                  aria-selected={tab === t.id}
+                  aria-controls={`corpPanel-${t.id}`}
+                  className={`corpTabs__tab ${tab === t.id ? 'is-active' : ''}`}
+                  onClick={() => wybierz(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="corpPanel" role="tabpanel" id={`corpPanel-${tab}`} aria-labelledby={`corpTab-${tab}`} key={tab}>
+            {tab === 'struktura' && (
+              <Structure currency={currency} onOpenIssuer={onOpenIssuer} onOpenSeries={onOpenSeries} />
+            )}
+            {tab === 'analiza' && <Widgets />}
+            {tab === 'przeplywy' && <Flows />}
+            {tab === 'historia' && (
+              <>
+                <Ops />
+                <Closed />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
