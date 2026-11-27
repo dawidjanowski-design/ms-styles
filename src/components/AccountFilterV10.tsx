@@ -81,7 +81,8 @@ export function AccountFilterV10({
             <button type="button" className="acctFilter__link" onClick={() => onChange(options.map((o) => o.id))} disabled={all}>
               Zaznacz wszystkie
             </button>
-            <button type="button" className="acctFilter__link" onClick={() => setOpen(false)}>
+            {/* Glowna akcja dropdownu — ten sam grafitowy przycisk co „Wpłać”. */}
+            <button type="button" className="btn btn--primary acctFilter__done" onClick={() => setOpen(false)}>
               Gotowe
             </button>
           </div>

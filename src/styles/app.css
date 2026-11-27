@@ -2765,3 +2765,5 @@ select.field__control {
 }
 .acctFilter__link:hover:not(:disabled) { background: var(--screen-bg); }
 .acctFilter__link:disabled { color: var(--muted); cursor: default; }
+.acctFilter__foot { align-items: center; }
+.acctFilter__done { height: 34px; padding: 0 16px; font-size: 13px; }
