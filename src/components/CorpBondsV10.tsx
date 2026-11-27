@@ -211,18 +211,19 @@ function Summary({ currency }: { currency: Currency }) {
           <div className="resultCard__stats corpMore__stats" id="corpMoreDetails">
             {portfelowe.map(kafelek)}
           </div>
+          {/* Liczniki skladu tez chowaja sie pod „Więcej szczegółów”. */}
+          <div className="corpCounters corpMore__counters">
+            {liczniki.map((c) => (
+              <span className="corpCounter" key={c.label}>
+                {c.label}
+                <strong>{c.value}</strong>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="corpSummary__foot">
-        <div className="corpCounters">
-          {liczniki.map((c) => (
-            <span className="corpCounter" key={c.label}>
-              {c.label}
-              <strong>{c.value}</strong>
-            </span>
-          ))}
-        </div>
         <button
           type="button"
           className="corpMore__toggle"

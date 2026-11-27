@@ -2828,3 +2828,5 @@ select.field__control {
 .corpSummary .corpMore__clip { padding: 0 16px 16px; margin: 0 -16px -16px; }
 .corpSummary .corpMore { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
 .corpSummary .corpMore__clip { margin-left: -16px; margin-right: -16px; }
+.corpMore__counters { padding: 16px 4px 0; }
+.corpSummary .corpSummary__foot { justify-content: flex-end; }
