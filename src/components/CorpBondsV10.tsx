@@ -624,22 +624,21 @@ function Widgets() {
   const labels = CORP_WIDGETS.map((x) => ANALIZA_TABS[x.id] ?? x.title);
   return (
     <section className="corpSection">
+      {/* Przelacznik i filtry nad sekcja, nie w karcie — jak wszedzie w nr 10. */}
       <div className="corpSection__head">
         <h2 className="sectionTitle">Analiza portfela</h2>
-      </div>
-      <article className="corpWidget corpAnaliza">
-        <div className="corpAnaliza__top">
+        <div className="corpSection__actions">
           <Pills
             items={labels}
             value={ANALIZA_TABS[w.id] ?? w.title}
             onChange={(v) => setId(CORP_WIDGETS[labels.indexOf(v)].id)}
           />
-          <div className="corpWidget__filters">
-            {w.filters.map((f) => (
-              <Select key={f} label={f} />
-            ))}
-          </div>
+          {w.filters.map((f) => (
+            <Select key={f} label={f} />
+          ))}
         </div>
+      </div>
+      <article className="corpWidget corpAnaliza">
         <div className={`corpAnaliza__body ${!w.bars && !w.parts ? 'corpAnaliza__body--solo' : ''}`} key={w.id}>
           <div className="corpAnaliza__lead">
             <span className="corpWidget__title">{w.title}</span>
