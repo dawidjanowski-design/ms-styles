@@ -1,6 +1,5 @@
 import { V10_ACCOUNT_DETAIL } from '../data/accountV10';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, type ReactNode } from 'react';
 import {
   ASSETS,
   CASH,
@@ -28,6 +27,7 @@ import {
 } from '../data/currencies';
 import { Amount, KeyValue, Pills } from './ui';
 import { InTransitDrawer } from './InTransit';
+import { useScreenBarV10 } from './ScreenBarV10';
 import { CashDrawerV10 } from './CashDrawerV10';
 import { V10_CASH_DETAIL, type CashKind } from '../data/cashV10';
 import {
@@ -39,7 +39,7 @@ import {
   hasScenario,
   type ClientId,
 } from '../data/clientsV10';
-import { ChevronRight, Menu, Plus } from '../icons/Feather';
+import { ChevronRight, Plus } from '../icons/Feather';
 
 type StyleId = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'makieta';
 /** Makieta nie ma wlasnej palety — korzysta z nr 1, a kolor gasi CSS (--seg-flat).
@@ -1055,46 +1055,6 @@ function AssetAddTile({ id, styleId }: { id: string; styleId: StyleId }) {
   return <V10AddTile title={nameOf(id, styleId)} sub={`${p.first} ${p.rest}`} />;
 }
 
-/* Nr 10: pasek ekranu przy przewijaniu. Naglowek aplikacji odjezdza do gory,
-   na jego miejsce wjezdza nizszy pasek z przyciskiem Menu i nazwa ekranu.
-   Przelacznik walut nie ma tu kopii — ten sam element z podsumowania
-   przykleja sie w pasku (patrz efekt w PortfolioScreen). Menu przywraca
-   naglowek nad paskiem; przewiniecie w dol chowa go z powrotem. */
-function ScreenBarV10({
-  title,
-  menuOpen,
-  onMenu,
-  onClose,
-}: {
-  title: string;
-  menuOpen: boolean;
-  onMenu: () => void;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    if (!menuOpen) return;
-    let last = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (y > last + 24) onClose();
-      last = y;
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [menuOpen, onClose]);
-  return (
-    <div className={`screenBar ${menuOpen ? 'screenBar--below' : ''}`} role="region" aria-label="Pasek ekranu">
-      <div className="screenBar__inner">
-        <button type="button" className="screenBar__menu" aria-expanded={menuOpen} onClick={onMenu}>
-          <Menu size={16} />
-          <span>Menu</span>
-        </button>
-        <span className="screenBar__title">{title}</span>
-      </div>
-    </div>
-  );
-}
-
 export function PortfolioScreen({
   styleId,
   currency,
@@ -1116,57 +1076,9 @@ export function PortfolioScreen({
      szczegolow (te sa narysowane na danych Dawida). */
   const scen = styleId === '10' && hasScenario(client) ? client : null;
   const [hot, setHot] = useState<string | null>(null);
-  /* Nr 10: przewijanie. Gdy przelacznik walut z podsumowania dojedzie do
-     krawedzi, naglowek odjezdza, wjezdza pasek ekranu, a sam przelacznik
-     przechodzi na position: fixed i zostaje w pasku po prawej. */
-  const pillsRef = useRef<HTMLDivElement>(null);
-  const [compact, setCompact] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  useEffect(() => {
-    if (!compact) setMenuOpen(false);
-  }, [compact]);
-  useEffect(() => {
-    const pills = pillsRef.current?.querySelector<HTMLElement>('.pills');
-    const holder = pillsRef.current;
-    if (styleId !== '10' || !pills || !holder) return;
-    const HEADER = 68;
-    const BAR = 60;
-    let docked = false;
-    const undock = () => {
-      pills.style.position = '';
-      pills.style.top = '';
-      pills.style.left = '';
-      holder.style.minHeight = '';
-      docked = false;
-    };
-    const update = () => {
-      const h = holder.getBoundingClientRect();
-      setCompact(h.top < HEADER);
-      const target = (menuOpen ? HEADER : 0) + (BAR - pills.offsetHeight) / 2;
-      if (h.top <= target) {
-        if (!docked) holder.style.minHeight = `${pills.offsetHeight}px`;
-        docked = true;
-        pills.style.position = 'fixed';
-        pills.style.top = `${target}px`;
-        pills.style.left = `${h.right - pills.offsetWidth}px`;
-      } else if (docked) undock();
-    };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-    return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
-      undock();
-    };
-  }, [styleId, menuOpen, currency]);
-  useEffect(() => {
-    if (styleId !== '10') return;
-    const root = document.documentElement;
-    if (compact && !menuOpen) root.setAttribute('data-compact', '');
-    else root.removeAttribute('data-compact');
-    return () => root.removeAttribute('data-compact');
-  }, [styleId, compact, menuOpen]);
+  /* Nr 10: pasek ekranu przy przewijaniu — przelacznik walut z podsumowania
+     przykleja sie w nim po prawej (ScreenBarV10). */
+  const { holderRef: pillsRef, bar: screenBar } = useScreenBarV10(styleId === '10', 'Portfel', [currency]);
   /* Panel srodkow w drodze dziala tylko w stylistykach nr 1 i nr 2. */
   const [transit, setTransit] = useState(false);
   /* Nr 10: otwarta szuflada karty gotowki. */
@@ -1207,17 +1119,7 @@ export function PortfolioScreen({
           {/* Reset podswietlenia dopiero po wyjsciu z calego bloku. Gdyby
               zerowal go kazdy element z osobna, przejazd myszka przez odstep
               miedzy wierszami na moment wracalby do stanu domyslnego. */}
-          {styleId === '10' &&
-            compact &&
-            createPortal(
-              <ScreenBarV10
-                title="Portfel"
-                menuOpen={menuOpen}
-                onMenu={() => setMenuOpen((o) => !o)}
-                onClose={() => setMenuOpen(false)}
-              />,
-              document.body
-            )}
+          {screenBar}
           <section
             className="summary"
             style={{ paddingTop: 'var(--summary-pt)' }}

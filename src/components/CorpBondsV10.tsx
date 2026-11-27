@@ -13,6 +13,7 @@ import {
   CORP_HEAD,
   CORP_ISSUERS,
   CORP_OPS,
+  CORP_SERIES,
   CORP_SERIES_DETAIL,
   CORP_OPS_FILTERS,
   CORP_OPS_FOOT,
@@ -32,6 +33,23 @@ import {
 import { CURRENCIES, type Currency } from '../data/currencies';
 import { Amount, Pills } from './ui';
 import { CorpFullTableV10 } from './CorpFullTableV10';
+import { AccountFilterV10, type AccountOption } from './AccountFilterV10';
+import { useScreenBarV10 } from './ScreenBarV10';
+
+/* Rachunki z obligacjami korporacyjnymi. Seria bez rozbicia na rachunki
+   lezy na Glownym (·6858). Liczba serii liczona z danych. */
+const KONTA: { id: string; name: string; number: string; key: string }[] = [
+  { id: 'glowny', name: 'Główny', number: '00-00-006858', key: '·6858' },
+  { id: 'emisje', name: 'Na emisje', number: '00-00-007432', key: '·7432' },
+  { id: 'oki', name: 'OKI', number: '00-00-009120', key: '·9120' },
+  { id: 'ike', name: 'IKE', number: '00-00-007431', key: '·7431' },
+];
+const ACCOUNT_OPTIONS: AccountOption[] = KONTA.map((k) => {
+  const n = CORP_SERIES.filter((s) =>
+    s.accounts ? s.accounts.some((a) => a.account.endsWith(k.key)) : k.key === '·6858'
+  ).length;
+  return { id: k.id, name: k.name, number: k.number, meta: `${n} ${n === 1 ? 'seria' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 'serie' : 'serii'}` };
+});
 import {
   Check,
   ChevronDown,
@@ -741,8 +759,13 @@ export function CorpBondsV10({
   onOpenIssuer: (issuer: string) => void;
   onOpenSeries: (id: string) => void;
 }) {
+  const [konta, setKonta] = useState<string[]>(KONTA.map((k) => k.id));
+  /* Ten sam pasek przy przewijaniu co na Portfelu — rachunki i waluty
+     przyklejaja sie w nim po prawej. */
+  const { holderRef, bar } = useScreenBarV10(true, CORP_HEAD.title, [currency, konta.length]);
   return (
     <div className="screenOuter">
+      {bar}
       <div className="screen">
         <div className="content content--airy">
           <nav className="crumbs" aria-label="Ścieżka nawigacji">
@@ -767,13 +790,15 @@ export function CorpBondsV10({
               </h1>
               <p className="corpHead__sub">{CORP_HEAD.sub}</p>
             </div>
-            <div className="corpHead__scope">
-              <Select label={CORP_HEAD.scope} />
-              <Pills
-                items={CURRENCIES}
-                value={currency}
-                onChange={(v) => onCurrencyChange(v as Currency)}
-              />
+            <div className="corpHead__dock" ref={holderRef}>
+              <div className="corpHead__scope">
+                <AccountFilterV10 options={ACCOUNT_OPTIONS} value={konta} onChange={setKonta} />
+                <Pills
+                  items={CURRENCIES}
+                  value={currency}
+                  onChange={(v) => onCurrencyChange(v as Currency)}
+                />
+              </div>
             </div>
           </div>
 

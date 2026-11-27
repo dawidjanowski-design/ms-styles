@@ -2713,3 +2713,55 @@ select.field__control {
 .acctV10__value { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
 /* Kolejnosc jak w review: pozycje, limit wplat, gotowka na samym dole. */
 .acctV10 > .acctCard__cash { order: 2; }
+
+/* ================= nr 10: pasek przy przewijaniu na obligacjach ================= */
+.corpHead__dock { display: flex; justify-content: flex-end; flex: none; }
+[data-style='10'] .corpHead__dock > .corpHead__scope { z-index: 45; }
+
+/* ================= nr 10: filtr rachunkow (wielokrotny wybor) ================= */
+.acctFilter { position: relative; }
+.acctFilter__btn { gap: 8px; }
+.acctFilter__chev { color: var(--muted); transition: transform 160ms var(--ease); }
+.acctFilter__btn[aria-expanded='true'] .acctFilter__chev { transform: rotate(180deg); }
+/* Czarny licznik wybranych rachunkow — widoczny tylko po zawezeniu. */
+.acctFilter__count {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums;
+  background: var(--ink); color: var(--card-bg);
+  animation: acctCountIn 180ms var(--ease);
+}
+@keyframes acctCountIn { from { transform: scale(0.6); opacity: 0; } }
+.acctFilter__menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 210;
+  width: 300px; padding: 6px; border-radius: 16px; background: var(--card-bg);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.22);
+  animation: clientSwIn 160ms var(--ease);
+}
+.acctFilter__item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px;
+  cursor: pointer; transition: background 140ms var(--ease);
+}
+.acctFilter__item:hover { background: var(--screen-bg); }
+.acctFilter__item input { position: absolute; opacity: 0; pointer-events: none; }
+.acctFilter__box {
+  width: 18px; height: 18px; flex: none; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 0 1.5px #c9c9cd; color: transparent; background: var(--card-bg);
+  transition: background 140ms var(--ease), box-shadow 140ms var(--ease), color 140ms var(--ease);
+}
+.acctFilter__item.is-on .acctFilter__box { background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--card-bg); }
+.acctFilter__item:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: -2px; }
+.acctFilter__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.acctFilter__name { font-size: 14px; font-weight: 500; color: var(--ink); }
+.acctFilter__meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.acctFilter__foot {
+  display: flex; justify-content: space-between; margin-top: 4px; padding: 8px 6px 2px;
+  border-top: 1px solid var(--divider);
+}
+.acctFilter__link {
+  height: 32px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink);
+  transition: background 140ms var(--ease);
+}
+.acctFilter__link:hover:not(:disabled) { background: var(--screen-bg); }
+.acctFilter__link:disabled { color: var(--muted); cursor: default; }
