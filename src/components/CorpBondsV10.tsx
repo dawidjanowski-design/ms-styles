@@ -879,11 +879,9 @@ export function CorpBondsV10({
           </div>
 
           <Summary currency={currency} />
-          {/* Kolejnosc: najpierw co i kiedy wplynie, potem analiza, dopiero
-              potem szczegolowa struktura. */}
-          <Flows />
-          <Widgets />
           <Structure currency={currency} onOpenIssuer={onOpenIssuer} onOpenSeries={onOpenSeries} />
+          <Widgets />
+          <Flows />
           <Closed />
           <Ops />
         </div>
