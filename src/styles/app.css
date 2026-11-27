@@ -2777,8 +2777,8 @@ select.field__control {
 /* Przelacznik klasy aktywow pod chevronem tytulu. */
 .classSw { position: relative; }
 .classSw__btn {
-  display: inline-flex; align-items: center; gap: 8px; margin: -4px -10px; padding: 4px 10px;
-  border-radius: 12px; font: inherit; color: inherit; transition: background 140ms var(--ease);
+  display: inline-flex; align-items: center; gap: 8px; margin: -4px -14px; padding: 4px 14px;
+  border-radius: 999px; font: inherit; color: inherit; transition: background 140ms var(--ease);
 }
 .classSw__btn:hover, .classSw__btn[aria-expanded='true'] { background: rgba(0, 0, 0, 0.04); }
 .classSw__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
