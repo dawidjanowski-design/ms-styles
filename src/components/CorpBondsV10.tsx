@@ -35,6 +35,7 @@ import { Amount, Pills } from './ui';
 import { CorpFullTableV10 } from './CorpFullTableV10';
 import { AccountFilterV10, type AccountOption } from './AccountFilterV10';
 import { useScreenBarV10 } from './ScreenBarV10';
+import { OpStatus, OpType } from './OpsBitsV10';
 import { CASH, V10_ALLOCATION, V10_NAMES } from '../data/portfolio';
 import { DETAIL_ASSETS, META } from './Portfolio';
 
@@ -67,7 +68,8 @@ import {
    to jego rozcienczona wersja, a nie szarosc: oba slupki mowia o tej samej
    klasie, roznia sie rodzajem przeplywu. */
 const SEG = 'var(--c-corp)';
-const SEG_SOFT = 'var(--c-corp-soft)';
+/* Odsetki w osobnym kolorze — od razu widac, ktory miesiac to wykup, a ktory kupon. */
+const SEG_SOFT = 'var(--c-interest, var(--c-corp-soft))';
 
 /* Jeden wykres, slupki jeden na drugim: odsetki u dolu, wykup nad nimi.
    Odsetki sa o dwa rzedy wielkosci mniejsze od wykupow, wiec dostaja
@@ -775,13 +777,15 @@ function Ops() {
           {CORP_OPS.slice(0, 5).map((o) => (
             <div className="opsRow" key={o.id}>
               <span>{o.date}</span>
-              <span>{o.type}</span>
+              <OpType type={o.type} negative={o.negative} />
               <span className="opsRow__name">
                 {o.instrument}
                 <span className="opsRow__sub">{o.account}</span>
               </span>
               <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
-              <span className="is-num opsRow__status">{o.status}</span>
+              <span className="is-num opsRow__status">
+                <OpStatus status={o.status} />
+              </span>
             </div>
           ))}
         </div>

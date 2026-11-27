@@ -16,6 +16,7 @@ import {
 } from '../data/corpV10';
 import { emitent, kwota, odmiana, procent } from '../data/corpMath';
 import { Amount } from './ui';
+import { OpStatus, OpType } from './OpsBitsV10';
 import { ChevronDown, ChevronRight, ChevronUp, Download } from '../icons/Feather';
 
 const RACHUNKI: [string, string, string] = ['rachunek', 'rachunki', 'rachunków'];
@@ -343,13 +344,15 @@ export function IssuerV10({
                   return (
                     <div className="opsRow" key={o.id}>
                       <span>{o.date}</span>
-                      <span>{o.type}</span>
+                      <OpType type={o.type} negative={o.negative} />
                       <span className="opsRow__name">
                         {s ? `${s.ticker} · ${s.name}` : o.instrument}
                         <span className="opsRow__sub">{o.account}</span>
                       </span>
                       <span className={`is-num ${o.negative ? '' : 'is-positive'}`}>{o.amount}</span>
-                      <span className="is-num opsRow__status">{o.status}</span>
+                      <span className="is-num opsRow__status">
+                        <OpStatus status={o.status} />
+                      </span>
                     </div>
                   );
                 })}

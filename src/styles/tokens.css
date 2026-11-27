@@ -687,6 +687,8 @@
   /* Rozcienczona zielen klasy — slupki odsetek i tla pigulek wynikowych.
      Jeden token zamiast wpisanego hexa w kilku miejscach. */
   --c-corp-soft: #cfe2d3;
+  /* Odsetki na wykresie zapadalnosci — osobny kolor od nominalu (zloto). */
+  --c-interest: #e4b212;
   /* Tlo zielonej pigulki ze stopa zwrotu. */
   --c-corp-bg: #e0eae1;
   /* Pigulka zlecenia w toku — ciemny bursztyn na jasnym, z tej samej rodziny

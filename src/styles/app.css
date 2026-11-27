@@ -1858,7 +1858,7 @@ select.field__control {
 }
 .corpFlow__bar { display: block; width: 100%; border-radius: 4px; }
 .corpFlow__bar--strong { background: var(--c-corp); }
-.corpFlow__bar--soft { background: var(--c-corp-soft); }
+.corpFlow__bar--soft { background: var(--c-interest, var(--c-corp-soft)); }
 .corpFlow__label { font-size: 13px; color: var(--muted); }
 .corpFlow.is-hot .corpFlow__label { color: var(--ink); }
 
@@ -2830,3 +2830,21 @@ select.field__control {
 .corpSummary .corpMore__clip { margin-left: -16px; margin-right: -16px; }
 .corpMore__counters { padding: 16px 4px 0; }
 .corpSummary .corpSummary__foot { justify-content: flex-end; }
+
+/* ================= nr 10: operacje — ikona kierunku i kolorowy status ================= */
+.opType { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+.opType__icon {
+  width: 24px; height: 24px; flex: none; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.opType__icon--in { background: var(--c-corp-bg); color: var(--c-corp); }
+.opType__icon--out { background: var(--screen-bg); color: var(--muted); }
+.opsRow__status { display: flex; justify-content: flex-end; }
+.opStatus {
+  display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px;
+  border-radius: 999px; font-size: 13px; white-space: nowrap;
+}
+.opStatus__dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+.opStatus--pending { background: var(--c-partial-bg, #f6eccc); color: var(--c-partial, #8a6400); }
+.opStatus--blocked { background: var(--screen-bg); color: var(--muted); }
+.opStatus--done { background: var(--c-corp-bg); color: var(--c-corp); }
