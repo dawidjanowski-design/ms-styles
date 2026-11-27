@@ -503,12 +503,12 @@ function Tooltip({ at, children }: { at: number; children: ReactNode }) {
   );
 }
 
-function InterestChart({ bars }: { bars: NonNullable<Widget['bars']> }) {
+function InterestChart({ bars, full = false }: { bars: NonNullable<Widget['bars']>; full?: boolean }) {
   const [hot, setHot] = useState<number | null>(null);
   const max = Math.max(...bars.map((b) => b.value));
 
   return (
-    <div className="corpSpark" onMouseLeave={() => setHot(null)}>
+    <div className={`corpSpark ${full ? 'corpSpark--full' : ''}`} onMouseLeave={() => setHot(null)}>
       {hot !== null && (
         <Tooltip at={((hot + 0.5) / bars.length) * 100}>
           <span className="chartTip__title">{bars[hot].label}</span>
@@ -530,15 +530,27 @@ function InterestChart({ bars }: { bars: NonNullable<Widget['bars']> }) {
           >
             <span
               className="corpSpark__bar"
-              style={{ height: `${Math.max(8, (b.value / max) * 100)}%` }}
+              style={{
+                height: full
+                  ? `calc((100% - 24px) * ${Math.max(0.06, b.value / max)})`
+                  : `${Math.max(8, (b.value / max) * 100)}%`,
+              }}
             />
+            {/* Pelny wykres: miesiac pod kazdym slupkiem, rok przy styczniu
+                i pierwszym miesiacu — jak na wykresie zapadalnosci. */}
+            {full && (
+              <span className="corpSpark__label">
+                {b.label.split(' ')[0]}
+                {(i === 0 || b.label.startsWith('I ')) && <em> {b.label.split(' ')[1]?.slice(2)}</em>}
+              </span>
+            )}
           </button>
         ))}
       </div>
-      <div className="corpSpark__axis">
+      {!full && <div className="corpSpark__axis">
         <span>{bars[0].label}</span>
         <span>{bars[bars.length - 1].label}</span>
-      </div>
+      </div>}
     </div>
   );
 }
@@ -635,8 +647,8 @@ function Widgets() {
             <span className="corpWidget__sub">{w.sub}</span>
           </div>
           {w.bars && (
-            <div className="corpAnaliza__viz">
-              <InterestChart bars={w.bars} />
+            <div className="corpAnaliza__viz corpAnaliza__viz--wide">
+              <InterestChart bars={w.bars} full />
             </div>
           )}
           {w.parts && (

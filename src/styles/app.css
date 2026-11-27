@@ -2865,3 +2865,16 @@ select.field__control {
 .corpAnaliza .corpWidget__parts { display: flex; flex-direction: column; gap: 10px; align-self: start; padding-left: 40px; box-shadow: inset 1px 0 0 var(--divider); }
 .corpAnaliza .corpPart { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 22px; }
 @media (prefers-reduced-motion: reduce) { .corpAnaliza__body { animation: none; } }
+/* Odsetki w Analizie: wykres pod liczba, na cala szerokosc karty, wyzszy,
+   z miesiacem pod kazdym slupkiem — jak wykres zapadalnosci nizej. */
+.corpAnaliza__viz--wide { grid-column: 1 / -1; }
+.corpAnaliza__body:has(.corpAnaliza__viz--wide) { grid-template-columns: 1fr; gap: 24px; }
+.corpSpark--full { margin-top: 0; padding-top: 0; }
+.corpSpark--full .corpSpark__bars { height: 184px; gap: 8px; }
+.corpSpark--full .corpSpark__slot { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 8px; height: 100%; padding: 0; }
+.corpSpark--full .corpSpark__bar { border-radius: 6px; background: var(--c-corp-soft); }
+.corpSpark--full .corpSpark__slot:last-child .corpSpark__bar { background: var(--c-corp); }
+.corpSpark--full .corpSpark__label { flex: none; font-size: 13px; line-height: 16px; color: var(--muted); text-align: center; }
+.corpSpark--full .corpSpark__label em { font-style: normal; opacity: 0.7; }
+.corpSpark--full .corpSpark__slot:hover .corpSpark__label, .corpSpark--full .corpSpark__slot.is-hot .corpSpark__label { color: var(--ink); }
+.corpSpark--full .corpSpark__bar { flex: none; }
