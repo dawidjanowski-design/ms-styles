@@ -845,7 +845,7 @@ export function CorpBondsV10({
               </div>
               <p className="corpHead__sub">
                 {currency === 'Łącznie'
-                  ? `${procent(udzial)} wartości całego portfela`
+                  ? `${udzial.toFixed(1).replace('.', ',')}% wartości całego portfela`
                   : `wszystkie pozycje w ${jednostka(currency)}`}
                 {' · '}stan na {CORP_HEAD.asOf}
               </p>
