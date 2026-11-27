@@ -3,7 +3,7 @@
    uklad sekcji i wlasne dane, wiec mieszanie go z poprzednia wersja
    zrobiloby z obu nieczytelna plataninke. */
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   CORP_CLOSED,
   CORP_CLOSED_TOTAL,
@@ -35,6 +35,8 @@ import { Amount, Pills } from './ui';
 import { CorpFullTableV10 } from './CorpFullTableV10';
 import { AccountFilterV10, type AccountOption } from './AccountFilterV10';
 import { useScreenBarV10 } from './ScreenBarV10';
+import { CASH, V10_ALLOCATION, V10_NAMES } from '../data/portfolio';
+import { DETAIL_ASSETS, META } from './Portfolio';
 
 /* Rachunki z obligacjami korporacyjnymi. Seria bez rozbicia na rachunki
    lezy na Glownym (·6858). Liczba serii liczona z danych. */
@@ -88,10 +90,72 @@ function Select({ label }: { label: string }) {
 /* Tresc z makiety 1264:4724: wartosc wiodaca z pigulka zmiany, cztery
    metryki wyniku z podpisami, trzy metryki portfela bez podpisow, a pod
    kreska liczniki skladu i najblizsze zdarzenia. */
+/* Chevron przy tytule: lista klas aktywow z kwotami. Wlasny ekran ma na razie
+   tylko ta klasa — pozostale sa przygaszone. */
+function ClassSwitch({ onBack }: { onBack: () => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const out = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const key = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', out);
+    document.addEventListener('keydown', key);
+    return () => {
+      document.removeEventListener('mousedown', out);
+      document.removeEventListener('keydown', key);
+    };
+  }, [open]);
+  const klasy = V10_ALLOCATION.filter((a) => a.id !== CASH.id);
+  return (
+    <div className="classSw" ref={ref}>
+      <h1 className="corpHead__title">
+        <button type="button" className="classSw__btn" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+          {CORP_HEAD.title}
+          <ChevronDown size={18} className="corpHead__chev" />
+        </button>
+      </h1>
+      {open && (
+        <div className="classSw__menu" role="group" aria-label="Klasy aktywów">
+          {klasy.map((k) => {
+            const cur = k.id === 'corp';
+            const name = V10_NAMES[k.id] ?? META[k.id].name;
+            return (
+              <button
+                type="button"
+                key={k.id}
+                className={`classSw__item ${cur ? 'is-active' : ''}`}
+                aria-current={cur ? 'page' : undefined}
+                disabled={!cur && !DETAIL_ASSETS.has(k.id)}
+                onClick={() => setOpen(false)}
+              >
+                <span className="classSw__bar" style={{ background: META[k.id].colors['2'].card }} />
+                <span className="classSw__name">{name}</span>
+                <span className="classSw__value">{k.value}</span>
+              </button>
+            );
+          })}
+          <div className="classSw__foot">
+            <button
+              type="button"
+              className="classSw__back"
+              onClick={() => {
+                setOpen(false);
+                onBack();
+              }}
+            >
+              Wszystkie aktywa w Portfelu
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Summary({ currency }: { currency: Currency }) {
   const p = podsumowanie(currency);
-  const j = jednostka(currency);
-  const [calosc, dec] = kwota(p.value, currency).split(',');
 
   const wynikowe: Metric[] = [
     { label: 'Śr. rentowność (ważona)', value: procent(p.rate), sub: 'do wykupu, w skali roku' },
@@ -134,20 +198,6 @@ function Summary({ currency }: { currency: Currency }) {
 
   return (
     <section className="resultCard corpSummary">
-      <div className="resultCard__lead">
-        <span className="resultCard__caption">Wartość bieżąca</span>
-        <div className="resultCard__amountRow">
-          <Amount int={calosc} dec={`,${dec}`} className="resultCard__amount" />
-          <span className="resultCard__rate">+8%</span>
-        </div>
-        <span className="resultCard__note resultCard__note--left">
-          {currency === 'Łącznie'
-            ? '42,5% wartości całego portfela'
-            : `wszystkie pozycje w ${j}`}
-        </span>
-      </div>
-
-      <div className="divider" />
       <div className="resultCard__stats">{wynikowe.map(kafelek)}</div>
 
       <div className={`corpMore ${open ? 'is-open' : ''}`} aria-hidden={!open}>
@@ -760,6 +810,10 @@ export function CorpBondsV10({
   onOpenSeries: (id: string) => void;
 }) {
   const [konta, setKonta] = useState<string[]>(KONTA.map((k) => k.id));
+  const p = podsumowanie(currency);
+  const [calosc, dec] = kwota(p.value, currency).split(',');
+  /* Udzial z wykresu portfela (V10_ALLOCATION), zeby dwie liczby sie zgadzaly. */
+  const udzial = V10_ALLOCATION.find((a) => a.id === 'corp')?.share ?? 0;
   /* Ten sam pasek przy przewijaniu co na Portfelu — rachunki i waluty
      przyklejaja sie w nim po prawej. */
   const { holderRef, bar } = useScreenBarV10(true, CORP_HEAD.title, [currency, konta.length]);
@@ -780,15 +834,21 @@ export function CorpBondsV10({
             <span className="crumbs__current">{CORP_HEAD.title}</span>
           </nav>
 
+          {/* Naglowek jak na Portfelu: tytul (z przelacznikiem klasy), pod nim
+              kwota z wynikiem i udzialem. Karta ponizej trzyma juz tylko metryki. */}
           <div className="corpHead">
             <div className="corpHead__text">
-              {/* Chevron przy tytule prowadzi do innych klas aktywow —
-                  ten sam wzorzec co przelacznik rachunku. */}
-              <h1 className="corpHead__title">
-                {CORP_HEAD.title}
-                <ChevronDown size={18} className="corpHead__chev" />
-              </h1>
-              <p className="corpHead__sub">{CORP_HEAD.sub}</p>
+              <ClassSwitch onBack={onBack} />
+              <div className="corpHead__amountRow">
+                <Amount int={calosc} dec={`,${dec}`} />
+                <span className="resultCard__rate">+8%</span>
+              </div>
+              <p className="corpHead__sub">
+                {currency === 'Łącznie'
+                  ? `${procent(udzial)} wartości całego portfela`
+                  : `wszystkie pozycje w ${jednostka(currency)}`}
+                {' · '}stan na {CORP_HEAD.asOf}
+              </p>
             </div>
             <div className="corpHead__dock" ref={holderRef}>
               <div className="corpHead__scope">

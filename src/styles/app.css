@@ -2767,3 +2767,43 @@ select.field__control {
 .acctFilter__link:disabled { color: var(--muted); cursor: default; }
 .acctFilter__foot { align-items: center; }
 .acctFilter__done { height: 34px; padding: 0 16px; font-size: 13px; }
+
+/* ================= nr 10: naglowek obligacji jak na Portfelu ================= */
+.corpHead__text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+[data-style='10'] .corpHead__title { font-size: 20px; line-height: 28px; }
+.corpHead__amountRow { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+.corpHead__amountRow .amount__int { font-size: var(--amount-size); }
+.corpHead__sub { margin: 0; }
+/* Przelacznik klasy aktywow pod chevronem tytulu. */
+.classSw { position: relative; }
+.classSw__btn {
+  display: inline-flex; align-items: center; gap: 8px; margin: -4px -10px; padding: 4px 10px;
+  border-radius: 12px; font: inherit; color: inherit; transition: background 140ms var(--ease);
+}
+.classSw__btn:hover, .classSw__btn[aria-expanded='true'] { background: rgba(0, 0, 0, 0.04); }
+.classSw__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.classSw__btn .corpHead__chev { transition: transform 160ms var(--ease); }
+.classSw__btn[aria-expanded='true'] .corpHead__chev { transform: rotate(180deg); }
+.classSw__menu {
+  position: absolute; top: calc(100% + 10px); left: -6px; z-index: 210; width: 380px; padding: 6px;
+  border-radius: 16px; background: var(--card-bg);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 18px 40px -12px rgba(0, 0, 0, 0.22);
+  animation: clientSwIn 160ms var(--ease);
+}
+.classSw__item {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border-radius: 12px;
+  text-align: left; font-size: 14px; color: var(--ink); transition: background 140ms var(--ease);
+}
+.classSw__item:hover:not(:disabled) { background: var(--screen-bg); }
+.classSw__item.is-active { background: var(--nav-active-bg); font-weight: 500; }
+.classSw__item:disabled { cursor: default; color: var(--muted); }
+.classSw__item:disabled .classSw__bar { opacity: 0.5; }
+.classSw__bar { width: 4px; height: 16px; border-radius: 4px; flex: none; }
+.classSw__name { flex: 1; min-width: 0; }
+.classSw__value { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.classSw__foot { margin-top: 4px; padding: 6px 6px 2px; border-top: 1px solid var(--divider); }
+.classSw__back {
+  display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 999px;
+  font-size: 13px; font-weight: 500; color: var(--ink); transition: background 140ms var(--ease);
+}
+.classSw__back:hover { background: var(--screen-bg); }

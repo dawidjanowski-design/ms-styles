@@ -10,6 +10,7 @@ export const CORP_HEAD = {
   title: 'Obligacje korporacyjne',
   sub: '7 emitentów · 9 serii · 4 rachunki',
   scope: 'Wszystkie rachunki',
+  asOf: '20.11.2026',
 };
 
 /* ------------------------------ serie i emitenci ------------------------------
