@@ -2849,3 +2849,19 @@ select.field__control {
 .opStatus--blocked { background: var(--screen-bg); color: var(--muted); }
 .opStatus--done { background: var(--c-corp-bg); color: var(--c-corp); }
 .corpBuy { gap: 6px; }
+
+/* ================= nr 10: Analiza portfela — jedna karta z przelacznikiem ================= */
+.corpAnaliza { gap: 24px; }
+.corpAnaliza__top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.corpAnaliza__body {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; align-items: end;
+  min-height: 150px; animation: corpPanelIn 220ms var(--ease);
+}
+@keyframes corpPanelIn { from { opacity: 0; transform: translateY(4px); } }
+.corpAnaliza__body--solo { grid-template-columns: 1fr; }
+.corpAnaliza__lead { display: flex; flex-direction: column; gap: 6px; align-self: start; }
+.corpAnaliza .corpWidget__value { font-size: 30px; line-height: 36px; }
+.corpAnaliza__viz { min-width: 0; }
+.corpAnaliza .corpWidget__parts { display: flex; flex-direction: column; gap: 10px; align-self: start; padding-left: 40px; box-shadow: inset 1px 0 0 var(--divider); }
+.corpAnaliza .corpPart { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 22px; }
+@media (prefers-reduced-motion: reduce) { .corpAnaliza__body { animation: none; } }

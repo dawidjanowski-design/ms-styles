@@ -601,47 +601,56 @@ function FlowsChart() {
 
 /* ----------------------------- analiza portfela ----------------------------- */
 
+/* Analiza portfela jako jedna karta z przelacznikiem (wzorzec Monarch):
+   Odsetki / Stopa zwrotu / Wynik. Po lewej liczba z opisem, po prawej
+   wykres albo rozbicie — jedna rzecz naraz, bez trzech kart obok siebie. */
+const ANALIZA_TABS: Record<string, string> = { odsetki: 'Odsetki', irr: 'Stopa zwrotu', wynik: 'Wynik' };
+
 function Widgets() {
+  const [id, setId] = useState(CORP_WIDGETS[0].id);
+  const w = CORP_WIDGETS.find((x) => x.id === id) ?? CORP_WIDGETS[0];
+  const labels = CORP_WIDGETS.map((x) => ANALIZA_TABS[x.id] ?? x.title);
   return (
     <section className="corpSection">
       <div className="corpSection__head">
         <h2 className="sectionTitle">Analiza portfela</h2>
       </div>
-      <div className="corpWidgets">
-        {CORP_WIDGETS.map((w) => (
-          <article
-            className={`corpWidget ${!w.bars && !w.parts ? 'corpWidget--plain' : ''}`}
-            key={w.id}
-          >
-            <h3 className="corpWidget__title">{w.title}</h3>
-            <div className="corpWidget__filters">
-              {w.filters.map((f) => (
-                <Select key={f} label={f} />
-              ))}
-            </div>
+      <article className="corpWidget corpAnaliza">
+        <div className="corpAnaliza__top">
+          <Pills
+            items={labels}
+            value={ANALIZA_TABS[w.id] ?? w.title}
+            onChange={(v) => setId(CORP_WIDGETS[labels.indexOf(v)].id)}
+          />
+          <div className="corpWidget__filters">
+            {w.filters.map((f) => (
+              <Select key={f} label={f} />
+            ))}
+          </div>
+        </div>
+        <div className={`corpAnaliza__body ${!w.bars && !w.parts ? 'corpAnaliza__body--solo' : ''}`} key={w.id}>
+          <div className="corpAnaliza__lead">
+            <span className="corpWidget__title">{w.title}</span>
             <div className="corpWidget__value">{w.value}</div>
             <span className="corpWidget__sub">{w.sub}</span>
-
-            {w.bars && <InterestChart bars={w.bars} />}
-
-            {w.parts && (
-              <>
-                <div className="divider" />
-                <div className="corpWidget__parts">
-                  {w.parts.map((p) => (
-                    <div className="corpPart" key={p.label}>
-                      <span className="corpPart__label">{p.label}</span>
-                      <span className={`corpPart__value ${p.negative ? 'is-negative' : ''}`}>
-                        {p.value}
-                      </span>
-                    </div>
-                  ))}
+          </div>
+          {w.bars && (
+            <div className="corpAnaliza__viz">
+              <InterestChart bars={w.bars} />
+            </div>
+          )}
+          {w.parts && (
+            <div className="corpAnaliza__viz corpWidget__parts">
+              {w.parts.map((p) => (
+                <div className="corpPart" key={p.label}>
+                  <span className="corpPart__label">{p.label}</span>
+                  <span className={`corpPart__value ${p.negative ? 'is-negative' : ''}`}>{p.value}</span>
                 </div>
-              </>
-            )}
-          </article>
-        ))}
-      </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </article>
     </section>
   );
 }
