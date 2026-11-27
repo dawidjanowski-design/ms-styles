@@ -2848,3 +2848,4 @@ select.field__control {
 .opStatus--pending { background: var(--c-partial-bg, #f6eccc); color: var(--c-partial, #8a6400); }
 .opStatus--blocked { background: var(--screen-bg); color: var(--muted); }
 .opStatus--done { background: var(--c-corp-bg); color: var(--c-corp); }
+.corpBuy { gap: 6px; }

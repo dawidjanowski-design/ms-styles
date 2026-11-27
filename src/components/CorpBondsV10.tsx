@@ -61,6 +61,7 @@ import {
   Download,
   Maximize2,
   MoreHorizontal,
+  Plus,
   SortNone,
 } from '../icons/Feather';
 
@@ -410,6 +411,11 @@ function Structure({
         </div>
         <div className="corpSection__actions">
           <Pills items={['Emitenci', 'Serie']} value={grouping} onChange={setGrouping} />
+          {/* Jedyna grafitowa akcja ekranu obligacji — jak „Wpłać” na Portfelu. */}
+          <button type="button" className="btn btn--primary corpBuy">
+            <Plus size={16} />
+            Kup obligacje
+          </button>
           <button type="button" className="btn" onClick={() => setFull(true)}>
             <Maximize2 size={14} />
             Pełna tabela
