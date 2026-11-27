@@ -503,12 +503,12 @@ function Tooltip({ at, children }: { at: number; children: ReactNode }) {
   );
 }
 
-function InterestChart({ bars, full = false }: { bars: NonNullable<Widget['bars']>; full?: boolean }) {
+function InterestChart({ bars }: { bars: NonNullable<Widget['bars']> }) {
   const [hot, setHot] = useState<number | null>(null);
   const max = Math.max(...bars.map((b) => b.value));
 
   return (
-    <div className={`corpSpark ${full ? 'corpSpark--full' : ''}`} onMouseLeave={() => setHot(null)}>
+    <div className="corpSpark" onMouseLeave={() => setHot(null)}>
       {hot !== null && (
         <Tooltip at={((hot + 0.5) / bars.length) * 100}>
           <span className="chartTip__title">{bars[hot].label}</span>
@@ -530,27 +530,15 @@ function InterestChart({ bars, full = false }: { bars: NonNullable<Widget['bars'
           >
             <span
               className="corpSpark__bar"
-              style={{
-                height: full
-                  ? `calc((100% - 24px) * ${Math.max(0.06, b.value / max)})`
-                  : `${Math.max(8, (b.value / max) * 100)}%`,
-              }}
+              style={{ height: `${Math.max(8, (b.value / max) * 100)}%` }}
             />
-            {/* Pelny wykres: miesiac pod kazdym slupkiem, rok przy styczniu
-                i pierwszym miesiacu — jak na wykresie zapadalnosci. */}
-            {full && (
-              <span className="corpSpark__label">
-                {b.label.split(' ')[0]}
-                {(i === 0 || b.label.startsWith('I ')) && <em> {b.label.split(' ')[1]?.slice(2)}</em>}
-              </span>
-            )}
           </button>
         ))}
       </div>
-      {!full && <div className="corpSpark__axis">
+      <div className="corpSpark__axis">
         <span>{bars[0].label}</span>
         <span>{bars[bars.length - 1].label}</span>
-      </div>}
+      </div>
     </div>
   );
 }
@@ -613,55 +601,47 @@ function FlowsChart() {
 
 /* ----------------------------- analiza portfela ----------------------------- */
 
-/* Analiza portfela jako jedna karta z przelacznikiem (wzorzec Monarch):
-   Odsetki / Stopa zwrotu / Wynik. Po lewej liczba z opisem, po prawej
-   wykres albo rozbicie — jedna rzecz naraz, bez trzech kart obok siebie. */
-const ANALIZA_TABS: Record<string, string> = { odsetki: 'Odsetki', irr: 'Stopa zwrotu', wynik: 'Wynik' };
-
 function Widgets() {
-  const [id, setId] = useState(CORP_WIDGETS[0].id);
-  const w = CORP_WIDGETS.find((x) => x.id === id) ?? CORP_WIDGETS[0];
-  const labels = CORP_WIDGETS.map((x) => ANALIZA_TABS[x.id] ?? x.title);
   return (
     <section className="corpSection">
-      {/* Przelacznik i filtry nad sekcja, nie w karcie — jak wszedzie w nr 10. */}
       <div className="corpSection__head">
         <h2 className="sectionTitle">Analiza portfela</h2>
-        <div className="corpSection__actions">
-          <Pills
-            items={labels}
-            value={ANALIZA_TABS[w.id] ?? w.title}
-            onChange={(v) => setId(CORP_WIDGETS[labels.indexOf(v)].id)}
-          />
-          {w.filters.map((f) => (
-            <Select key={f} label={f} />
-          ))}
-        </div>
       </div>
-      <article className="corpWidget corpAnaliza">
-        <div className={`corpAnaliza__body ${!w.bars && !w.parts ? 'corpAnaliza__body--solo' : ''}`} key={w.id}>
-          <div className="corpAnaliza__lead">
-            <span className="corpWidget__title">{w.title}</span>
-            <div className="corpWidget__value">{w.value}</div>
-            <span className="corpWidget__sub">{w.sub}</span>
-          </div>
-          {w.bars && (
-            <div className="corpAnaliza__viz corpAnaliza__viz--wide">
-              <InterestChart bars={w.bars} full />
-            </div>
-          )}
-          {w.parts && (
-            <div className="corpAnaliza__viz corpWidget__parts">
-              {w.parts.map((p) => (
-                <div className="corpPart" key={p.label}>
-                  <span className="corpPart__label">{p.label}</span>
-                  <span className={`corpPart__value ${p.negative ? 'is-negative' : ''}`}>{p.value}</span>
-                </div>
+      <div className="corpWidgets">
+        {CORP_WIDGETS.map((w) => (
+          <article
+            className={`corpWidget ${!w.bars && !w.parts ? 'corpWidget--plain' : ''}`}
+            key={w.id}
+          >
+            <h3 className="corpWidget__title">{w.title}</h3>
+            <div className="corpWidget__filters">
+              {w.filters.map((f) => (
+                <Select key={f} label={f} />
               ))}
             </div>
-          )}
-        </div>
-      </article>
+            <div className="corpWidget__value">{w.value}</div>
+            <span className="corpWidget__sub">{w.sub}</span>
+
+            {w.bars && <InterestChart bars={w.bars} />}
+
+            {w.parts && (
+              <>
+                <div className="divider" />
+                <div className="corpWidget__parts">
+                  {w.parts.map((p) => (
+                    <div className="corpPart" key={p.label}>
+                      <span className="corpPart__label">{p.label}</span>
+                      <span className={`corpPart__value ${p.negative ? 'is-negative' : ''}`}>
+                        {p.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </article>
+        ))}
+      </div>
     </section>
   );
 }

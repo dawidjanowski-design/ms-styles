@@ -2849,32 +2849,3 @@ select.field__control {
 .opStatus--blocked { background: var(--screen-bg); color: var(--muted); }
 .opStatus--done { background: var(--c-corp-bg); color: var(--c-corp); }
 .corpBuy { gap: 6px; }
-
-/* ================= nr 10: Analiza portfela — jedna karta z przelacznikiem ================= */
-.corpAnaliza { gap: 24px; }
-.corpAnaliza__top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.corpAnaliza__body {
-  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; align-items: end;
-  min-height: 150px; animation: corpPanelIn 220ms var(--ease);
-}
-@keyframes corpPanelIn { from { opacity: 0; transform: translateY(4px); } }
-.corpAnaliza__body--solo { grid-template-columns: 1fr; }
-.corpAnaliza__lead { display: flex; flex-direction: column; gap: 6px; align-self: start; }
-.corpAnaliza .corpWidget__value { font-size: 30px; line-height: 36px; }
-.corpAnaliza__viz { min-width: 0; }
-.corpAnaliza .corpWidget__parts { display: flex; flex-direction: column; gap: 10px; align-self: start; padding-left: 40px; box-shadow: inset 1px 0 0 var(--divider); }
-.corpAnaliza .corpPart { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; line-height: 22px; }
-@media (prefers-reduced-motion: reduce) { .corpAnaliza__body { animation: none; } }
-/* Odsetki w Analizie: wykres pod liczba, na cala szerokosc karty, wyzszy,
-   z miesiacem pod kazdym slupkiem — jak wykres zapadalnosci nizej. */
-.corpAnaliza__viz--wide { grid-column: 1 / -1; }
-.corpAnaliza__body:has(.corpAnaliza__viz--wide) { grid-template-columns: 1fr; gap: 24px; }
-.corpSpark--full { margin-top: 0; padding-top: 0; }
-.corpSpark--full .corpSpark__bars { height: 184px; gap: 8px; }
-.corpSpark--full .corpSpark__slot { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 8px; height: 100%; padding: 0; }
-.corpSpark--full .corpSpark__bar { border-radius: 6px; background: var(--c-corp-soft); }
-.corpSpark--full .corpSpark__slot:last-child .corpSpark__bar { background: var(--c-corp); }
-.corpSpark--full .corpSpark__label { flex: none; font-size: 13px; line-height: 16px; color: var(--muted); text-align: center; }
-.corpSpark--full .corpSpark__label em { font-style: normal; opacity: 0.7; }
-.corpSpark--full .corpSpark__slot:hover .corpSpark__label, .corpSpark--full .corpSpark__slot.is-hot .corpSpark__label { color: var(--ink); }
-.corpSpark--full .corpSpark__bar { flex: none; }
