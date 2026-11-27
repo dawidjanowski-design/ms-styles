@@ -172,10 +172,16 @@ function Summary({ currency }: { currency: Currency }) {
      wyplata odsetek wchodzi tu jako czwarta: to kwota w kalendarzu, wiec
      czyta sie jak metryka, a nie jak licznik skladu. */
   const portfelowe: Metric[] = [
-    { label: 'Wartość nominalna', value: kwota(p.nominal, currency) },
-    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon) },
-    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency) },
-    { label: 'Najbliższa wypłata odsetek', value: '31.12.2026' },
+    /* Dopiski jak w pierwszym rzedzie — kazda karta ma ten sam uklad
+       (nazwa, liczba, dopisek), wiec odstepy sa rowne w obu rzedach. */
+    { label: 'Wartość nominalna', value: kwota(p.nominal, currency), sub: 'suma nominałów serii' },
+    { label: 'Śr. oprocentowanie (ważone)', value: procent(p.coupon), sub: 'kupony, ważone wartością' },
+    { label: 'Śr. odsetki miesięczne', value: kwota(p.odsetkiMiesiecznie, currency), sub: 'odsetki 12M podzielone przez 12' },
+    {
+      label: 'Najbliższa wypłata odsetek',
+      value: '31.12.2026',
+      sub: `${CORP_SERIES.filter((x) => x.nextCoupon === '31.12.2026').length} serie`,
+    },
   ];
   const liczniki: Metric[] = [
     { label: 'Emitenci', value: String(p.emitenci) },
