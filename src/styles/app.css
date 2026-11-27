@@ -2807,3 +2807,18 @@ select.field__control {
   font-size: 13px; font-weight: 500; color: var(--ink); transition: background 140ms var(--ease);
 }
 .classSw__back:hover { background: var(--screen-bg); }
+
+/* Nr 10: metryki obligacji jako osobne karty — jak „Analiza portfela” nizej.
+   Bez wspolnego boksu; drugi rzad dalej zwijany pod „Więcej szczegółów”,
+   liczniki i przelacznik w stopce na tle ekranu. */
+.resultCard.corpSummary { background: transparent; box-shadow: none; padding: 0; border-radius: 0; gap: 16px; }
+.corpSummary .resultCard__stats { gap: 16px; }
+.corpSummary .resultStat {
+  background: var(--card-bg); border-radius: var(--card-radius); padding: 20px;
+  box-shadow: var(--shadow-card); gap: 4px;
+}
+.corpSummary .resultStat__label { min-height: 0; font-size: 13px; font-weight: 500; color: var(--ink); }
+.corpSummary .resultStat__value { margin-top: 12px; font-size: 24px; line-height: 30px; letter-spacing: -0.01em; }
+.corpSummary .resultStat__sub { font-size: 13px; color: var(--muted); }
+.corpSummary .corpMore__stats { padding-top: 16px; }
+.corpSummary .corpSummary__foot { padding: 0 4px; }

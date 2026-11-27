@@ -208,7 +208,6 @@ function Summary({ currency }: { currency: Currency }) {
         </div>
       </div>
 
-      <div className="divider" />
       <div className="corpSummary__foot">
         <div className="corpCounters">
           {liczniki.map((c) => (
